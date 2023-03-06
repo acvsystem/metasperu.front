@@ -1,0 +1,56 @@
+<ion-row>
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let columBody of renderBodyList">
+          <td *ngFor="let columValue of columBody.value" class="columBody">
+            <span *ngIf="columValue.value != 'endColunm'">
+              <input (keyup)="onKeypress(columBody.key,$event)" type="text" name="{{columValue.key}}" id="{{columBody.key}}" value="{{columValue.value}}" [readonly]="objEditFile.key != columBody.key">
+            </span>
+    
+            <section *ngFor="let optionList of buttonOptionList">
+              <div *ngIf="optionList.type == 'crud' && columValue.key == 'endColunm'">
+                <ion-row>
+                  <ion-col class="full-center">
+                    <span class="editButton" (click)="onActionFunction(optionList.fn,columBody.key)" *ngIf="objEditFile.key != columBody.key" style="cursor: pointer;">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </span>
+                    <span class="checkButton" (click)="onSaveData()" *ngIf="objEditFile.key == columBody.key" style="cursor: pointer;">
+                      <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    </span>
+                  </ion-col>
+                  <ion-col class="full-center">
+                    <span class="cancelButton" (click)="onClear()" *ngIf="objEditFile.key == columBody.key" style="cursor: pointer;">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </span>
+                    <span class="trashButton" (click)="onClear()" *ngIf="objEditFile.key != columBody.key" style="cursor: pointer;">
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </div>
+    
+              <div class="dropdown" *ngIf="optionList.type == 'dropdown' && columValue == 'endColunm'">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  {{optionList.text}}
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" *ngFor="let option of optionList.options"
+                      (click)="onActionFunction(option.fn)">{{option.value}}</a></li>
+                </ul>
+              </div>
+    
+    
+            </section>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ion-col>
+</ion-row>

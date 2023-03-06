@@ -1,0 +1,24 @@
+<ion-row class="desktop-item">
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+    <ion-item class="input-item">
+      <ion-label position="floating">{{label}}</ion-label>
+      <ion-input 
+        id={{id}} 
+        [value]="value"
+        type="{{ type == 'password' ? viewPassword ? 'text' : 'password' : 'text' }}"
+        placeholder="{{placeholder}}"
+      ></ion-input>
+      <span 
+        id="inputURL" 
+        (click)="onCopyText()" 
+        class="btn-copy" 
+        slot="end" 
+        *ngIf="isCopy"
+        data-bs-toggle="tooltip" 
+        data-bs-placement="bottom" 
+        data-bs-title="Copiar">
+        <i class="fa fa-files-o" aria-hidden="true"></i>
+      </span>
+    </ion-item>
+  </ion-col>
+</ion-row>

@@ -1,0 +1,7 @@
+{
+  "name": "metasperu",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

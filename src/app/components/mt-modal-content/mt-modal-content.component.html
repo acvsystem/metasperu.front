@@ -1,0 +1,29 @@
+<div id="content">
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      <div class="head-content">
+        <ion-row>
+          <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+            <span class="head-title">{{title}}</span>
+          </ion-col>
+          <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-right">
+            <span class="head-close" (click)="oncloseModal()">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </span>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      <div class="body-content">
+        <mt-frm-add-postulant *ngIf="bodyContent == 'mt-frm-add-postulant'"></mt-frm-add-postulant>
+        <mt-frm-generate-link *ngIf="bodyContent == 'mt-frm-generate-link'"></mt-frm-generate-link>
+      </div>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      <div class="footer-content">
+        <button type="button" class="btn btn-primary btn-sm">OK</button>
+      </div>
+    </ion-col>
+  </ion-row>
+</div>

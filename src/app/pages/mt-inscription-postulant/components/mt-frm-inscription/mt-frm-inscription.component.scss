@@ -1,0 +1,98 @@
+.container-form {
+    border-right: 1px solid #d7d7d7 !important;
+    padding-right: 14px !important;
+}
+
+#datos-personales {
+    ion-col {
+        padding: 0px !important;
+    }
+}
+
+.container-title {
+    padding: 10px !important;
+}
+
+.container-datos {
+    max-height: 718px !important;
+    ion-avatar {
+        margin-right: 15px !important;
+    }
+}
+
+.card-info {
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 4px !important;
+    padding: 3px 10px !important;
+    margin-top: 10px !important;
+}
+
+.card-info-title {
+    display: block !important;
+    font-size: 12px !important;
+    padding-top: 4px !important;  
+}
+
+.card-info-value {
+    font-size: 12px !important;
+}
+
+.scroll-on {
+    overflow: auto !important;
+}
+
+.scroll-on::-webkit-scrollbar {
+    -webkit-appearance: none !important;
+}
+
+.scroll-on::-webkit-scrollbar:vertical {
+    width: 10px !important;
+}
+
+.scroll-on::-webkit-scrollbar-button:increment,
+.scroll-on::-webkit-scrollbar-button {
+    display: none !important;
+}
+
+.scroll-on::-webkit-scrollbar:horizontal {
+    height: 10px !important;
+}
+
+.scroll-on::-webkit-scrollbar-thumb {
+    background-color: #79797980 !important;
+    border-radius: 20px !important;
+    border: 2px solid #ffff !important;
+}
+
+.scroll-on::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+nav {
+
+    // margin-top: 22px !important;
+    // padding-bottom: 28px !important;
+    ul {
+      list-style-type: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  
+    li {
+      display: inline !important;
+      color: var(--color-primary);
+      cursor: pointer !important;
+    }
+  
+    i {
+      margin: 0px 7px !important;
+      color: var(--color-medium)!important;
+      font-size: 16px !important;
+      position: relative!important;
+      top: 2px!important;
+    }
+  }
+
+  .active {
+    color: #2525bb !important;
+  }
