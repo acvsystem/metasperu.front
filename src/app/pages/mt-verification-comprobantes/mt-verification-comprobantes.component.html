@@ -9,9 +9,9 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
               <table class="table table-bordered">
                 <thead>
                   <tr>
@@ -34,6 +34,27 @@
                   </tr>
                 </tbody>
               </table>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral only-mobil">
+              <ion-row *ngFor="let columBody of bodyList">
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+                  <ion-item class="item-mobile">
+                    <ion-avatar slot="start" class="full-center">
+                      {{columBody.codigo}}
+                    </ion-avatar>
+                    <div class="body">
+                      <span class="title">{{columBody.Tienda}}</span>
+                      <span class="sub-title">Comprobantes: {{columBody.cant_comprobantes}}</span>
+                    </div>
+                    <div slot="end" class="estados">
+                      <span><i class="fa fa-toggle-on" aria-hidden="true" *ngIf="columBody.online == 1"></i></span>
+                      <span><i class="fa fa-toggle-on off" aria-hidden="true" *ngIf="columBody.online == 0"></i></span>
+                      <span><i class="fa fa-check-circle" aria-hidden="true" *ngIf="columBody.isVerification == 1"></i></span>
+                      <span><i class="fa fa-times" aria-hidden="true" *ngIf="columBody.isVerification == 0"></i></span>
+                    </div>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
             </ion-col>
           </ion-row>
         </ion-col>

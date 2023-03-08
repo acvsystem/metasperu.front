@@ -68,3 +68,65 @@ th:last-child {
 .trashButton {
     color: #f90d0d !important;
 }
+
+ion-avatar {
+    background: #b3b3b3 !important;
+    color: #ffff !important;
+}
+
+ion-item {
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 4px !important;
+    --border-color: #fff !important;
+    --border-style: dashed !important;
+    --border-width: 2px !important;
+    --border-radius: 20px !important;
+    --ripple-color: purple !important;
+    --detail-icon-color: white !important;
+    --detail-icon-opacity: 1 !important;
+    --detail-icon-font-size: 20px !important;
+
+    span {
+        margin-top: 2px !important;
+        display: block !important;
+    }
+
+    .body {
+        span {
+            font-size: 12px !important;
+        }
+
+        .title {
+            color: #242424 !important;
+            font-weight: 600 !important;
+        }
+
+        .sub-title {
+            color: gray !important;
+        }
+    }
+
+    .estados {
+        span {
+            text-align: end !important;
+        }
+    }
+
+}
+
+.fa-toggle-on {
+    color: green !important;
+}
+
+.fa-toggle-on.off {
+    transform: rotate(180deg);
+    color: #d3102a !important;
+}
+
+.fa-check-circle {
+    color: green !important;
+}
+
+.fa-times {
+    color: #d3102a !important;
+}

@@ -255,6 +255,10 @@
   display: none !important;
 }
 
+.only-desktop {
+  display: inline-table !important;
+}
+
 .card-content {
   width: 100% !important;
   margin: 10px !important;
@@ -262,10 +266,15 @@
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-@media (max-width:412px) {
+@media (max-width:500px) {
   .only-mobil {
     display: block !important;
   }
+
+  .only-desktop {
+    display: none !important;
+  }
+
 }
 
 ion-modal.mt-modal {
@@ -278,4 +287,9 @@ ion-modal.mt-modal {
 
 .align-right {
   float: right !important;
+}
+
+.no-padding-lateral {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
