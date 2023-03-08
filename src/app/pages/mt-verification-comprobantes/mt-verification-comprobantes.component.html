@@ -26,7 +26,10 @@
                       <span class="badge bg-success" *ngIf="columBody.isVerification == 1">ready</span>
                       <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
                     </td>
-                    <td class="columBody">{{columBody.cant_comprobantes}}</td>
+                    <td class="columBody">
+                      <span class="badge bg-success" *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                      <span class="badge bg-danger" *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+                    </td>
                     <td class="columBody">
                       <span class="badge bg-success" *ngIf="columBody.online == 1">online</span>
                       <span class="badge bg-danger" *ngIf="columBody.online == 0">offline</span>
@@ -41,16 +44,23 @@
                   <ion-item class="item-mobile">
                     <ion-avatar slot="start" class="full-center">
                       {{columBody.codigo}}
+                      <span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status" *ngIf="columBody.online == 1">
+                        <span class="visually-hidden">New alerts</span>
+                      </span>
+                      <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status" *ngIf="columBody.online == 0">
+                        <span class="visually-hidden">New alerts</span>
+                      </span>
                     </ion-avatar>
                     <div class="body">
-                      <span class="title">{{columBody.Tienda}}</span>
-                      <span class="sub-title">Comprobantes: {{columBody.cant_comprobantes}}</span>
+                      <div class="content-title">
+                        <span class="title">{{columBody.Tienda}}</span>
+                        <span class="status"><i class="fa fa-check-circle" aria-hidden="true" *ngIf="columBody.isVerification == 1"></i></span>
+                        <span class="status"><i class="fa fa-times" aria-hidden="true" *ngIf="columBody.isVerification == 0"></i></span>
+                      </div>
                     </div>
                     <div slot="end" class="estados">
-                      <span><i class="fa fa-toggle-on" aria-hidden="true" *ngIf="columBody.online == 1"></i></span>
-                      <span><i class="fa fa-toggle-on off" aria-hidden="true" *ngIf="columBody.online == 0"></i></span>
-                      <span><i class="fa fa-check-circle" aria-hidden="true" *ngIf="columBody.isVerification == 1"></i></span>
-                      <span><i class="fa fa-times" aria-hidden="true" *ngIf="columBody.isVerification == 0"></i></span>
+                      <span class="badge rounded-pill bg-success" *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                      <span class="badge rounded-pill bg-danger" *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
                     </div>
                   </ion-item>
                 </ion-col>

@@ -70,8 +70,15 @@ th:last-child {
 }
 
 ion-avatar {
-    background: #b3b3b3 !important;
+    position: relative !important;
+    background: #686868 !important;
     color: #ffff !important;
+
+    .status {
+        top: 4px !important;
+        left: 38px !important;
+        padding: 5px !important;
+    }
 }
 
 ion-item {
@@ -129,4 +136,20 @@ ion-item {
 
 .fa-times {
     color: #d3102a !important;
+}
+
+.content-title {
+    span {
+        display: inline-block !important;
+    }
+
+    .status {
+        margin-left: 5px !important;
+    }
+}
+
+.content-subtitle {
+    span {
+        display: inline-block !important;
+    }
 }
