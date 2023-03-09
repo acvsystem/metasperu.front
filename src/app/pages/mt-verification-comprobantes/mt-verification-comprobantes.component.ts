@@ -18,7 +18,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-    this.headList = ['Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online']
+    this.headList = ['#','Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online']
 
     this.socket.on('sessionConnect', (listaSession) => {
       console.log(listaSession);
