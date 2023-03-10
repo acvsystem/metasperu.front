@@ -18,6 +18,7 @@ import { MtFrmInscriptionComponent } from './pages/mt-inscription-postulant/comp
 import { MtNavStepComponent } from './components/mt-nav-step/mt-nav-step.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { HttpClientModule } from '@angular/common/http';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -36,7 +37,13 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtNavStepComponent,
     MtVerificationComprobantesComponent
   ],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, SocketIoModule.forRoot(confSocket)],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(), 
+    AppRoutingModule, 
+    SocketIoModule.forRoot(confSocket),
+    HttpClientModule
+  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })

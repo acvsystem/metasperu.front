@@ -12,16 +12,16 @@ export class MtVerificationComprobantesComponent implements OnInit {
   headList: Array<any> = [];
   bodyList: Array<any> = [];
   actionButton: boolean = true;
-  socket = io('http://159.65.226.239:3200', { query: { code: 'app' } });
+  token: any = localStorage.getItem('tn');
+  socket = io('http://localhost:3200', { query: { code: 'app', token: this.token } });
 
   constructor() { }
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#','Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online']
 
     this.socket.on('sessionConnect', (listaSession) => {
-      console.log(listaSession);
       let dataList = (listaSession || []);
       this.bodyList = [];
       (dataList || []).filter((data: any) => {

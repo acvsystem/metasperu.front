@@ -7,7 +7,7 @@ import { MtVerificationComprobantesComponent } from './pages/mt-verification-com
 const routes: Routes = [
   {
     path: '',
-    component: MtVerificationComprobantesComponent
+    component: MtLoginComponent
   },
   {
     path: 'login',
