@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShareService } from '../../services/shareService'
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-mt-login',
@@ -8,19 +9,34 @@ import { ShareService } from '../../services/shareService'
 })
 export class MtLoginComponent implements OnInit {
 
-  constructor(private shrService: ShareService) { }
+  userName: string = "";
+  password: string = "";
 
-  ngOnInit() { }
+  constructor(private shrService: ShareService, private nav: NavController) { }
+
+  ngOnInit() {
+    document.addEventListener('keydown', (event) => {
+      var keyValue = event.key;
+      if (keyValue == "Enter") {
+        this.onLogin();
+      }
+    }, false);
+  }
 
 
   onLogin() {
-    let parms = {
-      url: '/security/login',
-      body: { "usuario": "SISTEMAS", "password": "METASPERU" },
-      server: 'localhost:3200'
-    };
+    this.shrService.createToken(this.userName, this.password).then((token) => {
+      console.log(token);
+      if (token) {
+        this.nav.navigateRoot('comprobantes');
+      }
+    });
+  }
 
-    this.shrService.post(parms);
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
   }
 
 }

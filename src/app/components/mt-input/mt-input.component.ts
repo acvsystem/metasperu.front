@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'mt-input',
@@ -12,6 +12,7 @@ export class MtInputComponent implements OnInit {
   @Input() placeholder: string = "placeholder";
   @Input() value: string = "";
   @Input() isCopy: boolean = false;
+  @Output() afterChange: EventEmitter<any> = new EventEmitter();
   viewPassword: boolean = false;
   typePassword: string = "password";
 
@@ -23,5 +24,12 @@ export class MtInputComponent implements OnInit {
     var copyTextarea = document.getElementById("inputURL") as HTMLInputElement;
     copyTextarea.select();
     document.execCommand("copy");
+  }
+
+  onChange(ev: any) {
+    const self = this;
+    let value = (ev.target.value || '').trim();
+    // this.checkout.setValues(this.id, value);
+    this.afterChange.emit({ id: self.id, value: value });
   }
 }

@@ -9,8 +9,8 @@ import { of, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  @Output() eventShowLoading: EventEmitter<string> = new EventEmitter()
-  
+  @Output() eventShowLoading: EventEmitter<any> = new EventEmitter();
+
   constructor(private http: HttpClient) { }
 
   private getParams(paramList: IRequestParams) {
@@ -46,17 +46,17 @@ export class HttpService {
       body = request.body;
     }
 
-    this.eventShowLoading.emit('true');
+    this.eventShowLoading.emit(true);
 
-    return this.http.post(URL, body).pipe(
-      tap((x) => this.eventShowLoading.emit('false')),
+    return this.http.post(URL, body || file, { headers, params }).pipe(
+      tap((x) => this.eventShowLoading.emit(false)),
       retryWhen(
         genericRetryStrategy({
-          excludedStatusCodes: [401, 403, 400, 500]
+          excludedStatusCodes: [401, 403, 400, 500],
         }),
       ),
       catchError((error) => {
-        this.eventShowLoading.emit('false');
+        this.eventShowLoading.emit(false);
         if (returnError) return of(error);
         else return throwError(error);
       }),

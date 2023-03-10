@@ -1,7 +1,53 @@
 .show {
+  display: block !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+.content-profile {
+  display: flex !important;
+  margin-right: 10px !important;
+}
+
+.profile-name,
+.profile-ico,
+.profile-logo {
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px !important;
+}
+
+.profile-logo {
+  ion-avatar {
+    width: 35px !important;
+    height: 35px !important;
+  }
+}
+
+.profile-ico {
+  font-size: 13px !important;
+}
+
+.profile-name {
+  text-align: end !important;
+  flex-wrap: wrap !important;
+
+  .name {
+    height: 19px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+  }
+
+  .nivel {
+    color: gray !important;
+    font-size: 14px !important;
+  }
+
+  span {
     display: block !important;
+    flex: 100% !important;
   }
-  
-  .hide {
-    display: none !important;
-  }
+}

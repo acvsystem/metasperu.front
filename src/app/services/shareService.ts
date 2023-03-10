@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { concatMap, of, throwError } from 'rxjs';
 import { IRequestParams } from '../const/IRequestParams';
 import { StorageService } from '../utils/storage';
@@ -10,28 +10,28 @@ import { HttpService } from './httpService';
 export class ShareService {
   private hearders: Array<{ key: string; value: string }> = [];
   private intPost = 0;
-  private responseHttp:any;
+  @Output() eventIsLoggedIn: EventEmitter<any> = new EventEmitter();
 
   constructor(private store: StorageService, private xhr: HttpService) { }
 
   public post(parms_: IRequestParams): Promise<any> {
     const self = this;
-/*
-    let token = self.store.getStore('tn');
-
-    if (typeof parms_.isAuth === 'undefined') {
-      if (typeof token == 'undefined') {
-        return Promise.resolve(throwError(-1));
-      }
-    }
-    this.hearders = [];
-    this.hearders.push({ key: 'Authorization', value: 'bearer ' + token });
-    if (parms_.isAuth) {
-      this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
-    }
-
-    let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
-*/
+    /*
+        let token = self.store.getStore('tn');
+    
+        if (typeof parms_.isAuth === 'undefined') {
+          if (typeof token == 'undefined') {
+            return Promise.resolve(throwError(-1));
+          }
+        }
+        this.hearders = [];
+        this.hearders.push({ key: 'Authorization', value: 'bearer ' + token });
+        if (parms_.isAuth) {
+          this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
+        }
+    
+        let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
+    */
     let parms: IRequestParams = {
       url: parms_.url,
       headers: this.hearders,
@@ -40,32 +40,54 @@ export class ShareService {
       server: parms_.server,
       file: parms_.file
     };
-    
-   /* if (serverUrl.length > 0) {
-      Object.assign(parms, {
-        _serverUrl: serverUrl
-      });
-    }*/
 
-    this.xhr
-      .post(parms, true).subscribe((response) => {
-        console.log(response);
-        if (response.status == 401) {
-          this.intPost++;
-          if (this.intPost >= 3) {
-            this.intPost = 0;
-            this.responseHttp = of([]);
+    /* if (serverUrl.length > 0) {
+       Object.assign(parms, {
+         _serverUrl: serverUrl
+       });
+     }*/
+
+    return this.xhr
+      .post(parms, true)
+      .pipe(
+        concatMap((response) => {
+          if (response.status == 401) {
+            this.intPost++;
+            if (this.intPost >= 3) {
+              this.intPost = 0;
+              return of([]);
+            }
+            return [{ msj: "login" }];
+          } else if (response.status == 403 || response.status == 400) {
+            return of(response);
+          } else if (response['statusText'] == 'Unknown Error') {
+            return of([]);
+          } else {
+            return of(response);
           }
-        } else if (response.status == 403 || response.status == 400) {
-          this.responseHttp = of(response);
-        } else if (response['statusText'] == 'Unknown Error') {
-          this.responseHttp = of([]);
-        } else {
-          this.responseHttp = of(response);
-        }
-      });
+        }),
+      )
+      .toPromise();
+  }
 
-      return this.responseHttp;
+  createToken(userName, password): Promise<any> {
+    let parms = {
+      url: '/security/login',
+      body: { "usuario": userName, "password": password },
+      server: 'http://localhost:3200'
+    };
+
+    return this.post(parms).then((response) => {
+      console.log(response);
+      let token = ((response || {}).auth || {}).token;
+      if (token) {
+        this.eventIsLoggedIn.emit(true);
+        this.store.setStore('tn', token);
+        return token;
+      } else {
+        this.eventIsLoggedIn.emit(false);
+      }
+    });
   }
 
 }
