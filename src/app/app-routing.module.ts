@@ -3,6 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MtLoginComponent } from './pages/mt-login/mt-login.component';
 import { MtInscriptionPostulantComponent } from './pages/mt-inscription-postulant/mt-inscription-postulant.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
+import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
+import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 
 const routes: Routes = [
   {
@@ -20,6 +22,14 @@ const routes: Routes = [
   {
     path: 'comprobantes',
     component: MtVerificationComprobantesComponent
+  },
+  {
+    path: 'comprobantes-sunat',
+    component: MtSunatComprobantesComponent
+  },
+  {
+    path: 'configuracion',
+    component: MtConfiguracionComponent
   }
 ];
 
