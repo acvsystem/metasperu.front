@@ -19,7 +19,9 @@ import { MtNavStepComponent } from './components/mt-nav-step/mt-nav-step.compone
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
-
+import { MtPopoverComponent } from './components/mt-popover/mt-popover.component';
+import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
+import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
@@ -35,12 +37,15 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtTooltipComponent,
     MtFrmInscriptionComponent,
     MtNavStepComponent,
-    MtVerificationComprobantesComponent
+    MtVerificationComprobantesComponent,
+    MtPopoverComponent,
+    MtSunatComprobantesComponent,
+    MtConfiguracionComponent
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(), 
-    AppRoutingModule, 
+    IonicModule.forRoot(),
+    AppRoutingModule,
     SocketIoModule.forRoot(confSocket),
     HttpClientModule
   ],

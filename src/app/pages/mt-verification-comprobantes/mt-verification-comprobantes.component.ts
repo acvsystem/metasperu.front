@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
-import { Socket } from 'ngx-socket-io';
-import { map } from 'rxjs/operators';
+import { ShareService } from '../../services/shareService';
 @Component({
   selector: 'app-mt-verification-comprobantes',
   templateUrl: './mt-verification-comprobantes.component.html',
@@ -15,11 +14,17 @@ export class MtVerificationComprobantesComponent implements OnInit {
   token: any = localStorage.getItem('tn');
   socket = io('http://localhost:3200', { query: { code: 'app', token: this.token } });
 
-  constructor() { }
+  constructor(private service: ShareService) { }
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online'];
+
+    this.service.onDisconnectSocket.subscribe((disconnect) => {
+      if (disconnect) {
+        this.socket.disconnect();
+      }
+    });
 
     this.socket.on('sessionConnect', (listaSession) => {
       let dataList = (listaSession || []);

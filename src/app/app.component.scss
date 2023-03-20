@@ -28,6 +28,7 @@
 }
 
 .profile-ico {
+  cursor: pointer !important;
   font-size: 13px !important;
 }
 
@@ -39,15 +40,72 @@
     height: 19px !important;
     font-size: 15px !important;
     font-weight: 700 !important;
+    text-transform: lowercase !important;
+  }
+
+  .name::first-letter,
+  .nivel::first-letter {
+    text-transform: uppercase !important;
   }
 
   .nivel {
     color: gray !important;
     font-size: 14px !important;
+    text-transform: lowercase !important;
   }
+
 
   span {
     display: block !important;
     flex: 100% !important;
   }
+}
+
+
+.renderMobil {
+  .profile-logo {
+    ion-avatar {
+      width: 25px !important;
+      height: 25px !important;
+    }
+  }
+
+  .name {
+    font-size: 13px !important;
+  }
+
+  .nivel {
+    font-size: 12px !important;
+  }
+
+  .profile-ico {
+    font-size: 12px !important;
+  }
+
+  .headerTitle {
+    display: none !important;
+  }
+}
+
+.item-menu {
+  cursor: pointer !important;
+  height: 42px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  background: #FFFF;
+  border-bottom: 1px solid #c2c2c2;
+
+  span {
+    margin-left: 5px;
+    text-transform: lowercase;
+  }
+
+  span:first-letter {
+    text-transform: uppercase;
+  }
+}
+
+.item-menu:hover {
+  background: #f1f1f1;
 }

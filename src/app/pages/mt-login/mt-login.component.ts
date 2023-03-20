@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ShareService } from '../../services/shareService'
 import { NavController } from '@ionic/angular';
+import { StorageService } from '../../utils/storage';
 
 @Component({
   selector: 'app-mt-login',
@@ -12,9 +13,14 @@ export class MtLoginComponent implements OnInit {
   userName: string = "";
   password: string = "";
 
-  constructor(private shrService: ShareService, private nav: NavController) { }
+  constructor(
+    private shrService: ShareService,
+    private nav: NavController,
+    private store: StorageService
+  ) { }
 
   ngOnInit() {
+
     document.addEventListener('keydown', (event) => {
       var keyValue = event.key;
       if (keyValue == "Enter") {
@@ -26,7 +32,6 @@ export class MtLoginComponent implements OnInit {
 
   onLogin() {
     this.shrService.createToken(this.userName, this.password).then((token) => {
-      console.log(token);
       if (token) {
         this.nav.navigateRoot('comprobantes');
       }

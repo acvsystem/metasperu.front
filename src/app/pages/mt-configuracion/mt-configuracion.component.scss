@@ -1,0 +1,61 @@
+.card-content-configuration {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    margin: 10px !important;
+    padding: 10px !important;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.menu-configuration {
+    overflow: auto !important;
+}
+
+.item-menu-configuration {
+    cursor: pointer !important;
+    height: 42px !important;
+    display: flex !important;
+    justify-content: left !important;
+    align-items: center !important;
+    background: #FFFF !important;
+    border-bottom: 1px solid #c2c2c2 !important;
+    padding-left: 5px !important;
+
+
+}
+
+.item-menu-configuration:hover {
+    background: #f1f1f1 !important;
+}
+
+.content-view {
+    width: 100% !important;
+    padding: 0px 10px !important;
+
+    .title {
+        font-weight: 600 !important;
+    }
+}
+
+.full-width {
+    width: 100% !important;
+}
+
+.list-group {
+    max-height: 165px !important;
+    overflow: auto !important;
+
+    span {
+        cursor: pointer !important;
+    }
+}
+
+.btn-outline-primary {
+    margin-right: 5px !important;
+}
+
+.save {
+    float: right !important;
+}
