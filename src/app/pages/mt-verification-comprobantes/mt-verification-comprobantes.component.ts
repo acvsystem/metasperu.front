@@ -12,7 +12,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   headList: Array<any> = [];
   bodyList: Array<any> = [];
   actionButton: boolean = true;
-  socket = io('http://localhost:3200', { query: { code: 'app' } });
+  socket = io('http://159.65.226.239:3200', { query: { code: 'app' } });
 
   constructor() { }
 
