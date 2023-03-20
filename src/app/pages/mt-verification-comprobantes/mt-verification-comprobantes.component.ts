@@ -12,16 +12,15 @@ export class MtVerificationComprobantesComponent implements OnInit {
   headList: Array<any> = [];
   bodyList: Array<any> = [];
   actionButton: boolean = true;
-  socket = io('http://159.65.226.239:3200', { query: { code: 'app' } });
+  socket = io('http://localhost:3200', { query: { code: 'app' } });
 
   constructor() { }
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#','Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG']
 
     this.socket.on('sessionConnect', (listaSession) => {
-      console.log(listaSession);
       let dataList = (listaSession || []);
       this.bodyList = [];
       (dataList || []).filter((data: any) => {
@@ -30,8 +29,20 @@ export class MtVerificationComprobantesComponent implements OnInit {
           Tienda: (data || {}).DESCRIPCION,
           isVerification: (data || {}).VERIFICACION,
           cant_comprobantes: (data || {}).CANT_COMPROBANTES,
-          online: (data || {}).ISONLINE
+          online: (data || {}).ISONLINE,
+          conexICG: 0
         });
+      });
+    });
+
+    this.socket.on('conexion:serverICG:send', (conexion) => {
+      let codigo = ((conexion || [])[0] || {}).code || '';
+      let isConect = ((conexion || [])[0] || {}).isConect || 0;
+      this.bodyList.filter((data, i) => {
+        if (data.codigo == codigo) {
+          console.log((data || {}).online);
+          ((this.bodyList || [])[i] || {}).conexICG = (!(data || {}).online) ? 0 : isConect;
+        }
       });
     });
 
