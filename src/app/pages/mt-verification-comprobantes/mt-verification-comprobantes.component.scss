@@ -151,3 +151,102 @@ ion-item {
         display: inline-block !important;
     }
 }
+
+.aling-right .card-content {
+    width: auto !important;
+}
+
+.blob {
+    background: black;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+    margin: 10px;
+    height: 10px;
+    width: 10px;
+    transform: scale(1);
+    animation: pulse-black 2s infinite;
+}
+
+.blob.blue {
+    background: rgba(52, 172, 224, 1);
+    box-shadow: 0 0 0 0 rgba(52, 172, 224, 1);
+    animation: pulse-blue 2s infinite;
+    display: inline-flex;
+}
+
+@keyframes pulse-blue {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(52, 172, 224, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(52, 172, 224, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(52, 172, 224, 0);
+    }
+}
+
+.blob.red {
+    background: rgba(255, 82, 82, 1);
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
+    animation: pulse-red 2s infinite;
+  }
+  
+  @keyframes pulse-red {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+    }
+  }
+
+.content-btn-fact {
+
+    .facturacion-btn {
+        z-index: 99999;
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        padding-top: 0px;
+        padding-bottom: 0px;
+
+        i {
+            margin-right: 7px;
+        }
+    }
+}
+
+.popup-server {
+    position: absolute;
+    top: 41px;
+    z-index: 999999;
+    border: 1px solid #6c757d;
+    padding: 5px;
+    background: #fff;
+    border-radius: 5px;
+    min-width: 219px !important;
+
+    .status-title {     
+        font-size: 14px !important;
+    }
+
+    .form-switch {
+        pointer-events: none !important;
+    }
+    
+}
+

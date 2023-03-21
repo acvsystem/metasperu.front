@@ -12,7 +12,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
   headList: Array<any> = [];
   bodyList: Array<any> = [];
   actionButton: boolean = true;
-  socket = io('http://159.65.226.239:3200', { query: { code: 'app' } });
+  isConnectServer: string = 'false';
+  isVisibleStatus:boolean = false;
+  statusServerList:any = [];
+  socket = io('http://localhost:3200', { query: { code: 'app' } });
 
   constructor() { }
 
@@ -38,12 +41,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.on('conexion:serverICG:send', (conexion) => {
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
-      this.bodyList.filter((data, i) => {
-        if (data.codigo == codigo) {
-          console.log((data || {}).online);
-          ((this.bodyList || [])[i] || {}).conexICG = (!(data || {}).online) ? 0 : isConect;
-        }
-      });
+      let indexData = this.bodyList.findIndex((data) => data.codigo == codigo);
+      ((this.bodyList || [])[indexData] || {}).conexICG = (!((this.bodyList || [])[indexData] || {}).online) ? 0 : isConect;
+    });
+
+    this.socket.on('status:serverSUNAT:send', (status) => {
+      this.statusServerList = [status] || [];
+      let isConect = (status || {}).online || 'false';
+      this.isConnectServer = isConect;
     });
 
   }

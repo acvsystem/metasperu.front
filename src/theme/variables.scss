@@ -247,6 +247,12 @@
   justify-content: end !important;
 }
 
+.aling-left {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: start !important;
+}
+
 .subtitle {
   font-size: 16px !important;
 }

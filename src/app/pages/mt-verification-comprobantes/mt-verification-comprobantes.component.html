@@ -2,10 +2,82 @@
   <div id="content" class="full-center">
     <div class="card-content">
       <ion-row>
-        <ion-col>
-          <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-            <button (click)="onVerify()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i></button>
-          </ion-col>
+        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+          <button (click)="onVerify()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh"
+              aria-hidden="true"></i></button>
+        </ion-col>
+        <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10" class="aling-right content-btn-fact">
+          <button  (click)="isVisibleStatus = !isVisibleStatus" type="button" class="btn btn-outline-secondary btn-sm facturacion-btn">
+            <i class="fa fa-server" aria-hidden="true"></i>
+            <span>Facturacion</span>
+            <div [ngClass]="[isConnectServer == 'true' ? 'blob blue': 'blob red']"></div>
+          </button>
+          <section class="popup-server" *ngIf="isVisibleStatus && isConnectServer == 'true'">
+            <div *ngFor="let status of statusServerList">
+              <ion-row>
+                <ion-col sizeXs="4" sizeSm="4" sizeMd="4" sizeLg="4" class="aling-left">
+                  <label class="status-title">hostname:</label>
+                </ion-col>
+                <ion-col sizeXs="8" sizeSm="8" sizeMd="8" sizeLg="8">
+                  <label class="status-title">{{status.hostname}}</label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">ip:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <label class="status-title">{{status.ip}}</label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">cpu:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped" role="progressbar" [ngStyle]="{'width': status.cpu + '%'}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">ram:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped" role="progressbar" [ngStyle]="{'width': status.xram + '%'}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">usb:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'true'" checked>
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'false'">
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </section>
+
+          <section class="popup-server" *ngIf="isVisibleStatus && isConnectServer == 'false'">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="full-center">
+                <span class="full-center">
+                  <i class="fa fa-ban" aria-hidden="true"></i>
+                </span>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="full-center">
+                <span class="status-title">
+                  Desconectado
+                </span>
+              </ion-col>
+            </ion-row>
+          </section>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -28,8 +100,10 @@
                       <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
                     </td>
                     <td class="columBody">
-                      <span class="badge bg-success" *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
-                      <span class="badge bg-danger" *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+                      <span class="badge bg-success"
+                        *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                      <span class="badge bg-danger"
+                        *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
                     </td>
                     <td class="columBody">
                       <span class="badge bg-success" *ngIf="columBody.online == 1">online</span>
@@ -49,23 +123,31 @@
                   <ion-item class="item-mobile">
                     <ion-avatar slot="start" class="full-center">
                       {{columBody.codigo}}
-                      <span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status" *ngIf="columBody.online == 1">
+                      <span
+                        class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status"
+                        *ngIf="columBody.online == 1">
                         <span class="visually-hidden">New alerts</span>
                       </span>
-                      <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status" *ngIf="columBody.online == 0">
+                      <span
+                        class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status"
+                        *ngIf="columBody.online == 0">
                         <span class="visually-hidden">New alerts</span>
                       </span>
                     </ion-avatar>
                     <div class="body">
                       <div class="content-title">
                         <span class="title">{{columBody.Tienda}}</span>
-                        <span class="status"><i class="fa fa-check-circle" aria-hidden="true" *ngIf="columBody.isVerification == 1"></i></span>
-                        <span class="status"><i class="fa fa-times" aria-hidden="true" *ngIf="columBody.isVerification == 0"></i></span>
+                        <span class="status"><i class="fa fa-check-circle" aria-hidden="true"
+                            *ngIf="columBody.isVerification == 1"></i></span>
+                        <span class="status"><i class="fa fa-times" aria-hidden="true"
+                            *ngIf="columBody.isVerification == 0"></i></span>
                       </div>
                     </div>
                     <div slot="end" class="estados">
-                      <span class="badge rounded-pill bg-success" *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
-                      <span class="badge rounded-pill bg-danger" *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+                      <span class="badge rounded-pill bg-success"
+                        *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                      <span class="badge rounded-pill bg-danger"
+                        *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
                     </div>
                   </ion-item>
                 </ion-col>
@@ -77,3 +159,5 @@
     </div>
   </div>
 </ion-content>
+
+
