@@ -65,7 +65,8 @@ export class AppComponent {
 
     if (this.store.getStore('tn')) {
       this.renderNavBar = true;
-      this.nav.navigateRoot('configuracion');
+      let pathActual = this.store.getStore('pathURL') || '/comprobantes';
+      this.nav.navigateRoot((pathActual || {}).value);
     } else {
       this.renderNavBar = false;
       this.nav.navigateRoot('login');
@@ -82,6 +83,7 @@ export class AppComponent {
         )
         .subscribe(
           (event: NavigationEnd) => {
+            this.store.setStore('pathURL', window.location.pathname);
             if (!this.store.getStore('tn')) {
               this.renderNavBar = false;
               this.nav.navigateRoot('login');

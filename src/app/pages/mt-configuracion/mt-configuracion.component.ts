@@ -82,7 +82,6 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      this.onSaveEmailSend();
     });
   }
 
