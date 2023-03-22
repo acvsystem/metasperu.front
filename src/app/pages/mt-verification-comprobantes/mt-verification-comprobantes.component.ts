@@ -24,25 +24,42 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG']
 
     this.socket.on('sessionConnect', (listaSession) => {
-      let dataList = (listaSession || []);
-      this.bodyList = [];
-      (dataList || []).filter((data: any) => {
-        this.bodyList.push({
-          codigo: (data || {}).CODIGO_TERMINAL,
-          Tienda: (data || {}).DESCRIPCION,
-          isVerification: (data || {}).VERIFICACION,
-          cant_comprobantes: (data || {}).CANT_COMPROBANTES,
-          online: (data || {}).ISONLINE,
-          conexICG: 0
+      let dataList = [];
+      dataList = listaSession || [];
+
+      if (dataList.length > 1) {
+        this.bodyList = [];
+        (dataList || []).filter((dataSocket: any) => {
+          (this.bodyList || []).push({
+            codigo: (dataSocket || {}).CODIGO_TERMINAL,
+            Tienda: (dataSocket || {}).DESCRIPCION,
+            isVerification: (dataSocket || {}).VERIFICACION,
+            cant_comprobantes: (dataSocket || {}).CANT_COMPROBANTES,
+            online: (dataSocket || {}).ISONLINE,
+            conexICG: 0
+          });
         });
-      });
+      } else {
+        (dataList || []).filter((dataSocket: any) => {
+          let codigo = (dataSocket || {}).CODIGO_TERMINAL;
+          let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+          if (indexData != -1) {
+            (this.bodyList || [])[indexData].codigo = (dataSocket || {}).CODIGO_TERMINAL;
+            (this.bodyList || [])[indexData].Tienda = (dataSocket || {}).DESCRIPCION;
+            (this.bodyList || [])[indexData].isVerification = (dataSocket || {}).VERIFICACION;
+            (this.bodyList || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
+            (this.bodyList || [])[indexData].online = (dataSocket || {}).ISONLINE;
+            (this.bodyList || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
+          }
+        });
+      }
     });
 
     this.socket.on('conexion:serverICG:send', (conexion) => {
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo && data.conexICG != isConect));
-      if ( indexData != -1) {
+      if (indexData != -1) {
         ((this.bodyList || [])[indexData] || {}).conexICG = isConect;
       }
 
