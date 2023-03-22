@@ -11,33 +11,64 @@ export class MtVerificationComprobantesComponent implements OnInit {
   headList: Array<any> = [];
   bodyList: Array<any> = [];
   actionButton: boolean = true;
+  isConnectServer: string = 'false';
+  isVisibleStatus: boolean = false;
+  statusServerList: any = [];
   token: any = localStorage.getItem('tn');
   socket = io('http://localhost:3200', { query: { code: 'app', token: this.token } });
-
+  
   constructor(private service: ShareService) { }
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online'];
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG']
 
-    this.service.onDisconnectSocket.subscribe((disconnect) => {
-      if (disconnect) {
-        this.socket.disconnect();
+    this.socket.on('sessionConnect', (listaSession) => {
+      let dataList = [];
+      dataList = listaSession || [];
+
+      if (dataList.length > 1) {
+        this.bodyList = [];
+        (dataList || []).filter((dataSocket: any) => {
+          (this.bodyList || []).push({
+            codigo: (dataSocket || {}).CODIGO_TERMINAL,
+            Tienda: (dataSocket || {}).DESCRIPCION,
+            isVerification: (dataSocket || {}).VERIFICACION,
+            cant_comprobantes: (dataSocket || {}).CANT_COMPROBANTES,
+            online: (dataSocket || {}).ISONLINE,
+            conexICG: 0
+          });
+        });
+      } else {
+        (dataList || []).filter((dataSocket: any) => {
+          let codigo = (dataSocket || {}).CODIGO_TERMINAL;
+          let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+          if (indexData != -1) {
+            (this.bodyList || [])[indexData].codigo = (dataSocket || {}).CODIGO_TERMINAL;
+            (this.bodyList || [])[indexData].Tienda = (dataSocket || {}).DESCRIPCION;
+            (this.bodyList || [])[indexData].isVerification = (dataSocket || {}).VERIFICACION;
+            (this.bodyList || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
+            (this.bodyList || [])[indexData].online = (dataSocket || {}).ISONLINE;
+            (this.bodyList || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
+          }
+        });
       }
     });
 
-    this.socket.on('sessionConnect', (listaSession) => {
-      let dataList = (listaSession || []);
-      this.bodyList = [];
-      (dataList || []).filter((data: any) => {
-        this.bodyList.push({
-          codigo: (data || {}).CODIGO_TERMINAL,
-          Tienda: (data || {}).DESCRIPCION,
-          isVerification: (data || {}).VERIFICACION,
-          cant_comprobantes: (data || {}).CANT_COMPROBANTES,
-          online: (data || {}).ISONLINE
-        });
-      });
+    this.socket.on('conexion:serverICG:send', (conexion) => {
+      let codigo = ((conexion || [])[0] || {}).code || '';
+      let isConect = ((conexion || [])[0] || {}).isConect || 0;
+      let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo && data.conexICG != isConect));
+      if (indexData != -1) {
+        ((this.bodyList || [])[indexData] || {}).conexICG = isConect;
+      }
+
+    });
+
+    this.socket.on('status:serverSUNAT:send', (status) => {
+      this.statusServerList = [status] || [];
+      let isConect = (status || {}).online || 'false';
+      this.isConnectServer = isConect;
     });
 
   }
