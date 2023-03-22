@@ -13,8 +13,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
   bodyList: Array<any> = [];
   actionButton: boolean = true;
   isConnectServer: string = 'false';
-  isVisibleStatus:boolean = false;
-  statusServerList:any = [];
+  isVisibleStatus: boolean = false;
+  statusServerList: any = [];
   socket = io('http://159.65.226.239:3200', { query: { code: 'app' } });
 
   constructor() { }
@@ -41,8 +41,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.on('conexion:serverICG:send', (conexion) => {
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
-      let indexData = this.bodyList.findIndex((data) => data.codigo == codigo);
-      ((this.bodyList || [])[indexData] || {}).conexICG = (!((this.bodyList || [])[indexData] || {}).online) ? 0 : isConect;
+      let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo && data.conexICG != isConect));
+      if ( indexData != -1) {
+        ((this.bodyList || [])[indexData] || {}).conexICG = isConect;
+      }
+
     });
 
     this.socket.on('status:serverSUNAT:send', (status) => {
