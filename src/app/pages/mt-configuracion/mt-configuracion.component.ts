@@ -32,10 +32,19 @@ export class MtConfiguracionComponent implements OnInit {
       let index = this.emailList.findIndex(email => (email || {}).name == this.emailSend);
 
       if (index == -1 || !this.emailList.length) {
-        this.emailList.push(
-          { name: this.emailSend }
-        );
-        this.emailSend = "";
+        let parms = {
+          url: '/settings/service/email/save',
+          body: [{
+            name: this.emailSend
+          }]
+        };
+
+        this.service.post(parms).then((response) => {
+          this.emailList.push(
+            { name: this.emailSend }
+          );
+          this.emailSend = "";
+        });
       }
     }
   }
@@ -54,6 +63,16 @@ export class MtConfiguracionComponent implements OnInit {
 
   onDeleteEmail() {
     this.emailList = this.emailList.filter((email) => (email || {}).name !== this.emailSend);
+    let parms = {
+      url: '/settings/service/email/delete',
+      body: [{
+        name: this.emailSend
+      }]
+    };
+
+    this.service.post(parms).then((response) => {
+      console.log(response);
+    });
   }
 
   onSaveConfiguration() {
@@ -105,7 +124,7 @@ export class MtConfiguracionComponent implements OnInit {
       url: '/settings/service/email/sendTest',
       body: []
     };
-
+    console.log(parms);
     this.service.post(parms).then((response) => {
       console.log(response);
     });
