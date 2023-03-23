@@ -22,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MtPopoverComponent } from './components/mt-popover/mt-popover.component';
 import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
+import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
@@ -40,7 +41,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtVerificationComprobantesComponent,
     MtPopoverComponent,
     MtSunatComprobantesComponent,
-    MtConfiguracionComponent
+    MtConfiguracionComponent,
+    MtCreateUserComponent
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MtLoginComponent } from './pages/mt-login/mt-login.component';
 import { MtInscriptionPostulantComponent } from './pages/mt-inscription-postulant/mt-inscription-postulant.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
 import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
+import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
   {
     path: 'configuracion',
     component: MtConfiguracionComponent
+  },
+  {
+    path: 'create-account:token',
+    component: MtCreateUserComponent
   }
 ];
 

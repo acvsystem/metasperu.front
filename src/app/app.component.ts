@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpService } from './services/httpService';
-import { Router, ActivationStart, NavigationEnd } from "@angular/router";
+import { Router, ActivationStart, NavigationEnd,ActivatedRoute } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { StorageService } from './utils/storage';
 import { NavController } from '@ionic/angular';
@@ -48,7 +48,6 @@ export class AppComponent {
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
     this.isMobil = window.innerWidth < 769;
-
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });
@@ -69,7 +68,11 @@ export class AppComponent {
       this.nav.navigateRoot((pathActual || {}).value);
     } else {
       this.renderNavBar = false;
-      this.nav.navigateRoot('login');
+      if (!this.store.getStore('tnAcount')) {
+        this.nav.navigateRoot('login');
+      } else {
+        this.nav.navigateRoot('create-account');
+      }
     }
 
     try {
@@ -86,7 +89,12 @@ export class AppComponent {
             this.store.setStore('pathURL', window.location.pathname);
             if (!this.store.getStore('tn')) {
               this.renderNavBar = false;
-              this.nav.navigateRoot('login');
+              if (!this.store.getStore('creationAcount')) {
+                this.nav.navigateRoot('login');
+              } else {
+                this.nav.navigateRoot('create-account');
+              }
+
             }
           }
         )
