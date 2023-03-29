@@ -10,7 +10,9 @@ import { map } from 'rxjs/operators';
 export class MtVerificationComprobantesComponent implements OnInit {
 
   headList: Array<any> = [];
+  headListSunat: Array<any> = [];
   bodyList: Array<any> = [];
+  bodyListSunat: Array<any> = [];
   actionButton: boolean = true;
   isConnectServer: string = 'false';
   isVisibleStatus: boolean = false;
@@ -22,6 +24,27 @@ export class MtVerificationComprobantesComponent implements OnInit {
   ngOnInit() {
     const self = this;
     this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG']
+    this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat','Estado Comprobante', 'Codigo sunat', 'Fecha emision']
+
+    this.socket.on('sendNotificationSunat', (sunat) => {
+      let dataList = [];
+      dataList = sunat || [];
+      this.bodyListSunat = [];
+      (dataList || []).filter((dataSocket: any) => {
+        (this.bodyListSunat || []).push({
+          cod_documento: (dataSocket || {}).CODIGO_DOCUMENTO,
+          nro_correlativo: (dataSocket || {}).NRO_CORRELATIVO,
+          nom_aquiriente: (dataSocket || {}).NOM_ADQUIRIENTE,
+          nro_documento: (dataSocket || {}).NRO_DOCUMENTO,
+          tipo_doc_adquiriente: (dataSocket || {}).TIPO_DOCUMENTO_ADQUIRIENTE,
+          observacion: (dataSocket || {}).OBSERVACION,
+          estado_sunat: (dataSocket || {}).ESTADO_SUNAT,
+          estado_comprobante: (dataSocket || {}).ESTADO_COMPROBANTE,
+          codigo_sunat: (dataSocket || {}).CODIGO_ERROR_SUNAT,
+          fecha_emision: (dataSocket || {}).FECHA_EMISION
+        });
+      });
+    });
 
     this.socket.on('sessionConnect', (listaSession) => {
       let dataList = [];
