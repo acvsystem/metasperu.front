@@ -4,6 +4,7 @@ import { IRequestParams } from '../const/IRequestParams';
 import { catchError, retryWhen, tap } from 'rxjs/operators';
 import { genericRetryStrategy } from '../utils/rxjUtils';
 import { of, throwError } from 'rxjs';
+import { StorageService } from '../utils/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { of, throwError } from 'rxjs';
 export class HttpService {
   @Output() eventShowLoading: EventEmitter<any> = new EventEmitter();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private store: StorageService) { }
 
   private getParams(paramList: IRequestParams) {
     let params = new HttpParams();
@@ -34,6 +35,7 @@ export class HttpService {
   }
 
   post(request: IRequestParams, returnError?: boolean) {
+
     let params = this.getParams(request);
     let headers = this.getHeader(request);
     let body: any = null;
@@ -64,13 +66,14 @@ export class HttpService {
   }
 
   get(request: IRequestParams, returnError?: boolean) {
+
     let params = this.getParams(request);
     let headers = this.getHeader(request);
     let URL = `${request.server}${request.url}`;
 
     this.eventShowLoading.emit(true);
 
-    return this.http.get(URL).pipe(
+    return this.http.get(URL, { headers, params }).pipe(
       tap((x) => this.eventShowLoading.emit(false)),
       retryWhen(
         genericRetryStrategy({

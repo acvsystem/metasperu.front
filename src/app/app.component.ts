@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpService } from './services/httpService';
-import { Router, ActivationStart, NavigationEnd,ActivatedRoute } from "@angular/router";
+import { Router, ActivationStart, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { StorageService } from './utils/storage';
 import { NavController } from '@ionic/angular';
@@ -32,15 +32,17 @@ export class AppComponent {
     });
 
     this.service.onProfileUser.subscribe((profile) => {
-      this.store.setStore("mt-profile", JSON.stringify(profile));
       this.profileUser = [];
       this.profileUser.push(profile);
+      this.store.removeStore("mt-profile");
+      this.store.setStore("mt-profile", JSON.stringify(profile));
     });
 
     this.service.onMenuUser.subscribe((menu) => {
-      this.store.setStore("mt-menu", JSON.stringify(menu));
       this.menuUser = [];
       this.menuUser = menu;
+      this.store.removeStore("mt-menu");
+      this.store.setStore("mt-menu", JSON.stringify(menu));
     });
   }
 
@@ -48,6 +50,7 @@ export class AppComponent {
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
     this.isMobil = window.innerWidth < 769;
+    let pathActual: any = {};
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });
@@ -64,16 +67,12 @@ export class AppComponent {
 
     if (this.store.getStore('tn')) {
       this.renderNavBar = true;
-      let pathActual = this.store.getStore('pathURL') || '/comprobantes';
+      pathActual = this.store.getStore('pathURL') || 'comprobantes';
       this.nav.navigateRoot((pathActual || {}).value);
     } else {
       this.renderNavBar = false;
-      if (!this.store.getStore('tnAcount')) {
-        this.nav.navigateRoot('login');
-      } else {
-        this.nav.navigateRoot('create-account');
-      }
     }
+    
 
     try {
       this.router.events
@@ -86,15 +85,10 @@ export class AppComponent {
         )
         .subscribe(
           (event: NavigationEnd) => {
-            this.store.setStore('pathURL', window.location.pathname);
+            this.store.setStore('pathURL', location.pathname.split('/')[1]);
+            pathActual = this.store.getStore('pathURL') || 'comprobantes';
             if (!this.store.getStore('tn')) {
               this.renderNavBar = false;
-              if (!this.store.getStore('creationAcount')) {
-                this.nav.navigateRoot('login');
-              } else {
-                this.nav.navigateRoot('create-account');
-              }
-
             }
           }
         )
@@ -111,6 +105,7 @@ export class AppComponent {
   onLogout() {
     this.store.removeStore('tn');
     this.store.removeStore('mt-profile');
+    this.store.removeStore('mt-menu');
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;

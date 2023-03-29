@@ -16,7 +16,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   statusServerList: any = [];
   token: any = localStorage.getItem('tn');
   socket = io('http://localhost:3200', { query: { code: 'app', token: this.token } });
-  
+
   constructor(private service: ShareService) { }
 
   ngOnInit() {
@@ -73,7 +73,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   }
 
-  public onVerify() {
+  onVerify() {
     this.socket.emit('comunicationFront', 'angular');
   }
 

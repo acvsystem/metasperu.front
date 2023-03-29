@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShareService } from '../../services/shareService';
+import { io } from "socket.io-client";
 
 @Component({
   selector: 'mt-configuracion',
@@ -20,11 +21,19 @@ export class MtConfiguracionComponent implements OnInit {
   passEmailService: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
+  emailLinkRegistro: string = "";
+  hashAgente: string = "";
+  token: any = localStorage.getItem('tn');
+  socket = io('http://localhost:3200', { query: { code: 'app', token: this.token } });
 
   constructor(private service: ShareService) { }
 
   ngOnInit() {
     this.onListConfiguration();
+  }
+
+  onUpdateAgentFront() {
+    this.socket.emit('update:file:FrontAgent', 'update');
   }
 
   onAddEmailList() {
@@ -96,6 +105,17 @@ export class MtConfiguracionComponent implements OnInit {
     });
   }
 
+  onSendLinkRegister() {
+    let parms = {
+      url: '/settings/service/email/register',
+      body: { path: 'create-account', email: this.emailLinkRegistro }
+    };
+
+    this.service.post(parms).then((response) => {
+      console.log(response);
+    });
+  }
+
   onListConfiguration() {
     let parms = {
       url: '/settings/service/email/sendList'
@@ -126,6 +146,21 @@ export class MtConfiguracionComponent implements OnInit {
     console.log(parms);
     this.service.post(parms).then((response) => {
       console.log(response);
+    });
+  }
+
+  onGenerarHash() {
+    let parms = {
+      url: '/security/create/hash/agente'
+    };
+
+    this.service.get(parms).then((response) => {
+      let success = (response || {}).success || false;
+
+      if (success) {
+        console.log(response);
+        this.hashAgente = (response || {}).hash;
+      }
     });
   }
 

@@ -16,21 +16,48 @@ export class MtCreateUserComponent implements OnInit {
   password: string = "";
   nombreProfile: string = "";
   apellidoProfile: string = "";
+  token: string = '';
 
   constructor(
-    private shrService: ShareService,
+    private service: ShareService,
     private nav: NavController,
     private store: StorageService,
-    private navEnd: ActivatedRoute
-  ) { }
+    private navStart: ActivatedRoute
+  ) {
 
-  ngOnInit() {
-    console.log(this.navEnd.snapshot.paramMap.get('token'));
+    this.token = this.navStart.snapshot.paramMap.get('token') || '';
+    if (!this.token) {
+      this.nav.navigateRoot('login');
+    }
   }
 
+  ngOnInit() {
+    let token = location.pathname.split('/')[2];
+    this.store.setStore('tn', token);
+  }
 
   onRegistrar() {
-    this.nav.navigateRoot('login');
+
+    let bodyRegister = {
+      usuario: this.userName,
+      password: this.password,
+      nombreProfile: this.nombreProfile,
+      apellidoProfile: this.apellidoProfile
+    }
+
+    let parms = {
+      url: '/security/create/user',
+      body: bodyRegister
+    };
+
+    this.service.post(parms).then((response) => {
+      let res = response || {};
+
+      if ((res || {}).success) {
+        this.nav.navigateRoot('login');
+      }
+    });
+
   }
 
   onChangeInput(data: any) {

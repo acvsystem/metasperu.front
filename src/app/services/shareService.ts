@@ -15,28 +15,28 @@ export class ShareService {
   @Output() onMenuUser: EventEmitter<any> = new EventEmitter();
   @Output() onDisconnectSocket: EventEmitter<any> = new EventEmitter();
 
-  serverRute:string = 'http://localhost:3200';
+  serverRute: string = 'http://localhost:3200';
 
   constructor(private store: StorageService, private xhr: HttpService) { }
 
   public post(parms_: IRequestParams): Promise<any> {
     const self = this;
-    /*
-        let token = self.store.getStore('tn');
-    
-        if (typeof parms_.isAuth === 'undefined') {
-          if (typeof token == 'undefined') {
-            return Promise.resolve(throwError(-1));
-          }
-        }
-        this.hearders = [];
-        this.hearders.push({ key: 'Authorization', value: 'bearer ' + token });
-        if (parms_.isAuth) {
-          this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
-        }
-    
-        let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
-    */
+
+    let token = self.store.getStore('tn');
+
+    if (typeof parms_.isAuth === 'undefined') {
+      if (typeof token == 'undefined') {
+        return Promise.resolve(throwError(-1));
+      }
+    }
+    this.hearders = [];
+    this.hearders.push({ key: 'Authorization', value: (token || {}).value });
+    if (parms_.isAuth) {
+      this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
+    }
+
+    let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
+
     let parms: IRequestParams = {
       url: parms_.url,
       headers: this.hearders,
@@ -78,33 +78,36 @@ export class ShareService {
   public get(parms_: IRequestParams): Promise<any> {
     const self = this;
 
+
+    let token = self.store.getStore('tn');
+
+    if (typeof parms_.isAuth === 'undefined') {
+      if (typeof token == 'undefined') {
+        return Promise.resolve(throwError(-1));
+      }
+    }
+    this.hearders = [];
+    this.hearders.push({ key: 'Authorization', value: (token || {}).value });
+    if (parms_.isAuth) {
+      this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
+    }
+
+    let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
+
+    /* if (serverUrl.length > 0) {
+       Object.assign(parms, {
+         _serverUrl: serverUrl
+       });
+     }*/
+
     let parms: IRequestParams = {
       url: parms_.url,
       headers: this.hearders,
       parms: parms_.parms,
       server: this.serverRute
     };
-    /*
-        let token = self.store.getStore('tn');
-    
-        if (typeof parms_.isAuth === 'undefined') {
-          if (typeof token == 'undefined') {
-            return Promise.resolve(throwError(-1));
-          }
-        }
-        this.hearders = [];
-        this.hearders.push({ key: 'Authorization', value: 'bearer ' + token });
-        if (parms_.isAuth) {
-          this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
-        }
-    
-        let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
-    */
-    /* if (serverUrl.length > 0) {
-       Object.assign(parms, {
-         _serverUrl: serverUrl
-       });
-     }*/
+
+
 
     return this.xhr
       .get(parms, true)

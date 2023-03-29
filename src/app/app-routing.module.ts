@@ -6,7 +6,7 @@ import { MtVerificationComprobantesComponent } from './pages/mt-verification-com
 import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
-
+import { AuthGuardService as authGuard } from './services/authGuardService';
 const routes: Routes = [
   {
     path: '',
@@ -18,23 +18,31 @@ const routes: Routes = [
   },
   {
     path: 'inscription',
-    component: MtInscriptionPostulantComponent
+    component: MtInscriptionPostulantComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'comprobantes',
-    component: MtVerificationComprobantesComponent
+    component: MtVerificationComprobantesComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'comprobantes-sunat',
-    component: MtSunatComprobantesComponent
+    component: MtSunatComprobantesComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'configuracion',
     component: MtConfiguracionComponent
   },
   {
-    path: 'create-account:token',
-    component: MtCreateUserComponent
+    path: 'create-account/:token',
+    component: MtCreateUserComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: '**',
+    redirectTo:''
   }
 ];
 
