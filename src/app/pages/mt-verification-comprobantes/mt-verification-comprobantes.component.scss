@@ -195,7 +195,13 @@ ion-item {
     background: rgba(255, 82, 82, 1);
     box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
     animation: pulse-red 2s infinite;
+    display: inline-flex;
 }
+
+.bg-success-comprobantes {
+    background: #2b7be2 !important;
+}
+
 
 @keyframes pulse-red {
     0% {
@@ -257,4 +263,12 @@ ion-item {
 
 .scroll-y {
     overflow-x: auto !important;
+}
+
+.only-desktop {
+    .table {
+        .blob {
+            margin: 0px !important;
+        }
+    }
 }

@@ -118,22 +118,20 @@
                     <td class="columBody">{{columBody.codigo}}</td>
                     <td class="columBody">{{columBody.Tienda}}</td>
                     <td class="columBody">
-                      <span class="badge bg-success" *ngIf="columBody.isVerification == 1">ready</span>
+                      <span class="badge bg-success-comprobantes" *ngIf="columBody.isVerification == 1">ready</span>
                       <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
                     </td>
                     <td class="columBody">
-                      <span class="badge bg-success"
+                      <span class="badge bg-success-comprobantes"
                         *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
                       <span class="badge bg-danger"
                         *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
                     </td>
                     <td class="columBody">
-                      <span class="badge bg-success" *ngIf="columBody.online == 1">online</span>
-                      <span class="badge bg-danger" *ngIf="columBody.online == 0">offline</span>
+                      <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
                     </td>
                     <td class="columBody">
-                      <span class="badge bg-success" *ngIf="columBody.conexICG == 1">online</span>
-                      <span class="badge bg-danger" *ngIf="columBody.conexICG == 0">offline</span>
+                      <div [ngClass]="[columBody.conexICG == 1 ? 'blob blue': 'blob red']"></div>
                     </td>
                   </tr>
                 </tbody>
