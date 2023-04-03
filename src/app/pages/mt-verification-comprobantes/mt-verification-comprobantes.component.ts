@@ -38,7 +38,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
         var diff: any = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) || 0;
 
-        if (parseInt(diff) <= 3) {
+        if (parseInt(diff) < 3) {
           (this.bodyListSunat || []).push({
             cod_documento: (dataSocket || {}).CODIGO_DOCUMENTO,
             nro_correlativo: (dataSocket || {}).NRO_CORRELATIVO,
