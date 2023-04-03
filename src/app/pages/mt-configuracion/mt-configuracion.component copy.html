@@ -1,0 +1,160 @@
+<ion-content>
+  <div id="content" class="full-center">
+    <div class="card-content-configuration">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <div class="content-view">
+            <ion-row>
+              <ion-col>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+                  <button (click)="onSaveConfiguration()" type="button" class="btn btn-outline-primary btn-sm save">Guardar configuracion</button>
+                </ion-col>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span class="title">CONFIGURACION SERVIDOR EMAIL</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span>Servicio de envio</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+                <mt-input
+                id="userEmailService"
+                label="Usuario"
+                placeholder="Correo electronico"
+                type="text"
+                value="{{ userEmailService }}"
+                (afterChange)="onChangeInput($event)"
+              ></mt-input>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+                <mt-input
+                id="passEmailService"
+                label="Password"
+                placeholder="Password"
+                type="text"
+                value="{{ passEmailService }}"
+                (afterChange)="onChangeInput($event)"
+              ></mt-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span>Correo a enviar</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="11" sizeSm="11" sizeMd="4" sizeLg="4">
+                <mt-input
+                id="emailSend"
+                label="Email"
+                placeholder="Correo electronico"
+                value="{{ emailSend }}"
+                (afterChange)="onChangeInput($event)"
+                type="text"
+              ></mt-input>
+              </ion-col>
+              <ion-col sizeXs="1" sizeSm="1" sizeMd="4" sizeLg="4" class="aling-left">
+                <button (click)="onAddEmailList()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                <button *ngIf="isEmailDelete" (click)="onDeleteEmail()" type="button" class="btn btn-outline-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                <div class="list-group full-width">
+                  <span (click)="onSelectEmail(email.name)" class="list-group-item list-group-item-action list-group-item-dark" *ngFor="let email of emailList">{{ email.name }}</span>
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                <button (click)="onSendTestEmail()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar correo de prueba</button>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div class="content-view">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span class="title">CONFIGURACION DE USUARIO</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span>Generar link de registro</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Administrador" checked>
+                  <label class="form-check-label" for="inlineRadio1">Administrador</label>
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="11" sizeSm="11" sizeMd="4" sizeLg="4">
+                <mt-input
+                id="emailLinkRegistro"
+                label="Email"
+                placeholder="Correo electronico a enviar"
+                value="{{ emailLinkRegistro }}"
+                (afterChange)="onChangeInput($event)"
+                type="text"
+              ></mt-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                <button (click)="onSendLinkRegister()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar link de registro</button>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div class="content-view">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span class="title">CONFIGURACION AGENTE</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span>Generar hash</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="11" sizeSm="11" sizeMd="8" sizeLg="8">
+                <mt-input
+                id="hashAgente"
+                label="Hash"
+                placeholder="hash"
+                value="{{ hashAgente }}"
+                (afterChange)="onChangeInput($event)"
+                type="text"
+              ></mt-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                <button (click)="onGenerarHash()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Generar hash</button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <span>Actualizar agentes py</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                <button (click)="onUpdateAgentFront()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Emitir actualizacion</button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>
