@@ -1,0 +1,71 @@
+.select-menu {
+    background: #FFF;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    height: 46px;
+}
+
+.select-menu .select-btn {
+    display: flex;
+    height: 44px;
+    background: #FFF;
+    padding: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 4px;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.select-btn i {
+    font-size: 19px;
+    transition: 0.3s;
+    color: #626262;
+}
+
+.select-menu.active .select-btn i {
+    transform: rotate(-180deg);
+}
+
+.select-menu .options {
+    position: relative;
+    padding: 20px;
+    margin-top: 16px;
+    border-radius: 4px;
+    background: #FFF;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    padding: 13px 10px;
+    z-index: 999;
+    display: none;
+}
+
+
+
+.select-menu.active .options {
+    display: block;
+}
+
+.options .option {
+    display: flex;
+    height: 36px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 4px;
+    align-items: center;
+    background: #FFF;
+}
+
+.options .option:hover {
+    background: #F2F2F2;
+}
+
+.option i {
+    font-size: 25px;
+    margin-right: 12px;
+}
+
+.option-text {
+    font-size: 14px;
+    color: rgba(0, 0, 0, .65) !important;
+}

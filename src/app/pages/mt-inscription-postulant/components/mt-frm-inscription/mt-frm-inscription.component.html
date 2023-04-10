@@ -4,7 +4,7 @@
       <div class="nav-step">
         <mt-nav-step></mt-nav-step>
       </div>
-      <section id="datos-personales">
+      <section id="datos-personales" *ngIf="stepSelected == 1">
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <div class="container-title">
@@ -30,20 +30,18 @@
           ></mt-input>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Pais Nacimiento"
-            placeholder="Ingrese su pais de nacimiento"
-            type="text"
-          ></mt-input>
+            <mt-select
+            placeHolder="Pais de nacimiento"
+            [optionList]="optionListPais"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Tipo de documento"
-            placeholder="Ingrese su tipo de documento"
-            type="text"
-          ></mt-input>
+            <mt-select
+            placeHolder="Tipo de documento"
+            [optionList]="optionListPais"
+            ></mt-select>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-input
@@ -55,27 +53,24 @@
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Sexo"
-            placeholder="Ingrese su sexo"
-            type="text"
-          ></mt-input>
+            <mt-select
+            placeHolder="Sexo"
+            [optionList]="optionListPais"
+            ></mt-select>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Estado Civil"
-            placeholder="Ingrese su estado civil"
-            type="text"
-          ></mt-input>
+            <mt-select
+            placeHolder="Estado civil"
+            [optionList]="optionListPais"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Distrito"
-            placeholder="Ingrese su distrito"
-            type="text"
-          ></mt-input>
+            <mt-select
+            placeHolder="Distrito"
+            [optionList]="optionListPais"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -107,11 +102,10 @@
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Regimen Pensionario"
-            placeholder="Ingrese su regimen Pensionario"
-            type="text"
-          ></mt-input>
+            <mt-select
+            placeHolder="Regimen pensionario"
+            [optionList]="optionListPais"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -133,10 +127,94 @@
           </ion-col>
         </ion-row>
       </section>
+
+      <section id="experiencia-laboral" *ngIf="stepSelected == 2">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-title">
+              <div class="title-form">
+                <label>Experiencia Laboral</label>
+              </div>
+              <div class="btn-form">
+                <button type="button" class="btn btn-primary btn-sm">Siguiente</button>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            id="exlabEmpresa"
+            label="Empresa"
+            placeholder="Ingrese nombre de la Empresa"
+            value="{{ exlabEmpresa }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            id="exlabPuesto"
+            label="Puesto"
+            placeholder="Ingrese puesto laboral"
+            value="{{ exlabPuesto }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="exlabFecInicio"
+            label="Desde"
+            placeholder="Fecha de inicio"
+            value="{{ exlabFecInicio }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="exlabCulmino"
+            label="Hasta"
+            placeholder="Fecha de Termino"
+            value="{{ exlabCulmino }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            id="exlabMotivo"
+            label="Motivo"
+            placeholder="Ingrese el motivo del cese"
+            value="{{ exlabMotivo }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+              <label class="form-check-label" for="flexCheckDefault">
+                Sin experiencia laboral
+              </label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </section>
+
       <section id="section-button">
         <ion-row>
           <ion-col>
-            <button type="button" class="btn btn-primary">Siguiente</button>
+            <button type="button" (click)="onAddExpLab()" class="btn btn-primary btn-sm">Agregar Experiencia</button>
           </ion-col>
         </ion-row>
       </section>
@@ -161,85 +239,31 @@
         </ion-item>
       </div>
       <div class="body-content-datos">
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div class="card-info">
-              <label class="card-info-title">Tipo Documento</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div class="card-info">
-              <label class="card-info-title">Numero Documento</label>
-              <label class="card-info-value">11111111</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div class="card-info">
-              <label class="card-info-title">Sexo</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div class="card-info">
-              <label class="card-info-title">Estado Civil</label>
-              <label class="card-info-value">11111111</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
+        <ion-row *ngFor="let card of expLaboralList">
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card-info">
-              <label class="card-info-title">Distrito</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card-info">
-              <label class="card-info-title">Direccion</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card-info">
-              <label class="card-info-title">Referencia</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card-info">
-              <label class="card-info-title">Correo electronico</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card-info">
-              <label class="card-info-title">Regimen pensionario</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div class="card-info">
-              <label class="card-info-title">Nombre contacto emergencia</label>
-              <label class="card-info-value">DNI</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div class="card-info">
-              <label class="card-info-title">Numero contacto emergencia</label>
-              <label class="card-info-value">11111111</label>
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                {{card.empresa}}
+              </div>
+              <div class="card-body">
+                <div class="container-title">
+                  <div class="title-form">
+                    <span class="title">Desde:</span>
+                    <span>2020-01-01</span>
+                  </div>
+                  <div class="btn-form">
+                    <span class="title">Hasta:</span>
+                    <span>2020-01-01</span>
+                  </div>
+                </div>
+                <div>
+                  <span>Puesto: IT</span>
+                </div>
+                <div class="motivo-footer">
+                  <span class="title">Motivo de Cese:</span>
+                  <span>adasdasd</span>
+                </div>
+              </div>
             </div>
           </ion-col>
         </ion-row>

@@ -1,0 +1,17 @@
+<ion-row class="desktop-item">
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+    <div class="{{activeSelect ? 'select-menu active':'select-menu'}}">
+      <div class="select-btn" (click)="activeSelect = !activeSelect">
+        <span class="option-text" *ngIf="!nameOptionSelected.length">{{placeHolder}}</span>
+        <span class="option-text" *ngIf="nameOptionSelected.length">{{nameOptionSelected}}</span>
+        <i class="fa fa-angle-down" aria-hidden="true"></i>
+      </div>
+
+      <ul class="options">
+        <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option" *ngFor="let option of optionList">
+          <span class="option-text">{{ option.value }}</span>
+        </li>
+      </ul>
+    </div>
+  </ion-col>
+</ion-row>

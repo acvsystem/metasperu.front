@@ -4,17 +4,13 @@
       <a style="cursor:pointer" (click)="onSelectedStep($event)" id="{{step.id}}">
         <div class="content-icon">
           <div>
-            <span id="{{step.id}}" class="{{step.active ? 'icon active' : 'icon'}}"><i class="fa fa-file-text" aria-hidden="true"></i></span>
-          </div>  
+            <span id="{{step.id}}" class="{{step.status == 'success' ? 'icon active' : step.status == 'active' ? 'icon active' : 'icon'}}"><i class="fa fa-file-text" aria-hidden="true"></i></span>
+          </div>
+          <div class="status_active" class="{{step.status == 'active' || step.status == 'success' ? 'active' : ''}}"></div>
+          <div class="status_success" class="{{step.status == 'success' ? 'active' : ''}}"></div>  
         </div>    
-        <span style="font-size: 14px;">{{step.concept}}</span>
+        <span style="font-size: 12px;">{{step.concept}}</span>
       </a>
     </li>
   </ol>
-  <div class="content-progress-bar">
-    <span class=background-progress></span>
-    <div class="content-progress-value">
-      <span class="paint-progress"></span>
-    </div>
-  </div>
 </div>

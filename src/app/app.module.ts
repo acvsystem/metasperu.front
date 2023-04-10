@@ -23,6 +23,8 @@ import { MtPopoverComponent } from './components/mt-popover/mt-popover.component
 import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
+import { MtSelectComponent } from './components/mt-select/mt-select.component';
+
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
@@ -42,7 +44,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtPopoverComponent,
     MtSunatComprobantesComponent,
     MtConfiguracionComponent,
-    MtCreateUserComponent
+    MtCreateUserComponent,
+    MtSelectComponent
   ],
   imports: [
     BrowserModule,

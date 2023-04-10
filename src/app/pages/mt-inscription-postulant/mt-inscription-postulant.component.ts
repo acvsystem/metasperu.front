@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 
 @Component({
-  selector: 'app-mt-inscription-postulant',
+  selector: 'mt-inscription-postulant',
   templateUrl: './mt-inscription-postulant.component.html',
   styleUrls: ['./mt-inscription-postulant.component.scss'],
 })

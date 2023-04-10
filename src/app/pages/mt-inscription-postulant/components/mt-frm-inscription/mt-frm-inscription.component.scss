@@ -11,10 +11,47 @@
 
 .container-title {
     padding: 10px !important;
+    align-items: center !important;
+    display: flex !important;
+}
+
+.title-form {
+    width: 100%;
+}
+
+.btn-form {
+    display: inline-flex !important;
+    align-items: end !important;
+    width: 100% !important;
+    justify-content: end !important;
+}
+
+.card-body {
+    span {
+        font-size: 14px;
+        padding-right: 5px;
+    }
+
+    .title {
+        font-weight: 600 !important;
+        color: #717171 !important;
+    }
+
+    .container-title {
+        padding: 0px !important;
+    }
+
+    .motivo-footer {
+        span {
+            display: block !important;
+        }
+    }
+
 }
 
 .container-datos {
     max-height: 718px !important;
+
     ion-avatar {
         margin-right: 15px !important;
     }
@@ -30,7 +67,7 @@
 .card-info-title {
     display: block !important;
     font-size: 12px !important;
-    padding-top: 4px !important;  
+    padding-top: 4px !important;
 }
 
 .card-info-value {
@@ -73,26 +110,26 @@ nav {
     // margin-top: 22px !important;
     // padding-bottom: 28px !important;
     ul {
-      list-style-type: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
+        list-style-type: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
-  
-    li {
-      display: inline !important;
-      color: var(--color-primary);
-      cursor: pointer !important;
-    }
-  
-    i {
-      margin: 0px 7px !important;
-      color: var(--color-medium)!important;
-      font-size: 16px !important;
-      position: relative!important;
-      top: 2px!important;
-    }
-  }
 
-  .active {
+    li {
+        display: inline !important;
+        color: var(--color-primary);
+        cursor: pointer !important;
+    }
+
+    i {
+        margin: 0px 7px !important;
+        color: var(--color-medium) !important;
+        font-size: 16px !important;
+        position: relative !important;
+        top: 2px !important;
+    }
+}
+
+.active {
     color: #2525bb !important;
-  }
+}

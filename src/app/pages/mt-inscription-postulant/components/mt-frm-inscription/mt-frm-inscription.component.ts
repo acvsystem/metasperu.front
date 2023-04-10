@@ -7,6 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MtFrmInscriptionComponent implements OnInit {
   menuStepList: Array<any> = [];
+  optionListPais: Array<any> = [
+    { key: 'peru', value: 'Peru' }
+  ];
+
+  stepSelected: number = 2;
+  expLaboralList: Array<any> = [];
+  exlabEmpresa: string = "";
+  exlabPuesto: string = "";
+  exlabFecInicio: string = "";
+  exlabCulmino: string = "";
+  exlabMotivo: string = "";
 
   constructor() { }
 
@@ -47,6 +58,24 @@ export class MtFrmInscriptionComponent implements OnInit {
 
   onNextStep() {
 
+  }
+
+  onAddExpLab() {
+    this.expLaboralList.push(
+      {
+        empresa: this.exlabEmpresa,
+        puesto: this.exlabPuesto,
+        desde: this.exlabFecInicio,
+        culmino: this.exlabCulmino,
+        motivo: this.exlabMotivo
+      }
+    );
+  }
+
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
   }
 
 }

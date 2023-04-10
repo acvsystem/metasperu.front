@@ -7,6 +7,8 @@ import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-s
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 import { AuthGuardService as authGuard } from './services/authGuardService';
+import { MtRecursosHumanosComponent } from './pages/mt-recursos-humanos/mt-recursos-humanos.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -17,7 +19,7 @@ const routes: Routes = [
     component: MtLoginComponent
   },
   {
-    path: 'inscription',
+    path: 'recursos-humanos',
     component: MtInscriptionPostulantComponent,
     canActivate: [authGuard]
   },
@@ -42,7 +44,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo:''
+    redirectTo: ''
   }
 ];
 
