@@ -25,8 +25,6 @@ import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configurac
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 import { MtSelectComponent } from './components/mt-select/mt-select.component';
 
-const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +49,6 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    SocketIoModule.forRoot(confSocket),
     HttpClientModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
