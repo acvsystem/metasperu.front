@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'mt-nav-step',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./mt-nav-step.component.scss'],
 })
 export class MtNavStepComponent implements OnInit {
+  @Input() actualStep: number = 1;
+  @Output() onChangeStep: EventEmitter<any> = new EventEmitter();
+
   menuStepList: Array<any> = [];
 
   constructor() { }
@@ -13,44 +16,64 @@ export class MtNavStepComponent implements OnInit {
   ngOnInit() {
     this.menuStepList = [
       {
-        id: "tap0",
-        step: 0,
+        id: "tap1",
+        step: 1,
         status: 'success',
         concept: "Datos personales",
         icon: "fa fa-angle-right"
       },
       {
-        id: "tap1",
-        step: 1,
-        status: 'success',
-        concept: "Exp. laboral",
-        icon: "fa fa-angle-right"
-      },
-      {
         id: "tap2",
         step: 2,
-        status: 'active',
-        concept: "Form. academica",
+        status: 'progress',
+        concept: "Exp. laboral",
         icon: "fa fa-angle-right"
       },
       {
         id: "tap3",
         step: 3,
         status: 'progress',
-        concept: "Derechos habientes",
+        concept: "Form. academica",
         icon: "fa fa-angle-right"
       },
       {
         id: "tap4",
         step: 4,
         status: 'progress',
+        concept: "Derechos habientes",
+        icon: "fa fa-angle-right"
+      },
+      {
+        id: "tap5",
+        step: 5,
+        status: 'progress',
         concept: "Datos de salud"
       }
     ];
   }
 
-  onSelectedStep(ev:any) {
-    console.log(ev);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes && changes.hasOwnProperty('actualStep')) {
+      let indexStep = this.menuStepList.findIndex((data) => data.step == this.actualStep);
+      for (let i = 0; i < this.menuStepList.length; i++) {
+        if (i == this.actualStep) {
+          ((this.menuStepList || [])[indexStep] || {}).status = 'active';
+        }
+
+        if (i < indexStep) {
+          ((this.menuStepList || [])[i] || {}).status = "success";
+        }
+
+        if (i > indexStep) {
+          ((this.menuStepList || [])[i] || {}).status = "progress";
+        }
+      }
+
+    }
+  }
+
+  onSelectedStep(step: any) {
+    this.onChangeStep.emit(step);
   }
 
 }

@@ -2,7 +2,10 @@
   <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7">
     <div class="container-form">
       <div class="nav-step">
-        <mt-nav-step></mt-nav-step>
+        <mt-nav-step
+        [actualStep]="stepSelected"
+        (onChangeStep)="onNextStep($event)"
+        ></mt-nav-step>
       </div>
       <section id="datos-personales" *ngIf="stepSelected == 1">
         <ion-row>
@@ -10,13 +13,19 @@
             <div class="container-title">
               <label>Datos Personales</label>
             </div>
+            <div class="btn-form">
+              <button type="button" (click)="onNextStep(1+1)" class="btn btn-primary btn-sm">Siguiente</button>
+            </div>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <mt-input
+            id="dtprNombre"
             label="Nombre Completo"
             placeholder="Ingrese su nombre completo"
+            value="{{ dtprNombre }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -24,29 +33,40 @@
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-input
+            id="dtprFecNac"
             label="Fecha Nacimiento"
             placeholder="Ingrese su fecha de nacimiento"
+            value="{{ dtprFecNac }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
+            id="dtprCboPaisNac"
+            [enableSearchInput]="true"
             placeHolder="Pais de nacimiento"
             [optionList]="optionListPais"
+            (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
+            id="dtprCboTipodoc"
             placeHolder="Tipo de documento"
-            [optionList]="optionListPais"
+            [optionList]="optionListTipoDoc"
+            (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-input
+            id="dtprNumDoc"
             label="Numero de documento"
             placeholder="Ingrese su numero de documento"
+            value="{{ dtprNumDoc }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -54,30 +74,39 @@
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
+            id="dtprCboSexo"
             placeHolder="Sexo"
             [optionList]="optionListPais"
+            (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
+            id="dtprCboEstadoCivil"
             placeHolder="Estado civil"
             [optionList]="optionListPais"
+            (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
+            id="dtprCboDistrito"
             placeHolder="Distrito"
             [optionList]="optionListPais"
+            (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <mt-input
+            id="dtprDireccion"
             label="Direccion"
             placeholder="Ingrese su direccion"
+            value="{{ dtprDireccion }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -85,8 +114,11 @@
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <mt-input
+            id="dtprReferencia"
             label="Referencia"
             placeholder="Ingrese referencia de direccion"
+            value="{{ dtprReferencia }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -94,8 +126,11 @@
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <mt-input
+            id="dtprEmail"
             label="Correo electronico"
             placeholder="Ingrese su coreo electronico"
+            value="{{ dtprEmail }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -103,16 +138,21 @@
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
+            id="dtprCboPension"
             placeHolder="Regimen pensionario"
             [optionList]="optionListPais"
+            (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <mt-input
+            id="dtprContactoEmg"
             label="Nombre contacto emergia"
             placeholder="Ingrese nombre de contacto"
+            value="{{ dtprContactoEmg }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -120,8 +160,11 @@
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <mt-input
+            id="dtprNumEmerg"
             label="Numero contacto emergia"
             placeholder="Ingrese Numero de contacto"
+            value="{{ dtprNumEmerg }}"
+            (afterChange)="onChangeInput($event)"
             type="text"
           ></mt-input>
           </ion-col>
@@ -136,7 +179,7 @@
                 <label>Experiencia Laboral</label>
               </div>
               <div class="btn-form">
-                <button type="button" class="btn btn-primary btn-sm">Siguiente</button>
+                <button type="button" (click)="onNextStep(2+1)" class="btn btn-primary btn-sm">Siguiente</button>
               </div>
             </div>
           </ion-col>
@@ -199,14 +242,219 @@
             ></mt-input>
           </ion-col>
         </ion-row>
+      </section>
+
+      <section id="formacion-academica" *ngIf="stepSelected == 3">
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                Sin experiencia laboral
-              </label>
+            <div class="container-title">
+              <div class="title-form">
+                <label>Formacion academica</label>
+              </div>
+              <div class="btn-form">
+                <button type="button" (click)="onNextStep(3+1)" class="btn btn-primary btn-sm">Siguiente</button>
+              </div>
             </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            id="frAcCentroEstudio"
+            label="Centro de estudios"
+            placeholder="Ingrese centro de estudios"
+            value="{{ frAcCentroEstudio }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="frAcCarrera"
+            label="Carrera"
+            placeholder="Ingrese su carrera"
+            value="{{ frAcCarrera }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="frAcEstado"
+            label="Estado"
+            placeholder="Ingrese estado de carrera"
+            value="{{ frAcEstado }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <section id="experiencia-laboral" *ngIf="stepSelected == 4">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-title">
+              <div class="title-form">
+                <label>Datos de derecho habientes</label>
+              </div>
+              <div class="btn-form">
+                <button type="button" (click)="onNextStep(4+1)" class="btn btn-primary btn-sm">Siguiente</button>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            id="drabNombres"
+            label="Apellidos y nombres"
+            placeholder="Ingrese apellidos y nombres"
+            value="{{ drabNombres }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            id="drabParentesco"
+            label="Parentesco"
+            placeholder="Ingrese el parentesco"
+            value="{{ drabParentesco }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="drabEdad"
+            label="Edad"
+            placeholder="Ingrese la edad"
+            value="{{ drabEdad }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="drabSexo"
+            label="Sexo"
+            placeholder="Ingrese el sexo"
+            value="{{ drabSexo }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="drabTipoDoc"
+            label="Tipo Documento"
+            placeholder="Ingrese tipo de documento"
+            value="{{ drabTipoDoc }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            id="drabNroDocumento"
+            label="Nro Documento"
+            placeholder="Ingrese el numero de documento"
+            value="{{ drabNroDocumento }}"
+            (afterChange)="onChangeInput($event)"
+            type="text"
+            ></mt-input>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <section id="datos-personales" *ngIf="stepSelected == 5">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-title">
+              <label>Datos de salud</label>
+            </div>
+            <div class="btn-form">
+              <button type="button" class="btn btn-primary btn-sm">Enviar Datos</button>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            label="Alergias"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            label="Enfermedad"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            label="Medicamentos"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            label="Grupo sanguineo"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-title">
+              <label>Atecedentes</label>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-input
+            label="Tiene antecedentes policiales"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            label="Tiene antecedentes judiciales"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <mt-input
+            label="Tiene antecedentes penales"
+            placeholder="Ingrese segun corresponda"
+            type="text"
+          ></mt-input>
           </ion-col>
         </ion-row>
       </section>
@@ -214,7 +462,7 @@
       <section id="section-button">
         <ion-row>
           <ion-col>
-            <button type="button" (click)="onAddExpLab()" class="btn btn-primary btn-sm">Agregar Experiencia</button>
+            <button type="button" *ngIf="stepSelected == 2 || stepSelected == 3 || stepSelected == 4" (click)="onActionFuntion()" class="btn btn-primary btn-sm">{{buttonNameForm}}</button>
           </ion-col>
         </ion-row>
       </section>
@@ -249,19 +497,79 @@
                 <div class="container-title">
                   <div class="title-form">
                     <span class="title">Desde:</span>
-                    <span>2020-01-01</span>
+                    <span>{{card.desde}}</span>
                   </div>
                   <div class="btn-form">
                     <span class="title">Hasta:</span>
-                    <span>2020-01-01</span>
+                    <span>{{card.culmino}}</span>
                   </div>
                 </div>
                 <div>
-                  <span>Puesto: IT</span>
+                  <span>Puesto: {{card.puesto}}</span>
                 </div>
                 <div class="motivo-footer">
                   <span class="title">Motivo de Cese:</span>
-                  <span>adasdasd</span>
+                  <span>{{card.motivo}}</span>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let card of forAcademicaList">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                {{card.ctrEstudio}}
+              </div>
+              <div class="card-body">
+                <div class="container-title">
+                  <div class="title-form">
+                    <span class="title">Carrera:</span>
+                    <span>{{card.carrera}}</span>
+                  </div>
+                  <div class="btn-form">
+                    <span class="title">Estado:</span>
+                    <span>{{card.estado}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let card of drHabientesList">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                {{card.nombres}}
+              </div>
+              <div class="card-body">
+                <div class="container-title">
+                  <div class="title-form">
+                    <span class="title">Parentesco:</span>
+                    <span>{{card.parentesco}}</span>
+                  </div>
+                </div>
+                <div class="container-title">
+                  <div class="title-form">
+                    <span class="title">Edad:</span>
+                    <span>{{card.edad}}</span>
+                  </div>
+                  <div class="btn-form">
+                    <span class="title">Sexo:</span>
+                    <span>{{card.sexo}}</span>
+                  </div>
+                </div>
+                <div class="container-title">
+                  <div class="title-form">
+                    <span class="title">Tipo Documento:</span>
+                    <span>{{card.tipodoc}}</span>
+                  </div>
+                  <div class="btn-form">
+                    <span class="title">Nro Docuemnto:</span>
+                    <span>{{card.nrodoc}}</span>
+                  </div>
                 </div>
               </div>
             </div>

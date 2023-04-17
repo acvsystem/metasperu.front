@@ -38,6 +38,17 @@
     padding: 13px 10px;
     z-index: 999;
     display: none;
+    height: auto;
+
+    ul {
+        overflow: auto;
+        height: 200px;
+        padding-left: 0px;
+    }
+
+    .content-search {
+        padding-bottom: 10px;
+    }
 }
 
 

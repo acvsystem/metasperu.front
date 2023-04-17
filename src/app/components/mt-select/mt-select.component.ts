@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'mt-select',
@@ -6,26 +6,57 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./mt-select.component.scss'],
 })
 export class MtSelectComponent implements OnInit {
-
+  @Input() id = "";
+  @Input() enableSearchInput: boolean = false;
   @Input() optionList = [];
-  @Input() placeHolder:string = "Seleccione su opcion";
+  @Input() placeHolder: string = "Seleccione su opcion";
+  @Output() changeSelected: EventEmitter<any> = new EventEmitter();
   activeSelect: boolean = false;
-
+  sboSearch: string = "";
   optionSelected: any = {};
   nameOptionSelected: string = "";
+  originalOptionList = [];
 
-  constructor() { }
+  constructor() {
+    const self = this;
+    document.body.addEventListener("click", function (evt) {
+      if (self.activeSelect) {
+        self.activeSelect = false;
+      }
+    });
+  }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes && changes.hasOwnProperty('optionList')) {
+      this.originalOptionList = [...this.optionList];
+    }
   }
 
   onSelectedOption(ev) {
     this.nameOptionSelected = (ev || {}).value;
     this.optionSelected = {
+      selectId: this.id,
       key: (ev || {}).key,
       value: (ev || {}).value
     };
     this.activeSelect = false;
+    this.changeSelected.emit(this.optionSelected);
+  }
+
+  onChangeInput(ev) {
+    this.onFilter((ev || {}).value);
+  }
+
+  onFilter(value) {
+    let originalOptionList = [...this.originalOptionList];
+    let dataSearch = originalOptionList.filter((option) => {
+      return String(option.value).toLowerCase().indexOf(value.trim().toLowerCase()) > -1
+    });
+
+    this.optionList = !value.length ? originalOptionList : dataSearch;
   }
 
 }

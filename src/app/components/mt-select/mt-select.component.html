@@ -7,11 +7,24 @@
         <i class="fa fa-angle-down" aria-hidden="true"></i>
       </div>
 
-      <ul class="options">
-        <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option" *ngFor="let option of optionList">
-          <span class="option-text">{{ option.value }}</span>
-        </li>
-      </ul>
+      <div class="options">
+        <div class="content-search" *ngIf="enableSearchInput">
+          <mt-input
+          id="sboSearch"
+          label="Buscar"
+          placeholder="Buscar"
+          value="{{ sboSearch }}"
+          (afterChange)="onChangeInput($event)"
+          type="text"
+        ></mt-input>
+        </div>
+        <ul>
+          <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option" *ngFor="let option of optionList">
+            <span class="option-text">{{ option.value }}</span>
+          </li>
+        </ul>
+      </div>
+
     </div>
   </ion-col>
 </ion-row>
