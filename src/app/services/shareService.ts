@@ -15,7 +15,7 @@ export class ShareService {
   @Output() onMenuUser: EventEmitter<any> = new EventEmitter();
   @Output() onDisconnectSocket: EventEmitter<any> = new EventEmitter();
 
-  serverRute: string = 'http://localhost:3200';
+  serverRute: string = 'http://159.65.226.239:4200';
 
   constructor(private store: StorageService, private xhr: HttpService) { }
 

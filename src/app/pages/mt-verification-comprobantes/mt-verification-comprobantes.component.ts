@@ -17,7 +17,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isVisibleStatus: boolean = false;
   statusServerList: any = [];
   token: any = localStorage.getItem('tn');
-  socket = io('http://localhost:3200', { query: { code: 'app', token: this.token } });
+  socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
   constructor(private service: ShareService) { }
 
