@@ -24,6 +24,11 @@ export class MtConfiguracionComponent implements OnInit {
   emailLinkRegistro: string = "";
   hashAgente: string = "";
   token: any = localStorage.getItem('tn');
+  optionNivelList: Array<any> = [
+    { id: "Administrador", value: "Administrador" },
+    { id: "rrhh", value: "Recursos Humanos" }
+  ];
+
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
   constructor(private service: ShareService) { }
@@ -63,6 +68,12 @@ export class MtConfiguracionComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
+  }
+
+  onChangeSelect(data: any) {
+    let selectData = data || {};
+    let index = (selectData || {}).selectId || "";
+    this[index] = (selectData || {}).value || "";
   }
 
   onSelectEmail(value) {
