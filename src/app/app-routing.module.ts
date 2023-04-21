@@ -8,6 +8,7 @@ import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configurac
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 import { AuthGuardService as authGuard } from './services/authGuardService';
 import { MtRecursosHumanosComponent } from './pages/mt-recursos-humanos/mt-recursos-humanos.component';
+import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,11 @@ const routes: Routes = [
   {
     path: 'create-account/:token',
     component: MtCreateUserComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'control-asistencia',
+    component: MtControlAsistenciaComponent,
     canActivate: [authGuard]
   },
   {

@@ -26,8 +26,10 @@ export class MtConfiguracionComponent implements OnInit {
   token: any = localStorage.getItem('tn');
   optionNivelList: Array<any> = [
     { id: "Administrador", value: "Administrador" },
-    { id: "rrhh", value: "Recursos Humanos" }
+    { id: "rrhh", value: "RRhh" }
   ];
+
+  selectNivel: any = {};
 
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
@@ -117,9 +119,11 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onSendLinkRegister() {
+    var nivelUser = this.selectNivel;
+   
     let parms = {
       url: '/settings/service/email/register',
-      body: { path: 'create-account', email: this.emailLinkRegistro }
+      body: { path: 'create-account', email: this.emailLinkRegistro, nivel: nivelUser }
     };
 
     this.service.post(parms).then((response) => {

@@ -19,20 +19,26 @@ export class MtSelectComponent implements OnInit {
 
   constructor() {
     const self = this;
-    document.body.addEventListener("click", function (evt) {
+   /* document.body.addEventListener("click", function (evt) {
       if (self.activeSelect) {
         self.activeSelect = false;
       }
-    });
+    });*/
   }
 
   ngOnInit() {
+ 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.hasOwnProperty('optionList')) {
       this.originalOptionList = [...this.optionList];
     }
+  }
+
+  onOpenSelect() {
+    const self = this;
+    self.activeSelect = !self.activeSelect;
   }
 
   onSelectedOption(ev) {
