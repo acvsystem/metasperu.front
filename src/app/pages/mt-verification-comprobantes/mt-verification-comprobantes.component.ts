@@ -23,7 +23,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Conexion Comprobantes', 'Conexion ICG']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
 
     this.socket.on('sendNotificationSunat', (sunat) => {
