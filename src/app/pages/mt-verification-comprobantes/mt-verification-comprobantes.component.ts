@@ -19,7 +19,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   token: any = localStorage.getItem('tn');
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
-  constructor(private service: ShareService) { }
+  constructor() { }
 
   ngOnInit() {
     const self = this;
@@ -38,7 +38,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
         var diff: any = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) || 0;
 
-        if (parseInt(diff) <= 3) {
+        if (parseInt(diff) < 3) {
           (this.bodyListSunat || []).push({
             cod_documento: (dataSocket || {}).CODIGO_DOCUMENTO,
             nro_correlativo: (dataSocket || {}).NRO_CORRELATIVO,
@@ -106,7 +106,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   }
 
-  onVerify() {
+  public onVerify() {
     this.socket.emit('comunicationFront', 'angular');
   }
 

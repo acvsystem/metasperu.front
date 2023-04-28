@@ -29,13 +29,84 @@
               </div>
              </div>
           </div>
+          <!--<button  (click)="isVisibleStatus = !isVisibleStatus" type="button" class="btn btn-outline-secondary btn-sm facturacion-btn">
+            <i class="fa fa-server" aria-hidden="true"></i>
+            <span>Facturacion</span>
+            <div [ngClass]="[isConnectServer == 'true' ? 'blob blue': 'blob red']"></div>
+          </button>
+          <section class="popup-server" *ngIf="isVisibleStatus && isConnectServer == 'true'">
+            <div *ngFor="let status of statusServerList">
+              <ion-row>
+                <ion-col sizeXs="4" sizeSm="4" sizeMd="4" sizeLg="4" class="aling-left">
+                  <label class="status-title">hostname:</label>
+                </ion-col>
+                <ion-col sizeXs="8" sizeSm="8" sizeMd="8" sizeLg="8">
+                  <label class="status-title">{{status.hostname}}</label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">ip:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <label class="status-title">{{status.ip}}</label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">cpu:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" [ngStyle]="{'width': status.cpu + '%'}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{status.cpu}} %</div>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">ram:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" [ngStyle]="{'width': status.xram + '%'}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{status.xram}} %</div>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" class="aling-left">
+                  <label class="status-title">usb:</label>
+                </ion-col>
+                <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'true'" checked>
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'false'">
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </section>
+
+          <section class="popup-server" *ngIf="isVisibleStatus && isConnectServer == 'false'">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="full-center">
+                <span class="full-center">
+                  <i class="fa fa-ban" aria-hidden="true"></i>
+                </span>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="full-center">
+                <span class="status-title">
+                  Desconectado
+                </span>
+              </ion-col>
+            </ion-row>
+          </section>-->
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-              <table class="table table-bordered table-hover">
+              <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
@@ -106,7 +177,7 @@
         </ion-col>
       </ion-row>
 
-    <!--  <ion-row>
+      <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row class="scroll-y">
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
@@ -135,9 +206,7 @@
             </ion-col>
           </ion-row>
         </ion-col>
-      </ion-row>-->
+      </ion-row>
     </div>
   </div>
 </ion-content>
-
-
