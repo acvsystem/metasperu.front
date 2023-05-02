@@ -24,6 +24,7 @@ import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-s
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 import { MtSelectComponent } from './components/mt-select/mt-select.component';
+import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { MtSelectComponent } from './components/mt-select/mt-select.component';
     MtSunatComprobantesComponent,
     MtConfiguracionComponent,
     MtCreateUserComponent,
-    MtSelectComponent
+    MtSelectComponent,
+    MtControlAsistenciaComponent
   ],
   imports: [
     BrowserModule,
