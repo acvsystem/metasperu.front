@@ -1,6 +1,5 @@
  ion-input {
      top: 0px !important;
-
      input {
          padding-bottom: 0 !important;
          padding-top: 13px !important;
@@ -18,7 +17,7 @@
 
  ion-label {
      position: absolute !important;
-     top: -7px !important;
+     top: -10px !important;
      z-index: 99999 !important;
      color: rgba(0, 0, 0, 0.65) !important;
      font-size: 14px !important;
@@ -28,7 +27,7 @@
  .input-item {
      --highlight-background: #ffffff !important;
      border: 1px solid #d9d9d9;
-     height: 46px !important;
+     height: 39px !important;
      border-radius: 4px !important;
  }
 
@@ -45,11 +44,11 @@
  }
 
  .item-label-floating {
-     --min-height: 46px !important;
+     --min-height: 39px !important;
  }
 
  .item-label-floating .sc-ion-input-md-h {
-     --padding-top: 17px !important
+     --padding-top: 15px !important
  }
 
  .item-has-focus {
@@ -78,14 +77,42 @@
  }
 
  .btn-copy {
-    cursor: pointer !important;
-    height: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 0px !important;
-}
+     cursor: pointer !important;
+     height: 100% !important;
+     display: flex !important;
+     justify-content: center !important;
+     align-items: center !important;
+     margin: 0px !important;
+ }
 
-.btn-copy:hover {
-    color: #155795 !important;
-}
+ .btn-copy:hover {
+     color: #155795 !important;
+ }
+
+ .input-item.inputSellim {
+     height: 29px !important;
+
+     ion-input {
+         input.sc-ion-input-md {
+             --padding-top: 0 !important;
+             --padding-bttom: 0 !important;
+         }
+     }
+
+     .item-label-floating {
+         --min-height: 28px !important;
+     }
+ }
+
+ .input-item.inputSellim.item-has-value,
+ .input-item.inputSellim.item-has-focus.item-has-value {
+     ion-label {
+         top: -3px !important;
+     }
+ }
+
+ .input-item.inputSellim.item-has-focus {
+     ion-label {
+         top: -10px !important;
+     }
+ }

@@ -12,6 +12,7 @@ export class MtInputComponent implements OnInit {
   @Input() placeholder: string = "placeholder";
   @Input() value: string = "";
   @Input() isCopy: boolean = false;
+  @Input() sizeSllim: boolean = false;
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   viewPassword: boolean = false;
   typePassword: string = "password";

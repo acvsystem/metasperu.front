@@ -1,13 +1,13 @@
 <ion-row>
-  <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7">
-    <div class="container-form">
-      <div class="nav-step">
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" style="background-color: #FFF !important;">
+    <div class="container-form" style="background-color: #FFF !important;">
+      <div class="nav-step" style="background-color: #FFF !important;">
         <mt-nav-step
         [actualStep]="stepSelected"
         (onChangeStep)="onNextStep($event)"
         ></mt-nav-step>
       </div>
-      <section id="datos-personales" *ngIf="stepSelected == 1">
+      <section id="datos-personales" *ngIf="stepSelected == 1" style="background-color: #FFF !important;">
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <div class="container-title">
@@ -468,6 +468,7 @@
       </section>
     </div>
   </ion-col>
+  <!--
   <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5" class="scroll-on">
     <div class="container-datos">
       <div class="head-content-datos">
@@ -577,5 +578,5 @@
         </ion-row>
       </div>
     </div>
-  </ion-col>
+  </ion-col>-->
 </ion-row>

@@ -3,30 +3,103 @@
     <div class="card-content">
       <ion-row>
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-          <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh"
-              aria-hidden="true"></i></button>
+          <mt-select
+          id="functionExport"
+          [enableSearchInput]="true"
+          placeHolder="Exportar"
+          [optionList]="optionListExport"
+          (changeSelected)="onChangeSelect($event)"
+          ></mt-select>
+        </ion-col>
+        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+          <div class="content-button-filter">
+            <button type="button" (click)="exportReporte()" class="btn btn-primary">Exportar</button>
+          </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-              <table class="table table-bordered">
+              <table class="table table-bordered table-responsive-sm">
                 <thead>
                   <tr>
-                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
+                    <th class="columHead" *ngFor="let columHead of headList;let i = index">
+                      <span>{{columHead.value}}</span>
+                      <span class="icon-search" *ngIf="columHead.isSearch" (click)="onViewSearchModal(i)" ><i class="fa fa-search" aria-hidden="true"></i></span>
+                      <section *ngIf="viewModal == i">
+                        <div *ngIf="columHead.isSearch" class="modal-filter">
+                        <div *ngFor="let property of columHead.propSearch">
+                          <mt-select
+                          *ngIf="property.options"
+                          id="searchTienda"
+                          [enableSearchInput]="true"
+                          placeHolder="Buscar tienda"
+                          [optionList]="optionListTiendas"
+                          (changeSelected)="onChangeSelect($event)"
+                          ></mt-select>
+                          <mt-input
+                          *ngIf="property.input"
+                          id="searchEmpleado"
+                          label="Empleado"
+                          placeholder="Empleado"
+                          value="{{ searchEmpleado }}"
+                          (afterChange)="onChangeInput($event)"
+                          type="text"
+                          ></mt-input>
+                          <mt-input
+                          *ngIf="property.date"
+                          id="searchFecInicio"
+                          label="De"
+                          placeholder="Fechas"
+                          value="{{ searchFecInicio }}"
+                          (afterChange)="onChangeInput($event)"
+                          type="text"
+                          ></mt-input>
+                          <mt-input
+                          *ngIf="property.date"
+                          id="searchFecFin"
+                          label="Hasta"
+                          placeholder="Fechas"
+                          value="{{ searchFecFin }}"
+                          (afterChange)="onChangeInput($event)"
+                          type="text"
+                          ></mt-input>
+                        </div>
+                        <div class="search-content-button">
+                          <button class="btn btn-primary btn-sm" (click)="onFiltrar()">Buscar</button>
+                          <button class="btn btn-primary btn-sm button-float-rigth" (click)="onClear()">Limpiar</button>
+                        </div>
+                        </div>
+                      </section>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let columBody of bodyList;let index = index">
+                  <tr *ngFor="let columBody of dataPaginationList;let index = index">
                     <td class="columBody">{{index + 1}}</td>
-                    <td class="columBody">{{columBody.CODEMPLEADO}}</td>
+                    <td class="columBody">{{columBody.NOMVENDEDOR}}</td>
                     <td class="columBody">{{columBody.DIA}}</td>
-                    <td class="columBody">{{columBody.HORAIN}}</td>
-                    <td class="columBody">{{columBody.HORAOUT}}</td>
+                    <td class="columBody">{{columBody.HORAIN | date:'dd-MM-yy HH:mm'}}</td>
+                    <td class="columBody">{{columBody.HORAOUT | date:'dd-MM-yy HH:mm'}}</td>
                     <td class="columBody">{{columBody.HORAS}}</td>
                     <td class="columBody">{{columBody.VENTAS}}</td>
-                    <td class="columBody">{{columBody.CAJA}}</td>
+                    <td class="columBody">{{columBody.NOMBRE_TIENDA}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="8">
+                      <nav aria-label="..." class="pagination-content">
+                        <ul class="pagination">
+                          <li class="page-item">
+                            <span class="page-link" style="cursor: pointer;" (click)="onPreviousPage()" >Previous</span>
+                          </li>
+                          <li class="page-item" *ngFor="let page of indexPageList;let index = index"><span style="cursor: pointer;" (click)="onPage(index)" class="page-link">{{index + 1}}</span></li>
+                          <li class="page-item">
+                            <span class="page-link" style="cursor: pointer;" (click)="onNextPage()">Next</span>
+                          </li>
+                        </ul>
+                      </nav>
+                    </td>
                   </tr>
                 </tbody>
               </table>
