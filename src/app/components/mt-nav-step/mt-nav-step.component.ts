@@ -14,47 +14,53 @@ export class MtNavStepComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.menuStepList = [
-      {
-        id: "tap1",
-        step: 1,
-        status: 'success',
-        concept: "Datos personales",
-        icon: "fa fa-angle-right"
-      },
-      {
-        id: "tap2",
-        step: 2,
-        status: 'progress',
-        concept: "Exp. laboral",
-        icon: "fa fa-angle-right"
-      },
-      {
-        id: "tap3",
-        step: 3,
-        status: 'progress',
-        concept: "Form. academica",
-        icon: "fa fa-angle-right"
-      },
-      {
-        id: "tap4",
-        step: 4,
-        status: 'progress',
-        concept: "Derechos habientes",
-        icon: "fa fa-angle-right"
-      },
-      {
-        id: "tap5",
-        step: 5,
-        status: 'progress',
-        concept: "Datos de salud"
-      }
-    ];
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.hasOwnProperty('actualStep')) {
+      this.menuStepList = [
+        {
+          id: "tap1",
+          step: 1,
+          status: 'success',
+          concept: "Datos personales",
+          icon: "fa fa-file-text-o"
+        },
+        {
+          id: "tap2",
+          step: 2,
+          status: 'progress',
+          concept: "Exp. laboral",
+          icon: "fa fa-suitcase"
+        },
+        {
+          id: "tap3",
+          step: 3,
+          status: 'progress',
+          concept: "Form. academica",
+          icon: "fa fa-graduation-cap"
+        },
+        {
+          id: "tap4",
+          step: 4,
+          status: 'progress',
+          concept: "Derechos habientes",
+          icon: "fa fa-users"
+        },
+        {
+          id: "tap5",
+          step: 5,
+          status: 'progress',
+          concept: "Datos de salud",
+          icon: "fa fa-stethoscope"
+        }
+      ];
+
+      this.actualStep = (changes || {})['actualStep'].currentValue;
+  
       let indexStep = this.menuStepList.findIndex((data) => data.step == this.actualStep);
+      
       for (let i = 0; i < this.menuStepList.length; i++) {
         if (i == this.actualStep) {
           ((this.menuStepList || [])[indexStep] || {}).status = 'active';

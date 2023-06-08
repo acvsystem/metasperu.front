@@ -1,15 +1,15 @@
 <div class="container-step">
   <ol>
-    <li *ngFor="let step of menuStepList">
+    <li *ngFor="let step of menuStepList;let i = index;">
       <a style="cursor:pointer" (click)="onSelectedStep(step.step)" id="{{step.id}}">
         <div class="content-icon">
           <div>
-            <span id="{{step.id}}" class="{{step.status == 'success' ? 'icon active' : step.status == 'active' ? 'icon active' : 'icon'}}"><i class="fa fa-file-text" aria-hidden="true"></i></span>
+            <span id="{{step.id}}" class="{{step.status == 'success' ? 'icon active' : step.status == 'active' ? 'icon active' : 'icon'}}"><i class="{{step.icon}}" aria-hidden="true"></i></span>
           </div>
-          <div class="status_active" class="{{step.status == 'active' || step.status == 'success' ? 'active' : ''}}"></div>
-          <div class="status_success" class="{{step.status == 'success' ? 'active' : ''}}"></div>  
+          <div *ngIf="menuStepList.length != i + 1" class="status_active" class="{{step.status == 'active' || step.status == 'success' ? 'active' : ''}}"></div>
+          <div *ngIf="menuStepList.length != i + 1" class="status_success" class="{{step.status == 'success' ? 'active' : ''}}"></div>  
         </div>    
-        <span style="font-size: 12px;">{{step.concept}}</span>
+        <span style="font-size: 12px;" class="title-step">{{step.concept}}</span>
       </a>
     </li>
   </ol>

@@ -866,25 +866,25 @@ export class MtFrmInscriptionComponent implements OnInit {
     }
   ];
 
-  optionListTipoDoc:Array<any> = [
+  optionListTipoDoc: Array<any> = [
     {
-      "key": "DNI" ,
+      "key": "DNI",
       "value": "DNI"
     },
     {
-      "key": "CE" ,
+      "key": "CE",
       "value": "CE"
     },
     {
-      "key": "Pasaporte" ,
+      "key": "Pasaporte",
       "value": "Pasaporte"
     },
     {
-      "key": "PTP" ,
+      "key": "PTP",
       "value": "PTP"
     },
     {
-      "key": "Carne Refugiado" ,
+      "key": "Carne Refugiado",
       "value": "Carne Refugiado"
     }
   ];
@@ -907,7 +907,7 @@ export class MtFrmInscriptionComponent implements OnInit {
   dtprCboSexo: string = "";
   dtprCboDistrito: string = "";
   dtprCboPension: string = "";
-  
+
   exlabEmpresa: string = "";
   exlabPuesto: string = "";
   exlabFecInicio: string = "";
@@ -922,17 +922,34 @@ export class MtFrmInscriptionComponent implements OnInit {
   drabSexo: string = "";
   drabTipoDoc: string = "";
   drabNroDocumento: string = "";
+
+  dtslAlergia: string = "";
+  dtslEnfermedad: string = "";
+  dtslMedicamento: string = "";
+  dtslGrupoSanguineo: string = "";
+  dtslAntecedentesPol: string = "";
+  dtslAntecedenteJud: string = "";
+  dtslAntecedentePen: string = "";
+
+
+
+
   nroStep: number = 1;
   allDataList: Array<any> = [];
   buttonNameForm: string = "";
 
-  constructor(private store: StorageService) { }
+  constructor(private store: StorageService) { 
+    let storeStep = this.store.getStore("mtStep") || 1;
+    this.onNextStep(storeStep);
+  }
 
   ngOnInit() {
+    this.onStoreOfData();
   }
 
   onNextStep(nroStep) {
     this.stepSelected = nroStep;
+    this.store.setStore("mtStep", this.stepSelected);
     this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
     this.onDataStorage();
   }
@@ -941,23 +958,28 @@ export class MtFrmInscriptionComponent implements OnInit {
     var keyList = [
       {
         key: 'empresa',
-        property: 'exlabEmpresa'
+        property: 'exlabEmpresa',
+        required: true
       },
       {
         key: 'puesto',
-        property: 'exlabPuesto'
+        property: 'exlabPuesto',
+        required: true
       },
       {
         key: 'desde',
-        property: 'exlabFecInicio'
+        property: 'exlabFecInicio',
+        required: true
       },
       {
         key: 'culmino',
-        property: 'exlabCulmino'
+        property: 'exlabCulmino',
+        required: true
       },
       {
         key: 'motivo',
-        property: 'exlabMotivo'
+        property: 'exlabMotivo',
+        required: false
       }
     ]
 
@@ -968,15 +990,18 @@ export class MtFrmInscriptionComponent implements OnInit {
     var keyList = [
       {
         key: 'ctrEstudio',
-        property: 'frAcCentroEstudio'
+        property: 'frAcCentroEstudio',
+        required: true
       },
       {
         key: 'carrera',
-        property: 'frAcCarrera'
+        property: 'frAcCarrera',
+        required: true
       },
       {
         key: 'estado',
-        property: 'frAcEstado'
+        property: 'frAcEstado',
+        required: true
       }
     ];
 
@@ -987,27 +1012,33 @@ export class MtFrmInscriptionComponent implements OnInit {
     var keyList = [
       {
         key: 'nombres',
-        property: 'drabNombres'
+        property: 'drabNombres',
+        required: true
       },
       {
         key: 'parentesco',
-        property: 'drabParentesco'
+        property: 'drabParentesco',
+        required: true
       },
       {
         key: 'edad',
-        property: 'drabEdad'
+        property: 'drabEdad',
+        required: true
       },
       {
         key: 'sexo',
-        property: 'drabSexo'
+        property: 'drabSexo',
+        required: true
       },
       {
         key: 'tipodoc',
-        property: 'drabTipoDoc'
+        property: 'drabTipoDoc',
+        required: true
       },
       {
         key: 'nrodoc',
-        property: 'drabNroDocumento'
+        property: 'drabNroDocumento',
+        required: true
       }
     ]
 
@@ -1023,7 +1054,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     let notValueList = [];
     let dataList = {};
     (dataKeyList || []).map((obj): any => {
-      if (this[(obj || {}).property]) {
+      if (this[(obj || {}).property] || !(obj || {}).required) {
         dataList[(obj || {}).key] = this[(obj || {}).property];
       } else {
         notValueList.push((obj || {}).property);
@@ -1032,6 +1063,7 @@ export class MtFrmInscriptionComponent implements OnInit {
 
     if (!notValueList.length) {
       this[contentName].push(dataList);
+      console.log(this[contentName]);
     }
 
     this.onClear(keyList);
@@ -1057,28 +1089,77 @@ export class MtFrmInscriptionComponent implements OnInit {
   }
 
   onDataStorage() {
-    let dataStorage = [
-      {
-        datos_personales: {
-          nombre_apellido: this.dtprNombre,
-          fec_nacimiento: this.dtprFecNac,
-          pais_nacimiento: this.dtprCboPaisNac,
-          tipo_documento: this.dtprCboTipodoc,
-          num_documento: this.dtprNumDoc,
-          sexo: this.dtprCboSexo,
-          estado_civil: this.dtprCboEstadoCivil,
-          distrito: this.dtprCboDistrito,
-          direccion: this.dtprDireccion,
-          referencia: this.dtprReferencia,
-          email: this.dtprEmail,
-          tipo_pension: this.dtprCboPension,
-          contacto_emergengia: this.dtprContactoEmg,
-          numero_emergencia: this.dtprNumEmerg
-        }
-      }
-    ];
+    let dataStore = [];
 
-    this.store.setStore('inscription', JSON.stringify(dataStorage));
+    dataStore = [{
+      datos_personales: {
+        nombre_apellido: this.dtprNombre,
+        fec_nacimiento: this.dtprFecNac,
+        pais_nacimiento: this.dtprCboPaisNac,
+        tipo_documento: this.dtprCboTipodoc,
+        num_documento: this.dtprNumDoc,
+        sexo: this.dtprCboSexo,
+        estado_civil: this.dtprCboEstadoCivil,
+        distrito: this.dtprCboDistrito,
+        direccion: this.dtprDireccion,
+        referencia: this.dtprReferencia,
+        email: this.dtprEmail,
+        tipo_pension: this.dtprCboPension,
+        contacto_emergengia: this.dtprContactoEmg,
+        numero_emergencia: this.dtprNumEmerg
+      },
+      experiencia_laboral: this.expLaboralList,
+      formacion_academica: this.forAcademicaList,
+      derecho_habiente: this.drHabientesList,
+      datos_salud: {
+        alergias: this.dtslAlergia,
+        enfermedad: this.dtslEnfermedad,
+        medicamento: this.dtslMedicamento,
+        grupo_sanguineo: this.dtslGrupoSanguineo,
+        antecedentes_policiales: this.dtslAntecedentesPol,
+        antecedentes_judiciales: this.dtslAntecedenteJud,
+        antecedentes_penales: this.dtslAntecedentePen
+      }
+    }];
+
+    this.store.setStore('inscription', JSON.stringify(dataStore));
+  }
+
+  onStoreOfData() {
+    let dataStore = this.store.getStore('inscription');
+    let datosPersonales = ((dataStore || [])[0] || {}).datos_personales || {};
+    let experienciaLaboral = ((dataStore || [])[0] || {}).experiencia_laboral || {};
+    let formacionAcademica = ((dataStore || [])[0] || {}).formacion_academica || {};
+    let derechosHabiente = ((dataStore || [])[0] || {}).derecho_habiente || {};
+    let datosSalud = ((dataStore || [])[0] || {}).datos_salud || {};
+
+    this.dtprNombre = (datosPersonales || {}).nombre_apellido || "";
+    this.dtprFecNac = (datosPersonales || {}).fec_nacimiento || "";
+    this.dtprCboPaisNac = (datosPersonales || {}).pais_nacimiento || "";
+    this.dtprCboTipodoc = (datosPersonales || {}).tipo_documento || "";
+    this.dtprNumDoc = (datosPersonales || {}).num_documento || "";
+    this.dtprCboSexo = (datosPersonales || {}).sexo || "";
+    this.dtprCboEstadoCivil = (datosPersonales || {}).estado_civil || "";
+    this.dtprCboDistrito = (datosPersonales || {}).distrito || "";
+    this.dtprDireccion = (datosPersonales || {}).direccion || "";
+    this.dtprReferencia = (datosPersonales || {}).referencia || "";
+    this.dtprEmail = (datosPersonales || {}).email || "";
+    this.dtprCboPension = (datosPersonales || {}).tipo_pension || "";
+    this.dtprContactoEmg = (datosPersonales || {}).contacto_emergengia || "";
+    this.dtprNumEmerg = (datosPersonales || {}).numero_emergencia || "";
+
+    this.expLaboralList = experienciaLaboral || [];
+    this.forAcademicaList = formacionAcademica || [];
+    this.drHabientesList = derechosHabiente || [];
+
+    this.dtslAlergia = (datosSalud || {}).alergias || "";
+    this.dtslEnfermedad = (datosSalud || {}).enfermedad || "";
+    this.dtslMedicamento = (datosSalud || {}).medicamento || "";
+    this.dtslGrupoSanguineo = (datosSalud || {}).grupo_sanguineo || "";
+    this.dtslAntecedentesPol = (datosSalud || {}).antecedentes_policiales || "";
+    this.dtslAntecedenteJud = (datosSalud || {}).antecedentes_judiciales || "";
+    this.dtslAntecedentePen = (datosSalud || {}).antecedentes_penales || "";
+
   }
 
 }

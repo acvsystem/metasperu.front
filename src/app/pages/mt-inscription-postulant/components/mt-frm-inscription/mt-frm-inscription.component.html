@@ -9,12 +9,16 @@
       </div>
       <section id="datos-personales" *ngIf="stepSelected == 1" style="background-color: #FFF !important;">
         <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="container-title">
               <label>Datos Personales</label>
             </div>
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="btn-form">
-              <button type="button" (click)="onNextStep(1+1)" class="btn btn-primary btn-sm">Siguiente</button>
+              <button type="button" (click)="onNextStep(1+1)" class="btn btn-primary btn-sm">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </button>
             </div>
           </ion-col>
         </ion-row>
@@ -173,14 +177,16 @@
 
       <section id="experiencia-laboral" *ngIf="stepSelected == 2">
         <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="container-title">
-              <div class="title-form">
-                <label>Experiencia Laboral</label>
-              </div>
-              <div class="btn-form">
-                <button type="button" (click)="onNextStep(2+1)" class="btn btn-primary btn-sm">Siguiente</button>
-              </div>
+              <label>Experiencia Laboral</label>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+            <div class="btn-form">
+              <button type="button" (click)="onNextStep(2+1)" class="btn btn-primary btn-sm">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </button>
             </div>
           </ion-col>
         </ion-row>
@@ -246,14 +252,16 @@
 
       <section id="formacion-academica" *ngIf="stepSelected == 3">
         <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="container-title">
-              <div class="title-form">
-                <label>Formacion academica</label>
-              </div>
-              <div class="btn-form">
-                <button type="button" (click)="onNextStep(3+1)" class="btn btn-primary btn-sm">Siguiente</button>
-              </div>
+              <label>Formacion Academica</label>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+            <div class="btn-form">
+              <button type="button" (click)="onNextStep(3+1)" class="btn btn-primary btn-sm">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </button>
             </div>
           </ion-col>
         </ion-row>
@@ -295,14 +303,16 @@
 
       <section id="experiencia-laboral" *ngIf="stepSelected == 4">
         <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="container-title">
-              <div class="title-form">
-                <label>Datos de derecho habientes</label>
-              </div>
-              <div class="btn-form">
-                <button type="button" (click)="onNextStep(4+1)" class="btn btn-primary btn-sm">Siguiente</button>
-              </div>
+              <label>Datos de derecho habientes</label>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+            <div class="btn-form">
+              <button type="button" (click)="onNextStep(4+1)" class="btn btn-primary btn-sm">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </button>
             </div>
           </ion-col>
         </ion-row>
@@ -376,14 +386,18 @@
         </ion-row>
       </section>
 
-      <section id="datos-personales" *ngIf="stepSelected == 5">
+      <section id="datos-salud" *ngIf="stepSelected == 5">
         <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="container-title">
-              <label>Datos de salud</label>
+              <label>Datos de Salud</label>
             </div>
+          </ion-col>
+          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="btn-form">
-              <button type="button" class="btn btn-primary btn-sm">Enviar Datos</button>
+              <button type="button" class="btn btn-primary btn-sm">
+                <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Datos
+              </button>
             </div>
           </ion-col>
         </ion-row>
@@ -393,6 +407,9 @@
             label="Alergias"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslAlergia"
+            value="{{ dtslAlergia }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -402,6 +419,9 @@
             label="Enfermedad"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslEnfermedad"
+            value="{{ dtslEnfermedad }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -411,6 +431,9 @@
             label="Medicamentos"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslMedicamento"
+            value="{{ dtslMedicamento }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -420,6 +443,9 @@
             label="Grupo sanguineo"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslGrupoSanguineo"
+            value="{{ dtslGrupoSanguineo }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -436,6 +462,9 @@
             label="Tiene antecedentes policiales"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslAntecedentesPol"
+            value="{{ dtslAntecedentesPol }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -445,6 +474,9 @@
             label="Tiene antecedentes judiciales"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslAntecedenteJud"
+            value="{{ dtslAntecedenteJud }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -454,6 +486,9 @@
             label="Tiene antecedentes penales"
             placeholder="Ingrese segun corresponda"
             type="text"
+            id="dtslAntecedentePen"
+            value="{{ dtslAntecedentePen }}"
+            (afterChange)="onChangeInput($event)"
           ></mt-input>
           </ion-col>
         </ion-row>
@@ -463,6 +498,105 @@
         <ion-row>
           <ion-col>
             <button type="button" *ngIf="stepSelected == 2 || stepSelected == 3 || stepSelected == 4" (click)="onActionFuntion()" class="btn btn-primary btn-sm">{{buttonNameForm}}</button>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <section *ngIf="expLaboralList.length && stepSelected == 2">
+        <ion-row>
+          <ion-col>
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item" *ngFor="let data of expLaboralList;let i = index">
+                <h2 class="accordion-header" id="{{ 'flush-headingOne' + i }}">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#flush-collapseOne' + i" >
+                    {{data.empresa}}
+                  </button>
+                </h2>
+                <div id="{{'flush-collapseOne' + i }}" class="accordion-collapse collapse show" [attr.aria-labelledby]="'flush-headingOne' + i" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <div class="accordion-fecha">
+                          <span>{{data.desde}} - {{data.culmino}}</span>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Puesto:</ion-col>
+                      <ion-col sizeXs="9" sizeSm="9" sizeMd="11" sizeLg="11">{{data.puesto}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Motivo:</ion-col>
+                      <ion-col sizeXs="9" sizeSm="9" sizeMd="11" sizeLg="11">{{data.motivo}}</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <section *ngIf="forAcademicaList.length && stepSelected == 3">
+        <ion-row>
+          <ion-col>
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item" *ngFor="let data of forAcademicaList;let i = index">
+                <h2 class="accordion-header" id="{{ 'flush-headingOne' + i }}">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#flush-collapseOne' + i" >
+                    {{data.ctrEstudio}}
+                  </button>
+                </h2>
+                <div id="{{'flush-collapseOne' + i }}" class="accordion-collapse collapse show" [attr.aria-labelledby]="'flush-headingOne' + i" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <ion-row>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Carrera:</ion-col>
+                      <ion-col sizeXs="9" sizeSm="9" sizeMd="11" sizeLg="11">{{data.carrera}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Estado:</ion-col>
+                      <ion-col sizeXs="9" sizeSm="9" sizeMd="11" sizeLg="11">{{data.estado}}</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <section *ngIf="drHabientesList.length && stepSelected == 4">
+        <ion-row>
+          <ion-col>
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item" *ngFor="let data of drHabientesList;let i = index">
+                <h2 class="accordion-header" id="{{ 'flush-headingOne' + i }}">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#flush-collapseOne' + i" >
+                    {{data.nombres}}
+                  </button>
+                </h2>
+                <div id="{{'flush-collapseOne' + i }}" class="accordion-collapse collapse show" [attr.aria-labelledby]="'flush-headingOne' + i" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <ion-row>
+                      <ion-col sizeXs="4" sizeSm="4" sizeMd="1" sizeLg="1">Parentesco:</ion-col>
+                      <ion-col sizeXs="8" sizeSm="8" sizeMd="11" sizeLg="11">{{data.parentesco}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Edad:</ion-col>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="11" sizeLg="11">{{data.edad}}</ion-col>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Sexo:</ion-col>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="11" sizeLg="11">{{data.sexo}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Tipo Doc:</ion-col>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="11" sizeLg="11">{{data.tipodoc}}</ion-col>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="1" sizeLg="1">Nro Doc:</ion-col>
+                      <ion-col sizeXs="3" sizeSm="3" sizeMd="11" sizeLg="11">{{data.nrodoc}}</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </div>
           </ion-col>
         </ion-row>
       </section>

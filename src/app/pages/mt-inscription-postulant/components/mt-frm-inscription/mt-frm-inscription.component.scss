@@ -1,18 +1,23 @@
 .container-form {
-  //  border-right: 1px solid #d7d7d7 !important;
-  //  padding-right: 14px !important;
+    //  border-right: 1px solid #d7d7d7 !important;
+    //  padding-right: 14px !important;
 }
 
-#datos-personales {
+#datos-personales,
+#experiencia-laboral,
+#accordionExample,
+#formacion-academica,
+#datos-salud {
     ion-col {
         padding: 0px !important;
     }
 }
 
 .container-title {
-    padding: 10px !important;
+    height: 100% !important;
     align-items: center !important;
-    display: flex !important;
+    display: inline-flex !important;
+    padding-left: 5px !important;
 }
 
 .title-form {
@@ -24,6 +29,17 @@
     align-items: end !important;
     width: 100% !important;
     justify-content: end !important;
+    padding: 5px !important;
+
+    button {
+        width: 57px !important;
+    }
+}
+
+#datos-salud .btn-form {
+    button {
+        width: 118px !important;
+    }
 }
 
 .card-body {
@@ -132,4 +148,12 @@ nav {
 
 .active {
     color: #2525bb !important;
+}
+
+.accordion-body {
+    .accordion-fecha {
+        display: flex;
+        justify-content: end;
+        font-size: 14px !important;
+    }
 }

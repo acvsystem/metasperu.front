@@ -4,7 +4,7 @@ ol {
     padding: 0px !important;
 
     li {
-        min-width: 20% !important;
+        min-width: 20%;
         text-align: center !important;
     }
 }
@@ -25,15 +25,16 @@ ol {
     border: 1px solid rgba(192, 192, 192, 0.753);
 }
 
-.active,.success {
-    background-color: #116b9e !important; 
+.active,
+.success {
+    background-color: #116b9e !important;
     border: 1px solid #116b9e !important;
     color: #FFFF
 }
 
 .progress {
     border-color: #1274AC !important;
-    background-color: #7a7a7a !important;   
+    background-color: #7a7a7a !important;
 }
 
 .icon {
@@ -53,8 +54,8 @@ ol {
     transition-property: color, background-color, border-color !important;
     transition-duration: .4s !important;
     transition-timing-function: ease-in-out !important;
-    background-color: #7a7a7a;  
-    color: #FFFF; 
+    background-color: #7a7a7a;
+    color: #FFFF;
 }
 
 .content-icon {
