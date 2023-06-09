@@ -25,6 +25,7 @@ import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configurac
 import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.component';
 import { MtSelectComponent } from './components/mt-select/mt-select.component';
 import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
+import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-c
     MtConfiguracionComponent,
     MtCreateUserComponent,
     MtSelectComponent,
-    MtControlAsistenciaComponent
+    MtControlAsistenciaComponent,
+    MtNotificationComponent
   ],
   imports: [
     BrowserModule,

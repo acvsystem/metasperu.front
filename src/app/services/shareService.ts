@@ -14,6 +14,7 @@ export class ShareService {
   @Output() onProfileUser: EventEmitter<any> = new EventEmitter();
   @Output() onMenuUser: EventEmitter<any> = new EventEmitter();
   @Output() onDisconnectSocket: EventEmitter<any> = new EventEmitter();
+  @Output() onNotification: EventEmitter<any> = new EventEmitter();
 
   serverRute: string = 'http://159.65.226.239:4200';
 

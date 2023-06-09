@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../../../utils/storage';
+import { ShareService } from '../../../../services/shareService';
+
 @Component({
   selector: 'mt-frm-inscription',
   templateUrl: './mt-frm-inscription.component.html',
@@ -938,7 +940,7 @@ export class MtFrmInscriptionComponent implements OnInit {
   allDataList: Array<any> = [];
   buttonNameForm: string = "";
 
-  constructor(private store: StorageService) { 
+  constructor(private store: StorageService, private service: ShareService) {
     let storeStep = this.store.getStore("mtStep") || 1;
     this.onNextStep(storeStep);
   }
@@ -1063,7 +1065,17 @@ export class MtFrmInscriptionComponent implements OnInit {
 
     if (!notValueList.length) {
       this[contentName].push(dataList);
-      console.log(this[contentName]);
+      let notificationList = [{
+        isSuccess: true,
+        bodyNotification: "Registro agregado correctamente."
+      }]
+      this.service.onNotification.emit(notificationList);
+    } else {
+      let notificationList = [{
+        isError: true,
+        bodyNotification: "Todos los campos son requediros."
+      }]
+      this.service.onNotification.emit(notificationList);
     }
 
     this.onClear(keyList);

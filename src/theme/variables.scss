@@ -404,5 +404,10 @@ ion-modal.mt-modal {
 
   button.btn-primary {
     background: #116b9e !important;
+    border-color: #116b9e !important;
   }
+}
+
+mt-notification {
+  z-index: 99999 !important;
 }
