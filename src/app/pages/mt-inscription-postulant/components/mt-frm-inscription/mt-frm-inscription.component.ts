@@ -933,7 +933,7 @@ export class MtFrmInscriptionComponent implements OnInit {
   dtslAntecedenteJud: string = "";
   dtslAntecedentePen: string = "";
 
-
+  isComplete: boolean = false;
 
 
   nroStep: number = 1;
@@ -943,6 +943,9 @@ export class MtFrmInscriptionComponent implements OnInit {
   constructor(private store: StorageService, private service: ShareService) {
     let storeStep = this.store.getStore("mtStep") || 1;
     this.onNextStep(storeStep);
+    if (storeStep == 6) {
+      this.isComplete = true;
+    }
   }
 
   ngOnInit() {
@@ -950,10 +953,12 @@ export class MtFrmInscriptionComponent implements OnInit {
   }
 
   onNextStep(nroStep) {
+    this.isComplete = false;
     this.stepSelected = nroStep;
     this.store.setStore("mtStep", this.stepSelected);
     this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
     this.onDataStorage();
+    
   }
 
   onAddExpLab() {
@@ -1174,4 +1179,8 @@ export class MtFrmInscriptionComponent implements OnInit {
 
   }
 
+  onSendData() {
+    this.onNextStep(6);
+    this.isComplete = true;
+  }
 }

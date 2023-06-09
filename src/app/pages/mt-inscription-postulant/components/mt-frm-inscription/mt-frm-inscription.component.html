@@ -4,6 +4,7 @@
       <div class="nav-step" style="background-color: #FFF !important;">
         <mt-nav-step
         [actualStep]="stepSelected"
+        [isComplete]="isComplete"
         (onChangeStep)="onNextStep($event)"
         ></mt-nav-step>
       </div>
@@ -395,7 +396,7 @@
           </ion-col>
           <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
             <div class="btn-form">
-              <button type="button" class="btn btn-primary btn-sm">
+              <button (click)="onSendData()" type="button" class="btn btn-primary btn-sm">
                 <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Datos
               </button>
             </div>
@@ -490,6 +491,28 @@
             value="{{ dtslAntecedentePen }}"
             (afterChange)="onChangeInput($event)"
           ></mt-input>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <section id="proceso-success" *ngIf="stepSelected == 6">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-icon-success">
+              <span>
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+              </span>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-title-success">
+              <label>Proceso realizado con exito</label>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="container-subtitle-success">
+              <label>Sus datos se enviaron adecuadamente </label>
+            </div>
           </ion-col>
         </ion-row>
       </section>
@@ -602,115 +625,4 @@
       </section>
     </div>
   </ion-col>
-  <!--
-  <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5" class="scroll-on">
-    <div class="container-datos">
-      <div class="head-content-datos">
-        <ion-item>
-          <ion-avatar>
-            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-          </ion-avatar>
-          <ion-row>
-            <ion-col class="no-padding" sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <span>Andre Canales Vasquez</span>
-            </ion-col>
-            <ion-col class="no-padding" sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <span>30 años</span>
-              <span class="align-right">23/05/1992</span>
-            </ion-col>
-          </ion-row>
-        </ion-item>
-      </div>
-      <div class="body-content-datos">
-        <ion-row *ngFor="let card of expLaboralList">
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card" style="width: 100%;">
-              <div class="card-header">
-                {{card.empresa}}
-              </div>
-              <div class="card-body">
-                <div class="container-title">
-                  <div class="title-form">
-                    <span class="title">Desde:</span>
-                    <span>{{card.desde}}</span>
-                  </div>
-                  <div class="btn-form">
-                    <span class="title">Hasta:</span>
-                    <span>{{card.culmino}}</span>
-                  </div>
-                </div>
-                <div>
-                  <span>Puesto: {{card.puesto}}</span>
-                </div>
-                <div class="motivo-footer">
-                  <span class="title">Motivo de Cese:</span>
-                  <span>{{card.motivo}}</span>
-                </div>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row *ngFor="let card of forAcademicaList">
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card" style="width: 100%;">
-              <div class="card-header">
-                {{card.ctrEstudio}}
-              </div>
-              <div class="card-body">
-                <div class="container-title">
-                  <div class="title-form">
-                    <span class="title">Carrera:</span>
-                    <span>{{card.carrera}}</span>
-                  </div>
-                  <div class="btn-form">
-                    <span class="title">Estado:</span>
-                    <span>{{card.estado}}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row *ngFor="let card of drHabientesList">
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card" style="width: 100%;">
-              <div class="card-header">
-                {{card.nombres}}
-              </div>
-              <div class="card-body">
-                <div class="container-title">
-                  <div class="title-form">
-                    <span class="title">Parentesco:</span>
-                    <span>{{card.parentesco}}</span>
-                  </div>
-                </div>
-                <div class="container-title">
-                  <div class="title-form">
-                    <span class="title">Edad:</span>
-                    <span>{{card.edad}}</span>
-                  </div>
-                  <div class="btn-form">
-                    <span class="title">Sexo:</span>
-                    <span>{{card.sexo}}</span>
-                  </div>
-                </div>
-                <div class="container-title">
-                  <div class="title-form">
-                    <span class="title">Tipo Documento:</span>
-                    <span>{{card.tipodoc}}</span>
-                  </div>
-                  <div class="btn-form">
-                    <span class="title">Nro Docuemnto:</span>
-                    <span>{{card.nrodoc}}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </div>
-    </div>
-  </ion-col>-->
 </ion-row>

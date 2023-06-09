@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 })
 export class MtNavStepComponent implements OnInit {
   @Input() actualStep: number = 1;
+  @Input() isComplete: boolean = false;
   @Output() onChangeStep: EventEmitter<any> = new EventEmitter();
 
   menuStepList: Array<any> = [];
@@ -58,20 +59,24 @@ export class MtNavStepComponent implements OnInit {
       ];
 
       this.actualStep = (changes || {})['actualStep'].currentValue;
-  
+
       let indexStep = this.menuStepList.findIndex((data) => data.step == this.actualStep);
-      
+
       for (let i = 0; i < this.menuStepList.length; i++) {
-        if (i == this.actualStep) {
-          ((this.menuStepList || [])[indexStep] || {}).status = 'active';
-        }
+        if (!this.isComplete) {
+          if (i == this.actualStep) {
+            ((this.menuStepList || [])[indexStep] || {}).status = 'active';
+          }
 
-        if (i < indexStep) {
-          ((this.menuStepList || [])[i] || {}).status = "success";
-        }
+          if (i < indexStep) {
+            ((this.menuStepList || [])[i] || {}).status = "success";
+          }
 
-        if (i > indexStep) {
-          ((this.menuStepList || [])[i] || {}).status = "progress";
+          if (i > indexStep) {
+            ((this.menuStepList || [])[i] || {}).status = "progress";
+          }
+        } else {
+          ((this.menuStepList || [])[i] || {}).status = 'success';
         }
       }
 
