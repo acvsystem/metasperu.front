@@ -958,7 +958,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.store.setStore("mtStep", this.stepSelected);
     this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
     this.onDataStorage();
-    
+
   }
 
   onAddExpLab() {
@@ -1109,6 +1109,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     let dataStore = [];
 
     dataStore = [{
+      id: this.dtprNumDoc,
       datos_personales: {
         nombre_apellido: this.dtprNombre,
         fec_nacimiento: this.dtprFecNac,
@@ -1140,6 +1141,15 @@ export class MtFrmInscriptionComponent implements OnInit {
     }];
 
     this.store.setStore('inscription', JSON.stringify(dataStore));
+
+    let parms = {
+      url: '/rrhh/registrar/inscripcion_postulante',
+      body: dataStore
+    };
+
+    this.service.post(parms).then((response) => {
+      console.log(response);
+    });
   }
 
   onStoreOfData() {
