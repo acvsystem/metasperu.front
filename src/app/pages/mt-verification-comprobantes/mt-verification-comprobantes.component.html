@@ -14,8 +14,8 @@
             <div class="status-stadistic">
               <div>
                  <p>{{status.hostname}}</p>
-                 <p class="progress-status">cpu:<progress id="cpu" max="100" value="{{status.cpu}}">{{status.cpu}}</progress></p>
-                 <p class="progress-status">ram:<progress id="ram" max="100" value="{{status.xram}}">{{status.xram}}</progress></p>
+                 <p class="progress-status"><span>cpu: {{status.cpu}}</span><progress id="cpu" max="100" value="{{status.cpu}}">{{status.cpu}}</progress></p>
+                 <p class="progress-status"><span>ram: {{status.xram}}</span><progress id="ram" max="100" value="{{status.xram}}">{{status.xram}}</progress></p>
                </div>
              </div>
              <div class="active-hardward">
