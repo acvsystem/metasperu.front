@@ -884,10 +884,96 @@ export class MtFrmInscriptionComponent implements OnInit {
     {
       "key": "PTP",
       "value": "PTP"
+    }
+  ];
+
+  optionListEstadoCivil: Array<any> = [
+    {
+      "key": "Solera(o)",
+      "value": "Solera(o)"
     },
     {
-      "key": "Carne Refugiado",
-      "value": "Carne Refugiado"
+      "key": "Casada(o)",
+      "value": "Casada(o)"
+    },
+    {
+      "key": "Conviviente",
+      "value": "Conviviente"
+    },
+    {
+      "key": "Divorciada(o)",
+      "value": "Divorciada(o)"
+    },
+    {
+      "key": "Viuda(o)",
+      "value": "Viuda(o)"
+    }
+  ];
+
+  optionListSexo: Array<any> = [
+    {
+      "key": "Mujer",
+      "value": "Mujer"
+    },
+    {
+      "key": "Hombre",
+      "value": "Hombre"
+    }
+  ];
+
+  optionListStandar: Array<any> = [
+    {
+      "key": "Si",
+      "value": "Si"
+    },
+    {
+      "key": "No",
+      "value": "No"
+    }
+  ];
+
+  optionListPensiones: Array<any> = [
+    {
+      "key": "Cuento con AFP",
+      "value": "Cuento con AFP"
+    },
+    {
+      "key": "Cuento con ONP",
+      "value": "Cuento con ONP"
+    },
+    {
+      "key": "No estoy afiliado a un sistema de pensiones",
+      "value": "No estoy afiliado a un sistema de pensiones"
+    }
+  ];
+
+  optionListParentesco: Array<any> = [
+    {
+      "key": "Conyugue / Conviviente",
+      "value": "Conyugue / Conviviente"
+    },
+    {
+      "key": "Hijo(a)",
+      "value": "Hijo(a)"
+    }
+  ];
+
+  optionListEstadoEstudio: Array<any> = [
+    {
+      "key": "Completo",
+      "value": "Completo"
+    },
+    {
+      "key": "Incompleto",
+      "value": "Incompleto"
+    },
+    {
+      "key": "En curso",
+      "value": "En curso"
+    },
+    {
+      "key": "No cuenta",
+      "value": "No cuenta"
     }
   ];
 
@@ -896,11 +982,15 @@ export class MtFrmInscriptionComponent implements OnInit {
   forAcademicaList: Array<any> = [];
   drHabientesList: Array<any> = [];
   dtprNombre: string = "";
+  dtprApPaterno: string = "";
+  dtprApMaterno: string = "";
   dtprFecNac: string = "";
   dtprNumDoc: string = "";
   dtprDireccion: string = "";
   dtprReferencia: string = "";
   dtprEmail: string = "";
+  dtprCelular: string = "";
+  dtprHobby: string = "";
   dtprContactoEmg: string = "";
   dtprNumEmerg: string = "";
   dtprCboPaisNac: string = "";
@@ -1112,13 +1202,16 @@ export class MtFrmInscriptionComponent implements OnInit {
       id: this.dtprNumDoc,
       datos_personales: {
         nombre_apellido: this.dtprNombre,
+        ap_paterno: this.dtprApPaterno,
+        ap_materno: this.dtprApMaterno,
+        celular: this.dtprCelular,
+        hobby: this.dtprHobby,
         fec_nacimiento: this.dtprFecNac,
         pais_nacimiento: this.dtprCboPaisNac,
         tipo_documento: this.dtprCboTipodoc,
         num_documento: this.dtprNumDoc,
         sexo: this.dtprCboSexo,
         estado_civil: this.dtprCboEstadoCivil,
-        distrito: this.dtprCboDistrito,
         direccion: this.dtprDireccion,
         referencia: this.dtprReferencia,
         email: this.dtprEmail,

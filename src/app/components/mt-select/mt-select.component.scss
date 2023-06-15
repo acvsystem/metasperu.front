@@ -43,6 +43,7 @@
         overflow: auto;
         max-height: 200px;
         padding-left: 0px;
+        margin-bottom: 0px;
     }
 
     .content-search {
@@ -80,4 +81,8 @@
 .option-text {
     font-size: 14px;
     color: rgba(0, 0, 0, .65) !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    
 }
