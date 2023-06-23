@@ -28,7 +28,6 @@
     "@ionic/angular": "^6.1.9",
     "http-server": "^14.1.1",
     "ionicons": "^6.0.3",
-    "ngx-socket-io": "^4.4.0",
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.6.1",
     "tslib": "^2.3.0",
