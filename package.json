@@ -14,7 +14,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/core": "^16.1.0",
+    "@angular-devkit/core": "^15.0.0",
     "@angular/common": "^16.1.1",
     "@angular/core": "^16.1.1",
     "@angular/forms": "^16.1.1",
@@ -37,12 +37,12 @@
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.1.0",
+    "@angular-devkit/build-angular": "^15.0.0",
     "@angular-eslint/builder": "^14.0.0",
     "@angular-eslint/eslint-plugin": "^14.0.0",
     "@angular-eslint/eslint-plugin-template": "^14.0.0",
     "@angular-eslint/template-parser": "^14.0.0",
-    "@angular/cli": "^16.1.0",
+    "@angular/cli": "^15.0.0",
     "@angular/compiler": "^16.1.1",
     "@angular/compiler-cli": "^16.1.1",
     "@angular/language-service": "^16.1.1",
