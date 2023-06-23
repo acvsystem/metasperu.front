@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
-
+import { BrowserModule } from '@angular/platform-browser';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
@@ -17,7 +16,6 @@ import { MtTooltipComponent } from './components/mt-tooltip/mt-tooltip.component
 import { MtFrmInscriptionComponent } from './pages/mt-inscription-postulant/components/mt-frm-inscription/mt-frm-inscription.component';
 import { MtNavStepComponent } from './components/mt-nav-step/mt-nav-step.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
 import { MtPopoverComponent } from './components/mt-popover/mt-popover.component';
 import { MtSunatComprobantesComponent } from './pages/mt-sunat-comprobantes/mt-sunat-comprobantes.component';
@@ -26,7 +24,6 @@ import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.com
 import { MtSelectComponent } from './components/mt-select/mt-select.component';
 import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
 import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -58,5 +55,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class AppModule { }
