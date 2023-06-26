@@ -411,3 +411,77 @@ ion-modal.mt-modal {
 mt-notification {
   z-index: 99999 !important;
 }
+
+mat-form-field {
+  width: 100%;
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+    border-bottom: none !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  .mat-mdc-text-field-wrapper.mdc-text-field {
+    --highlight-background: #ffffff !important;
+    border: 1px solid #d9d9d9;
+    height: 39px !important;
+    border-radius: 4px !important;
+    background: #ffff;
+
+
+    .mat-mdc-form-field-flex {
+      padding: 0px;
+      height: 39px !important;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding: 0px;
+      min-height: 39px !important;
+
+      .mdc-floating-label {
+        top: 50%;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.65);
+      }
+
+      input {
+        margin-top: 14px;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+  }
+}
+
+mat-date-range-input {
+
+  .mat-mdc-form-field-focus-overlay {
+    background: #ffff;
+  }
+
+  .mat-date-range-input-separator {
+    margin-top: 11px !important;
+    margin-right: 11px !important;
+  }
+
+  .mat-date-range-input-container {
+    height: 37px;
+  }
+
+  .mat-date-range-input-wrapper,
+  .mat-date-range-input-end-wrapper {
+    top: 7px;
+  }
+
+}
+
+
+mat-form-field mat-date-range-input  input {
+  margin-top: 0px !important;
+}
+
+.accordion-header {
+  margin: 0px !important;
+}

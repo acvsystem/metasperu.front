@@ -24,6 +24,13 @@ import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.com
 import { MtSelectComponent } from './components/mt-select/mt-select.component';
 import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
 import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MtCalendarComponent } from './components/mt-calendar/mt-calendar.component';
+
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule,MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -45,15 +52,23 @@ import { MtNotificationComponent } from './components/mt-notification/mt-notific
     MtCreateUserComponent,
     MtSelectComponent,
     MtControlAsistenciaComponent,
-    MtNotificationComponent
+    MtNotificationComponent,
+    MtCalendarComponent
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatNativeDateModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

@@ -47,24 +47,18 @@
                           (afterChange)="onChangeInput($event)"
                           type="text"
                           ></mt-input>
-                          <mt-input
+
+                          <mt-calendar
                           *ngIf="property.date"
-                          id="searchFecInicio"
-                          label="De"
-                          placeholder="Fechas"
-                          value="{{ searchFecInicio }}"
-                          (afterChange)="onChangeInput($event)"
-                          type="text"
-                          ></mt-input>
-                          <mt-input
-                          *ngIf="property.date"
-                          id="searchFecFin"
-                          label="Hasta"
-                          placeholder="Fechas"
-                          value="{{ searchFecFin }}"
-                          (afterChange)="onChangeInput($event)"
-                          type="text"
-                          ></mt-input>
+                          idInit="searchFecInicio"
+                          idEnd="searchFecFin"
+                          label="Rango fecha"
+                          labelInit="Fecha Inicio"
+                          labelFin="Fecha Fin"
+                          isRageDate="true"
+                          (afterChangeInit)="onChangeInput($event)"
+                          (afterChangeEnd)="onChangeInput($event)"
+                          ></mt-calendar>
                         </div>
                         <div class="search-content-button">
                           <button class="btn btn-primary btn-sm" (click)="onFiltrar()">Buscar</button>

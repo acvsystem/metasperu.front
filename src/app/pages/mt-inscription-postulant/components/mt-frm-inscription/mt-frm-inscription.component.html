@@ -59,14 +59,11 @@
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
+            <mt-calendar
             id="dtprFecNac"
             label="Fecha Nacimiento"
-            placeholder="Ingrese su fecha de nacimiento"
-            value="{{ dtprFecNac }}"
             (afterChange)="onChangeInput($event)"
-            type="text"
-          ></mt-input>
+            ></mt-calendar>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-select
@@ -253,24 +250,16 @@
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="exlabFecInicio"
-            label="Desde"
-            placeholder="Fecha de inicio"
-            value="{{ exlabFecInicio }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="exlabCulmino"
-            label="Hasta"
-            placeholder="Fecha de Termino"
-            value="{{ exlabCulmino }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
+            <mt-calendar
+            idInit="exlabFecInicio"
+            idEnd="exlabCulmino"
+            label="Fecha Trabajo"
+            labelInit="Fecha Inicio"
+            labelFin="Fecha Fin"
+            isRageDate="true"
+            (afterChangeInit)="onChangeInput($event)"
+            (afterChangeEnd)="onChangeInput($event)"
+            ></mt-calendar>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -326,14 +315,12 @@
             ></mt-input>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
+            <mt-select
             id="frAcEstado"
-            label="Estado"
-            placeholder="Ingrese estado de carrera"
-            value="{{ frAcEstado }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
+            placeHolder="Estado"
+            [optionList]="optionListEstadoEstudio"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </ion-col>
         </ion-row>
       </section>
@@ -389,26 +376,22 @@
             ></mt-input>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
+            <mt-select
             id="drabSexo"
-            label="Sexo"
-            placeholder="Ingrese el sexo"
-            value="{{ drabSexo }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
+            placeHolder="Sexo"
+            [optionList]="optionListSexo"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
+            <mt-select
             id="drabTipoDoc"
-            label="Tipo Documento"
-            placeholder="Ingrese tipo de documento"
-            value="{{ drabTipoDoc }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
+            placeHolder="Tipo Documento"
+            [optionList]="optionListTipoDoc"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <mt-input
@@ -495,38 +478,32 @@
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            label="Tiene antecedentes policiales"
-            placeholder="Ingrese segun corresponda"
-            type="text"
+            <mt-select
             id="dtslAntecedentesPol"
-            value="{{ dtslAntecedentesPol }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
+            placeHolder="Tiene antecedentes policiales"
+            [optionList]="optionListStandar"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Tiene antecedentes judiciales"
-            placeholder="Ingrese segun corresponda"
-            type="text"
+            <mt-select
             id="dtslAntecedenteJud"
-            value="{{ dtslAntecedenteJud }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
+            placeHolder="Tiene antecedentes judiciales"
+            [optionList]="optionListStandar"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Tiene antecedentes penales"
-            placeholder="Ingrese segun corresponda"
-            type="text"
+            <mt-select
             id="dtslAntecedentePen"
-            value="{{ dtslAntecedentePen }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
+            placeHolder="Tiene antecedentes judiciales"
+            [optionList]="optionListStandar"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </ion-col>
         </ion-row>
       </section>
