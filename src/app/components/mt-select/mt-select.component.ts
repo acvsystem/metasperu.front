@@ -10,7 +10,10 @@ export class MtSelectComponent implements OnInit {
   @Input() enableSearchInput: boolean = false;
   @Input() optionList = [];
   @Input() placeHolder: string = "Seleccione su opcion";
+  @Input() isRequired: boolean = false;
+  @Input() selectOption: boolean = false;
   @Output() changeSelected: EventEmitter<any> = new EventEmitter();
+
   activeSelect: boolean = false;
   sboSearch: string = "";
   optionSelected: any = {};
@@ -19,21 +22,26 @@ export class MtSelectComponent implements OnInit {
 
   constructor() {
     const self = this;
-   /* document.body.addEventListener("click", function (evt) {
-      if (self.activeSelect) {
-        self.activeSelect = false;
-      }
-    });*/
+    /* document.body.addEventListener("click", function (evt) {
+       if (self.activeSelect) {
+         self.activeSelect = false;
+       }
+     });*/
   }
 
   ngOnInit() {
- 
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.hasOwnProperty('optionList')) {
       this.originalOptionList = [...this.optionList];
     }
+
+    if (changes && changes.hasOwnProperty('selectOption')) {
+      this.onSelectedOption(this.selectOption);
+    }
+
   }
 
   onOpenSelect() {

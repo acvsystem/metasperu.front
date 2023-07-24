@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'mt-calendar',
@@ -13,26 +14,32 @@ export class MtCalendarComponent implements OnInit {
   @Input() label: string = "label";
   @Input() labelInit: string = "Inicio";
   @Input() labelFin: string = "Fin";
-  @Input() isRageDate :boolean = false;
-  
+  @Input() isRageDate: boolean = false;
+  @Input() isRequired: boolean = false;
+
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeInit: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeEnd: EventEmitter<any> = new EventEmitter();
+
+  date: any = "";
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.date = new FormControl(new Date());
+    console.log(this.date);
+  }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     const fechaSelected = new Date(event.value).toLocaleDateString('en-CA');
     this.afterChange.emit({ id: this.id, value: fechaSelected });
   }
 
-  addEventInit(type: string, event: MatDatepickerInputEvent<Date>){
+  addEventInit(type: string, event: MatDatepickerInputEvent<Date>) {
     const fechaSelected = new Date(event.value).toLocaleDateString('en-CA');
     this.afterChangeInit.emit({ id: this.idInit, value: fechaSelected });
   }
 
-  addEventEnd(type: string, event: MatDatepickerInputEvent<Date>){
+  addEventEnd(type: string, event: MatDatepickerInputEvent<Date>) {
     const fechaSelected = new Date(event.value).toLocaleDateString('en-CA');
     this.afterChangeEnd.emit({ id: this.idEnd, value: fechaSelected });
   }

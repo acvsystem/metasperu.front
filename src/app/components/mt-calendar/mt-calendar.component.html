@@ -1,8 +1,8 @@
-<ion-row class="desktop-item">
+<ion-row  [ngClass]="[isRequired ? 'desktop-item required': 'desktop-item']">
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
     <mat-form-field class="example-full-width" *ngIf="!isRageDate">
       <mat-label>{{label}}</mat-label>
-      <input matInput [matDatepicker]="picker" (dateInput)="addEvent('input', $event)">
+      <input matInput [matDatepicker]="picker" (dateInput)="addEvent('input', $event)" [value]="date.value">
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker  #picker></mat-datepicker>
     </mat-form-field>

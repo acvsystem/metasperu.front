@@ -455,6 +455,25 @@ mat-form-field {
   }
 }
 
+.required {
+  mat-form-field {
+    .mat-mdc-text-field-wrapper.mdc-text-field {
+      border: 1px solid red;
+
+      .mat-mdc-form-field-infix {
+
+        .mdc-floating-label {
+          color: red;
+        }
+
+        input {
+          color: red;
+        }
+      }
+    }
+  }
+}
+
 mat-date-range-input {
 
   .mat-mdc-form-field-focus-overlay {
@@ -478,10 +497,14 @@ mat-date-range-input {
 }
 
 
-mat-form-field mat-date-range-input  input {
+mat-form-field mat-date-range-input input {
   margin-top: 0px !important;
 }
 
 .accordion-header {
   margin: 0px !important;
+}
+
+.txt-size-card-mobil {
+  font-size: 13px !important;
 }

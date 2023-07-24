@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'mt-input',
@@ -13,6 +13,7 @@ export class MtInputComponent implements OnInit {
   @Input() value: string = "";
   @Input() isCopy: boolean = false;
   @Input() sizeSllim: boolean = false;
+  @Input() isRequired: boolean = false;
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   viewPassword: boolean = false;
   typePassword: string = "password";

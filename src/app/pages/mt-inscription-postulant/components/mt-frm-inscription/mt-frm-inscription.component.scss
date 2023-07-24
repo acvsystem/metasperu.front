@@ -182,3 +182,61 @@ nav {
     font-size: 13px;
     color: #585858;
 }
+
+.card-information-slim {
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 4px !important;
+    padding: 3px 10px !important;
+    padding-right: 0px !important;
+    margin-top: 10px !important;
+    min-height: 50px !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
+
+    .title {
+        span {
+            font-size: 11px !important;
+        }
+    }
+
+    span {
+        font-size: 12px !important;
+    }
+
+    .card-extra-info {
+        color: #585858 !important;
+
+        .align-end {
+            display: flex !important;
+            justify-content: end !important;
+            align-items: end !important;
+        }
+    }
+
+    .align-rigth {
+        float: right !important;
+    }
+
+
+    #content-card {
+        padding-right: 5px !important;
+    }
+
+    #content-button-card {
+        width: 90% !important;
+        height: 100% !important;
+        background: #f54848 !important;
+        color: #ffff !important;
+        border-radius: 3px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        cursor: pointer !important;
+    }
+}
+
+#section-button {
+    .btn-view {
+        margin-top: 5px !important;
+        border: solid 1px #d7d7d7 !important;
+    }
+}

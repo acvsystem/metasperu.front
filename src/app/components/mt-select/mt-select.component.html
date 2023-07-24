@@ -1,8 +1,8 @@
 <ion-row class="desktop-item">
-  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+  <ion-col [ngClass]="[isRequired ? 'required': '']" sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
     <div class="{{activeSelect ? 'select-menu active':'select-menu'}}">
       <div class="select-btn" (click)="onOpenSelect()">
-        <span class="option-text" *ngIf="!nameOptionSelected.length">{{placeHolder}}</span>
+        <span class="option-text select-placeholder" *ngIf="!nameOptionSelected.length">{{placeHolder}}</span>
         <span class="option-text" *ngIf="nameOptionSelected.length">{{nameOptionSelected}}</span>
         <i class="fa fa-angle-down" aria-hidden="true"></i>
       </div>

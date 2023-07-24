@@ -106,6 +106,8 @@ export class AppComponent {
     this.store.removeStore('tn');
     this.store.removeStore('mt-profile');
     this.store.removeStore('mt-menu');
+    this.store.removeStore('mtStep');
+    this.store.removeStore('inscription');
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;

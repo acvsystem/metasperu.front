@@ -977,6 +977,17 @@ export class MtFrmInscriptionComponent implements OnInit {
     }
   ];
 
+  optionListTipoEstudio:Array<any> = [
+    {
+      "key": "Tecnica",
+      "value": "Tecnica"
+    },
+    {
+      "key": "Superior",
+      "value": "Superior"
+    }
+  ];
+
   stepSelected: number = 1;
   expLaboralList: Array<any> = [];
   forAcademicaList: Array<any> = [];
@@ -993,6 +1004,7 @@ export class MtFrmInscriptionComponent implements OnInit {
   dtprHobby: string = "";
   dtprContactoEmg: string = "";
   dtprNumEmerg: string = "";
+
   dtprCboPaisNac: string = "";
   dtprCboTipodoc: string = "";
   dtprCboEstadoCivil: string = "";
@@ -1000,20 +1012,32 @@ export class MtFrmInscriptionComponent implements OnInit {
   dtprCboDistrito: string = "";
   dtprCboPension: string = "";
 
+  selectOptionPaisNac: any = {};
+  selectOptionTipodoc: any = {};
+  selectOptionEstadoCivil: any = {};
+  selectOptionSexo: any = {};
+  selectOptionDistrito: any = {};
+  selectOptionPension: any = {};
+
   exlabEmpresa: string = "";
   exlabPuesto: string = "";
   exlabFecInicio: string = "";
   exlabCulmino: string = "";
   exlabMotivo: string = "";
+
   frAcCentroEstudio: string = "";
   frAcCarrera: string = "";
   frAcEstado: string = "";
+  frAcTipo: string = "";
+
   drabNombres: string = "";
   drabParentesco: string = "";
   drabEdad: string = "";
   drabSexo: string = "";
   drabTipoDoc: string = "";
   drabNroDocumento: string = "";
+  drabFecNac: string = "";
+  drabOcupacion: string = "";
 
   dtslAlergia: string = "";
   dtslEnfermedad: string = "";
@@ -1025,10 +1049,13 @@ export class MtFrmInscriptionComponent implements OnInit {
 
   isComplete: boolean = false;
 
-
   nroStep: number = 1;
   allDataList: Array<any> = [];
   buttonNameForm: string = "";
+  showError: boolean = false;
+
+  requiredList: Array<any> = [];
+  isViewAdds: boolean = false;
 
   constructor(private store: StorageService, private service: ShareService) {
     let storeStep = this.store.getStore("mtStep") || 1;
@@ -1039,16 +1066,67 @@ export class MtFrmInscriptionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onStoreOfData();
+
+  }
+
+  getRequiredByStep(step?) {
+    var fieldsToValidate = [];
+
+    if (step == null || typeof step == 'undefined') {
+      step = this.stepSelected;
+    }
+
+    switch (String(step)) {
+      case '1':
+        fieldsToValidate = [
+          "dtprNombre",
+          "dtprApPaterno",
+          "dtprApMaterno",
+          "dtprFecNac",
+          "dtprNumDoc",
+          "dtprDireccion",
+          "dtprReferencia",
+          "dtprEmail",
+          "dtprCelular",
+          "dtprContactoEmg",
+          "dtprNumEmerg",
+          "dtprCboPaisNac",
+          "dtprCboTipodoc",
+          "dtprCboEstadoCivil",
+          "dtprCboSexo",
+          "dtprCboPension"
+        ];
+
+        break;
+      case '5':
+        fieldsToValidate = [
+          "dtslAntecedentesPol",
+          "dtslAntecedenteJud",
+          "dtslAntecedentePen"
+        ];
+
+        break;
+      default: fieldsToValidate = [];
+    }
+
+    return fieldsToValidate;
   }
 
   onNextStep(nroStep) {
-    this.isComplete = false;
-    this.stepSelected = nroStep;
-    this.store.setStore("mtStep", this.stepSelected);
-    this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
-    this.onDataStorage();
+    this.requiredList = this.getRequiredByStep(this.stepSelected);
+    this.onStoreOfData();
+    if (this.requiredList.length && this.stepSelected != nroStep) {
+      this.showError = true;
+    }
 
+    if (!this.requiredList.length) {
+      this.isComplete = false;
+      this.stepSelected = nroStep;
+      this.store.setStore("mtStep", this.stepSelected);
+      this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
+      this.onDataStorage();
+      this.onDataRegister();
+    }
   }
 
   onAddExpLab() {
@@ -1099,6 +1177,11 @@ export class MtFrmInscriptionComponent implements OnInit {
         key: 'estado',
         property: 'frAcEstado',
         required: true
+      },
+      {
+        key: 'tipo',
+        property: 'frAcTipo',
+        required: true
       }
     ];
 
@@ -1136,7 +1219,18 @@ export class MtFrmInscriptionComponent implements OnInit {
         key: 'nrodoc',
         property: 'drabNroDocumento',
         required: true
+      },
+      {
+        key: 'fchnac',
+        property: 'drabFecNac',
+        required: true
+      },
+      {
+        key: 'ocupacion',
+        property: 'drabOcupacion',
+        required: true
       }
+      
     ]
 
     this.onAddRegister('drHabientesList', keyList);
@@ -1150,7 +1244,9 @@ export class MtFrmInscriptionComponent implements OnInit {
     let dataKeyList = keyList || [];
     let notValueList = [];
     let dataList = {};
+   
     (dataKeyList || []).map((obj): any => {
+      console.log(this[(obj || {}).property] );
       if (this[(obj || {}).property] || !(obj || {}).required) {
         dataList[(obj || {}).key] = this[(obj || {}).property];
       } else {
@@ -1163,7 +1259,9 @@ export class MtFrmInscriptionComponent implements OnInit {
       let notificationList = [{
         isSuccess: true,
         bodyNotification: "Registro agregado correctamente."
-      }]
+      }];
+      this.onDataStorage();
+      this.onClear(keyList);
       this.service.onNotification.emit(notificationList);
     } else {
       let notificationList = [{
@@ -1173,7 +1271,7 @@ export class MtFrmInscriptionComponent implements OnInit {
       this.service.onNotification.emit(notificationList);
     }
 
-    this.onClear(keyList);
+    
   }
 
   onClear(keyList) {
@@ -1187,12 +1285,25 @@ export class MtFrmInscriptionComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
+    if (this[index]) {
+      this.requiredList = (this.requiredList || []).filter(required => required != index);
+    } else {
+      this.requiredList.push(index);
+    }
+    this.onDataStorage();
   }
 
   onChangeSelect(data: any) {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).value || "";
+
+    if (this[index]) {
+      this.requiredList = (this.requiredList || []).filter(required => required != index);
+    } else {
+      this.requiredList.push(index);
+    }
+    this.onDataStorage();
   }
 
   onDataStorage() {
@@ -1201,11 +1312,10 @@ export class MtFrmInscriptionComponent implements OnInit {
     dataStore = [{
       id: this.dtprNumDoc,
       datos_personales: {
-        nombre_apellido: this.dtprNombre,
+        nombres: this.dtprNombre,
         ap_paterno: this.dtprApPaterno,
         ap_materno: this.dtprApMaterno,
-        celular: this.dtprCelular,
-        hobby: this.dtprHobby,
+        nro_celular: this.dtprCelular,
         fec_nacimiento: this.dtprFecNac,
         pais_nacimiento: this.dtprCboPaisNac,
         tipo_documento: this.dtprCboTipodoc,
@@ -1235,6 +1345,11 @@ export class MtFrmInscriptionComponent implements OnInit {
 
     this.store.setStore('inscription', JSON.stringify(dataStore));
 
+  }
+
+  onDataRegister() {
+    let dataStore = this.store.getStore('inscription');
+
     let parms = {
       url: '/rrhh/registrar/inscripcion_postulante',
       body: dataStore
@@ -1247,38 +1362,72 @@ export class MtFrmInscriptionComponent implements OnInit {
 
   onStoreOfData() {
     let dataStore = this.store.getStore('inscription');
+
     let datosPersonales = ((dataStore || [])[0] || {}).datos_personales || {};
     let experienciaLaboral = ((dataStore || [])[0] || {}).experiencia_laboral || {};
     let formacionAcademica = ((dataStore || [])[0] || {}).formacion_academica || {};
     let derechosHabiente = ((dataStore || [])[0] || {}).derecho_habiente || {};
     let datosSalud = ((dataStore || [])[0] || {}).datos_salud || {};
 
-    this.dtprNombre = (datosPersonales || {}).nombre_apellido || "";
-    this.dtprFecNac = (datosPersonales || {}).fec_nacimiento || "";
-    this.dtprCboPaisNac = (datosPersonales || {}).pais_nacimiento || "";
-    this.dtprCboTipodoc = (datosPersonales || {}).tipo_documento || "";
-    this.dtprNumDoc = (datosPersonales || {}).num_documento || "";
-    this.dtprCboSexo = (datosPersonales || {}).sexo || "";
-    this.dtprCboEstadoCivil = (datosPersonales || {}).estado_civil || "";
-    this.dtprCboDistrito = (datosPersonales || {}).distrito || "";
-    this.dtprDireccion = (datosPersonales || {}).direccion || "";
-    this.dtprReferencia = (datosPersonales || {}).referencia || "";
-    this.dtprEmail = (datosPersonales || {}).email || "";
-    this.dtprCboPension = (datosPersonales || {}).tipo_pension || "";
-    this.dtprContactoEmg = (datosPersonales || {}).contacto_emergengia || "";
-    this.dtprNumEmerg = (datosPersonales || {}).numero_emergencia || "";
+    let optionPais: any = this.optionListPais.filter((pais) => pais.value == (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac)
 
-    this.expLaboralList = experienciaLaboral || [];
-    this.forAcademicaList = formacionAcademica || [];
-    this.drHabientesList = derechosHabiente || [];
 
-    this.dtslAlergia = (datosSalud || {}).alergias || "";
-    this.dtslEnfermedad = (datosSalud || {}).enfermedad || "";
-    this.dtslMedicamento = (datosSalud || {}).medicamento || "";
-    this.dtslGrupoSanguineo = (datosSalud || {}).grupo_sanguineo || "";
-    this.dtslAntecedentesPol = (datosSalud || {}).antecedentes_policiales || "";
-    this.dtslAntecedenteJud = (datosSalud || {}).antecedentes_judiciales || "";
-    this.dtslAntecedentePen = (datosSalud || {}).antecedentes_penales || "";
+    this.dtprNombre = (datosPersonales || {}).nombres || this.dtprNombre;
+    this.dtprCelular = (datosPersonales || {}).nro_celular || this.dtprCelular;
+    this.dtprApPaterno = (datosPersonales || {}).ap_paterno || this.dtprApPaterno;
+    this.dtprApMaterno = (datosPersonales || {}).ap_materno || this.dtprApMaterno;
+    this.dtprFecNac = (datosPersonales || {}).fec_nacimiento || this.dtprFecNac;
+    this.dtprCboPaisNac = (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac;
+    this.dtprCboTipodoc = (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc;
+    this.dtprNumDoc = (datosPersonales || {}).num_documento || this.dtprNumDoc;
+    this.dtprCboSexo = (datosPersonales || {}).sexo || this.dtprCboSexo;
+    this.selectOptionSexo = {
+      key: (datosPersonales || {}).sexo || this.dtprCboSexo,
+      value: (datosPersonales || {}).sexo || this.dtprCboSexo
+    };
+    this.selectOptionPaisNac = {
+      key: (optionPais || {}).key,
+      value: (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac
+    };
+    this.selectOptionTipodoc = {
+      key: (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc,
+      value: (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc
+    };
+    this.selectOptionEstadoCivil = {
+      key: (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil,
+      value: (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil
+    };
+    this.selectOptionPension = {
+      key: (datosPersonales || {}).tipo_pension || this.dtprCboPension,
+      value: (datosPersonales || {}).tipo_pension || this.dtprCboPension
+    };
+
+    this.dtprCboEstadoCivil = (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil;
+    this.dtprCboDistrito = (datosPersonales || {}).distrito || this.dtprCboDistrito;
+    this.dtprDireccion = (datosPersonales || {}).direccion || this.dtprDireccion;
+    this.dtprReferencia = (datosPersonales || {}).referencia || this.dtprReferencia;
+    this.dtprEmail = (datosPersonales || {}).email || this.dtprEmail;
+    this.dtprCboPension = (datosPersonales || {}).tipo_pension || this.dtprCboPension;
+    this.dtprContactoEmg = (datosPersonales || {}).contacto_emergengia || this.dtprContactoEmg;
+    this.dtprNumEmerg = (datosPersonales || {}).numero_emergencia || this.dtprNumEmerg;
+
+    this.expLaboralList = experienciaLaboral || this.expLaboralList;
+    this.forAcademicaList = formacionAcademica || this.forAcademicaList;
+    this.drHabientesList = derechosHabiente || this.drHabientesList;
+
+    this.dtslAlergia = (datosSalud || {}).alergias || this.dtslAlergia;
+    this.dtslEnfermedad = (datosSalud || {}).enfermedad || this.dtslEnfermedad;
+    this.dtslMedicamento = (datosSalud || {}).medicamento || this.dtslMedicamento;
+    this.dtslGrupoSanguineo = (datosSalud || {}).grupo_sanguineo || this.dtslGrupoSanguineo;
+    this.dtslAntecedentesPol = (datosSalud || {}).antecedentes_policiales || this.dtslAntecedentesPol;
+    this.dtslAntecedenteJud = (datosSalud || {}).antecedentes_judiciales || this.dtslAntecedenteJud;
+    this.dtslAntecedentePen = (datosSalud || {}).antecedentes_penales || this.dtslAntecedentePen;
+
+    this.requiredList.filter((index) => {
+      if (this[index]) {
+        this.requiredList = (this.requiredList || []).filter(required => required != index);
+      }
+    });
 
   }
 
@@ -1286,4 +1435,11 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.onNextStep(6);
     this.isComplete = true;
   }
+
+
+  onDeleteItem(dataName, index) {
+    this[dataName].splice(index, 1);
+    this.onDataStorage();
+  }
+
 }

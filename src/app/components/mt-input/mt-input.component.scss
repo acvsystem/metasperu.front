@@ -1,5 +1,6 @@
  ion-input {
      top: 0px !important;
+
      input {
          padding-bottom: 0 !important;
          padding-top: 13px !important;
@@ -36,7 +37,7 @@
      margin: 0 !important;
      padding: 0 !important;
      width: 100% !important;
-     color: rgba(0, 0, 0, .65) !important;
+     color: rgba(0, 0, 0, .65);
      font-size: 14px !important;
      line-height: 1.5 !important;
      background-color: #fff !important;
@@ -114,5 +115,19 @@
  .input-item.inputSellim.item-has-focus {
      ion-label {
          top: -10px !important;
+     }
+ }
+
+ .required {
+     ion-label {
+         color: red !important;
+     }
+
+     .item-has-focus {
+         box-shadow: 0 0 0 1px rgb(248, 99, 99) !important;
+     }
+
+     .input-item {
+         border: 1px solid red !important;
      }
  }
