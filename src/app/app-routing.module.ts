@@ -9,7 +9,7 @@ import { MtCreateUserComponent } from './pages/mt-create-user/mt-create-user.com
 import { AuthGuardService as authGuard } from './services/authGuardService';
 import { MtRecursosHumanosComponent } from './pages/mt-recursos-humanos/mt-recursos-humanos.component';
 import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
-
+import { MtFrmInscriptionComponent } from './pages/mt-inscription-postulant/components/mt-frm-inscription/mt-frm-inscription.component';
 const routes: Routes = [
   {
     path: '',
@@ -41,6 +41,11 @@ const routes: Routes = [
   {
     path: 'create-account/:token',
     component: MtCreateUserComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'postulante/:token',
+    component: MtFrmInscriptionComponent,
     canActivate: [authGuard]
   },
   {

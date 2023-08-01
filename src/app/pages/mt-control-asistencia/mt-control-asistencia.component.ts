@@ -108,10 +108,10 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     this.socket.on('sendControlAsistencia', (asistencia) => {
       console.log("socket-sendControlAsistencia", asistencia);
-      if (this.actualIndexPage == 0) {
-        this.onPaginationData(1);
-      }
-
+      /*  if (this.actualIndexPage == 0) {
+          this.onPaginationData(1);
+        }
+  */
 
       /* let socketCodEmp = (asistencia || {}).CODEMPLEADO;
        let socketHorasEmp = (asistencia || {}).HORAS;

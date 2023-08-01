@@ -1,0 +1,49 @@
+.icon-search {
+    float: right !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    color: #bbbbbb !important;
+    padding-top: 4px !important;
+}
+
+.icon-search:hover {
+    color: #7e7e7e !important;
+}
+
+.content-button-filter {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+
+    button {
+        border-radius: 4px !important;
+        padding: 5px 25px !important;
+    }
+}
+
+.modal-filter {
+    width: 210px !important;
+    z-index: 99999 !important;
+    position: absolute !important;
+    background: #ffff !important;
+    height: auto !important;
+    padding-bottom: 3px !important;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d !important;
+}
+
+.search-content-button {
+    padding: 3px 6px !important;
+
+    button {
+        display: inline-block !important;
+        width: 49% !important;
+    }
+}
+
+.button-float-rigth {
+    float: right !important;
+}
+
+.colunm-action {
+    text-align: center !important;
+}

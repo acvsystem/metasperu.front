@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../../../utils/storage';
 import { ShareService } from '../../../../services/shareService';
+import { NavController } from '@ionic/angular';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'mt-frm-inscription',
@@ -977,7 +979,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     }
   ];
 
-  optionListTipoEstudio:Array<any> = [
+  optionListTipoEstudio: Array<any> = [
     {
       "key": "Tecnica",
       "value": "Tecnica"
@@ -1056,8 +1058,9 @@ export class MtFrmInscriptionComponent implements OnInit {
 
   requiredList: Array<any> = [];
   isViewAdds: boolean = false;
+  token: string = "";
 
-  constructor(private store: StorageService, private service: ShareService) {
+  constructor(private store: StorageService, private service: ShareService, private nav: NavController, private navStart: ActivatedRoute) {
     let storeStep = this.store.getStore("mtStep") || 1;
     this.onNextStep(storeStep);
     if (storeStep == 6) {
@@ -1066,7 +1069,23 @@ export class MtFrmInscriptionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.onValidateLink();
+  }
 
+  onValidateLink() {
+    this.token = this.navStart.snapshot.paramMap.get('token') || '';
+
+    let parms = {
+      url: '/security/validation/access/postulante',
+      body: { token: this.token }
+    };
+
+    this.service.post(parms).then((response) => {
+      var validation = response.success;
+      if (!validation) {
+        this.nav.navigateRoot('login');
+      }
+    });
   }
 
   getRequiredByStep(step?) {
@@ -1230,7 +1249,7 @@ export class MtFrmInscriptionComponent implements OnInit {
         property: 'drabOcupacion',
         required: true
       }
-      
+
     ]
 
     this.onAddRegister('drHabientesList', keyList);
@@ -1244,9 +1263,9 @@ export class MtFrmInscriptionComponent implements OnInit {
     let dataKeyList = keyList || [];
     let notValueList = [];
     let dataList = {};
-   
+
     (dataKeyList || []).map((obj): any => {
-      console.log(this[(obj || {}).property] );
+      console.log(this[(obj || {}).property]);
       if (this[(obj || {}).property] || !(obj || {}).required) {
         dataList[(obj || {}).key] = this[(obj || {}).property];
       } else {
@@ -1271,7 +1290,7 @@ export class MtFrmInscriptionComponent implements OnInit {
       this.service.onNotification.emit(notificationList);
     }
 
-    
+
   }
 
   onClear(keyList) {

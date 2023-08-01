@@ -4,10 +4,7 @@
       <ion-row>
         <ion-col>
           <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-            <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i></button>
-          </ion-col>
-          <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-            <button (click)="openModalAddPostulant()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-user-plus" aria-hidden="true"></i></button>
+            <button type="button" (click)="onData()" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i></button>
           </ion-col>
           <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
             <button (click)="openModalGenerateLink()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
@@ -15,14 +12,75 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <mt-datatable
-            [headList]="headList" 
-            [bodyList]="bodyList"
-            [actionButton]="actionButton"
-            [buttonOptionList]="buttonOptionList"
-            (returnData)="onSaveOrUpdate($event)"
-            ></mt-datatable>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
+              <table class="table table-bordered table-responsive-sm">
+                <thead>
+                  <tr>
+                    <th class="columHead" *ngFor="let columHead of headList;let i = index">
+                      <span>{{columHead.value}}</span>
+                      <span class="icon-search" *ngIf="columHead.isSearch" (click)="onViewSearchModal(i)" ><i class="fa fa-search" aria-hidden="true"></i></span>
+                      <section *ngIf="viewModal == i">
+                        <div *ngIf="columHead.isSearch" class="modal-filter">
+                        <div *ngFor="let property of columHead.propSearch">
+                          <mt-select
+                          *ngIf="property.options"
+                          id="searchTienda"
+                          [enableSearchInput]="true"
+                          placeHolder="Buscar tienda"
+                          [optionList]="optionListTiendas"
+                          (changeSelected)="onChangeSelect($event)"
+                          ></mt-select>
+                          <mt-input
+                          *ngIf="property.input"
+                          id="searchEmpleado"
+                          label="Empleado"
+                          placeholder="Empleado"
+                          value="{{ searchEmpleado }}"
+                          (afterChange)="onChangeInput($event)"
+                          type="text"
+                          ></mt-input>
+
+                          <mt-calendar
+                          *ngIf="property.date"
+                          idInit="searchFecInicio"
+                          idEnd="searchFecFin"
+                          label="Rango fecha"
+                          labelInit="Fecha Inicio"
+                          labelFin="Fecha Fin"
+                          isRageDate="true"
+                          (afterChangeInit)="onChangeInput($event)"
+                          (afterChangeEnd)="onChangeInput($event)"
+                          ></mt-calendar>
+                        </div>
+                        <div class="search-content-button">
+                          <button class="btn btn-primary btn-sm" (click)="onFiltrar()">Buscar</button>
+                          <button class="btn btn-primary btn-sm button-float-rigth" (click)="onClear()">Limpiar</button>
+                        </div>
+                        </div>
+                      </section>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let columBody of datosPersonalesList;let index = index">
+                    <td class="columBody">{{index + 1}}</td>
+                    <td class="columBody">{{columBody.nombres}}</td>
+                    <td class="columBody">{{columBody.ap_paterno}}</td>
+                    <td class="columBody">{{columBody.ap_materno}}</td>
+                    <td class="columBody">{{columBody.tipo_documento}}</td>
+                    <td class="columBody">{{columBody.num_documento}}</td>
+                    <td class="columBody colunm-action ">
+                      <button type="button" class="btn btn-danger btn-sm" (click)="onPDF(columBody.num_documento)">PDF</button>
+                    </td>
+                  </tr>
+                  <tr>
+                  </tr>
+                </tbody>
+              </table>
+            </ion-col>
+          </ion-row>
         </ion-col>
       </ion-row>
     </div>

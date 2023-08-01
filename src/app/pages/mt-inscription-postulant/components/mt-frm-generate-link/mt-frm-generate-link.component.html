@@ -2,8 +2,7 @@
   <ion-row>
     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
       <div class="button-content">
-        <button type="button" class="btn btn-primary btn-sm addDocument">Inscripcion</button>
-        <button type="button" class="btn btn-primary btn-sm addDocument">Tav</button>
+        <button type="button" (click)="onGenerateLink()" class="btn btn-primary btn-sm addDocument">Generar Acceso</button>
       </div>
     </ion-col>
     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
@@ -11,6 +10,7 @@
       label="URL"
       placeholder="URL"
       type="text"
+      value="{{ txtLink }}"
       [isCopy]="true"
     ></mt-input>
     </ion-col>

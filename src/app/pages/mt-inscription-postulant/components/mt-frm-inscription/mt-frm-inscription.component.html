@@ -100,7 +100,7 @@
             placeholder="Ingrese su numero de documento"
             value="{{ dtprNumDoc }}"
             (afterChange)="onChangeInput($event)"
-            type="text"
+            type="number"
             [isRequired]="showError && requiredList.includes('dtprNumDoc')"
           ></mt-input>
           </ion-col>
@@ -174,7 +174,7 @@
             placeholder="Ingrese su numero de celular"
             value="{{ dtprCelular }}"
             (afterChange)="onChangeInput($event)"
-            type="text"
+            type="number"
             [isRequired]="showError && requiredList.includes('dtprCelular')"
           ></mt-input>
           </ion-col>
@@ -212,7 +212,7 @@
             placeholder="Ingrese Numero de contacto"
             value="{{ dtprNumEmerg }}"
             (afterChange)="onChangeInput($event)"
-            type="text"
+            type="number"
             [isRequired]="showError && requiredList.includes('dtprNumEmerg')"
           ></mt-input>
           </ion-col>
@@ -407,7 +407,7 @@
             placeholder="Ingrese la edad"
             value="{{ drabEdad }}"
             (afterChange)="onChangeInput($event)"
-            type="text"
+            type="number"
             ></mt-input>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
@@ -435,7 +435,7 @@
             placeholder="Ingrese el numero de documento"
             value="{{ drabNroDocumento }}"
             (afterChange)="onChangeInput($event)"
-            type="text"
+            type="number"
             ></mt-input>
           </ion-col>
         </ion-row>

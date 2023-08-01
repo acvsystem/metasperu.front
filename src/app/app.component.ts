@@ -51,6 +51,7 @@ export class AppComponent {
     let menu = this.store.getStore('mt-menu');
     this.isMobil = window.innerWidth < 769;
     let pathActual: any = {};
+  
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });

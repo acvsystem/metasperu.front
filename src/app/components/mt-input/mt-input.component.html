@@ -6,7 +6,7 @@
         style="color: rgba(0, 0, 0, 0.65) !important;"
         id={{id}} 
         [value]="value"
-        type="{{ type == 'password' ? viewPassword ? 'text' : 'password' : 'text' }}"
+        type="{{ type == 'number' ? 'number' : type == 'password' ? viewPassword ? 'text' : 'password' : 'text' }}"
         placeholder="{{placeholder}}"
         (keyup)="onChange($event)" 
       ></ion-input>
