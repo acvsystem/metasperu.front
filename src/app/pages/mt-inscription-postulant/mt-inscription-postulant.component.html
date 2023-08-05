@@ -2,13 +2,11 @@
   <div id="content" class="full-center">
     <div class="card-content" *ngIf="isAuth">
       <ion-row>
-        <ion-col>
-          <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="1" sizeLg="1">
+          <div class="section-button-card">
             <button type="button" (click)="onData()" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i></button>
-          </ion-col>
-          <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
             <button (click)="openModalGenerateLink()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
-          </ion-col>
+          </div>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -71,8 +69,18 @@
                     <td class="columBody">{{columBody.ap_materno}}</td>
                     <td class="columBody">{{columBody.tipo_documento}}</td>
                     <td class="columBody">{{columBody.num_documento}}</td>
-                    <td class="columBody colunm-action ">
-                      <button type="button" class="btn btn-danger btn-sm" (click)="onPDF(columBody.num_documento)">PDF</button>
+                    <td class="columBody">{{columBody.tienda}}</td>
+                    <td class="columBody">
+                      <span class="badge text-bg-secondary" *ngIf="columBody.estado == 'PENDIENTE'">{{columBody.estado}}</span>
+                      <span class="badge text-bg-primary" *ngIf="columBody.estado == 'ACEPTADO'">{{columBody.estado}}</span>
+                    </td>
+                    <td class="columBody">
+                      <button type="button" class="btn btn-danger btn-sm" (click)="onPDF(columBody.num_documento)">
+                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                      </button>
+                      <button type="button" class="btn btn-success btn-sm" (click)="openModalChangeEstado(columBody)">
+                        <i class="fa fa-exchange" aria-hidden="true"></i>
+                      </button>
                     </td>
                   </tr>
                   <tr>

@@ -11,6 +11,8 @@ export class MtModalContentComponent implements OnInit {
   @Input() nameSection: string = '';
   @Input() title: string = '';
   @Input() bodyContent: any = '';
+  @Input() dataIn: any = '';
+
   contentHTML: any = '';
 
   constructor(private modalLogin: ModalController, private sanitizer: DomSanitizer) { }

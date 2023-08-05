@@ -1,0 +1,56 @@
+<div class="content">
+  <ion-row>
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="5" sizeLg="5">
+      <mt-select
+      id="tiendaPostulante"
+      [enableSearchInput]="true"
+      placeHolder="Buscar tienda"
+      [optionList]="optionListTiendas"
+      (changeSelected)="onChangeSelect($event)"
+      ></mt-select>
+    </ion-col>
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
+      <mt-select
+      id="estadoPostulante"
+      placeHolder="Estado"
+      [optionList]="optionListEstado"
+      (changeSelected)="onChangeSelect($event)"
+      ></mt-select>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+      <div class="full-center">
+        <button type="button" (click)="onChangeEstado()" class="btn btn-outline-primary btn-sm">Cambiar Estado</button>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
+          <table class="table table-bordered table-responsive-sm">
+            <thead>
+              <tr>
+                <th class="columHead" *ngFor="let columHead of headList;let i = index">
+                  <span>{{columHead.value}}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let columBody of dataPaginationList;let index = index">
+                <td class="columBody">{{index + 1}}</td>
+                <td class="columBody">{{columBody.nombres}}</td>
+                <td class="columBody">{{columBody.tipo_documento}}</td>
+                <td class="columBody">{{columBody.num_documento}}</td>
+                <td class="columBody">{{columBody.tienda}}</td>
+                <td class="columBody">
+                  <span class="badge text-bg-secondary" *ngIf="columBody.estado == 'PENDIENTE'">{{columBody.estado}}</span>
+                  <span class="badge text-bg-primary" *ngIf="columBody.estado == 'ACEPTADO'">{{columBody.estado}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</div>

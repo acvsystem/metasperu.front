@@ -44,6 +44,26 @@
     float: right !important;
 }
 
-.colunm-action {
+.columBody {
     text-align: center !important;
+
+    button {
+        margin-right: 5px !important;
+    }
+
+    span {
+        font-weight: 100 !important;
+    }
+
+}
+
+.section-button-card {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+
+    button {
+        margin-right: 10px !important;
+    }
 }

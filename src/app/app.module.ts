@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, isDevMode } from '@
 import { RouteReuseStrategy } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,12 +27,18 @@ import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-c
 import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MtCalendarComponent } from './components/mt-calendar/mt-calendar.component';
+import { MtFrmChangeStdPostulantComponent } from './pages/mt-inscription-postulant/components/mt-frm-change-std-postulant/mt-frm-change-std-postulant.component';
+import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule,MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -54,7 +61,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     MtSelectComponent,
     MtControlAsistenciaComponent,
     MtNotificationComponent,
-    MtCalendarComponent
+    MtCalendarComponent,
+    MtFrmChangeStdPostulantComponent,
+    MtEmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +75,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     MatInputModule,
     MatFormFieldModule,
     MatNativeDateModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    FormsModule, 
+    ReactiveFormsModule,
+    MatIconModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
@@ -75,7 +90,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

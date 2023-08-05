@@ -1,0 +1,22 @@
+.mat-calendar-body-cell.selected {
+    background-color: #d6eafa;
+    border-radius: 100%
+}
+
+.habit-tracker {
+    width: 300px;
+}
+
+.mat-calendar-header {
+    padding-top: 0px !important;
+}
+
+.content-chip-list {
+    margin-top: 3px !important;
+    padding-left: 56px;
+
+    mat-chip-row {
+        margin-right: 5px !important;
+        margin-bottom: 5px !important;
+    }
+}

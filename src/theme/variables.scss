@@ -508,3 +508,10 @@ mat-form-field mat-date-range-input input {
 .txt-size-card-mobil {
   font-size: 13px !important;
 }
+
+mat-calendar .selected-date {
+  span.mat-calendar-body-cell-content {
+      background-color: #673ab7 !important;
+      color: #fff !important;
+  }
+}

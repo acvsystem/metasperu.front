@@ -10,6 +10,8 @@ import { AuthGuardService as authGuard } from './services/authGuardService';
 import { MtRecursosHumanosComponent } from './pages/mt-recursos-humanos/mt-recursos-humanos.component';
 import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
 import { MtFrmInscriptionComponent } from './pages/mt-inscription-postulant/components/mt-frm-inscription/mt-frm-inscription.component';
+import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -51,6 +53,11 @@ const routes: Routes = [
   {
     path: 'control-asistencia',
     component: MtControlAsistenciaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'empleados',
+    component: MtEmployeeComponent,
     canActivate: [authGuard]
   },
   {

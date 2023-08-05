@@ -2,7 +2,32 @@
   <div id="content" class="full-center">
     <div class="card-content">
       <ion-row>
-        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
+          <mt-input
+          id="lstPeriodo"
+          label="Periodo"
+          placeholder="Periodo"
+          value="{{ lstPeriodo }}"
+          (afterChange)="onChangeInput($event)"
+          type="text"
+          ></mt-input>
+        </ion-col>
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
+          <mt-select
+          id="lstCentroCosto"
+          placeHolder="Centro de costo"
+          [optionList]="optionListMarca"
+          (changeSelected)="onChangeSelect($event)"
+          ></mt-select>
+        </ion-col>
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="5" sizeLg="5">
+          <mt-calendar
+          label="fecha"
+          isMultiSelect="true"
+          (afterChange)="onDateCalendar($event)"
+          ></mt-calendar>
+        </ion-col>
+       <!-- <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <mt-select
           id="functionExport"
           [enableSearchInput]="true"
@@ -10,10 +35,15 @@
           [optionList]="optionListExport"
           (changeSelected)="onChangeSelect($event)"
           ></mt-select>
-        </ion-col>
+        </ion-col>-->
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <div class="content-button-filter">
-            <button type="button" (click)="exportReporte()" class="btn btn-primary">Exportar</button>
+            <button type="button" (click)="searchData()"class="btn btn-outline-secondary">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+            <button type="button" (click)="exportReporte()"class="btn btn-outline-primary">
+              <i class="fa fa-download" aria-hidden="true"></i>
+            </button>
           </div>
         </ion-col>
       </ion-row>
@@ -55,7 +85,7 @@
                           label="Rango fecha"
                           labelInit="Fecha Inicio"
                           labelFin="Fecha Fin"
-                          isRageDate="true"
+                          isMultiSelect="true"
                           (afterChangeInit)="onChangeInput($event)"
                           (afterChangeEnd)="onChangeInput($event)"
                           ></mt-calendar>
@@ -72,13 +102,9 @@
                 <tbody>
                   <tr *ngFor="let columBody of dataPaginationList;let index = index">
                     <td class="columBody">{{index + 1}}</td>
-                    <td class="columBody">{{columBody.NOMVENDEDOR}}</td>
-                    <td class="columBody">{{columBody.DIA}}</td>
-                    <td class="columBody">{{columBody.HORAIN | date:'dd-MM-yy HH:mm'}}</td>
-                    <td class="columBody">{{columBody.HORAOUT | date:'dd-MM-yy HH:mm'}}</td>
-                    <td class="columBody">{{columBody.HORAS}}</td>
-                    <td class="columBody">{{columBody.VENTAS}}</td>
-                    <td class="columBody">{{columBody.NOMBRE_TIENDA}}</td>
+                    <td class="columBody">{{columBody.nombreCompleto}}</td>
+                    <td class="columBody">{{columBody.nroDocumento}}</td>
+                    <td class="columBody">{{columBody.dia}}</td>
                   </tr>
                   <tr>
                     <td colspan="8">
