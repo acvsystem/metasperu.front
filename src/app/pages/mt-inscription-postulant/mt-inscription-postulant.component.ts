@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 import { ShareService } from 'src/app/services/shareService';
 import { jsPDF } from "jspdf";
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
   selector: 'mt-inscription-postulant',
@@ -11,6 +14,8 @@ import { jsPDF } from "jspdf";
   styleUrls: ['./mt-inscription-postulant.component.scss'],
 })
 export class MtInscriptionPostulantComponent implements OnInit {
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   headList: Array<any> = [];
   bodyList: Array<any> = [];
@@ -62,6 +67,10 @@ export class MtInscriptionPostulantComponent implements OnInit {
     { key: 'VSFA JOCKEY FULL', value: 'VSFA JOCKEY FULL' },
     { key: 'BBW ASIA', value: 'BBW ASIA' }
   ];
+
+  displayedColumns: string[] = ['Nombre completo', 'Tipo Documento', 'Numero Documento', 'Tienda', 'Estado', 'Accion'];
+  dataSource = new MatTableDataSource<PeriodicElement>(this.datosPersonalesList);
+
 
   constructor(private sanitized: DomSanitizer, public modalCtrl: ModalController, private service: ShareService) { }
 
@@ -144,6 +153,9 @@ export class MtInscriptionPostulantComponent implements OnInit {
       (this.dataPostulanteList || []).filter((dt) => {
         (this.datosPersonalesList || []).push((dt || {}).datos_personales);
       });
+
+      this.dataSource = new MatTableDataSource<PeriodicElement>(this.datosPersonalesList);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -680,6 +692,20 @@ export class MtInscriptionPostulantComponent implements OnInit {
     modal.present();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
 
+}
+
+export interface PeriodicElement {
+  nombres: string;
+  ap_paterno: string;
+  ap_materno: string;
+  tipo_documento: string;
+  num_documento: string;
+  tienda: string;
+  estado: string;
 }

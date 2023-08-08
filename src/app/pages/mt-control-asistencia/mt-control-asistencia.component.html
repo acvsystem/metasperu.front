@@ -2,7 +2,7 @@
   <div id="content" class="full-center">
     <div class="card-content">
       <ion-row>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="1" sizeLg="1">
           <mt-input
           id="lstPeriodo"
           label="Periodo"
@@ -27,15 +27,14 @@
           (afterChange)="onDateCalendar($event)"
           ></mt-calendar>
         </ion-col>
-       <!-- <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <mt-select
           id="functionExport"
-          [enableSearchInput]="true"
           placeHolder="Exportar"
           [optionList]="optionListExport"
           (changeSelected)="onChangeSelect($event)"
           ></mt-select>
-        </ion-col>-->
+        </ion-col>
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <div class="content-button-filter">
             <button type="button" (click)="searchData()"class="btn btn-outline-secondary">
@@ -46,12 +45,75 @@
             </button>
           </div>
         </ion-col>
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
+          <div class="content-filter">
+            <mat-form-field>
+              <mat-label>Filter</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+            </mat-form-field>
+          </div>
+        </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-              <table class="table table-bordered table-responsive-sm">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource">
+
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="Nombre completo">
+                    <th mat-header-cell *matHeaderCellDef> Nombre completo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nombreCompleto}} </td>
+                  </ng-container>
+              
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="Documento">
+                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nroDocumento}} </td>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="Fecha">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let element"> {{element.dia}} </td>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="Hora Ingreso">
+                    <th mat-header-cell *matHeaderCellDef> Hora Ingreso </th>
+                    <td mat-cell *matCellDef="let element"> {{element.hrIn}} </td>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="Hora Salida">
+                    <th mat-header-cell *matHeaderCellDef> Hora Salida </th>
+                    <td mat-cell *matCellDef="let element"> {{element.hrOut}} </td>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="Horas Trabajadas">
+                    <th mat-header-cell *matHeaderCellDef> Horas Trabajadas </th>
+                    <td mat-cell *matCellDef="let element"> {{element.hrWorking}} </td>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="Nro ventas">
+                    <th mat-header-cell *matHeaderCellDef> Nro ventas </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nroVentas}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Ventas">
+                    <th mat-header-cell *matHeaderCellDef> Ventas </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Ventas}} </td>
+                  </ng-container>
+              
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                               showFirstLastButtons
+                               aria-label="Select page of periodic elements">
+                </mat-paginator>
+              </div>
+
+             <!-- <table class="table table-bordered table-responsive-sm">
                 <thead>
                   <tr>
                     <th class="columHead" *ngFor="let columHead of headList;let i = index">
@@ -122,7 +184,7 @@
                     </td>
                   </tr>
                 </tbody>
-              </table>
+              </table>-->
             </ion-col>
           </ion-row>
         </ion-col>

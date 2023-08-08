@@ -44,17 +44,13 @@
     float: right !important;
 }
 
-.columBody {
-    text-align: center !important;
+ button.mdc-button  {
+    min-width: 12px !important;
+    margin-right: 10px;
+}
 
-    button {
-        margin-right: 5px !important;
-    }
-
-    span {
-        font-weight: 100 !important;
-    }
-
+span {
+    font-weight: 100 !important;
 }
 
 .section-button-card {

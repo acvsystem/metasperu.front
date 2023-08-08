@@ -16,14 +16,12 @@
 }
 
 .content-button-filter {
-    display: flex !important;
-    align-items: center !important;
-    height: 100% !important;
+    margin-top: 6px !important;
 
     button {
         border-radius: 4px !important;
         margin-right: 10px;
-       // padding: 5px 25px !important;
+        // padding: 5px 25px !important;
     }
 }
 
@@ -39,6 +37,7 @@
 
 .search-content-button {
     padding: 3px 6px !important;
+
     button {
         display: inline-block !important;
         width: 49% !important;

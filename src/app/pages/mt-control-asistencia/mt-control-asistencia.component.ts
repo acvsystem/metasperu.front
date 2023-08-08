@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { io } from "socket.io-client";
 import { ShareService } from '../../services/shareService';
 import * as XLSX from 'xlsx';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
   selector: 'mt-control-asistencia',
@@ -9,6 +12,9 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./mt-control-asistencia.component.scss'],
 })
 export class MtControlAsistenciaComponent implements OnInit {
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   token: any = localStorage.getItem('tn');
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
   bodyList: Array<any> = [];
@@ -54,7 +60,8 @@ export class MtControlAsistenciaComponent implements OnInit {
   ];
 
   optionListExport: Array<any> = [
-    { key: 'exportVacaciones', value: 'Reporte Feriados' }
+    { key: 'exportFeriado', value: 'Reporte Feriados' },
+    { key: 'exportAsistencia', value: 'Reporte Asistencia' }
   ];
 
   optionListMarca: Array<any> = [
@@ -68,6 +75,9 @@ export class MtControlAsistenciaComponent implements OnInit {
   reporteFaltante: Array<any> = [];
   employeList: Array<any> = [];
   dateCalendarList: Array<any> = [];
+  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'Hora Salida', 'Horas Trabajadas', 'Nro ventas', 'Ventas'];
+
+  dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
   constructor(private service: ShareService) { }
 
@@ -102,6 +112,10 @@ export class MtControlAsistenciaComponent implements OnInit {
       let dataReport = (asistencia || {}).serverData || "{}";
 
       this.dataPaginationList = JSON.parse(dataReport);
+
+      this.dataPaginationList = this.dataPaginationList || [];
+      this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
+      this.dataSource.paginator = this.paginator;
     });
 
   }
@@ -112,7 +126,7 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   searchData() {
 
-   // if (this.lstCentroCosto.length && this.exlabFecInicio && this.exlabCulmino) {
+    if (this.lstCentroCosto.length && (this.dateCalendarList || []).length) {
       let parms = {
         url: '/control-asistencia',
         body: [
@@ -122,10 +136,10 @@ export class MtControlAsistenciaComponent implements OnInit {
           }
         ]
       };
-console.log(parms);
-     /* this.service.post(parms).then((response) => {
-      });*/
-    //}
+
+      this.service.post(parms).then((response) => {
+      });
+    }
 
   }
 
@@ -138,7 +152,7 @@ console.log(parms);
 
     this.service.get(parms).then((response) => {
       let data = ((response || [])[0] || {}).data || [];
-      console.log(data);
+
       this.employeList = data || [];
     });
   }
@@ -148,29 +162,70 @@ console.log(parms);
     let tipoReporte = (selectedOption || {}).key;
     let dataJson = [];
     let reportName = "";
-
     let empleadosAsistencia = this.dataPaginationList;
 
-    this.employeList.filter((ejb) => {
-      let cantFeriado = 0;
-      let empleado = (empleadosAsistencia || []).find((emp) => {
-        return (ejb.NRO_DOC == emp.nroDocumento
-        );
+    if (tipoReporte == "exportFeriado") {
+
+      let documentosListAdded = [];
+      this.employeList.filter((ejb) => {
+        let cantFeriado = 0;
+
+        (empleadosAsistencia || []).find((emp) => {
+          let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
+
+          if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
+            let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
+            (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
+            if (asist !== -1) {
+              cantFeriado += 1;
+            }
+          }
+        });
+
+        let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+
+        this.reporteList.push({ 'PERIODO': this.lstPeriodo, 'CODIGO': (ejb || {}).CODIGO_EJB, 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
+
+      });
+    }
+
+    if (tipoReporte == "exportAsistencia") {
+      this.employeList.filter((ejb) => {
+        let hrWorking = 0;
+        let nroVentas = 0;
+        let ventas = 0;
+        (empleadosAsistencia || []).find((emp) => {
+          if (ejb.NRO_DOC == emp.nroDocumento) {
+            let index = this.reporteList.findIndex((report) => report.DOCUMENTO == emp.nroDocumento);
+            hrWorking += emp.hrWorking;
+            nroVentas += emp.nroVentas;
+            ventas += emp.Ventas;
+            let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+
+            if (index == -1) {
+              this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking, 'NRO.VENTAS': nroVentas, 'VENTAS': ventas });
+            } else {
+              this.reporteList[index]['H.I.B'] = emp.hrIn;
+              this.reporteList[index]['H.SALIDA'] = emp.hrOut;
+              this.reporteList[index]['H.TRABAJADAS'] = hrWorking;
+              this.reporteList[index]['NRO.VENTAS'] = nroVentas;
+              this.reporteList[index]['VENTAS'] = ventas;
+            }
+          }
+        });
+
       });
 
-      if (typeof empleado != 'undefined') {
-        cantFeriado = 2;
-      }
-
-      let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO} `;
-
-      this.reporteList.push({ 'PERIODO': this.lstPeriodo, 'CODIGO': (ejb || {}).CODIGO_EJB, 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
-    });
+    }
 
     dataJson = this.reporteList || [];
     reportName = 'metasPeru';
 
-    if (this.lstPeriodo.length && dataJson.length) {
+    if (tipoReporte == "exportFeriado" && dataJson.length && this.lstPeriodo) {
+      this.exportToExcel(dataJson, reportName);
+    }
+
+    if (tipoReporte == "exportAsistencia" && dataJson.length) {
       this.exportToExcel(dataJson, reportName);
     }
 
@@ -344,4 +399,20 @@ console.log(parms);
     this[index] = (selectData || {}).value || "";
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+}
+
+export interface PeriodicElement {
+  nombreCompleto: string;
+  nroDocumento: string;
+  dia: string;
+  hrIn: string;
+  hrOut: string;
+  nroVentas: number;
+  Ventas: number;
+  hrWorking: string;
 }
