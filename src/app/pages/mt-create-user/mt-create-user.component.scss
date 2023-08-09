@@ -11,17 +11,44 @@ ion-content {
     background: #fff !important;
     border-radius: 5px !important;
     padding: 20px 15px !important;
+
+    img {
+        max-width: 50% !important;
+    }
 }
 
-.head-login,
 .body-login,
 .footer-button {
     padding-bottom: 10px !important;
 }
 
+.body-login {
+    .title {
+        margin-bottom: 16px !important;
+    }
+
+    .subtitle,
+    .btnLogin {
+        margin-bottom: 12px !important;
+    }
+}
+
 .subtitle {
-    color: #155795 !important;
+    color: #141618 !important;
+}
+
+.title {
+    font-size: 23px !important;
+    color: #444444 !important;
     font-weight: 600 !important;
+    margin-bottom: 10px !important;
+}
+
+.btnLogin {
+    cursor: pointer !important;
+    text-decoration-line: underline !important;
+    color: #155795 !important;
+    margin-left: 5px !important;
 }
 
 .footer-button .btn {

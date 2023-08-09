@@ -29,7 +29,14 @@ export class MtConfiguracionComponent implements OnInit {
     { id: "rrhh", value: "RRhh" }
   ];
 
+  optionListHashNivel: Array<any> = [
+    { id: "ADMINSITRADOR", value: "ADMINITRADOR" },
+    { id: "SERVER", value: "SERVER" },
+    { id: "AGENTE", value: "AGENTE" }
+  ];
+
   selectNivel: any = {};
+  selectedHashNivel: string = "";
 
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
@@ -120,7 +127,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   onSendLinkRegister() {
     var nivelUser = this.selectNivel;
-   
+
     let parms = {
       url: '/settings/service/email/register',
       body: { path: 'create-account', email: this.emailLinkRegistro, nivel: nivelUser }
@@ -166,10 +173,11 @@ export class MtConfiguracionComponent implements OnInit {
 
   onGenerarHash() {
     let parms = {
-      url: '/security/create/hash/agente'
+      url: '/security/create/hash/agente',
+      body: { nivel: this.selectedHashNivel }
     };
 
-    this.service.get(parms).then((response) => {
+    this.service.post(parms).then((response) => {
       let success = (response || {}).success || false;
 
       if (success) {

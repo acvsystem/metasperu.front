@@ -27,7 +27,7 @@ export class MtCreateUserComponent implements OnInit {
 
     this.token = this.navStart.snapshot.paramMap.get('token') || '';
     if (!this.token) {
-      this.nav.navigateRoot('login');
+      //  this.nav.navigateRoot('login');
     }
   }
 
@@ -45,25 +45,32 @@ export class MtCreateUserComponent implements OnInit {
       apellidoProfile: this.apellidoProfile
     }
 
+    let validForm = Object.values(bodyRegister).filter((value) => value == "");
+
     let parms = {
       url: '/security/create/user',
       body: bodyRegister
     };
 
-    this.service.post(parms).then((response) => {
-      let res = response || {};
+    if (!validForm.length) {
+      this.service.post(parms).then((response) => {
+        let res = response || {};
 
-      if ((res || {}).success) {
-        this.nav.navigateRoot('login');
-      }
-    });
-
+        if ((res || {}).success) {
+          this.nav.navigateRoot('login');
+        }
+      });
+    }
   }
 
   onChangeInput(data: any) {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
+  }
+
+  onLoginRoute() {
+    this.nav.navigateRoot('login');
   }
 
 }
