@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class MtControlAsistenciaComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator_timerList: MatPaginator;
 
   token: any = localStorage.getItem('tn');
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
@@ -76,7 +77,10 @@ export class MtControlAsistenciaComponent implements OnInit {
   employeList: Array<any> = [];
   dateCalendarList: Array<any> = [];
   displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'Hora Salida', 'Horas Trabajadas', 'Nro ventas', 'Ventas'];
-
+  tipoTableView: string = "allList";
+  displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Brake', 'Nro. Ventas', 'Ventas'];
+  dataTimerList: Array<any> = [];
+  dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
   constructor(private service: ShareService) { }
@@ -116,9 +120,87 @@ export class MtControlAsistenciaComponent implements OnInit {
       this.dataPaginationList = this.dataPaginationList || [];
       this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
       this.dataSource.paginator = this.paginator;
+
+      this.onDataTimer();
     });
 
   }
+
+  onDataTimer() {
+    if (this.tipoTableView == "timerList") {
+      let documentosListAdded = [];
+      this.dataTimerList = [];
+
+      this.employeList.filter((ejb) => {
+        let hrWorking = 0;
+        let nroVentas = 0;
+        let ventas = 0;
+
+        (this.dataPaginationList || []).find((emp) => {
+          let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+          let hExcedente = 0;
+          let hFaltante = 0;
+
+          if (ejb.NRO_DOC == emp.nroDocumento) {
+
+            hrWorking += emp.hrWorking;
+            nroVentas += emp.nroVentas;
+
+            if (hrWorking > 8) {
+              hExcedente = hrWorking % 8;
+            }
+
+            if (hrWorking < 8) {
+              hFaltante = 8 - hrWorking;
+            }
+
+            ventas += emp.Ventas;
+
+            let index = this.reporteList.findIndex((report) => report.DOCUMENTO == emp.nroDocumento && report.FECHA == emp.dia);
+
+            if (index != -1) {
+              let hora_1 = parseInt(this.reporteList[index]['H.S.B'].split(":")[0]) * 60 + parseInt(this.reporteList[index]['H.S.B'].split(":")[1]);
+              let hora_2 = parseInt(emp.hrIn.split(":")[0]) * 60 + parseInt(emp.hrIn.split(":")[1]);
+
+              ((this.reporteList || [])[index] || {})['H.I.B'] = emp.hrIn;
+              ((this.reporteList || [])[index] || {})['H.SALIDA'] = emp.hrOut;
+              ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = hrWorking.toFixed(2);
+              ((this.reporteList || [])[index] || {})['NRO.VENTAS'] = nroVentas.toFixed(2);
+              ((this.reporteList || [])[index] || {})['VENTAS'] = ventas.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = hExcedente.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.FALTANTES'] = hFaltante.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.BRAKE'] = (hora_2 - hora_1) / 60;
+
+              ((this.dataTimerList || [])[index] || {})['hib'] = emp.hrIn;
+              ((this.dataTimerList || [])[index] || {})['hSalida'] = emp.hrOut;
+              ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = hrWorking.toFixed(2);
+              ((this.dataTimerList || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
+              ((this.dataTimerList || [])[index] || {})['ventas'] = ventas.toFixed(2);
+              ((this.dataTimerList || [])[index] || {})['hExcedente'] = hExcedente.toFixed(2);
+              ((this.dataTimerList || [])[index] || {})['hFaltantes'] = hFaltante.toFixed(2);
+              ((this.dataTimerList || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
+            }
+
+            let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
+
+            if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
+              let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
+              (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
+              if (asist !== -1) {
+                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking.toFixed(2), 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0, 'nroVentas': nroVentas.toFixed(2), 'ventas': ventas.toFixed(2) });
+                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking.toFixed(2), 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0, 'NRO.VENTAS': nroVentas.toFixed(2), 'VENTAS': ventas.toFixed(2) });
+              }
+            }
+
+          }
+        });
+
+      });
+      this.dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
+      this.dataSource_timeList.paginator = this.paginator_timerList;
+    }
+  }
+
   viewModal: any = -1;
   onViewSearchModal(index) {
     this.viewModal = this.viewModal == index ? -1 : index;
@@ -197,11 +279,11 @@ export class MtControlAsistenciaComponent implements OnInit {
         let hrWorking = 0;
         let nroVentas = 0;
         let ventas = 0;
-        let hExcedente = 0;
-        let hFaltante = 0;
 
-        (empleadosAsistencia || []).find((emp) => {
+        (this.dataPaginationList || []).find((emp) => {
           let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+          let hExcedente = 0;
+          let hFaltante = 0;
 
           if (ejb.NRO_DOC == emp.nroDocumento) {
 
@@ -213,7 +295,7 @@ export class MtControlAsistenciaComponent implements OnInit {
             }
 
             if (hrWorking < 8) {
-              hFaltante = hrWorking / 8;
+              hFaltante = 8 - hrWorking;
             }
 
             ventas += emp.Ventas;
@@ -224,14 +306,14 @@ export class MtControlAsistenciaComponent implements OnInit {
               let hora_1 = parseInt(this.reporteList[index]['H.S.B'].split(":")[0]) * 60 + parseInt(this.reporteList[index]['H.S.B'].split(":")[1]);
               let hora_2 = parseInt(emp.hrIn.split(":")[0]) * 60 + parseInt(emp.hrIn.split(":")[1]);
 
-              this.reporteList[index]['H.I.B'] = emp.hrIn;
-              this.reporteList[index]['H.SALIDA'] = emp.hrOut;
-              this.reporteList[index]['H.TRABAJADAS'] = hrWorking;
-              this.reporteList[index]['NRO.VENTAS'] = nroVentas;
-              this.reporteList[index]['VENTAS'] = ventas;
-              this.reporteList[index]['H.EXCEDENTES'] = hExcedente.toFixed(2);
-              this.reporteList[index]['H.FALTANTES'] = hFaltante.toFixed(2);
-              this.reporteList[index]['H.BRAKE'] = (hora_2 - hora_1) / 60;
+              ((this.reporteList || [])[index] || {})['H.I.B'] = emp.hrIn;
+              ((this.reporteList || [])[index] || {})['H.SALIDA'] = emp.hrOut;
+              ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = hrWorking.toFixed(2);
+              ((this.reporteList || [])[index] || {})['NRO.VENTAS'] = nroVentas;
+              ((this.reporteList || [])[index] || {})['VENTAS'] = ventas;
+              ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = hExcedente.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.FALTANTES'] = hFaltante.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.BRAKE'] = (hora_2 - hora_1) / 60;
             }
 
             let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
@@ -248,10 +330,10 @@ export class MtControlAsistenciaComponent implements OnInit {
         });
 
       });
-
     }
 
     dataJson = this.reporteList || [];
+    console.log(dataJson);
     reportName = 'metasPeru';
 
     if (tipoReporte == "exportFeriado" && dataJson.length && this.lstPeriodo) {
@@ -434,7 +516,17 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.tipoTableView == "timerList") {
+      this.dataSource_timeList.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+  }
+
+  onChangeTableView(ev) {
+    this.tipoTableView = ev;
   }
 
 }
@@ -448,4 +540,20 @@ export interface PeriodicElement {
   nroVentas: number;
   Ventas: number;
   hrWorking: string;
+}
+
+export interface TimerElement {
+  nomEmpleado: string;
+  documento: string;
+  fecha: string;
+  hIngreso: string;
+  hsb: string;
+  hib: string;
+  hSalida: string;
+  hTrabajadas: string;
+  hExcedente: string;
+  hFaltantes: string;
+  hBrake: number;
+  nroVentas: number;
+  ventas: number;
 }

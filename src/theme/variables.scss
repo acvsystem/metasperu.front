@@ -511,8 +511,18 @@ mat-form-field mat-date-range-input input {
 
 mat-calendar .selected-date {
   span.mat-calendar-body-cell-content {
-      background-color: #673ab7 !important;
-      color: #fff !important;
+    background-color: #673ab7 !important;
+    color: #fff !important;
   }
 }
 
+mat-button-toggle {
+  button .mat-button-toggle-label-content {
+    padding: 0 7px !important;
+    line-height: 37px !important;
+  }
+
+  button .mat-icon {
+    height: 31px !important;
+  }
+}

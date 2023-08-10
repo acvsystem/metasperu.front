@@ -105,14 +105,15 @@
      }
  }
 
- .input-item.item-has-value,
- .input-item.item-has-focus.item-has-value {
+
+ .input-item.inputSellim.item-has-value,
+ .input-item.inputSellim.item-has-focus.item-has-value {
      ion-label {
          top: -3px !important;
      }
  }
 
- .input-item.item-has-focus {
+ .input-item.inputSellim.item-has-focus {
      ion-label {
          top: -10px !important;
      }
