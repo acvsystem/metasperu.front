@@ -505,7 +505,8 @@ export class MtControlAsistenciaComponent implements OnInit {
   }
 
   onDateCalendar(ev) {
-    this.dateCalendarList = ev.dateList;
+    console.log(ev);
+  this.dateCalendarList = ev.dateList;
   }
 
   onChangeSelect(data: any) {
