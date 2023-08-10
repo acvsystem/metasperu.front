@@ -53,7 +53,17 @@
             </mat-form-field>
           </div>
         </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="9" sizeLg="9" class="aling-right">
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
+          <mt-calendar
+          label="fecha"
+          isRageDate="true"
+          labelInit="Inicio"
+          labelFin="Termino"
+          (afterChangeInit)=""
+          (afterChangeEnd)=""
+          ></mt-calendar>
+        </ion-col>
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6" class="aling-right">
           <mat-button-toggle-group #group="matButtonToggleGroup">
             <mat-button-toggle (click)="onChangeTableView(group.value)" value="allList" aria-label="Text align left">
               <mat-icon>
