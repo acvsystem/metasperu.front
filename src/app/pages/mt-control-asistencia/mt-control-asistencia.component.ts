@@ -37,6 +37,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   lstCentroCosto: string = "";
   lstPeriodo: string = "";
 
+
   optionListTiendas: Array<any> = [
     { key: 'BBW JOCKEY', value: 'BBW JOCKEY' },
     { key: 'VSBA JOCKEY', value: 'VSBA JOCKEY' },
@@ -76,9 +77,9 @@ export class MtControlAsistenciaComponent implements OnInit {
   reporteFaltante: Array<any> = [];
   employeList: Array<any> = [];
   dateCalendarList: Array<any> = [];
-  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'Hora Salida', 'Horas Trabajadas', 'Nro ventas', 'Ventas'];
+  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'Hora Salida', 'Horas Trabajadas'];
   tipoTableView: string = "allList";
-  displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Brake', 'Nro. Ventas', 'Ventas'];
+  displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Brake'];
   dataTimerList: Array<any> = [];
   dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
@@ -187,8 +188,8 @@ export class MtControlAsistenciaComponent implements OnInit {
               let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
               (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
               if (asist !== -1) {
-                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking.toFixed(2), 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0, 'nroVentas': nroVentas.toFixed(2), 'ventas': ventas.toFixed(2) });
-                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking.toFixed(2), 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0, 'NRO.VENTAS': nroVentas.toFixed(2), 'VENTAS': ventas.toFixed(2) });
+                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking.toFixed(2), 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0 });
+                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking.toFixed(2), 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0 });
               }
             }
 
@@ -208,15 +209,32 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   searchData() {
 
-    if (this.lstCentroCosto.length && (this.dateCalendarList || []).length) {
+    let body = [];
+
+    if (this.searchFecInicio.length && this.searchFecFin.length) {
+      body.push(
+        {
+          centroCosto: this.lstCentroCosto,
+          date_1: this.searchFecInicio,
+          date_2: this.searchFecFin
+        }
+      );
+    }
+
+    if (this.lstCentroCosto.length && (this.dateCalendarList || []).length && !this.searchFecInicio.length && !this.searchFecFin.length) {
+      body.push(
+        {
+          centroCosto: this.lstCentroCosto,
+          dateList: this.dateCalendarList
+        }
+      );
+    }
+
+    console.log(body);
+    if ((this.lstCentroCosto.length && (this.dateCalendarList || []).length) || (this.searchFecInicio.length && this.searchFecFin.length)) {
       let parms = {
         url: '/control-asistencia',
-        body: [
-          {
-            centroCosto: this.lstCentroCosto,
-            dateList: this.dateCalendarList
-          }
-        ]
+        body: body
       };
 
       this.service.post(parms).then((response) => {
@@ -322,7 +340,7 @@ export class MtControlAsistenciaComponent implements OnInit {
               let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
               (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
               if (asist !== -1) {
-                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking, 'H.EXCEDENTES': hExcedente, 'H.FALTANTES': hFaltante, 'H.BRAKE': 0, 'NRO.VENTAS': nroVentas, 'VENTAS': ventas });
+                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking, 'H.EXCEDENTES': hExcedente, 'H.FALTANTES': hFaltante, 'H.BRAKE': 0 });
               }
             }
 
@@ -333,7 +351,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     }
 
     dataJson = this.reporteList || [];
-    console.log(dataJson);
+   
     reportName = 'metasPeru';
 
     if (tipoReporte == "exportFeriado" && dataJson.length && this.lstPeriodo) {
@@ -505,8 +523,18 @@ export class MtControlAsistenciaComponent implements OnInit {
   }
 
   onDateCalendar(ev) {
-    console.log(ev);
-  this.dateCalendarList = ev.dateList;
+
+    if (ev.id == "mt-input-init" || ev.id == "mt-input-end") {
+      this.dateCalendarList = [];
+
+      this.searchFecInicio = (!this.searchFecInicio.length) ? ev.id == "mt-input-init" ? ev.value : "" : this.searchFecInicio;
+      this.searchFecFin = (!this.searchFecFin.length) ? ev.id == "mt-input-end" ? ev.value : "" : this.searchFecFin;
+    }
+
+    if (!this.searchFecInicio.length && !this.searchFecFin.length) {
+      this.dateCalendarList = ev.dateList;
+    }
+
   }
 
   onChangeSelect(data: any) {

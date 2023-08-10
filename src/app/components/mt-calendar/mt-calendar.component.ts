@@ -11,8 +11,8 @@ export class MtCalendarComponent implements OnInit {
 
 
   @Input() id: string = 'mt-input-' + Math.floor(Math.random() * 9999 + 1111);
-  @Input() idInit: string = 'mt-input-' + Math.floor(Math.random() * 9999 + 1111);
-  @Input() idEnd: string = 'mt-input-' + Math.floor(Math.random() * 9999 + 1111);
+  @Input() idInit: string = 'mt-input-init';
+  @Input() idEnd: string = 'mt-input-end';
   @Input() label: string = "label";
   @Input() labelInit: string = "Inicio";
   @Input() labelFin: string = "Fin";
