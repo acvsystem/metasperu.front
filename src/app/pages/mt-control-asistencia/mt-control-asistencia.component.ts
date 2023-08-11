@@ -4,7 +4,8 @@ import { ShareService } from '../../services/shareService';
 import * as XLSX from 'xlsx';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { MatDialog } from '@angular/material/dialog';
+import { MtChartDialogComponent } from '../../components/mt-chart-dialog/mt-chart-dialog.component';
 
 @Component({
   selector: 'mt-control-asistencia',
@@ -77,14 +78,15 @@ export class MtControlAsistenciaComponent implements OnInit {
   reporteFaltante: Array<any> = [];
   employeList: Array<any> = [];
   dateCalendarList: Array<any> = [];
-  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'Hora Salida', 'Horas Trabajadas'];
+  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Brake'];
+
   tipoTableView: string = "allList";
-  displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Brake'];
+  displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'Fecha', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'Accion'];
   dataTimerList: Array<any> = [];
   dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, private dialog: MatDialog) { }
 
   ngOnInit() {
 
@@ -127,7 +129,101 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   }
 
+  openDialog() {
+    const dialogRef = this.dialog.open(MtChartDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
   onDataTimer() {
+
+    if (this.tipoTableView == "timerList") {
+      if ((this.searchFecInicio.length && this.searchFecFin.length)) {
+        this.onReportMensual();
+      }
+
+    } else {
+      if (this.dateCalendarList.length) {
+        let documentosListAdded = [];
+        this.dataTimerList = [];
+
+        this.employeList.filter((ejb) => {
+          let hrWorking = 0;
+          let nroVentas = 0;
+          let ventas = 0;
+
+          (this.dataPaginationList || []).find((emp) => {
+            let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+            let hExcedente = 0;
+            let hFaltante = 0;
+
+            if (ejb.NRO_DOC == emp.nroDocumento) {
+
+              hrWorking += emp.hrWorking;
+              nroVentas += emp.nroVentas;
+
+              if (hrWorking > 8) {
+                hExcedente += hrWorking % 8;
+              }
+
+              if (hrWorking < 8) {
+                hFaltante += 8 - hrWorking;
+              }
+
+              ventas += emp.Ventas;
+
+              let index = this.reporteList.findIndex((report) => report.DOCUMENTO == emp.nroDocumento && report.FECHA == emp.dia);
+
+              if (index != -1) {
+                let hora_1 = parseInt(this.reporteList[index]['H.S.B'].split(":")[0]) * 60 + parseInt(this.reporteList[index]['H.S.B'].split(":")[1]);
+                let hora_2 = parseInt(emp.hrIn.split(":")[0]) * 60 + parseInt(emp.hrIn.split(":")[1]);
+
+                ((this.reporteList || [])[index] || {})['H.I.B'] = emp.hrIn;
+                ((this.reporteList || [])[index] || {})['H.SALIDA'] = emp.hrOut;
+                ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = hrWorking.toFixed(2);
+                ((this.reporteList || [])[index] || {})['NRO.VENTAS'] = nroVentas.toFixed(2);
+                ((this.reporteList || [])[index] || {})['VENTAS'] = ventas.toFixed(2);
+                ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = hExcedente.toFixed(2);
+                ((this.reporteList || [])[index] || {})['H.FALTANTES'] = hFaltante.toFixed(2);
+                ((this.reporteList || [])[index] || {})['H.BRAKE'] = (hora_2 - hora_1) / 60;
+
+                ((this.dataTimerList || [])[index] || {})['hib'] = emp.hrIn;
+                ((this.dataTimerList || [])[index] || {})['hSalida'] = emp.hrOut;
+                ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = hrWorking.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['ventas'] = ventas.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['hExcedente'] = hExcedente.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['hFaltantes'] = hFaltante.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
+              }
+
+              let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
+
+              if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
+
+                let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
+                (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
+                if (asist !== -1) {
+                  this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking.toFixed(2), 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0 });
+                  this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking.toFixed(2), 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0 });
+                }
+              }
+
+            }
+          });
+
+        });
+
+        this.dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
+        this.dataSource_timeList.paginator = this.paginator_timerList;
+      }
+
+    }
+  }
+
+  onReportMensual() {
     if (this.tipoTableView == "timerList") {
       let documentosListAdded = [];
       this.dataTimerList = [];
@@ -148,16 +244,16 @@ export class MtControlAsistenciaComponent implements OnInit {
             nroVentas += emp.nroVentas;
 
             if (hrWorking > 8) {
-              hExcedente = hrWorking % 8;
+              hExcedente += hrWorking % 8;
             }
 
             if (hrWorking < 8) {
-              hFaltante = 8 - hrWorking;
+              hFaltante += 8 - hrWorking;
             }
 
             ventas += emp.Ventas;
 
-            let index = this.reporteList.findIndex((report) => report.DOCUMENTO == emp.nroDocumento && report.FECHA == emp.dia);
+            let index = this.reporteList.findIndex((report) => report.DOCUMENTO == emp.nroDocumento);
 
             if (index != -1) {
               let hora_1 = parseInt(this.reporteList[index]['H.S.B'].split(":")[0]) * 60 + parseInt(this.reporteList[index]['H.S.B'].split(":")[1]);
@@ -182,12 +278,13 @@ export class MtControlAsistenciaComponent implements OnInit {
               ((this.dataTimerList || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
             }
 
-            let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
+            let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento);
 
             if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
+
               let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
               (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-              if (asist !== -1) {
+              if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
                 this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking.toFixed(2), 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0 });
                 this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking.toFixed(2), 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0 });
               }
@@ -197,6 +294,7 @@ export class MtControlAsistenciaComponent implements OnInit {
         });
 
       });
+
       this.dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
       this.dataSource_timeList.paginator = this.paginator_timerList;
     }
@@ -230,7 +328,7 @@ export class MtControlAsistenciaComponent implements OnInit {
       );
     }
 
-    console.log(body);
+
     if ((this.lstCentroCosto.length && (this.dateCalendarList || []).length) || (this.searchFecInicio.length && this.searchFecFin.length)) {
       let parms = {
         url: '/control-asistencia',
@@ -242,6 +340,8 @@ export class MtControlAsistenciaComponent implements OnInit {
     }
 
   }
+
+
 
 
   onEmpleadoList() {
@@ -351,7 +451,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     }
 
     dataJson = this.reporteList || [];
-   
+
     reportName = 'metasPeru';
 
     if (tipoReporte == "exportFeriado" && dataJson.length && this.lstPeriodo) {
@@ -376,138 +476,6 @@ export class MtControlAsistenciaComponent implements OnInit {
     XLSX.writeFile(workbook, name);
   }
 
-  onNextPage() {
-    let indexLength = this.actualIndexPage + 1;
-    if (indexLength < this.indexPageList.length && this.bodyList.length < this.indexPageList.length) {
-      this.actualIndexPage = indexLength;
-      this.onPaginationData(this.actualIndexPage * this.viewLengthRegister);
-    } else {
-
-      if (indexLength < this.indexPageList.length) {
-        this.actualIndexPage = indexLength;
-        this.dataPaginationList = this.bodyList[this.actualIndexPage];
-      }
-
-    }
-
-  }
-
-  onPreviousPage() {
-    if (this.actualIndexPage > 0) {
-      this.actualIndexPage = this.actualIndexPage - 1;
-      this.dataPaginationList = this.bodyList[this.actualIndexPage];
-    }
-  }
-
-  onPage(indexPage) {
-    this.actualIndexPage = indexPage;
-
-    if (((this.bodyList || [])[indexPage] || []).length) {
-      this.dataPaginationList = this.bodyList[indexPage];
-    } else {
-      this.onPaginationData(indexPage * this.viewLengthRegister);
-    }
-
-  }
-
-  onPaginationData(cantActual) {
-
-
-    let parms = {
-      url: '/rrhh/search/asistencia/pagination',
-      parms: [
-        { key: 'limitPage', value: this.viewLengthRegister },
-        { key: 'cantRegister', value: cantActual }
-      ]
-    };
-
-    this.service.get(parms).then((response) => {
-      let data = ((response || [])[0] || {}).data || [];
-      if (data.length) {
-        this.onInsertData(((response || [])[0] || {}).cant_registros, cantActual, data, false);
-      }
-
-    });
-  }
-
-  onInsertData(cantRegister, cantActual, data, isFilter) {
-
-    let dataLength = cantRegister;
-    var isActionFilter = isFilter;
-    let insertPage = 0;
-
-    if (cantActual > 1) {
-      insertPage = (cantActual / this.viewLengthRegister);
-    }
-
-    this.cantPagination = Math.ceil(dataLength / this.viewLengthRegister);
-
-    if (isActionFilter) {
-      this.indexPageList = [];
-      this.bodyList = [];
-    }
-    if (!this.indexPageList.length) {
-      for (let i = 1; i <= this.cantPagination; i++) {
-        this.indexPageList.push(i);
-
-        if (isActionFilter) {
-          let limiteRegister = i * this.viewLengthRegister;
-
-          let initRegister = limiteRegister - this.viewLengthRegister;
-          if (limiteRegister == this.viewLengthRegister) {
-            initRegister = 0;
-          }
-          let indexArrow = initRegister / this.viewLengthRegister;
-          this.bodyList[indexArrow] = [];
-          (data || []).filter((register, j) => {
-            if (j > initRegister - 1 && j < limiteRegister) {
-              this.bodyList[indexArrow].push(register);
-            }
-          });
-        }
-      }
-    }
-
-    if (!isActionFilter) {
-      this.bodyList[insertPage] = data;
-    }
-
-    console.log(this.bodyList);
-    this.dataPaginationList = this.bodyList[insertPage];
-  }
-
-  onFiltrar() {
-
-    let parametros = [];
-
-    if (this.searchFecInicio.length) {
-      parametros.push({ key: 'dateInit', value: this.searchFecInicio });
-    }
-
-    if (this.searchFecInicio.length && this.searchFecFin.length) {
-      parametros.push({ key: 'dateEnd', value: this.searchFecFin });
-    }
-
-    if (this.searchTienda.length) {
-      parametros.push({ key: 'dateNomTienda', value: this.searchTienda });
-    }
-
-    if (this.searchEmpleado.length) {
-      parametros.push({ key: 'dateNomEmp', value: this.searchEmpleado });
-    }
-
-    let parms = {
-      url: '/rrhh/search/asistencia',
-      parms: parametros
-    };
-
-    this.service.get(parms).then((response) => {
-      this.onInsertData(((response || [])[0] || {}).data.length, 1, ((response || [])[0] || {}).data, true);
-      this.viewModal = -1;
-    });
-
-
-  }
 
   onClear() {
     this.searchFecInicio = "";

@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, isDevMode } from '@
 import { RouteReuseStrategy } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MtCalendarComponent } from './components/mt-calendar/mt-calendar.component';
 import { MtFrmChangeStdPostulantComponent } from './pages/mt-inscription-postulant/components/mt-frm-change-std-postulant/mt-frm-change-std-postulant.component';
 import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
+import { MtChartDialogComponent } from './components/mt-chart-dialog/mt-chart-dialog.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -37,10 +38,12 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgxChartsModule }from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -65,7 +68,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MtNotificationComponent,
     MtCalendarComponent,
     MtFrmChangeStdPostulantComponent,
-    MtEmployeeComponent
+    MtEmployeeComponent,
+    MtChartDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -80,11 +84,13 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatTableModule,
     MatPaginatorModule,
     MatChipsModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     MatIconModule,
+    NgxChartsModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatDialogModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

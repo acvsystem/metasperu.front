@@ -526,3 +526,9 @@ mat-button-toggle {
     height: 31px !important;
   }
 }
+
+.mdc-table {
+  .mdc-button {
+    min-width: 49px !important;
+  }
+}
