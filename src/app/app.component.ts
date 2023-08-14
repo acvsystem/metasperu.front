@@ -51,7 +51,7 @@ export class AppComponent {
     let menu = this.store.getStore('mt-menu');
     this.isMobil = window.innerWidth < 769;
     let pathActual: any = {};
-  
+
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });
@@ -68,12 +68,19 @@ export class AppComponent {
 
     if (this.store.getStore('tn')) {
       this.renderNavBar = true;
-      pathActual = this.store.getStore('pathURL') || 'comprobantes';
-      this.nav.navigateRoot((pathActual || {}).value);
+
+      pathActual = this.store.getStore('pathURL');
+      let route = (pathActual || {}).value;
+
+      if (pathActual == 'null') {
+        route = (((this.profileUser || [])[0] || {}).nivel == "ADMINSTRADOR") ? 'comprobantes' : 'empleados';
+      }
+
+      this.nav.navigateRoot(route);
     } else {
       this.renderNavBar = false;
     }
-    
+
 
     try {
       this.router.events
@@ -87,7 +94,7 @@ export class AppComponent {
         .subscribe(
           (event: NavigationEnd) => {
             this.store.setStore('pathURL', location.pathname.split('/')[1]);
-            pathActual = this.store.getStore('pathURL') || 'comprobantes';
+           // pathActual = this.store.getStore('pathURL') || 'comprobantes';
             if (!this.store.getStore('tn')) {
               this.renderNavBar = false;
             }

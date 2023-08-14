@@ -89,6 +89,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('conexion:serverICG:send', (conexion) => {
+      console.log(conexion);
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo && data.conexICG != isConect));
@@ -99,7 +100,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('status:serverSUNAT:send', (status) => {
-      console.log(status);
       this.statusServerList = [status] || [];
       let isConect = (status || {}).online || 'false';
       this.isConnectServer = isConect;
