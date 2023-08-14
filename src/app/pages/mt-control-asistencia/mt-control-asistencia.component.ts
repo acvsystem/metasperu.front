@@ -38,6 +38,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   lstCentroCosto: string = "";
   lstPeriodo: string = "";
 
+  chartData: Array<any> = [];
 
   optionListTiendas: Array<any> = [
     { key: 'BBW JOCKEY', value: 'BBW JOCKEY' },
@@ -129,8 +130,27 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(MtChartDialogComponent);
+  openDialog(nroDocumento) {
+    let hrWorking = 0;
+    this.dataPaginationList.filter((data) => {
+
+      if (data.nroDocumento == nroDocumento) {
+        hrWorking += data.hrWorking;
+
+        let index = this.chartData.findIndex((chart) => chart.name == data.dia);
+
+        if (index != -1) {
+          (this.chartData[index] || {}).value = hrWorking;
+          hrWorking = 0;
+        } else {
+          this.chartData.push({ name: (data || {}).dia, value: hrWorking });
+        }
+      }
+    })
+
+    const dialogRef = this.dialog.open(MtChartDialogComponent, {
+      data: this.chartData,
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

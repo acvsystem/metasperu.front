@@ -1,15 +1,18 @@
 
-<ngx-charts-bar-vertical 
-    [view]="[1000,400]"
-    [results]="saleData"
-    [xAxisLabel]="'Products'"
-    [legendTitle]="'Product Sale Chart'"
-    [yAxisLabel]="'Sale'"
+<div class="container-charts">
+    <ngx-charts-bar-vertical 
+    [view]="[1000,444]"
+    [results]="chartData"
+    [xAxisLabel]="'Dias'"
+    [legendTitle]="'Dias Trabajados'"
+    [yAxisLabel]="'Horas'"
     [legend]="true"
     [showXAxisLabel]="true"
     [showYAxisLabel]="true"
     [xAxis]="true"
     [yAxis]="true"
-    [gradient]="true">
+    [scheme]="colorScheme"
+    [schemeType]="schemeType">
 </ngx-charts-bar-vertical>
+</div>
 
