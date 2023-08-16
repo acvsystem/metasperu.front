@@ -355,8 +355,10 @@ export class MtControlAsistenciaComponent implements OnInit {
         body: body
       };
 
-      this.service.post(parms).then((response) => {
-      });
+      this.socket.emit('emitRRHH', body);
+
+      /*this.service.post(parms).then((response) => {
+      });*/
     }
 
   }
