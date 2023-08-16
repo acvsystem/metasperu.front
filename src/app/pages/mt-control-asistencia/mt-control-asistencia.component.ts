@@ -14,8 +14,8 @@ import { MtChartDialogComponent } from '../../components/mt-chart-dialog/mt-char
 })
 export class MtControlAsistenciaComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatPaginator) paginator_timerList: MatPaginator;
+  @ViewChild('MatPaginator_1') paginator: MatPaginator;
+  @ViewChild('MatPaginator_2') paginator_timerList: MatPaginator;
 
   token: any = localStorage.getItem('tn');
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
@@ -85,7 +85,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'Fecha', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'Accion'];
   dataTimerList: Array<any> = [];
   dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
-  dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
+  dataSource = new MatTableDataSource<TimerElement>(this.dataTimerList);
 
   constructor(private service: ShareService, private dialog: MatDialog) { }
 
@@ -118,12 +118,12 @@ export class MtControlAsistenciaComponent implements OnInit {
       console.log("socket-sendControlAsistencia", JSON.parse(asistencia.serverData));
 
       let dataReport = (asistencia || {}).serverData || "{}";
-
+      this.dataPaginationList = [];
       this.dataPaginationList = JSON.parse(dataReport);
 
       this.dataPaginationList = this.dataPaginationList || [];
-      this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
-      this.dataSource.paginator = this.paginator;
+      //this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
+      // this.dataSource.paginator = this.paginator;
 
       this.onDataTimer();
     });
@@ -236,8 +236,14 @@ export class MtControlAsistenciaComponent implements OnInit {
 
         });
 
-        this.dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
-        this.dataSource_timeList.paginator = this.paginator_timerList;
+        if (this.dataTimerList.length) {
+          this.dataSource.data = this.dataTimerList;
+          this.dataSource.paginator = this.paginator;
+        } else {
+          this.dataSource = new MatTableDataSource<TimerElement>(this.dataTimerList);
+          this.dataSource.paginator = this.paginator;
+        }
+
       }
 
     }
@@ -350,21 +356,10 @@ export class MtControlAsistenciaComponent implements OnInit {
 
 
     if ((this.lstCentroCosto.length && (this.dateCalendarList || []).length) || (this.searchFecInicio.length && this.searchFecFin.length)) {
-      let parms = {
-        url: '/control-asistencia',
-        body: body
-      };
-
       this.socket.emit('emitRRHH', body);
-
-      /*this.service.post(parms).then((response) => {
-      });*/
     }
 
   }
-
-
-
 
   onEmpleadoList() {
 
@@ -376,10 +371,12 @@ export class MtControlAsistenciaComponent implements OnInit {
       let data = ((response || [])[0] || {}).data || [];
 
       this.employeList = data || [];
+      console.log(this.employeList);
     });
   }
 
   exportReporte() {
+
     let selectedOption = this.optionListExport.find((dat) => dat.value == this.functionExport);
     let tipoReporte = (selectedOption || {}).key;
     let dataJson = [];
@@ -480,7 +477,15 @@ export class MtControlAsistenciaComponent implements OnInit {
       this.exportToExcel(dataJson, reportName);
     }
 
-    if (tipoReporte == "exportAsistencia" && dataJson.length) {
+    if (tipoReporte == "exportFeriado" && dataJson.length && !this.lstPeriodo) {
+      let notificationList = [{
+        isCaution: true,
+        bodyNotification: "Inserte el periodo del reporte."
+      }];
+      this.service.onNotification.emit(notificationList);
+    }
+
+    if (tipoReporte == "exportAsistencia" && dataJson.length && this.tipoTableView == "timerList") {
       this.exportToExcel(dataJson, reportName);
     }
 
@@ -546,6 +551,7 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   onChangeTableView(ev) {
     this.tipoTableView = ev;
+    this.onDataTimer();
   }
 
 }

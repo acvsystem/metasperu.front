@@ -22,9 +22,17 @@
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="5" sizeLg="5">
           <mt-calendar
+          *ngIf="tipoTableView == 'allList'"
           label="fecha"
           isMultiSelect="true"
           (afterChange)="onDateCalendar($event)"
+          ></mt-calendar>
+          <mt-calendar
+          *ngIf="tipoTableView != 'allList'"
+          label="fecha"
+          isMultiSelect="true"
+          (afterChange)="onDateCalendar($event)"
+          disabled="true"
           ></mt-calendar>
         </ion-col>
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
@@ -55,6 +63,7 @@
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
           <mt-calendar
+          *ngIf="tipoTableView == 'timerList'"
           label="fecha"
           isRageDate="true"
           labelInit="Inicio"
@@ -62,6 +71,17 @@
           (afterChangeInit)="onDateCalendar($event)"
           (afterChangeEnd)="onDateCalendar($event)"
           ></mt-calendar>
+          <mt-calendar
+          *ngIf="tipoTableView != 'timerList'"
+          label="fecha"
+          isRageDate="true"
+          labelInit="Inicio"
+          labelFin="Termino"
+          (afterChangeInit)="onDateCalendar($event)"
+          (afterChangeEnd)="onDateCalendar($event)"
+          disabled="true"
+          ></mt-calendar>
+          
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6" class="aling-right">
           <mat-button-toggle-group #group="matButtonToggleGroup">
@@ -81,9 +101,9 @@
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-              <div class="mat-elevation-z8" *ngIf="tipoTableView == 'allList'">
-                <table mat-table [dataSource]="dataSource_timeList">
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="mat-elevation-z8" [class]="tipoTableView == 'allList' ? 'onVisible':'onHide'">
+                <table mat-table [dataSource]="dataSource">
 
                   <!-- Weight Column -->
                   <ng-container matColumnDef="Nombre completo">
@@ -146,12 +166,12 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
               
-                <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                <mat-paginator #MatPaginator_1 [pageSizeOptions]="[5, 10, 20]"
                                showFirstLastButtons
                                aria-label="Select page of periodic elements">
                 </mat-paginator>
               </div>
-              <div class="mat-elevation-z8" *ngIf="tipoTableView == 'timerList'">
+              <div class="mat-elevation-z8" [class]="tipoTableView == 'timerList' ? 'onVisible':'onHide'">
                 <table mat-table [dataSource]="dataSource_timeList">
 
                   <ng-container matColumnDef="Nombre completo">
@@ -203,7 +223,7 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumnsTimerList;"></tr>
                 </table>
               
-                <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                <mat-paginator  #MatPaginator_2 [pageSizeOptions]="[5, 10, 20]"
                                showFirstLastButtons
                                aria-label="Select page of periodic elements">
                 </mat-paginator>

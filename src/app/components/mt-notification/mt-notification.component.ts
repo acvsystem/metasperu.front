@@ -23,7 +23,6 @@ export class MtNotificationComponent implements OnInit {
       this.configurationList = [];
       this.isTimeClose = false;
       this.configurationList = configuration;
-
       setTimeout(() => {
         this.isTimeClose = true;
       }, 3000);

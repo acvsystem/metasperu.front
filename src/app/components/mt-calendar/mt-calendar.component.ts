@@ -19,6 +19,7 @@ export class MtCalendarComponent implements OnInit {
   @Input() isRageDate: boolean = false;
   @Input() isRequired: boolean = false;
   @Input() isMultiSelect: boolean = false;
+  @Input() disabled: boolean = false;
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeInit: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeEnd: EventEmitter<any> = new EventEmitter();

@@ -17,7 +17,8 @@
           </button>
         </mat-chip-row>
       </div>
-      <input matInput [matDatepicker]="picker" (dateChange)="dateChanged($event)" [value]="date.value" hidden>
+      <input matInput *ngIf="!disabled" [matDatepicker]="picker" (dateChange)="dateChanged($event)" [value]="date.value" hidden>
+      <input matInput *ngIf="disabled"  [matDatepicker]="picker" (dateChange)="dateChanged($event)" [value]="date.value" hidden disabled>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker [dateClass]="dateClass" #picker>
       </mat-datepicker>
@@ -27,8 +28,11 @@
     <mat-form-field class="mt-calendar-range" *ngIf="isRageDate">
       <mat-label>{{label}}</mat-label>
       <mat-date-range-input [rangePicker]="rangePicker">
-        <input matStartDate placeholder="{{labelInit}}" (dateInput)="addEventInit('input', $event)">
-        <input matEndDate placeholder="{{labelFin}}" (dateInput)="addEventEnd('input', $event)">
+        <input matStartDate *ngIf="!disabled" placeholder="{{labelInit}}" (dateInput)="addEventInit('input', $event)">
+        <input matEndDate *ngIf="!disabled" placeholder="{{labelFin}}" (dateInput)="addEventEnd('input', $event)">
+
+        <input matStartDate *ngIf="disabled" placeholder="{{labelInit}}" (dateInput)="addEventInit('input', $event)" disabled>
+        <input matEndDate *ngIf="disabled" placeholder="{{labelFin}}" (dateInput)="addEventEnd('input', $event)" disabled>
       </mat-date-range-input>
       <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
       <mat-date-range-picker #rangePicker>
