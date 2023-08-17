@@ -206,20 +206,20 @@ export class MtControlAsistenciaComponent implements OnInit {
 
                 ((this.reporteList || [])[index] || {})['H.I.B'] = emp.hrIn;
                 ((this.reporteList || [])[index] || {})['H.SALIDA'] = emp.hrOut;
-                ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = hrWorking.toFixed(2);
+                ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                 ((this.reporteList || [])[index] || {})['NRO.VENTAS'] = nroVentas.toFixed(2);
                 ((this.reporteList || [])[index] || {})['VENTAS'] = ventas.toFixed(2);
-                ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = hExcedente.toFixed(2);
-                ((this.reporteList || [])[index] || {})['H.FALTANTES'] = hFaltante.toFixed(2);
+                ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = Math.round(parseFloat(hExcedente.toFixed(2)));
+                ((this.reporteList || [])[index] || {})['H.FALTANTES'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                 ((this.reporteList || [])[index] || {})['H.BRAKE'] = (hora_2 - hora_1) / 60;
 
                 ((this.dataTimerList || [])[index] || {})['hib'] = emp.hrIn;
                 ((this.dataTimerList || [])[index] || {})['hSalida'] = emp.hrOut;
-                ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = hrWorking.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                 ((this.dataTimerList || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
                 ((this.dataTimerList || [])[index] || {})['ventas'] = ventas.toFixed(2);
-                ((this.dataTimerList || [])[index] || {})['hExcedente'] = hExcedente.toFixed(2);
-                ((this.dataTimerList || [])[index] || {})['hFaltantes'] = hFaltante.toFixed(2);
+                ((this.dataTimerList || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
+                ((this.dataTimerList || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                 ((this.dataTimerList || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
               }
 
@@ -230,8 +230,8 @@ export class MtControlAsistenciaComponent implements OnInit {
                 let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
                 (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
                 if (asist !== -1) {
-                  this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking.toFixed(2), 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0 });
-                  this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking.toFixed(2), 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0 });
+                  this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 });
+                  this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': Math.round(parseFloat(hrWorking.toFixed(2))), 'H.EXCEDENTES': Math.round(parseFloat(hExcedente.toFixed(2))), 'H.FALTANTES': Math.round(parseFloat(hFaltante.toFixed(2))), 'H.BRAKE': 0 });
                 }
               }
 
@@ -271,7 +271,7 @@ export class MtControlAsistenciaComponent implements OnInit {
           if (ejb.NRO_DOC == emp.nroDocumento) {
             hrWorking += emp.hrWorking;
             nroVentas += emp.nroVentas;
-   
+
             if (hrWorking > 8) {
               hExcedente += hrWorking % 8;
             }
@@ -290,20 +290,20 @@ export class MtControlAsistenciaComponent implements OnInit {
 
               ((this.reporteList || [])[index] || {})['H.I.B'] = emp.hrIn;
               ((this.reporteList || [])[index] || {})['H.SALIDA'] = emp.hrOut;
-              ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = Math.round(hrWorking.toFixed(2));
+              ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = Math.round(parseFloat(hrWorking.toFixed(2)));
               ((this.reporteList || [])[index] || {})['NRO.VENTAS'] = nroVentas.toFixed(2);
               ((this.reporteList || [])[index] || {})['VENTAS'] = ventas.toFixed(2);
               ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = Math.round(parseFloat(hExcedente.toFixed(2)));
-              ((this.reporteList || [])[index] || {})['H.FALTANTES'] = hFaltante.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.FALTANTES'] = Math.round(parseFloat(hFaltante.toFixed(2)));
               ((this.reporteList || [])[index] || {})['H.BRAKE'] = (hora_2 - hora_1) / 60;
 
               ((this.dataTimerList || [])[index] || {})['hib'] = emp.hrIn;
               ((this.dataTimerList || [])[index] || {})['hSalida'] = emp.hrOut;
-              ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = Math.round(hrWorking.toFixed(2));
+              ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
               ((this.dataTimerList || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
               ((this.dataTimerList || [])[index] || {})['ventas'] = ventas.toFixed(2);
               ((this.dataTimerList || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
-              ((this.dataTimerList || [])[index] || {})['hFaltantes'] = hFaltante.toFixed(2);
+              ((this.dataTimerList || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
               ((this.dataTimerList || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
             }
 
@@ -314,8 +314,8 @@ export class MtControlAsistenciaComponent implements OnInit {
               let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
               (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
               if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
-                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': hrWorking, 'hExcedente': hExcedente.toFixed(2), 'hFaltantes': hFaltante.toFixed(2), 'hBrake': 0 });
-                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking, 'H.EXCEDENTES': hExcedente.toFixed(2), 'H.FALTANTES': hFaltante.toFixed(2), 'H.BRAKE': 0 });
+                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 });
+                this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'FECHA': emp.dia, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': Math.round(parseFloat(hrWorking.toFixed(2))), 'H.EXCEDENTES': Math.round(parseFloat(hExcedente.toFixed(2))), 'H.FALTANTES': Math.round(parseFloat(hFaltante.toFixed(2))), 'H.BRAKE': 0 });
               }
             }
 
@@ -463,14 +463,14 @@ export class MtControlAsistenciaComponent implements OnInit {
 
               ((this.reporteList || [])[index] || {})['H.I.B'] = emp.hrIn;
               ((this.reporteList || [])[index] || {})['H.SALIDA'] = emp.hrOut;
-              ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = hrWorking.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.TRABAJADAS'] = Math.round(parseFloat(hrWorking.toFixed(2)));
               ((this.reporteList || [])[index] || {})['NRO.VENTAS'] = nroVentas;
               ((this.reporteList || [])[index] || {})['VENTAS'] = ventas;
-              ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = hExcedente.toFixed(2);
-              ((this.reporteList || [])[index] || {})['H.FALTANTES'] = hFaltante.toFixed(2);
+              ((this.reporteList || [])[index] || {})['H.EXCEDENTES'] = Math.round(parseFloat(hExcedente.toFixed(2)));
+              ((this.reporteList || [])[index] || {})['H.FALTANTES'] = Math.round(parseFloat(hFaltante.toFixed(2)));
               ((this.reporteList || [])[index] || {})['H.BRAKE'] = (hora_2 - hora_1) / 60;
             } else {
-              this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': hrWorking, 'H.EXCEDENTES': hExcedente, 'H.FALTANTES': hFaltante, 'H.BRAKE': 0 });
+              this.reporteList.push({ 'EMPLEADO': nombreCompleto, 'DOCUMENTO': emp.nroDocumento, 'H.INGRESO': emp.hrIn, 'H.S.B': emp.hrOut, 'H.I.B': '', 'H.SALIDA': '', 'H.TRABAJADAS': Math.round(parseFloat(hrWorking.toFixed(2))), 'H.EXCEDENTES': Math.round(parseFloat(hExcedente.toFixed(2))), 'H.FALTANTES': Math.round(parseFloat(hFaltante.toFixed(2))), 'H.BRAKE': 0 });
 
             }
 
