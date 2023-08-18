@@ -44,6 +44,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgxChartsModule }from '@swimlane/ngx-charts';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { NgxChartsModule }from '@swimlane/ngx-charts';
     MatButtonModule,
     MatButtonToggleModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

@@ -63,7 +63,7 @@
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
           <mt-calendar
-          *ngIf="tipoTableView == 'timerList'"
+    
           label="fecha"
           isRageDate="true"
           labelInit="Inicio"
@@ -71,7 +71,7 @@
           (afterChangeInit)="onDateCalendar($event)"
           (afterChangeEnd)="onDateCalendar($event)"
           ></mt-calendar>
-          <mt-calendar
+        <!--  <mt-calendar
           *ngIf="tipoTableView != 'timerList'"
           label="fecha"
           isRageDate="true"
@@ -80,7 +80,7 @@
           (afterChangeInit)="onDateCalendar($event)"
           (afterChangeEnd)="onDateCalendar($event)"
           disabled="true"
-          ></mt-calendar>
+          ></mt-calendar>-->
           
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6" class="aling-right">
@@ -103,6 +103,9 @@
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <div class="mat-elevation-z8" [class]="tipoTableView == 'allList' ? 'onVisible':'onHide'">
+                <div class="example-loading-shade" *ngIf="isLoadingResults">
+                  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+                </div>
                 <table mat-table [dataSource]="dataSource">
 
                   <!-- Weight Column -->
@@ -172,6 +175,10 @@
                 </mat-paginator>
               </div>
               <div class="mat-elevation-z8" [class]="tipoTableView == 'timerList' ? 'onVisible':'onHide'">
+                <div class="example-loading-shade" *ngIf="isLoadingResults">
+                  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+                </div>
+
                 <table mat-table [dataSource]="dataSource_timeList">
 
                   <ng-container matColumnDef="Nombre completo">
