@@ -118,21 +118,18 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     this.socket.on('sendControlAsistencia', (asistencia) => {
 
-      console.log("socket-sendControlAsistencia", JSON.parse(asistencia.serverData));
+      console.log("socket-sendControlAsistencia", asistencia);
 
-      let dataReport = (asistencia || {}).serverData || "{}";
-      let responseSocket = JSON.parse(dataReport);
+      this.dataPaginationList = asistencia;
 
-      responseSocket.filter((rs) => {
-        this.dataPaginationList.push(rs);
-      });
+      if (this.dataPaginationList.length) {
+        this.isLoadingResults = false;
+      }
+      
+      this.dataSource = new MatTableDataSource<TimerElement>(this.dataPaginationList);
+      this.dataSource.paginator = this.paginator;
 
-
-
-      //this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
-      // this.dataSource.paginator = this.paginator;
-
-      this.onDataTimer();
+      //this.onDataTimer();
     });
 
   }
@@ -208,7 +205,7 @@ export class MtControlAsistenciaComponent implements OnInit {
             if (index != -1) {
               let hora_1 = parseInt(this.dataTimerList[index]['hsb'].split(":")[0]) * 60 + parseInt(this.dataTimerList[index]['hsb'].split(":")[1]);
               let hora_2 = parseInt(emp.hrIn.split(":")[0]) * 60 + parseInt(emp.hrIn.split(":")[1]);
-              
+
               ((this.dataTimerList || [])[index] || {})['hib'] = emp.hrIn;
               ((this.dataTimerList || [])[index] || {})['hSalida'] = emp.hrOut;
               ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
@@ -223,11 +220,11 @@ export class MtControlAsistenciaComponent implements OnInit {
 
             if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
 
-               let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
+              let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
               (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-               if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
-              this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 });
-               }
+              if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
+                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 });
+              }
             }
 
           }
@@ -236,7 +233,7 @@ export class MtControlAsistenciaComponent implements OnInit {
       });
 
       if (this.dataTimerList.length) {
-        
+
         this.dataSource.data = this.dataTimerList;
         this.dataSource.paginator = this.paginator;
         this.isLoadingResults = false;
@@ -313,7 +310,7 @@ export class MtControlAsistenciaComponent implements OnInit {
         this.dataSource_timeList.paginator = this.paginator_timerList;
         this.isLoadingResults = false;
       }
-      
+
     }
   }
 
@@ -330,28 +327,42 @@ export class MtControlAsistenciaComponent implements OnInit {
     let selectedOption = this.optionListExport.find((dat) => dat.value == this.functionExport);
     let tipoReporte = (selectedOption || {}).key;
     this.dataPaginationList = [];
+    this.isLoadingResults = true;
 
-    if (this.searchFecInicio.length && this.searchFecFin.length) {
-      body.push(
-        {
-          centroCosto: this.lstCentroCosto,
-          date_1: this.searchFecInicio,
-          date_2: this.searchFecFin
+    body.push(
+      {
+        "isReportForDay": true,
+        "isReportTotal": false,
+        "isReportMtDate": true,
+        "isReporRgDate": false,
+        "centroCosto": this.lstCentroCosto,
+        "dateList": this.dateCalendarList
+      }
+    );
+
+
+    /*
+        if (this.searchFecInicio.length && this.searchFecFin.length) {
+          body.push(
+            {
+              centroCosto: this.lstCentroCosto,
+              date_1: this.searchFecInicio,
+              date_2: this.searchFecFin
+            }
+          );
         }
-      );
-    }
-
-    if ((this.dateCalendarList || []).length && !this.searchFecInicio.length && !this.searchFecFin.length) {
-      body.push(
-        {
-          centroCosto: this.lstCentroCosto,
-          dateList: this.dateCalendarList
+    
+        if ((this.dateCalendarList || []).length && !this.searchFecInicio.length && !this.searchFecFin.length) {
+          body.push(
+            {
+              centroCosto: this.lstCentroCosto,
+              dateList: this.dateCalendarList
+            }
+          );
         }
-      );
-    }
+    */
 
-
-    if ((this.dateCalendarList || []).length || (this.searchFecInicio.length && this.searchFecFin.length)) {
+    /*if ((this.dateCalendarList || []).length || (this.searchFecInicio.length && this.searchFecFin.length)) {
       self.isLoadingResults = true;
       if (tipoReporte == "exportFeriado") {
         centroCostoList.filter((crt) => {
@@ -362,7 +373,9 @@ export class MtControlAsistenciaComponent implements OnInit {
         this.socket.emit('emitRRHH', body);
       }
 
-    }
+    }*/
+
+    this.socket.emit('emitRRHH', body);
 
   }
 
@@ -622,7 +635,7 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   onChangeTableView(ev) {
     this.tipoTableView = ev;
-    this.onDataTimer();
+    // this.onDataTimer();
   }
 
 }
