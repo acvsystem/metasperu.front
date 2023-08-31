@@ -90,7 +90,8 @@ export class MtControlAsistenciaComponent implements OnInit {
   isLoadingResults: boolean = false;
 
   isReportForDay = true;
-  isReportMtDate = false;
+  isReportTotal = false;
+  isReporRgDate = false;
 
   constructor(private service: ShareService, private dialog: MatDialog) { }
 
@@ -335,14 +336,13 @@ export class MtControlAsistenciaComponent implements OnInit {
     body.push(
       {
         "isReportForDay": this.isReportForDay,
-        "isReportTotal": false,
-        "isReportMtDate": this.isReportMtDate,
-        "isReporRgDate": true,
+        "isReportTotal": this.isReportTotal,
+        "isReporRgDate": this.isReporRgDate,
         "centroCosto": this.lstCentroCosto,
         "dateList": this.dateCalendarList
       }
     );
-
+console.log(body);
     this.socket.emit('emitRRHH', body);
 
   }
@@ -454,6 +454,7 @@ export class MtControlAsistenciaComponent implements OnInit {
       this.searchFecInicio = (ev.value != this.searchFecInicio && ev.id == "mt-input-init") ? ev.value : this.searchFecInicio;
       this.searchFecFin = (ev.value != this.searchFecFin && ev.id == "mt-input-end") ? ev.value : this.searchFecFin;
       this.dateCalendarList = [this.searchFecInicio, this.searchFecFin];
+      this.isReporRgDate = true;
     } else {
       this.searchFecInicio = "";
       this.searchFecFin = "";
@@ -461,6 +462,7 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     if (!this.searchFecInicio.length && !this.searchFecFin.length) {
       this.dateCalendarList = ev.dateList;
+      this.isReporRgDate = false;
     }
 
   }
@@ -485,6 +487,18 @@ export class MtControlAsistenciaComponent implements OnInit {
   onChangeTableView(ev) {
     this.tipoTableView = ev;
     // this.onDataTimer();
+  }
+
+  onOptionTipoReport(ev) {
+    if (ev == "isReportForDay") {
+      this.isReportForDay = true;
+      this.isReportTotal = false;
+    }
+
+    if (ev == "isReportTotal") {
+      this.isReportForDay = false;
+      this.isReportTotal = true;
+    }
   }
 
 

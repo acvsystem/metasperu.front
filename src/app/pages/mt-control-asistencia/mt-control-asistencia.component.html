@@ -74,11 +74,11 @@
         <ion-col sizeXs="6" sizeSm="6" sizeMd="4" sizeLg="4">
           <div class="content-option-report">
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" (click)="isReportForDay = !isReportMtDate">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" (click)="onOptionTipoReport('isReportForDay')" value="1">
               <label class="form-check-label" for="inlineRadio1">Por Dia</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" (click)="isReportMtDate = !isReportForDay">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" (click)="onOptionTipoReport('isReportTotal')" value="2">
               <label class="form-check-label" for="inlineRadio2">Por Mes</label>
             </div>
           </div>
