@@ -132,8 +132,6 @@ export class MtControlAsistenciaComponent implements OnInit {
 
       this.dataSource = new MatTableDataSource<TimerElement>(this.dataPaginationList);
       this.dataSource.paginator = this.paginator;
-
-      //this.onDataTimer();
     });
 
   }
@@ -167,157 +165,6 @@ export class MtControlAsistenciaComponent implements OnInit {
     });
   }
 
-  onDataTimer() {
-
-    if (this.tipoTableView == "timerList") {
-      if ((this.searchFecInicio.length && this.searchFecFin.length)) {
-        this.onReportMensual();
-      }
-
-    } else {
-
-      let documentosListAdded = [];
-      this.dataTimerList = [];
-
-      this.employeList.filter((ejb) => {
-        let hrWorking = 0;
-        let nroVentas = 0;
-        let ventas = 0;
-
-        (this.dataPaginationList || []).find((emp) => {
-          let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
-          let hExcedente = 0;
-          let hFaltante = 0;
-
-          if (ejb.NRO_DOC == emp.nroDocumento) {
-
-            hrWorking += emp.hrWorking;
-            nroVentas += emp.nroVentas;
-
-            if (hrWorking > 8) {
-              hExcedente += hrWorking % 8;
-            }
-
-            if (hrWorking < 8) {
-              hFaltante += 8 - hrWorking;
-            }
-
-            ventas += emp.Ventas;
-
-            let index = this.dataTimerList.findIndex((report) => report.documento == emp.nroDocumento && report.FECHA == emp.dia);
-
-            if (index != -1) {
-              let hora_1 = parseInt(this.dataTimerList[index]['hsb'].split(":")[0]) * 60 + parseInt(this.dataTimerList[index]['hsb'].split(":")[1]);
-              let hora_2 = parseInt(emp.hrIn.split(":")[0]) * 60 + parseInt(emp.hrIn.split(":")[1]);
-
-              ((this.dataTimerList || [])[index] || {})['hib'] = emp.hrIn;
-              ((this.dataTimerList || [])[index] || {})['hSalida'] = emp.hrOut;
-              ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-              ((this.dataTimerList || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
-              ((this.dataTimerList || [])[index] || {})['ventas'] = ventas.toFixed(2);
-              ((this.dataTimerList || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
-              ((this.dataTimerList || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
-              ((this.dataTimerList || [])[index] || {})['hBreak'] = (hora_2 - hora_1) / 60;
-            }
-
-            let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
-
-            if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
-
-              let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
-              (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-              if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
-                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 });
-              }
-            }
-
-          }
-        });
-
-      });
-
-      if (this.dataTimerList.length) {
-
-        this.dataSource.data = this.dataTimerList;
-        this.dataSource.paginator = this.paginator;
-        this.isLoadingResults = false;
-      } else {
-        this.dataSource = new MatTableDataSource<TimerElement>(this.dataTimerList);
-        this.dataSource.paginator = this.paginator;
-        this.isLoadingResults = false;
-      }
-    }
-  }
-
-  onReportMensual() {
-    if (this.tipoTableView == "timerList") {
-      console.log(this.isLoadingResults);
-      let documentosListAdded = [];
-      this.dataTimerList = [];
-
-      this.employeList.filter((ejb) => {
-        let hrWorking: any = 0;
-        let nroVentas = 0;
-        let ventas = 0;
-
-        (this.dataPaginationList || []).find((emp) => {
-          let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
-          let hExcedente = 0;
-          let hFaltante = 0;
-
-          if (ejb.NRO_DOC == emp.nroDocumento) {
-            hrWorking += emp.hrWorking;
-            nroVentas += emp.nroVentas;
-
-            if (hrWorking > 8) {
-              hExcedente += hrWorking % 8;
-            }
-
-            if (hrWorking < 8) {
-              hFaltante += 8 - hrWorking;
-            }
-
-            ventas += emp.Ventas;
-
-            let index = this.dataTimerList.findIndex((report) => report.documento == emp.nroDocumento);
-
-            if (index != -1) {
-              ((this.dataTimerList || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-              ((this.dataTimerList || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
-              ((this.dataTimerList || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
-            }
-
-            let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento);
-
-            if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
-
-              let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
-              (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-              if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
-                // debugger
-                this.dataTimerList.push({ 'nomEmpleado': nombreCompleto, 'documento': emp.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) });
-              }
-            }
-
-          }
-        });
-
-      });
-
-
-      if (this.dataTimerList.length) {
-        this.dataSource_timeList.data = this.dataTimerList;
-        this.dataSource_timeList.paginator = this.paginator_timerList;
-        this.isLoadingResults = false;
-      } else {
-        this.dataSource_timeList = new MatTableDataSource<TimerElement>(this.dataTimerList);
-        this.dataSource_timeList.paginator = this.paginator_timerList;
-        this.isLoadingResults = false;
-      }
-
-    }
-  }
-
   viewModal: any = -1;
   onViewSearchModal(index) {
     this.viewModal = this.viewModal == index ? -1 : index;
@@ -342,7 +189,7 @@ export class MtControlAsistenciaComponent implements OnInit {
         "dateList": this.dateCalendarList
       }
     );
-console.log(body);
+
     this.socket.emit('emitRRHH', body);
 
   }
@@ -486,7 +333,6 @@ console.log(body);
 
   onChangeTableView(ev) {
     this.tipoTableView = ev;
-    // this.onDataTimer();
   }
 
   onOptionTipoReport(ev) {
