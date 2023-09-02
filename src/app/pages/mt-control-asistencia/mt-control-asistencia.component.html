@@ -36,14 +36,6 @@
           ></mt-calendar>
         </ion-col>
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-          <mt-select
-          id="functionExport"
-          placeHolder="Exportar"
-          [optionList]="optionListExport"
-          (changeSelected)="onChangeSelect($event)"
-          ></mt-select>
-        </ion-col>
-        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <div class="content-button-filter">
             <button type="button" (click)="searchData()"class="btn btn-outline-secondary">
               <i class="fa fa-search" aria-hidden="true"></i>
@@ -81,28 +73,18 @@
               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" (click)="onOptionTipoReport('isReportTotal')" value="2">
               <label class="form-check-label" for="inlineRadio2">General</label>
             </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" (click)="onOptionTipoReport('isReportFeriado')" value="2">
+              <label class="form-check-label" for="inlineRadio2">Reporte Feriado</label>
+            </div>
           </div>
-        </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3" class="aling-right">
-          <mat-button-toggle-group #group="matButtonToggleGroup">
-            <mat-button-toggle (click)="onChangeTableView(group.value)" value="allList" aria-label="Text align left">
-              <mat-icon>
-                <i class="fa fa-list" aria-hidden="true"></i>
-              </mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle (click)="onChangeTableView(group.value)" value="timerList" aria-label="Text align center">
-              <mat-icon>
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-              </mat-icon>
-            </mat-button-toggle>
-          </mat-button-toggle-group>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div class="mat-elevation-z8" [class]="tipoTableView == 'allList' ? 'onVisible':'onHide'">
+              <div class="mat-elevation-z8">
                 <div class="example-loading-shade" *ngIf="isLoadingResults">
                   <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
@@ -170,61 +152,6 @@
                 </table>
               
                 <mat-paginator #MatPaginator_1 [pageSizeOptions]="[5, 10, 20]"
-                               showFirstLastButtons
-                               aria-label="Select page of periodic elements">
-                </mat-paginator>
-              </div>
-              <div class="mat-elevation-z8" [class]="tipoTableView == 'timerList' ? 'onVisible':'onHide'">
-                <div class="example-loading-shade" *ngIf="isLoadingResults">
-                  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-                </div>
-
-                <table mat-table [dataSource]="dataSource_timeList">
-
-                  <ng-container matColumnDef="Nombre completo">
-                    <th mat-header-cell *matHeaderCellDef> Nombre completo </th>
-                    <td mat-cell *matCellDef="let element"> {{element.nomEmpleado}} </td>
-                  </ng-container>
-               
-                  <ng-container matColumnDef="Documento">
-                    <th mat-header-cell *matHeaderCellDef> Documento </th>
-                    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="H. Trabajadas">
-                    <th mat-header-cell *matHeaderCellDef> H. Trabajadas </th>
-                    <td mat-cell *matCellDef="let element"> {{element.hTrabajadas}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="H. Excedentes">
-                    <th mat-header-cell *matHeaderCellDef> H. Excedentes </th>
-                    <td mat-cell *matCellDef="let element" [ngClass]="[element.hExcedente > 0 ? 'alertItem':'']"> {{element.hExcedente}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="H. Faltantes">
-                    <th mat-header-cell *matHeaderCellDef> H. Faltantes </th>
-                    <td mat-cell *matCellDef="let element" [ngClass]="[element.hFaltantes > 0 ? 'alertItem':'']"> {{element.hFaltantes}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="H. Break">
-                    <th mat-header-cell *matHeaderCellDef> H. Break </th>
-                    <td mat-cell *matCellDef="let element" [ngClass]="[element.hBreak > 1 ? 'alertItem':'']"> {{element.hBreak}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="Accion">
-                    <th mat-header-cell *matHeaderCellDef> Accion </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      <button mat-flat-button color="primary" (click)="openDialog(element.documento)">
-                        <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                      </button>
-                    </td>
-                  </ng-container>
-              
-                  <tr mat-header-row *matHeaderRowDef="displayedColumnsTimerList; sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumnsTimerList;"></tr>
-                </table>
-              
-                <mat-paginator  #MatPaginator_2 [pageSizeOptions]="[5, 10, 20]"
                                showFirstLastButtons
                                aria-label="Select page of periodic elements">
                 </mat-paginator>

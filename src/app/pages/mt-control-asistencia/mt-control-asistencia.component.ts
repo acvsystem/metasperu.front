@@ -92,6 +92,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   isReportForDay = true;
   isReportTotal = false;
   isReporRgDate = false;
+  isReportFeriado = false;
 
   constructor(private service: ShareService, private dialog: MatDialog) { }
 
@@ -185,6 +186,7 @@ export class MtControlAsistenciaComponent implements OnInit {
         "isReportForDay": this.isReportForDay,
         "isReportTotal": this.isReportTotal,
         "isReporRgDate": this.isReporRgDate,
+        "isReportFeriado" : this.isReportFeriado,
         "centroCosto": this.lstCentroCosto,
         "dateList": this.dateCalendarList
       }
@@ -204,7 +206,6 @@ export class MtControlAsistenciaComponent implements OnInit {
       let data = ((response || [])[0] || {}).data || [];
 
       this.employeList = data || [];
-      console.log("onEmpleadoList", this.employeList);
     });
   }
 
@@ -218,41 +219,41 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     this.reporteList = [];
 
-    if (tipoReporte == "exportFeriado") {
-
-      let documentosListAdded = [];
-      this.employeList.filter((ejb) => {
-        let cantFeriado = 0;
-
-        (empleadosAsistencia || []).find((emp) => {
-          let addedEmp = documentosListAdded.filter((added) => added.dni == emp.nroDocumento && added.fecha == (emp || {}).dia);
-
-          if (ejb.NRO_DOC == emp.nroDocumento && !addedEmp.length) {
-            let asist = (this.dateCalendarList || []).indexOf((emp || {}).dia);
-            (documentosListAdded || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-            if (asist !== -1) {
-              cantFeriado += 1;
-            }
-          }
-        });
-
-        let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
-
-        this.reporteList.push({ 'PERIODO': this.lstPeriodo, 'CODIGO': (ejb || {}).CODIGO_EJB, 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
-
-      });
-    }
+     if (this.isReportFeriado) {
+ 
+       let documentosListAdded = [];
+       this.employeList.filter((ejb) => {
+         let cantFeriado = 0;
+ 
+         (empleadosAsistencia || []).find((emp) => {
+           let addedEmp = documentosListAdded.filter((added) => added.dni == emp.documento && added.fecha == (emp || {}).fecha);
+ 
+           if (ejb.NRO_DOC == emp.documento && !addedEmp.length) {
+             let asist = (this.dateCalendarList || []).indexOf((emp || {}).fecha);
+             (documentosListAdded || []).push({ dni: emp.documento, fecha: (emp || {}).fecha });
+             if (asist !== -1) {
+               cantFeriado += 1;
+             }
+           }
+         });
+ 
+         let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+ 
+         this.reporteList.push({ 'PERIODO': this.lstPeriodo, 'CODIGO': (ejb || {}).CODIGO_EJB, 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
+ 
+       });
+     }
 
     dataJson = this.dataPaginationList || [];
 
     reportName = 'metasPeru';
 
 
-    if (tipoReporte == "exportFeriado" && dataJson.length && this.lstPeriodo) {
-      this.exportToExcel(dataJson, reportName);
+    if (this.isReportFeriado && dataJson.length && this.lstPeriodo) {
+      this.exportToExcel(this.reporteList, reportName);
     }
 
-    if (tipoReporte == "exportFeriado" && dataJson.length && !this.lstPeriodo) {
+    if (this.isReportFeriado && dataJson.length && !this.lstPeriodo) {
       let notificationList = [{
         isCaution: true,
         bodyNotification: "Inserte el periodo del reporte."
@@ -261,7 +262,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     }
 
 
-    if (tipoReporte != "exportFeriado" && dataJson.length) {
+    if (!this.isReportFeriado && dataJson.length) {
       this.exportToExcel(dataJson, reportName);
     }
 
@@ -339,11 +340,18 @@ export class MtControlAsistenciaComponent implements OnInit {
     if (ev == "isReportForDay") {
       this.isReportForDay = true;
       this.isReportTotal = false;
+      this.isReportFeriado = false;
     }
 
     if (ev == "isReportTotal") {
       this.isReportForDay = false;
       this.isReportTotal = true;
+      this.isReportFeriado = false;
+    }
+
+    if (ev == "isReportFeriado") {
+      this.isReportFeriado = true;
+      this.isReportForDay = true;
     }
   }
 
