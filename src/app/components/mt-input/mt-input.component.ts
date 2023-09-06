@@ -23,7 +23,7 @@ export class MtInputComponent implements OnInit {
   ngOnInit() { }
 
   onCopyText() {
-    var copyTextarea = document.getElementById("inputURL") as HTMLInputElement;
+    var copyTextarea = document.getElementById(`${this.id}`) as HTMLInputElement;
     copyTextarea.select();
     document.execCommand("copy");
   }

@@ -79,7 +79,6 @@ export class ShareService {
   public get(parms_: IRequestParams): Promise<any> {
     const self = this;
 
-
     let token = self.store.getStore('tn');
 
     if (typeof parms_.isAuth === 'undefined') {

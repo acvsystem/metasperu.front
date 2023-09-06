@@ -89,6 +89,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('conexion:serverICG:send', (conexion) => {
+     
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo && data.conexICG != isConect));

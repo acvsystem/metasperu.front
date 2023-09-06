@@ -32,7 +32,8 @@ export class MtConfiguracionComponent implements OnInit {
   optionListHashNivel: Array<any> = [
     { id: "ADMINSITRADOR", value: "ADMINITRADOR" },
     { id: "SERVER", value: "SERVER" },
-    { id: "AGENTE", value: "AGENTE" }
+    { id: "AGENTE", value: "AGENTE" },
+    { id: "SUNAT", value: "SUNAT" }
   ];
 
   selectNivel: any = {};
@@ -47,7 +48,7 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onUpdateAgentFront() {
-    this.socket.emit('update:file:FrontAgent', 'update');
+    this.socket.emit('update:file:FrontAgent', this.hashAgente);
   }
 
   onAddEmailList() {
