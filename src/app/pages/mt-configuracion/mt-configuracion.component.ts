@@ -33,11 +33,34 @@ export class MtConfiguracionComponent implements OnInit {
     { id: "ADMINSITRADOR", value: "ADMINITRADOR" },
     { id: "SERVER", value: "SERVER" },
     { id: "AGENTE", value: "AGENTE" },
-    { id: "SUNAT", value: "SUNAT" }
+    { id: "SUNAT", value: "SUNAT" },
+    { id: "VERIFICACION DOCUMENTO", value: "VERIFICACION DOCUMENTO" }
   ];
 
   selectNivel: any = {};
   selectedHashNivel: string = "";
+  tiendasList: Array<any> = [
+    { key: '7A', value: 'BBW JOCKEY', progress: 0 },
+    { key: '9A', value: 'VSBA JOCKEY', progress: 0 },
+    { key: 'PC', value: 'AEO JOCKEY', progress: 0 },
+    { key: 'PB', value: 'AEO ASIA', progress: 0 },
+    { key: '7E', value: 'BBW LA RAMBLA', progress: 0 },
+    { key: '9D', value: 'VS LA RAMBLA', progress: 0 },
+    { key: '9B', value: 'VS PLAZA NORTE', progress: 0 },
+    { key: '7C', value: 'BBW SAN MIGUEL', progress: 0 },
+    { key: '9C', value: 'VS SAN MIGUEL', progress: 0 },
+    { key: '7D', value: 'BBW SALAVERRY' },
+    { key: '9I', value: 'VS SALAVERRY' },
+    { key: '9G', value: 'VS MALL DEL SUR' },
+    { key: '9H', value: 'VS PURUCHUCO', progress: 0 },
+    { key: '9M', value: 'VS ECOMMERCE', progress: 0 },
+    { key: '7F', value: 'BBW ECOMMERCE', progress: 0 },
+    { key: 'PA', value: 'AEO ECOMMERCE', progress: 0 },
+    { key: '9K', value: 'VS MEGA PLAZA', progress: 0 },
+    { key: '9L', value: 'VS MINKA', progress: 0 },
+    { key: '9F', value: 'VSFA JOCKEY FULL', progress: 0 },
+    { key: '7A7', value: 'BBW ASIA', progress: 0 }
+  ];
 
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
@@ -45,9 +68,18 @@ export class MtConfiguracionComponent implements OnInit {
 
   ngOnInit() {
     this.onListConfiguration();
+
+    this.socket.on('status:updateFile', (status) => {
+      console.log(status);
+    });
   }
 
   onUpdateAgentFront() {
+    let body = {
+      hash: this.hashAgente,
+      fileName: this.selectedHashNivel == "SUNAT" ? "SUNAT.zip" : this.selectedHashNivel == "AGENTE" ? "agnFront.py" : "PLUGIN_VALIDACION.zip"
+    }
+
     this.socket.emit('update:file:FrontAgent', this.hashAgente);
   }
 

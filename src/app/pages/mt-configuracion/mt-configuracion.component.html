@@ -181,6 +181,36 @@
           </ion-row>
         </div>
       </ion-col>
+
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+        <div class="card-content-configuration">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="content-view">
+                <ion-row class="border-bottom-title">
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <span class="title card-title">Estatus de actualizacion</span>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                    <ol class="list-group">
+                      <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">{{tienda.value}}</div>
+                        </div>
+                        <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress == 0"></span>
+                        <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
+                        <span class="badge bg-success rounded-pill" *ngIf="tienda.progress == 100"></span>
+                      </li>
+                    </ol>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-col>
     </ion-row>
   </div>
 </ion-content>
