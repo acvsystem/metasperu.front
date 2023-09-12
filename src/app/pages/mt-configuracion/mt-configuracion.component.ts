@@ -34,7 +34,7 @@ export class MtConfiguracionComponent implements OnInit {
     { id: "SERVER", value: "SERVER" },
     { id: "AGENTE", value: "AGENTE" },
     { id: "SUNAT", value: "SUNAT" },
-    { id: "VERIFICACION DOCUMENTO", value: "VERIFICACION DOCUMENTO" }
+    { id: "DOCUMENTO", value: "DOCUMENTO" }
   ];
 
   selectNivel: any = {};
@@ -49,9 +49,9 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '9B', value: 'VS PLAZA NORTE', progress: 0 },
     { key: '7C', value: 'BBW SAN MIGUEL', progress: 0 },
     { key: '9C', value: 'VS SAN MIGUEL', progress: 0 },
-    { key: '7D', value: 'BBW SALAVERRY' },
-    { key: '9I', value: 'VS SALAVERRY' },
-    { key: '9G', value: 'VS MALL DEL SUR' },
+    { key: '7D', value: 'BBW SALAVERRY', progress: 0 },
+    { key: '9I', value: 'VS SALAVERRY', progress: 0 },
+    { key: '9G', value: 'VS MALL DEL SUR', progress: 0 },
     { key: '9H', value: 'VS PURUCHUCO', progress: 0 },
     { key: '9M', value: 'VS ECOMMERCE', progress: 0 },
     { key: '7F', value: 'BBW ECOMMERCE', progress: 0 },
@@ -69,8 +69,9 @@ export class MtConfiguracionComponent implements OnInit {
   ngOnInit() {
     this.onListConfiguration();
 
-    this.socket.on('status:updateFile', (status) => {
-      console.log(status);
+    this.socket.on('update:file:status', (status) => {
+      let index = this.tiendasList.findIndex((tienda)=> tienda.key == status.serie);
+      this.tiendasList[index].progress = status.status;
     });
   }
 
@@ -80,7 +81,7 @@ export class MtConfiguracionComponent implements OnInit {
       fileName: this.selectedHashNivel == "SUNAT" ? "SUNAT.zip" : this.selectedHashNivel == "AGENTE" ? "agnFront.py" : "PLUGIN_VALIDACION.zip"
     }
 
-    this.socket.emit('update:file:FrontAgent', this.hashAgente);
+    this.socket.emit('update:file:FrontAgent', body);
   }
 
   onAddEmailList() {

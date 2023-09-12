@@ -2,214 +2,223 @@
   <div id="content">
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <div class="card-content-configuration">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div class="content-view">
-                <ion-row class="border-bottom-title">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="title card-title">Configuracion servidor de correo</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="card-subtitle">Servicio de envio</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input
-                    id="userEmailService"
-                    label="Usuario"
-                    placeholder="Correo electronico"
-                    type="text"
-                    value="{{ userEmailService }}"
-                    (afterChange)="onChangeInput($event)"
-                  ></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input
-                    id="passEmailService"
-                    label="Password"
-                    placeholder="Password"
-                    type="text"
-                    value="{{ passEmailService }}"
-                    (afterChange)="onChangeInput($event)"
-                  ></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="card-subtitle">Correo a enviar</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="6" sizeLg="6">
-                    <mt-input
-                    id="emailSend"
-                    label="Email"
-                    placeholder="Correo electronico"
-                    value="{{ emailSend }}"
-                    (afterChange)="onChangeInput($event)"
-                    type="text"
-                  ></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="1" sizeSm="1" sizeMd="4" sizeLg="4" class="aling-left">
-                    <button (click)="onAddEmailList()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                    <button *ngIf="isEmailDelete" (click)="onDeleteEmail()" type="button" class="btn btn-outline-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                    <div class="list-group full-width">
-                      <span (click)="onSelectEmail(email.name)" class="list-group-item list-group-item-action list-group-item-dark" *ngFor="let email of emailList">{{ email.name }}</span>
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                    <button (click)="onSaveConfiguration()" type="button" class="btn btn-primary btn-sm save"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
-                    <button (click)="onSendTestEmail()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar correo de prueba</button>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card-content-configuration">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <div class="content-view">
+                  <ion-row class="border-bottom-title">
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <span class="title card-title">Configuracion servidor de correo</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <span class="card-subtitle">Servicio de envio</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-input
+                      id="userEmailService"
+                      label="Usuario"
+                      placeholder="Correo electronico"
+                      type="text"
+                      value="{{ userEmailService }}"
+                      (afterChange)="onChangeInput($event)"
+                    ></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-input
+                      id="passEmailService"
+                      label="Password"
+                      placeholder="Password"
+                      type="text"
+                      value="{{ passEmailService }}"
+                      (afterChange)="onChangeInput($event)"
+                    ></mt-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <span class="card-subtitle">Correo a enviar</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="11" sizeSm="11" sizeMd="6" sizeLg="6">
+                      <mt-input
+                      id="emailSend"
+                      label="Email"
+                      placeholder="Correo electronico"
+                      value="{{ emailSend }}"
+                      (afterChange)="onChangeInput($event)"
+                      type="text"
+                    ></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="1" sizeSm="1" sizeMd="4" sizeLg="4" class="aling-left">
+                      <button (click)="onAddEmailList()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                      <button *ngIf="isEmailDelete" (click)="onDeleteEmail()" type="button" class="btn btn-outline-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                      <div class="list-group full-width">
+                        <span (click)="onSelectEmail(email.name)" class="list-group-item list-group-item-action list-group-item-dark" *ngFor="let email of emailList">{{ email.name }}</span>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                      <button (click)="onSaveConfiguration()" type="button" class="btn btn-primary btn-sm save"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                      <button (click)="onSendTestEmail()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar correo de prueba</button>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-col>
+            </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card-content-configuration">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <div class="content-view">
+                  <ion-row class="border-bottom-title">
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <span class="title card-title">Configuracion de usuarios</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <span class="card-subtitle">Enviar link de registro</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <mt-select
+                      id="selectNivel"
+                      placeHolder="Nivel de cuenta"
+                      [optionList]="optionNivelList"
+                      (changeSelected)="onChangeSelect($event)"
+                      ></mt-select>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="11" sizeSm="11" sizeMd="6" sizeLg="6">
+                      <mt-input
+                      id="emailLinkRegistro"
+                      label="Email"
+                      placeholder="Correo electronico a enviar"
+                      value="{{ emailLinkRegistro }}"
+                      (afterChange)="onChangeInput($event)"
+                      type="text"
+                    ></mt-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                      <button (click)="onSendLinkRegister()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar link de registro</button>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-col>
+            </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card-content-configuration">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div class="content-view">
+                    <ion-row class="border-bottom-title">
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <span class="title card-title">Configuracion script agente</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <span class="card-subtitle">Generar hash</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                        <mt-select
+                        id="selectedHashNivel"
+                        placeHolder="Nivel Hash"
+                        [optionList]="optionListHashNivel"
+                        (changeSelected)="onChangeSelect($event)"
+                        ></mt-select>
+                      </ion-col>
+                      <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                        <mt-input
+                        id="hashAgente"
+                        label="Hash"
+                        placeholder="hash"
+                        value="{{ hashAgente }}"
+                        (afterChange)="onChangeInput($event)"
+                        type="text"
+                      ></mt-input>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                        <button (click)="onGenerarHash()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Generar hash</button>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <span class="card-subtitle">Actualizar script agentes</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                        <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar agentes</button>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
       </ion-col>
 
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <div class="card-content-configuration">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div class="content-view">
-                <ion-row class="border-bottom-title">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="title card-title">Configuracion de usuarios</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="card-subtitle">Enviar link de registro</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <mt-select
-                    id="selectNivel"
-                    placeHolder="Nivel de cuenta"
-                    [optionList]="optionNivelList"
-                    (changeSelected)="onChangeSelect($event)"
-                    ></mt-select>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="6" sizeLg="6">
-                    <mt-input
-                    id="emailLinkRegistro"
-                    label="Email"
-                    placeholder="Correo electronico a enviar"
-                    value="{{ emailLinkRegistro }}"
-                    (afterChange)="onChangeInput($event)"
-                    type="text"
-                  ></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                    <button (click)="onSendLinkRegister()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar link de registro</button>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
-      </ion-col>
-
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <div class="card-content-configuration">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div class="content-view">
-                <ion-row class="border-bottom-title">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="title card-title">Configuracion script agente</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="card-subtitle">Generar hash</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
-                    <mt-select
-                    id="selectedHashNivel"
-                    placeHolder="Nivel Hash"
-                    [optionList]="optionListHashNivel"
-                    (changeSelected)="onChangeSelect($event)"
-                    ></mt-select>
-                  </ion-col>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
-                    <mt-input
-                    id="hashAgente"
-                    label="Hash"
-                    placeholder="hash"
-                    value="{{ hashAgente }}"
-                    (afterChange)="onChangeInput($event)"
-                    type="text"
-                  ></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                    <button (click)="onGenerarHash()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Generar hash</button>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="card-subtitle">Actualizar script agentes</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                    <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar agentes</button>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
-      </ion-col>
-
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <div class="card-content-configuration">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div class="content-view">
-                <ion-row class="border-bottom-title">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <span class="title card-title">Estatus de actualizacion</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
-                    <ol class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
-                        <div class="ms-2 me-auto">
-                          <div class="fw-bold">{{tienda.value}}</div>
-                        </div>
-                        <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress == 0"></span>
-                        <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
-                        <span class="badge bg-success rounded-pill" *ngIf="tienda.progress == 100"></span>
-                      </li>
-                    </ol>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card-content-configuration">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div class="content-view">
+                    <ion-row class="border-bottom-title">
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <span class="title card-title">Estatus de actualizacion</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                        <ol class="list-group">
+                          <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
+                            <div class="ms-2 me-auto">
+                              <div class="fw-bold">{{tienda.value}}</div>
+                            </div>
+                            <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i class="fa fa-check" aria-hidden="true"></i></span>
+                            <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
+                          </li>
+                        </ol>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
   </div>
