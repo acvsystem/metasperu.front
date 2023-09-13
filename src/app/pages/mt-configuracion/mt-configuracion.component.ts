@@ -41,7 +41,6 @@ export class MtConfiguracionComponent implements OnInit {
   selectedHashNivel: string = "";
   tiendasList: Array<any> = [
     { key: '7A', value: 'BBW JOCKEY', progress: 0 },
-    { key: '9A', value: 'VSBA JOCKEY', progress: 0 },
     { key: 'PC', value: 'AEO JOCKEY', progress: 0 },
     { key: 'PB', value: 'AEO ASIA', progress: 0 },
     { key: '7E', value: 'BBW LA RAMBLA', progress: 0 },
@@ -70,6 +69,7 @@ export class MtConfiguracionComponent implements OnInit {
     this.onListConfiguration();
 
     this.socket.on('update:file:status', (status) => {
+      console.log(status);
       let index = this.tiendasList.findIndex((tienda)=> tienda.key == status.serie);
       this.tiendasList[index].progress = status.status;
     });
