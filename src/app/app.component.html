@@ -13,9 +13,24 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <div (click)="onNavigatorRoute(menu.RUTE_PAGE)" *ngFor="let menu of menuUser" class="item-menu">
-        <span>{{menu.NAME_MENU}}</span>
-      </div>
+      <section *ngFor="let menu of menuUser" class="content-item">
+        <div (click)="menu.ISVISIBLE = !menu.ISVISIBLE" *ngIf="menu.SUBMENU.length" class="item-menu">
+          <span>{{menu.NAME_MENU}}</span>
+        </div>
+        <div (click)="onNavigatorRoute(menu.RUTE_PAGE)" *ngIf="!menu.SUBMENU.length"  class="item-menu">
+          <span>{{menu.NAME_MENU}}</span>
+        </div>
+        <section *ngIf="menu.ISVISIBLE" class="all-content-submenu">       
+          <section *ngFor="let submenu of menu.SUBMENU" class="content-submenu">   
+            <div class="line-vertical"></div>
+            <div class="line-horizontal"></div>
+            <div (click)="onNavigatorRoute(submenu.RUTE_PAGE)" class="submenu-item" >
+              <span>{{submenu.NAME_MENU}}</span>
+            </div>
+          </section>
+        </section>
+
+      </section>
     </ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">

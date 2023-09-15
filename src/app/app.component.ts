@@ -19,6 +19,8 @@ export class AppComponent {
   menuList: Array<any> = [{ name: "Logout", fn: "onLogout" }];
   profileUser: any = [];
   menuUser: any = [];
+  isSubMenuRrhh: boolean = false;
+  isSubMenuSistemas: boolean = false;
 
   constructor(
     private httpService: HttpService,
@@ -40,18 +42,59 @@ export class AppComponent {
 
     this.service.onMenuUser.subscribe((menu) => {
       this.menuUser = [];
-      this.menuUser = menu;
       this.store.removeStore("mt-menu");
-      this.store.setStore("mt-menu", JSON.stringify(menu));
+      let newMenu = [
+        {
+          KEY: "rrhh",
+          NAME_MENU: "Recursos Humanos",
+          ISVISIBLE: false,
+          RUTE_PAGE: "",
+          SUBMENU: []
+        },
+        {
+          KEY: "sistemas",
+          NAME_MENU: "Sistemas",
+          ISVISIBLE: false,
+          RUTE_PAGE: "",
+          SUBMENU: []
+        }
+      ];
+      let menuUser = menu;
+
+      menuUser.filter((menu) => {
+        if ((menu || {}).RUTE_PAGE == 'empleados' || (menu || {}).RUTE_PAGE == 'control-asistencia' || (menu || {}).RUTE_PAGE == 'recursos-humanos') {
+          newMenu[0]['SUBMENU'].push(menu);
+        } else if ((menu || {}).RUTE_PAGE == 'comprobantes-sunat' || (menu || {}).RUTE_PAGE == 'comprobantes') {
+          newMenu[1]['SUBMENU'].push(menu);
+        } else {
+          newMenu.push(
+            {
+              KEY: "configuracion",
+              NAME_MENU: menu.NAME_MENU,
+              RUTE_PAGE: menu.RUTE_PAGE,
+              ISVISIBLE: true,
+              SUBMENU: []
+            }
+          );
+        }
+
+
+
+      });
+
+      this.menuUser = newMenu;
+      console.log(this.menuUser);
+      this.store.setStore("mt-menu", JSON.stringify(this.menuUser));
     });
   }
 
   ngOnInit() {
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
+    console.log(menu);
     this.isMobil = window.innerWidth < 769;
     let pathActual: any = {};
-  
+
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });
@@ -73,7 +116,7 @@ export class AppComponent {
     } else {
       this.renderNavBar = false;
     }
-    
+
 
     try {
       this.router.events
