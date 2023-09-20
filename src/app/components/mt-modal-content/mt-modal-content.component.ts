@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -12,17 +12,26 @@ export class MtModalContentComponent implements OnInit {
   @Input() title: string = '';
   @Input() bodyContent: any = '';
   @Input() dataIn: any = '';
-
+  @Output() onResponseModal: EventEmitter<any> = new EventEmitter();
+  
   contentHTML: any = '';
 
   constructor(private modalLogin: ModalController, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
+    console.log(this.bodyContent);
     this.contentHTML = this.sanitizer.bypassSecurityTrustHtml(this.bodyContent);
   }
 
   oncloseModal() {
     this.modalLogin.dismiss();
+  }
+
+  onResponseComponent($event) {
+    if (this.bodyContent == "mt-frm-add-employee" && $event) {
+      this.onResponseModal.emit($event);
+      this.oncloseModal();
+    }
   }
 
 }

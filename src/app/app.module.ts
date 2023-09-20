@@ -30,6 +30,7 @@ import { MtCalendarComponent } from './components/mt-calendar/mt-calendar.compon
 import { MtFrmChangeStdPostulantComponent } from './pages/mt-inscription-postulant/components/mt-frm-change-std-postulant/mt-frm-change-std-postulant.component';
 import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
 import { MtChartDialogComponent } from './components/mt-chart-dialog/mt-chart-dialog.component';
+import { MtFrmAddEmployeeComponent } from './pages/mt-employee/components/mt-frm-add-employee/mt-frm-add-employee.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -43,8 +44,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
-import { NgxChartsModule }from '@swimlane/ngx-charts';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MtCalendarComponent,
     MtFrmChangeStdPostulantComponent,
     MtEmployeeComponent,
-    MtChartDialogComponent
+    MtChartDialogComponent,
+    MtFrmAddEmployeeComponent
   ],
   imports: [
     BrowserModule,

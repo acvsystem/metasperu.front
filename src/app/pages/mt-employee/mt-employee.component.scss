@@ -14,3 +14,10 @@ table {
         max-width: 468px !important;
     }
 }
+
+.content-buttons {
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}

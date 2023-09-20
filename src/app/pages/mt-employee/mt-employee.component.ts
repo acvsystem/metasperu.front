@@ -1,7 +1,9 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, EventEmitter } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ModalController } from '@ionic/angular';
+import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 
 @Component({
   selector: 'mt-employee',
@@ -18,7 +20,7 @@ export class MtEmployeeComponent implements OnInit {
 
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, public modalCtrl: ModalController) { }
 
   ngOnInit() {
     this.onEmpleadoList();
@@ -42,6 +44,30 @@ export class MtEmployeeComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  async openModalAddEmployee() {
+
+    let onResponseModal = new EventEmitter();
+
+    onResponseModal.subscribe((isSuccess) => {
+      if (isSuccess) {
+        this.onEmpleadoList();
+      }
+    });
+
+    let modal = await this.modalCtrl.create({
+      component: MtModalContentComponent,
+      componentProps: {
+        nameSection: 'addEmployee',
+        title: 'Registrar empleado',
+        bodyContent: 'mt-frm-add-employee',
+        onResponseModal: onResponseModal
+      },
+      cssClass: 'mt-modal'
+    });
+
+    modal.present();
   }
 
 }

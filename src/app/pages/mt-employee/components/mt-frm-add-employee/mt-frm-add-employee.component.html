@@ -1,0 +1,112 @@
+<div class="content">
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      <mt-input
+      id="aEmpNombre"
+      label="Nombres"
+      placeholder="Ingrese nombre completo"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-input
+      id="aEmpApellido"
+      label="Apellido Paterno"
+      placeholder="Ingrese apellido paterno"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-input
+      id="aEmpMaterno"
+      label="Apellido Materno"
+      placeholder="Ingrese apellido materno"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-select
+      id="paisNacimiento"
+      [optionList]="optionListPais"
+      [enableSearchInput]="true"
+      placeHolder="Buscar pais"
+      (changeSelected)="onChangeSelect($event)"
+      ></mt-select>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-select
+      id="tiendaEmpleado"
+      [enableSearchInput]="true"
+      placeHolder="Buscar tienda"
+      [optionList]="optionListTiendas"
+      (changeSelected)="onChangeSelect($event)"
+      ></mt-select>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+      <mt-select
+      id="estadoCivil"
+      [optionList]="optionListEstadoCivil"
+      (changeSelected)="onChangeSelect($event)"
+      ></mt-select>
+    </ion-col>
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+      <mt-select
+      id="tipoDocumento"
+      [optionList]="optionListTipoDoc"
+      (changeSelected)="onChangeSelect($event)"
+      ></mt-select>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-input
+      id="aEmpNumDocumento"
+      label="Numero documento"
+      placeholder="Ingrese numero documento"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-input
+      id="aEmpNumTelefono"
+      label="Telefono empleado"
+      placeholder="Ingrese numero telefonico"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-input
+      id="aEmpEmail"
+      label="Correo electronico"
+      placeholder="Ingrese correo electronico"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <mt-input
+      id="aEmpFechaNac"
+      label="fecha nac"
+      placeholder="Ingrese numero telefonico"
+      type="text"
+      (afterChange)="onChangeInput($event)"
+    ></mt-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      <button type="button" (click)="onAddRegister()" class="btn btn-primary btn-sm">Guardar</button>
+    </ion-col>
+  </ion-row>
+</div>
