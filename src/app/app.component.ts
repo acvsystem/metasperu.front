@@ -50,16 +50,22 @@ export class AppComponent {
           ISVISIBLE: false,
           RUTE_PAGE: "",
           SUBMENU: []
-        },
-        {
-          KEY: "sistemas",
-          NAME_MENU: "Sistemas",
-          ISVISIBLE: false,
-          RUTE_PAGE: "",
-          SUBMENU: []
         }
       ];
+
       let menuUser = menu;
+   
+      if (this.profileUser[0].nivel == "ADMINISTRADOR") {
+        newMenu.push(
+          {
+            KEY: "sistemas",
+            NAME_MENU: "Sistemas",
+            RUTE_PAGE: "",
+            ISVISIBLE: false,
+            SUBMENU: []
+          }
+        );
+      }
 
       menuUser.filter((menu) => {
         if ((menu || {}).RUTE_PAGE == 'empleados' || (menu || {}).RUTE_PAGE == 'control-asistencia' || (menu || {}).RUTE_PAGE == 'recursos-humanos') {
@@ -77,9 +83,6 @@ export class AppComponent {
             }
           );
         }
-
-
-
       });
 
       this.menuUser = newMenu;
