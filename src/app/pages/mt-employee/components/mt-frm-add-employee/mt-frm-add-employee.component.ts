@@ -1065,7 +1065,7 @@ export class MtFrmAddEmployeeComponent implements OnInit {
         url: '/rrhh/registrar/employee',
         body: this.dataEmployee
       };
-
+      
       if (this.dataEmployee.length) {
         this.service.post(parms).then((response) => {
           let success = (((response || [])[0] || {}).status || {}).success;

@@ -16,7 +16,7 @@ export class MtEmployeeComponent implements OnInit {
 
   dataPaginationList: Array<any> = [];
   headList: Array<any> = [];
-  displayedColumns: string[] = ['Nro', 'Codigo EJB', 'Nombre completo', 'Tipo Documento', 'Numero Documento', 'Tienda', 'Salario', 'Fecha Ingreso', 'Cargo', 'Estado'];
+  displayedColumns: string[] = ['Nro', 'Codigo EJB', 'Nombre completo', 'Tipo Documento', 'Numero Documento', 'Tienda', 'Salario', 'Fecha Ingreso', 'Cargo', 'Estado', 'Accion'];
 
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
@@ -39,6 +39,23 @@ export class MtEmployeeComponent implements OnInit {
       this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  onDeleteRegister(nroDocumento) {
+      let parms = {
+        url: '/rrhh/delete/employee',
+        body: {
+          nroDocumento: nroDocumento
+        }
+      };
+
+      this.service.post(parms).then((response) => {
+        let success = (((response || [])[0] || {}).status || {}).success;
+        if (success) {
+          this.onEmpleadoList();
+        }
+      });
+
   }
 
   applyFilter(event: Event) {
