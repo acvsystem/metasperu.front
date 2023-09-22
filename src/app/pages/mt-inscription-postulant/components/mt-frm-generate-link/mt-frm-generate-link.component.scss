@@ -5,3 +5,27 @@
         margin-right: 10px !important;
     }
 }
+
+.link-description {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-height: 39px;
+    max-width: 563px;
+    font-size: 14px !important;
+    background: #ffffff !important;
+    border: 1px solid #d9d9d9;
+    height: 39px !important;
+    border-radius: 4px !important;
+    padding-top: 2px !important;
+    padding-right: 8px;
+    padding-left: 8px;
+
+    label {
+        display: block;
+        z-index: 99999 !important;
+        color: rgba(0, 0, 0, 0.65) !important;
+        font-size: 12px !important;
+        margin: 0px !important;
+    }
+}

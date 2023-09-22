@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'mt-frm-generate-link',
@@ -9,7 +10,7 @@ import { ShareService } from 'src/app/services/shareService';
 export class MtFrmGenerateLinkComponent implements OnInit {
   txtLink: string = "";
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, private clipboard: Clipboard) { }
 
   ngOnInit() {
   }
@@ -25,4 +26,5 @@ export class MtFrmGenerateLinkComponent implements OnInit {
     });
   }
 
+ 
 }

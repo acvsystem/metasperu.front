@@ -28,8 +28,8 @@
     <mat-form-field class="mt-calendar-range" *ngIf="isRageDate">
       <mat-label>{{label}}</mat-label>
       <mat-date-range-input [rangePicker]="rangePicker">
-        <input matStartDate *ngIf="!disabled" placeholder="{{labelInit}}" (dateInput)="addEventInit('input', $event)">
-        <input matEndDate *ngIf="!disabled" placeholder="{{labelFin}}" (dateInput)="addEventEnd('input', $event)">
+        <input #matStartDate matStartDate *ngIf="!disabled" placeholder="{{labelInit}}" (dateInput)="addEventInit('input', $event)">
+        <input #matEndDate matEndDate *ngIf="!disabled" placeholder="{{labelFin}}" (dateInput)="addEventEnd('input', $event)">
 
         <input matStartDate *ngIf="disabled" placeholder="{{labelInit}}" (dateInput)="addEventInit('input', $event)" disabled>
         <input matEndDate *ngIf="disabled" placeholder="{{labelFin}}" (dateInput)="addEventEnd('input', $event)" disabled>

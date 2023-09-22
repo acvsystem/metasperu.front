@@ -43,7 +43,7 @@
     text-transform: lowercase !important;
   }
 
-  .name::first-letter,
+  label::first-letter,
   .nivel::first-letter {
     text-transform: uppercase !important;
   }

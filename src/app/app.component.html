@@ -42,7 +42,9 @@
         <ion-title class="headerTitle">METAS PERU</ion-title>
         <div slot="end" class="content-profile">
           <div class="profile-name" *ngFor="let profile of profileUser">
-            <span class="name">{{profile.name}}</span>
+            <span class="name">
+              <label>{{profile.name_1}}</label><label>&nbsp;{{profile.name_2}}</label>
+            </span>
             <span class="nivel">{{profile.nivel}}</span>
           </div>
           <div class="profile-logo">

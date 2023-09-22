@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ShareService } from '../../services/shareService';
 
 @Component({
   selector: 'mt-select',
@@ -20,13 +21,13 @@ export class MtSelectComponent implements OnInit {
   nameOptionSelected: string = "";
   originalOptionList = [];
 
-  constructor() {
+  constructor(private service: ShareService) {
     const self = this;
-    /* document.body.addEventListener("click", function (evt) {
-       if (self.activeSelect) {
-         self.activeSelect = false;
-       }
-     });*/
+    this.service.onCloseSelect.subscribe(()=>{
+      if(this.activeSelect){
+        self.activeSelect = false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -41,6 +42,7 @@ export class MtSelectComponent implements OnInit {
     if (changes && changes.hasOwnProperty('selectOption')) {
       this.onSelectedOption(this.selectOption);
     }
+
 
   }
 

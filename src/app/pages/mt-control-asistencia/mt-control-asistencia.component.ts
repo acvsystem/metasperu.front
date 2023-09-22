@@ -37,6 +37,8 @@ export class MtControlAsistenciaComponent implements OnInit {
   exlabCulmino: string = "";
   lstCentroCosto: string = "";
   lstPeriodo: string = "";
+  isClearMulti: boolean = false;
+  isClearRage: boolean = false;
 
   chartData: Array<any> = [];
 
@@ -99,6 +101,13 @@ export class MtControlAsistenciaComponent implements OnInit {
   ngOnInit() {
     const self = this;
     this.onEmpleadoList();
+
+    document.addEventListener('keydown', (event) => {
+      var keyValue = event.key;
+      if (keyValue == "Enter") {
+        this.searchData();
+      }
+    }, false);
 
     this.headList = [
       {
@@ -174,25 +183,41 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   searchData() {
     const self = this;
-    let body = [];
-    let centroCostoList = this.optionListMarca || [];
-    let selectedOption = this.optionListExport.find((dat) => dat.value == this.functionExport);
-    let tipoReporte = (selectedOption || {}).key;
-    this.dataPaginationList = [];
-    this.isLoadingResults = true;
 
-    body.push(
-      {
-        "isReportForDay": this.isReportForDay,
-        "isReportTotal": this.isReportTotal,
-        "isReporRgDate": this.isReporRgDate,
-        "isReportFeriado" : this.isReportFeriado,
-        "centroCosto": this.lstCentroCosto,
-        "dateList": this.dateCalendarList
+    if (this.lstCentroCosto) {
+      let body = [];
+      let centroCostoList = this.optionListMarca || [];
+      let selectedOption = this.optionListExport.find((dat) => dat.value == this.functionExport);
+      let tipoReporte = (selectedOption || {}).key;
+      this.dataPaginationList = [];
+      this.isLoadingResults = true;
+      let dateList = [];
+      let nowDay = new Date().toLocaleDateString('en-CA');;
+      dateList = !this.dateCalendarList.length ? [nowDay] : [...this.dateCalendarList];
+
+      if (dateList.length == 1) {
+        dateList.push(dateList[0]);
       }
-    );
 
-    this.socket.emit('emitRRHH', body);
+      body.push(
+        {
+          "isReportForDay": this.isReportForDay,
+          "isReportTotal": this.isReportTotal,
+          "isReporRgDate": this.isReporRgDate,
+          "isReportFeriado": this.isReportFeriado,
+          "centroCosto": this.lstCentroCosto,
+          "dateList": dateList
+        }
+      );
+
+      this.socket.emit('emitRRHH', body);
+    } else {
+      let notificationList = [{
+        isCaution: true,
+        bodyNotification: "Seleccione el centro de costo."
+      }];
+      this.service.onNotification.emit(notificationList);
+    }
 
   }
 
@@ -219,30 +244,30 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     this.reporteList = [];
 
-     if (this.isReportFeriado) {
- 
-       let documentosListAdded = [];
-       this.employeList.filter((ejb) => {
-         let cantFeriado = 0;
- 
-         (empleadosAsistencia || []).find((emp) => {
-           let addedEmp = documentosListAdded.filter((added) => added.dni == emp.documento && added.fecha == (emp || {}).fecha);
- 
-           if (ejb.NRO_DOC == emp.documento && !addedEmp.length) {
-             let asist = (this.dateCalendarList || []).indexOf((emp || {}).fecha);
-             (documentosListAdded || []).push({ dni: emp.documento, fecha: (emp || {}).fecha });
-             if (asist !== -1) {
-               cantFeriado += 1;
-             }
-           }
-         });
- 
-         let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
- 
-         this.reporteList.push({ 'PERIODO': this.lstPeriodo, 'CODIGO': (ejb || {}).CODIGO_EJB, 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
- 
-       });
-     }
+    if (this.isReportFeriado) {
+
+      let documentosListAdded = [];
+      this.employeList.filter((ejb) => {
+        let cantFeriado = 0;
+
+        (empleadosAsistencia || []).find((emp) => {
+          let addedEmp = documentosListAdded.filter((added) => added.dni == emp.documento && added.fecha == (emp || {}).fecha);
+
+          if (ejb.NRO_DOC == emp.documento && !addedEmp.length) {
+            let asist = (this.dateCalendarList || []).indexOf((emp || {}).fecha);
+            (documentosListAdded || []).push({ dni: emp.documento, fecha: (emp || {}).fecha });
+            if (asist !== -1) {
+              cantFeriado += 1;
+            }
+          }
+        });
+
+        let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+
+        this.reporteList.push({ 'PERIODO': this.lstPeriodo, 'CODIGO': (ejb || {}).CODIGO_EJB, 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
+
+      });
+    }
 
     dataJson = this.dataPaginationList || [];
 
@@ -303,6 +328,10 @@ export class MtControlAsistenciaComponent implements OnInit {
       this.searchFecFin = (ev.value != this.searchFecFin && ev.id == "mt-input-end") ? ev.value : this.searchFecFin;
       this.dateCalendarList = [this.searchFecInicio, this.searchFecFin];
       this.isReporRgDate = true;
+      this.isClearRage = false;
+      if (this.dateCalendarList.length && this.isReporRgDate) {
+        this.isClearMulti = true;
+      }
     } else {
       this.searchFecInicio = "";
       this.searchFecFin = "";
@@ -311,6 +340,8 @@ export class MtControlAsistenciaComponent implements OnInit {
     if (!this.searchFecInicio.length && !this.searchFecFin.length) {
       this.dateCalendarList = ev.dateList;
       this.isReporRgDate = false;
+      this.isClearRage = true;
+      this.isClearMulti = false;
     }
 
   }

@@ -27,13 +27,6 @@
           isMultiSelect="true"
           (afterChange)="onDateCalendar($event)"
           ></mt-calendar>
-          <mt-calendar
-          *ngIf="tipoTableView != 'allList'"
-          label="fecha"
-          isMultiSelect="true"
-          (afterChange)="onDateCalendar($event)"
-          disabled="true"
-          ></mt-calendar>
         </ion-col>
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <div class="content-button-filter">
@@ -66,7 +59,7 @@
         <ion-col sizeXs="6" sizeSm="6" sizeMd="4" sizeLg="4">
           <div class="content-option-report">
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" (click)="onOptionTipoReport('isReportForDay')" value="1">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" (click)="onOptionTipoReport('isReportForDay')" value="1" checked>
               <label class="form-check-label" for="inlineRadio1">Detallado</label>
             </div>
             <div class="form-check form-check-inline">

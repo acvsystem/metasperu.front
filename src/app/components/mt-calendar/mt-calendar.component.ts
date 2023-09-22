@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDatepicker, MatDatepickerInputEvent, MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import { FormControl } from '@angular/forms';
 
@@ -8,7 +8,8 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./mt-calendar.component.scss']
 })
 export class MtCalendarComponent implements OnInit {
-
+  @ViewChild('matStartDate') startDateRef: ElementRef;
+  @ViewChild('matEndDate') endDateRef: ElementRef;
 
   @Input() id: string = 'mt-input-' + Math.floor(Math.random() * 9999 + 1111);
   @Input() idInit: string = 'mt-input-init';
@@ -20,6 +21,8 @@ export class MtCalendarComponent implements OnInit {
   @Input() isRequired: boolean = false;
   @Input() isMultiSelect: boolean = false;
   @Input() disabled: boolean = false;
+  @Input() clearMultiSelection: boolean = false;
+  @Input() clearRageSelection: boolean = false;
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeInit: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeEnd: EventEmitter<any> = new EventEmitter();
@@ -38,12 +41,17 @@ export class MtCalendarComponent implements OnInit {
     this.date = new FormControl(new Date());
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+
+  }
+
   public dateChanged(event: MatDatepickerInputEvent<Date>): void {
     if (event.value) {
+      this.clearMultiSelection = false;
       const date = new Date(event.value).toLocaleDateString('en-CA');
       this.model.push(event.value);
       this.chipDateList.push(date);
-      
+
       this.afterChange.emit({ dateList: this.chipDateList });
     }
   }

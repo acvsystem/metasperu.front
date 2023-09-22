@@ -5,6 +5,7 @@ import { filter } from "rxjs/operators";
 import { StorageService } from './utils/storage';
 import { NavController } from '@ionic/angular';
 import { ShareService } from './services/shareService';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,8 @@ export class AppComponent {
     private router: Router,
     private store: StorageService,
     private nav: NavController,
-    private service: ShareService
+    private service: ShareService,
+    private menu: MenuController
   ) {
     this.httpService.eventShowLoading.subscribe((response) => {
       this.isShowLoading = response;
@@ -35,9 +37,15 @@ export class AppComponent {
 
     this.service.onProfileUser.subscribe((profile) => {
       this.profileUser = [];
-      this.profileUser.push(profile);
+      let newProfile = {
+        name_1: profile.name.split(' ')[0],
+        name_2: profile.name.split(' ')[1],
+        nivel: profile.nivel
+      };
+
+      this.profileUser.push(newProfile);
       this.store.removeStore("mt-profile");
-      this.store.setStore("mt-profile", JSON.stringify(profile));
+      this.store.setStore("mt-profile", JSON.stringify(newProfile));
     });
 
     this.service.onMenuUser.subscribe((menu) => {
@@ -54,7 +62,7 @@ export class AppComponent {
       ];
 
       let menuUser = menu;
-   
+
       if (this.profileUser[0].nivel == "ADMINISTRADOR") {
         newMenu.push(
           {
@@ -92,9 +100,10 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    const selft = this;
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
-    console.log(menu);
+
     this.isMobil = window.innerWidth < 769;
     let pathActual: any = {};
 
@@ -143,6 +152,15 @@ export class AppComponent {
     } catch (e) {
       console.log('error app ', e);
     }
+
+    document.body.addEventListener("click", function (evt) {
+      let classListSelect = [...((evt || {}).target || {})["classList"]] || [];
+    
+      if (classListSelect.indexOf("isSelectComponent") == -1) {
+        selft.service.onCloseSelect.emit(true);
+      }
+
+    });
   }
 
   onFunctionMenu(ev) {
@@ -163,6 +181,7 @@ export class AppComponent {
 
   onNavigatorRoute(route) {
     this.nav.navigateRoot(route);
+    this.menu.close();
   }
 
 }
