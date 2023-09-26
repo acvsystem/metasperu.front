@@ -3,21 +3,16 @@
     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
       <div class="button-content">
         <button type="button" (click)="onGenerateLink()" class="btn btn-primary btn-sm addDocument">Generar Acceso</button>
-        <button [cdkCopyToClipboard]="txtLink">Copy</button>
       </div>
     </ion-col>
     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-      <div class="link-description">
-        <label>Link Acceso</label>
-        <a id="link" href="{{ txtLink }}">{{ txtLink }}</a>
-      </div>
-     <!-- <mt-input
+      <mt-input
       label="URL"
       placeholder="URL"
       type="text"
       value="{{ txtLink }}"
       [isCopy]="true"
-    ></mt-input>-->
+    ></mt-input>
     </ion-col>
   </ion-row>
 </div>

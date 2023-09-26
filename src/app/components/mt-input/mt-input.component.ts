@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'mt-input',
@@ -18,14 +19,15 @@ export class MtInputComponent implements OnInit {
   viewPassword: boolean = false;
   typePassword: string = "password";
 
-  constructor() { }
+  constructor(private clipboard: Clipboard) { }
 
   ngOnInit() { }
 
   onCopyText() {
     var copyTextarea = document.getElementById(`${this.id}`) as HTMLInputElement;
-    copyTextarea.select();
-    document.execCommand("copy");
+    //copyTextarea.select();
+    this.clipboard.copy;
+    //document.execCommand("copy");
   }
 
   onChange(ev: any) {

@@ -102,12 +102,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     const self = this;
     this.onEmpleadoList();
 
-    document.addEventListener('keydown', (event) => {
-      var keyValue = event.key;
-      if (keyValue == "Enter") {
-        this.searchData();
-      }
-    }, false);
+
 
     this.headList = [
       {

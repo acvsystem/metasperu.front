@@ -20,13 +20,13 @@ export class MtLoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+/*
     document.addEventListener('keydown', (event) => {
       var keyValue = event.key;
       if (keyValue == "Enter") {
         this.onLogin();
       }
-    }, false);
+    }, false);*/
   }
 
 
