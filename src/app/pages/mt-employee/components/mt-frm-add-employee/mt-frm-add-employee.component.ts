@@ -20,6 +20,7 @@ export class MtFrmAddEmployeeComponent implements OnInit {
   aEmpNumTelefono: string = "";
   aEmpEmail: string = "";
   aEmpFechaNac: string = "";
+  aEmpCodigoEjb: string = "";
 
   optionListTiendas: Array<any> = [
     { key: 'BBW JOCKEY', value: 'BBW JOCKEY' },
@@ -1019,6 +1020,11 @@ export class MtFrmAddEmployeeComponent implements OnInit {
       {
         key: 'CORREO_ELECTONICO',
         property: 'aEmpEmail',
+        required: true
+      },
+      {
+        key: 'CODIGO_EJB',
+        property: 'aEmpCodigoEjb',
         required: true
       }
     ]
