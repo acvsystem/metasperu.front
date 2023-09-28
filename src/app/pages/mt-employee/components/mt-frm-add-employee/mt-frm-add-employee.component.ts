@@ -27,8 +27,7 @@ export class MtFrmAddEmployeeComponent implements OnInit {
   selectOptionSTC = {};
   selectOptionTdoc = {};
   isUpdate: boolean = false;
-  textButton: string = "Registar";
-
+  textButton: string = "Registrar";
   optionListTiendas: Array<any> = [
     { key: 'BBW JOCKEY', value: 'BBW JOCKEY' },
     { key: 'VSBA JOCKEY', value: 'VSBA JOCKEY' },
@@ -961,7 +960,6 @@ export class MtFrmAddEmployeeComponent implements OnInit {
 
     if (Object.keys(this.dataEmployeeList).length) {
       this.isUpdate = true;
-      this.textButton = "Actualizar";
       this.estadoCivil = this.dataEmployeeList['ESTADO_CIVIL'];
       this.tipoDocumento = this.dataEmployeeList['TIPO_DOC'];
       this.paisNacimiento = this.dataEmployeeList['PAIS_NAC'];
@@ -974,13 +972,34 @@ export class MtFrmAddEmployeeComponent implements OnInit {
       this.aEmpEmail = this.dataEmployeeList['EMAIL_EMP'];
       this.aEmpFechaNac = this.dataEmployeeList['FEC_NAC'];
       this.aEmpCodigoEjb = this.dataEmployeeList['CODIGO_EJB'];
+      this.textButton = "Actualizar";
+      
+      this.selectOptionPais = {
+        key: this.paisNacimiento,
+        value: this.paisNacimiento
+      };
+
+      this.selectOptionTienda = {
+        key: this.tiendaEmpleado,
+        value: this.tiendaEmpleado
+      };
+
+      this.selectOptionSTC = {
+        key: this.estadoCivil,
+        value: this.estadoCivil
+      };
+
+      this.selectOptionTdoc = {
+        key: this.tipoDocumento,
+        value: this.tipoDocumento
+      };
     }
+
 
   }
 
   ngOnDestroy() {
     this.onClear();
-    console.log("ngOnDestroy");
   }
 
   onClear() {
@@ -996,8 +1015,8 @@ export class MtFrmAddEmployeeComponent implements OnInit {
     this.aEmpEmail = "";
     this.aEmpFechaNac = "";
     this.aEmpCodigoEjb = "";
-
     this.isUpdate = false;
+    this.textButton = "Registrar";
   }
 
 
