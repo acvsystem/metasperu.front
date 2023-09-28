@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ShareService } from '../../../../services/shareService';
 
 @Component({
@@ -8,6 +8,7 @@ import { ShareService } from '../../../../services/shareService';
 })
 export class MtFrmAddEmployeeComponent implements OnInit {
   @Output() onResponse: EventEmitter<any> = new EventEmitter();
+  @Input() dataEmployeeList = {};
 
   estadoCivil: string = "";
   tipoDocumento: string = "";
@@ -21,6 +22,12 @@ export class MtFrmAddEmployeeComponent implements OnInit {
   aEmpEmail: string = "";
   aEmpFechaNac: string = "";
   aEmpCodigoEjb: string = "";
+  selectOptionPais = {};
+  selectOptionTienda = {};
+  selectOptionSTC = {};
+  selectOptionTdoc = {};
+  isUpdate: boolean = false;
+  textButton: string = "Registar";
 
   optionListTiendas: Array<any> = [
     { key: 'BBW JOCKEY', value: 'BBW JOCKEY' },
@@ -950,7 +957,49 @@ export class MtFrmAddEmployeeComponent implements OnInit {
 
   constructor(private service: ShareService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+
+    if (Object.keys(this.dataEmployeeList).length) {
+      this.isUpdate = true;
+      this.textButton = "Actualizar";
+      this.estadoCivil = this.dataEmployeeList['ESTADO_CIVIL'];
+      this.tipoDocumento = this.dataEmployeeList['TIPO_DOC'];
+      this.paisNacimiento = this.dataEmployeeList['PAIS_NAC'];
+      this.tiendaEmpleado = this.dataEmployeeList['TIENDA_ASIGNADO'];
+      this.aEmpNombre = this.dataEmployeeList['NOM_EMPLEADO'];
+      this.aEmpApellido = this.dataEmployeeList['AP_PATERNO'];
+      this.aEmpMaterno = this.dataEmployeeList['AP_MATERNO'];
+      this.aEmpNumDocumento = this.dataEmployeeList['NRO_DOC'];
+      this.aEmpNumTelefono = this.dataEmployeeList['TLF_EMP'];
+      this.aEmpEmail = this.dataEmployeeList['EMAIL_EMP'];
+      this.aEmpFechaNac = this.dataEmployeeList['FEC_NAC'];
+      this.aEmpCodigoEjb = this.dataEmployeeList['CODIGO_EJB'];
+    }
+
+  }
+
+  ngOnDestroy() {
+    this.onClear();
+    console.log("ngOnDestroy");
+  }
+
+  onClear() {
+    this.estadoCivil = "";
+    this.tipoDocumento = "";
+    this.paisNacimiento = "";
+    this.tiendaEmpleado = "";
+    this.aEmpNombre = "";
+    this.aEmpApellido = "";
+    this.aEmpMaterno = "";
+    this.aEmpNumDocumento = "";
+    this.aEmpNumTelefono = "";
+    this.aEmpEmail = "";
+    this.aEmpFechaNac = "";
+    this.aEmpCodigoEjb = "";
+
+    this.isUpdate = false;
+  }
+
 
   onChangeSelect(data: any) {
     let selectData = data || {};
@@ -1071,7 +1120,7 @@ export class MtFrmAddEmployeeComponent implements OnInit {
         url: '/rrhh/registrar/employee',
         body: this.dataEmployee
       };
-      
+
       if (this.dataEmployee.length) {
         this.service.post(parms).then((response) => {
           let success = (((response || [])[0] || {}).status || {}).success;

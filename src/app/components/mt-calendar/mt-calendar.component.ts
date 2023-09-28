@@ -23,6 +23,7 @@ export class MtCalendarComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() clearMultiSelection: boolean = false;
   @Input() clearRageSelection: boolean = false;
+  @Input() defaultValue: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeInit: EventEmitter<any> = new EventEmitter();
   @Output() afterChangeEnd: EventEmitter<any> = new EventEmitter();
@@ -42,7 +43,6 @@ export class MtCalendarComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
   }
 
   public dateChanged(event: MatDatepickerInputEvent<Date>): void {

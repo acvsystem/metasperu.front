@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ShareService } from '../../services/shareService'
 import { NavController } from '@ionic/angular';
 import { StorageService } from '../../utils/storage';
@@ -10,8 +10,7 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ['./mt-create-user.component.scss'],
 })
 export class MtCreateUserComponent implements OnInit {
-
-
+  
   userName: string = "";
   password: string = "";
   nombreProfile: string = "";

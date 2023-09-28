@@ -12,7 +12,10 @@
         </ion-col>
         <ion-col sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
           <div class="content-buttons">
-            <button type="button" (click)="openModalAddEmployee()" class="btn btn-outline-primary btn-sm">Agregar</button>
+            <button type="button" (click)="openModalAddEmployee(true)" class="btn btn-outline-primary">Agregar</button>
+            <button type="button" (click)="exportReporte()" class="btn btn-outline-primary">
+              <i class="fa fa-download" aria-hidden="true"></i>
+            </button>
           </div>
         </ion-col>
       </ion-row>
@@ -88,7 +91,9 @@
               </ng-container>
           
               <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <tr mat-row 
+              (click)="onSelectedEmployee(row)"
+              *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
           
             <mat-paginator [pageSizeOptions]="[5, 10, 20]"

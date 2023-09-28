@@ -12,8 +12,10 @@ export class MtModalContentComponent implements OnInit {
   @Input() title: string = '';
   @Input() bodyContent: any = '';
   @Input() dataIn: any = '';
+  @Input() dataEmployeeList = {};
   @Output() onResponseModal: EventEmitter<any> = new EventEmitter();
-  
+  @Output() onCloseModal: EventEmitter<any> = new EventEmitter();
+
   contentHTML: any = '';
 
   constructor(private modalLogin: ModalController, private sanitizer: DomSanitizer) { }
@@ -24,6 +26,8 @@ export class MtModalContentComponent implements OnInit {
   }
 
   oncloseModal() {
+    this.dataEmployeeList = {};
+    this.onCloseModal.emit(true);
     this.modalLogin.dismiss();
   }
 

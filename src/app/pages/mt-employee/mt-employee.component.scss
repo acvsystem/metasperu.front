@@ -18,10 +18,19 @@ table {
 .content-buttons {
     height: 100%;
     display: flex;
-    justify-content: right;
+    //justify-content: right;
     align-items: center;
+
+    button {
+        margin-left: 10px !important;
+    }
 }
 
 .delete-btn-table {
     padding: 5px 14px !important;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    background: #0000000a !important;
+    cursor: pointer !important;
 }

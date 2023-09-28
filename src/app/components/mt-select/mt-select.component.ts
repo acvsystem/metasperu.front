@@ -23,8 +23,8 @@ export class MtSelectComponent implements OnInit {
 
   constructor(private service: ShareService) {
     const self = this;
-    this.service.onCloseSelect.subscribe(()=>{
-      if(this.activeSelect){
+    this.service.onCloseSelect.subscribe(() => {
+      if (this.activeSelect) {
         self.activeSelect = false;
       }
     });
@@ -40,7 +40,9 @@ export class MtSelectComponent implements OnInit {
     }
 
     if (changes && changes.hasOwnProperty('selectOption')) {
-      this.onSelectedOption(this.selectOption);
+      if (Object.keys(this.selectOption).length) {
+        this.onSelectedOption(this.selectOption);
+      }
     }
 
 

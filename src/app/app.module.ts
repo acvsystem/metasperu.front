@@ -106,7 +106,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }],
+    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

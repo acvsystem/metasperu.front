@@ -4,6 +4,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'mt-employee',
@@ -17,6 +18,7 @@ export class MtEmployeeComponent implements OnInit {
   dataPaginationList: Array<any> = [];
   headList: Array<any> = [];
   displayedColumns: string[] = ['Nro', 'Codigo EJB', 'Nombre completo', 'Tipo Documento', 'Numero Documento', 'Tienda', 'Salario', 'Fecha Ingreso', 'Cargo', 'Estado', 'Accion'];
+  selectedEmployee: Array<any> = [];
 
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
@@ -42,19 +44,19 @@ export class MtEmployeeComponent implements OnInit {
   }
 
   onDeleteRegister(nroDocumento) {
-      let parms = {
-        url: '/rrhh/delete/employee',
-        body: {
-          nroDocumento: nroDocumento
-        }
-      };
+    let parms = {
+      url: '/rrhh/delete/employee',
+      body: {
+        nroDocumento: nroDocumento
+      }
+    };
 
-      this.service.post(parms).then((response) => {
-        let success = (((response || [])[0] || {}).status || {}).success;
-        if (success) {
-          this.onEmpleadoList();
-        }
-      });
+    this.service.post(parms).then((response) => {
+      let success = (((response || [])[0] || {}).status || {}).success;
+      if (success) {
+        this.onEmpleadoList();
+      }
+    });
 
   }
 
@@ -63,7 +65,12 @@ export class MtEmployeeComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  async openModalAddEmployee() {
+  onSelectedEmployee(ev) {
+    this.selectedEmployee = ev;
+    this.openModalAddEmployee(false);
+  }
+
+  async openModalAddEmployee(isNew) {
 
     let onResponseModal = new EventEmitter();
 
@@ -73,18 +80,34 @@ export class MtEmployeeComponent implements OnInit {
       }
     });
 
+    if (isNew) {
+      this.selectedEmployee = [];
+    }
+
     let modal = await this.modalCtrl.create({
       component: MtModalContentComponent,
       componentProps: {
         nameSection: 'addEmployee',
         title: 'Registrar empleado',
         bodyContent: 'mt-frm-add-employee',
+        dataEmployeeList: this.selectedEmployee,
         onResponseModal: onResponseModal
       },
       cssClass: 'mt-modal'
     });
 
     modal.present();
+  }
+
+  exportReporte(): void {
+    let name = `dataEmpleados.xlsx`;
+    let element = this.dataPaginationList;
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(element);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+
+
+    XLSX.utils.book_append_sheet(workbook, ws, 'Sheet1');
+    XLSX.writeFile(workbook, name);
   }
 
 }
