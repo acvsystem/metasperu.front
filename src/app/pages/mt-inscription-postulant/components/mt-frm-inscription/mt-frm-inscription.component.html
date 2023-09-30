@@ -1,696 +1,698 @@
-<ion-row>
-  <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" style="background-color: #FFF !important;">
-    <div class="container-form" style="background-color: #FFF !important;">
-      <div class="nav-step" style="background-color: #FFF !important;">
-        <mt-nav-step
-        [actualStep]="stepSelected"
-        [isComplete]="isComplete"
-        (onChangeStep)="onNextStep($event)"
-        ></mt-nav-step>
+<ion-content>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" style="background-color: #FFF !important;">
+      <div class="container-form" style="background-color: #FFF !important;">
+        <div class="nav-step" style="background-color: #FFF !important;">
+          <mt-nav-step
+          [actualStep]="stepSelected"
+          [isComplete]="isComplete"
+          (onChangeStep)="onNextStep($event)"
+          ></mt-nav-step>
+        </div>
+        <section id="datos-personales" *ngIf="stepSelected == 1" style="background-color: #FFF !important;">
+          <ion-row>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="container-title">
+                <label>Datos Personales</label>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="btn-form">
+                <button type="button" (click)="onNextStep(1+1)" class="btn btn-primary btn-sm">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprNombre"
+              label="Nombres"
+              placeholder="Ingrese su nombre completo"
+              value="{{ dtprNombre }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprNombre')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <mt-input
+              id="dtprApPaterno"
+              label="Apellido Paterno"
+              placeholder="Ingrese su nombre completo"
+              value="{{ dtprApPaterno }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprApPaterno')"
+            ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <mt-input
+              id="dtprApMaterno"
+              label="Apellido Materno"
+              placeholder="Ingrese su nombre completo"
+              value="{{ dtprApMaterno }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprApMaterno')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-calendar
+              id="dtprFecNac"
+              label="Fecha Nacimiento"
+              (afterChange)="onChangeInput($event)"
+              [defaultValue]="dtprFecNac"
+              [isRequired]="showError && requiredList.includes('dtprFecNac')"
+              ></mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtprCboPaisNac"
+              [enableSearchInput]="true"
+              placeHolder="Pais de nacimiento"
+              [optionList]="optionListPais"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionPaisNac"
+              [isRequired]="showError && requiredList.includes('dtprCboPaisNac')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtprCboTipodoc"
+              placeHolder="Tipo de documento"
+              [optionList]="optionListTipoDoc"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionTipodoc"
+              [isRequired]="showError && requiredList.includes('dtprCboTipodoc')"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              id="dtprNumDoc"
+              label="Numero de documento"
+              placeholder="Ingrese su numero de documento"
+              value="{{ dtprNumDoc }}"
+              (afterChange)="onChangeInput($event)"
+              type="number"
+              [isRequired]="showError && requiredList.includes('dtprNumDoc')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtprCboSexo"
+              placeHolder="Sexo"
+              [optionList]="optionListSexo"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionSexo"
+              [isRequired]="showError && requiredList.includes('dtprCboSexo')"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtprCboEstadoCivil"
+              placeHolder="Estado civil"
+              [optionList]="optionListEstadoCivil"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionEstadoCivil"
+              [isRequired]="showError && requiredList.includes('dtprCboEstadoCivil')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprDireccion"
+              label="Direccion"
+              placeholder="Ingrese su direccion"
+              value="{{ dtprDireccion }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprDireccion')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprReferencia"
+              label="Referencia"
+              placeholder="Ingrese referencia de direccion"
+              value="{{ dtprReferencia }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprReferencia')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprEmail"
+              label="Correo electronico"
+              placeholder="Ingrese su coreo electronico"
+              value="{{ dtprEmail }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprEmail')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprCelular"
+              label="Celular"
+              placeholder="Ingrese su numero de celular"
+              value="{{ dtprCelular }}"
+              (afterChange)="onChangeInput($event)"
+              type="number"
+              [isRequired]="showError && requiredList.includes('dtprCelular')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtprCboPension"
+              placeHolder="Regimen pensionario"
+              [optionList]="optionListPensiones"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionPension"
+              [isRequired]="showError && requiredList.includes('dtprCboPension')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprContactoEmg"
+              label="Nombre contacto emergencia"
+              placeholder="Ingrese nombre de contacto"
+              value="{{ dtprContactoEmg }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprContactoEmg')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="dtprNumEmerg"
+              label="Numero contacto emergencia"
+              placeholder="Ingrese Numero de contacto"
+              value="{{ dtprNumEmerg }}"
+              (afterChange)="onChangeInput($event)"
+              type="number"
+              [isRequired]="showError && requiredList.includes('dtprNumEmerg')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section id="experiencia-laboral" *ngIf="stepSelected == 2">
+          <ion-row>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="container-title">
+                <label>Experiencia Laboral</label>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="btn-form">
+                <button type="button" (click)="onNextStep(2+1)" class="btn btn-primary btn-sm">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="exlabEmpresa"
+              label="Empresa"
+              placeholder="Ingrese nombre de la Empresa"
+              value="{{ exlabEmpresa }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('exlabEmpresa')"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="exlabPuesto"
+              label="Puesto"
+              placeholder="Ingrese puesto laboral"
+              value="{{ exlabPuesto }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('exlabPuesto')"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-calendar
+              idInit="exlabFecInicio"
+              idEnd="exlabCulmino"
+              label="Fecha Trabajo"
+              labelInit="Fecha Inicio"
+              labelFin="Fecha Fin"
+              isRageDate="true"
+              (afterChangeInit)="onChangeInput($event)"
+              (afterChangeEnd)="onChangeInput($event)"
+              ></mt-calendar>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="exlabMotivo"
+              label="Motivo"
+              placeholder="Ingrese el motivo del cese"
+              value="{{ exlabMotivo }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('exlabMotivo')"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section id="formacion-academica" *ngIf="stepSelected == 3">
+          <ion-row>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="container-title">
+                <label>Formacion Academica</label>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="btn-form">
+                <button type="button" (click)="onNextStep(3+1)" class="btn btn-primary btn-sm">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="frAcCentroEstudio"
+              label="Centro de estudios"
+              placeholder="Ingrese centro de estudios"
+              value="{{ frAcCentroEstudio }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('frAcCentroEstudio')"
+              ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="frAcTipo"
+              placeHolder="Tipo estudio"
+              [optionList]="optionListTipoEstudio"
+              (changeSelected)="onChangeSelect($event)"
+              [isRequired]="showError && requiredList.includes('frAcTipo')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              id="frAcCarrera"
+              label="Carrera"
+              placeholder="Ingrese su carrera"
+              value="{{ frAcCarrera }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('frAcCarrera')"
+              ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="frAcEstado"
+              placeHolder="Estado"
+              [optionList]="optionListEstadoEstudio"
+              (changeSelected)="onChangeSelect($event)"
+              [isRequired]="showError && requiredList.includes('frAcEstado')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section id="experiencia-laboral" *ngIf="stepSelected == 4">
+          <ion-row>
+            <ion-col sizeXs="7" sizeSm="7" sizeMd="7" sizeLg="7">
+              <div class="container-title">
+                <label>Datos de derecho habientes</label>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="5" sizeSm="5" sizeMd="5" sizeLg="5">
+              <div class="btn-form">
+                <button type="button" (click)="onNextStep(4+1)" class="btn btn-primary btn-sm">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="drabNombres"
+              label="Apellidos y nombres"
+              placeholder="Ingrese apellidos y nombres"
+              value="{{ drabNombres }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-calendar
+              id="drabFecNac"
+              label="Fecha Nacimiento"
+              (afterChange)="onChangeInput($event)"
+              [defaultValue]="drabFecNac"
+              ></mt-calendar>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="drabParentesco"
+              label="Parentesco"
+              placeholder="Ingrese el parentesco"
+              value="{{ drabParentesco }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              id="drabEdad"
+              label="Edad"
+              placeholder="Ingrese la edad"
+              value="{{ drabEdad }}"
+              (afterChange)="onChangeInput($event)"
+              type="number"
+              ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="drabSexo"
+              placeHolder="Sexo"
+              [optionList]="optionListSexo"
+              (changeSelected)="onChangeSelect($event)"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="drabTipoDoc"
+              placeHolder="Tipo Documento"
+              [optionList]="optionListTipoDoc"
+              (changeSelected)="onChangeSelect($event)"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              id="drabNroDocumento"
+              label="Nro Documento"
+              placeholder="Ingrese el numero de documento"
+              value="{{ drabNroDocumento }}"
+              (afterChange)="onChangeInput($event)"
+              type="number"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              id="drabOcupacion"
+              label="Ocupacion"
+              placeholder="Ingrese ocupacion"
+              value="{{ drabOcupacion }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              ></mt-input>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section id="datos-salud" *ngIf="stepSelected == 5">
+          <ion-row>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="container-title">
+                <label>Datos de Salud</label>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="btn-form">
+                <button (click)="onSendData()" type="button" class="btn btn-primary btn-sm">
+                  <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Datos
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-input
+              label="Alergias"
+              placeholder="Ingrese segun corresponda"
+              type="text"
+              id="dtslAlergia"
+              value="{{ dtslAlergia }}"
+              (afterChange)="onChangeInput($event)"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              label="Enfermedad"
+              placeholder="Ingrese segun corresponda"
+              type="text"
+              id="dtslEnfermedad"
+              value="{{ dtslEnfermedad }}"
+              (afterChange)="onChangeInput($event)"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              label="Medicamentos"
+              placeholder="Ingrese segun corresponda"
+              type="text"
+              id="dtslMedicamento"
+              value="{{ dtslMedicamento }}"
+              (afterChange)="onChangeInput($event)"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-input
+              label="Grupo sanguineo"
+              placeholder="Ingrese segun corresponda"
+              type="text"
+              id="dtslGrupoSanguineo"
+              value="{{ dtslGrupoSanguineo }}"
+              (afterChange)="onChangeInput($event)"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="container-title">
+                <label>Atecedentes</label>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-select
+              id="dtslAntecedentesPol"
+              placeHolder="Tiene antecedentes policiales"
+              [optionList]="optionListStandar"
+              (changeSelected)="onChangeSelect($event)"
+              [isRequired]="showError && requiredList.includes('dtslAntecedentesPol')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtslAntecedenteJud"
+              placeHolder="Tiene antecedentes judiciales"
+              [optionList]="optionListStandar"
+              (changeSelected)="onChangeSelect($event)"
+              [isRequired]="showError && requiredList.includes('dtslAntecedenteJud')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <mt-select
+              id="dtslAntecedentePen"
+              placeHolder="Tiene antecedentes judiciales"
+              [optionList]="optionListStandar"
+              (changeSelected)="onChangeSelect($event)"
+              [isRequired]="showError && requiredList.includes('dtslAntecedentePen')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section id="proceso-success" *ngIf="stepSelected == 6">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="container-icon-success">
+                <span>
+                  <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                </span>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="container-title-success">
+                <label>Proceso realizado con exito</label>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="container-subtitle-success">
+                <label>Sus datos se enviaron adecuadamente </label>
+              </div>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section id="section-button">
+          <ion-row>
+            <ion-col>
+              <button type="button" *ngIf="stepSelected == 2 || stepSelected == 3 || stepSelected == 4" (click)="onActionFuntion()" class="btn btn-primary btn-sm">{{buttonNameForm}}</button>
+              <button type="button" *ngIf="stepSelected == 2 || stepSelected == 3 || stepSelected == 4" (click)="isViewAdds = !isViewAdds" class="btn btn-light btn-sm btn-view">
+                {{ (!isViewAdds) ? "Ver lista" : "Ocultar Lista" }}
+              </button>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section *ngIf="expLaboralList.length && stepSelected == 2 && isViewAdds">
+          <ion-row>
+            <ion-col>
+              <div class="accordion" id="accordionExample">
+  
+                <div class="card-information-slim" *ngFor="let data of expLaboralList;let i = index">
+                  <ion-row>
+                    <ion-col sizeXs="11" sizeSm="11" sizeMd="11" sizeLg="11">
+                      <ion-row id="content-card">
+                        <ion-col class="title" sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                          <span>{{data.empresa}}</span>
+                        </ion-col>
+                      
+                        <ion-col class="card-extra-info" sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
+                          <span>{{data.puesto}}</span><br>
+                          <span>De: {{data.desde}} Hasta: {{data.culmino}}</span><br>
+                          <span>Motivo: {{data.motivo}}</span>
+                        </ion-col>
+                      </ion-row>
+                    </ion-col>
+                    <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
+                      <div id="content-button-card" (click)="onDeleteItem('expLaboralList',i)">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section *ngIf="forAcademicaList.length && stepSelected == 3 && isViewAdds">
+          <ion-row>
+            <ion-col>
+              <div class="accordion" id="accordionExample">
+                <div class="card-information-slim" *ngFor="let data of forAcademicaList;let i = index">
+                  <ion-row>
+                    <ion-col sizeXs="11" sizeSm="11" sizeMd="11" sizeLg="11">
+                      <ion-row id="content-card">
+                        <ion-col class="title" sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                          <span>{{data.ctrEstudio}}</span>
+                        </ion-col>
+                        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+                          <span class="align-right">{{data.estado}}</span>
+                        </ion-col>
+                      
+                        <ion-col class="card-extra-info" sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
+                          <span>{{data.tipo}}</span><br>
+                          <span>{{data.carrera}}</span>
+                        </ion-col>
+                      </ion-row>
+                    </ion-col>
+                    <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
+                      <div id="content-button-card" (click)="onDeleteItem('forAcademicaList',i)">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </section>
+  
+        <section *ngIf="drHabientesList.length && stepSelected == 4 && isViewAdds">
+          <ion-row>
+            <ion-col>
+              <div class="accordion" id="accordionExample">
+                <div class="card-information-slim" *ngFor="let data of drHabientesList;let i = index">
+                  <ion-row>
+                    <ion-col sizeXs="11" sizeSm="11" sizeMd="11" sizeLg="11">
+                      <ion-row id="content-card">
+                        <ion-col class="title" sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
+                          <span>{{data.nombres}} {{(data.sexo == "Hombre")?"(M)":"(F)"}}</span>
+                        </ion-col>
+                        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
+                          <span class="align-right">{{data.edad}} Años</span>
+                        </ion-col>
+                      
+                        <ion-col class="card-extra-info" sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
+                          <span>{{data.parentesco}}</span><br>
+                          <span>{{data.tipodoc}}: {{data.nrodoc}}</span>
+                        </ion-col>
+                        <ion-col class="align-end card-extra-info" sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
+                          <span>{{data.fchnac}}</span>
+                        </ion-col>
+                      </ion-row>
+                    </ion-col>
+                    <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
+                      <div id="content-button-card" (click)="onDeleteItem('drHabientesList',i)">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </section>
       </div>
-      <section id="datos-personales" *ngIf="stepSelected == 1" style="background-color: #FFF !important;">
-        <ion-row>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="container-title">
-              <label>Datos Personales</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="btn-form">
-              <button type="button" (click)="onNextStep(1+1)" class="btn btn-primary btn-sm">
-                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-              </button>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprNombre"
-            label="Nombres"
-            placeholder="Ingrese su nombre completo"
-            value="{{ dtprNombre }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprNombre')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="dtprApPaterno"
-            label="Apellido Paterno"
-            placeholder="Ingrese su nombre completo"
-            value="{{ dtprApPaterno }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprApPaterno')"
-          ></mt-input>
-          </ion-col>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="dtprApMaterno"
-            label="Apellido Materno"
-            placeholder="Ingrese su nombre completo"
-            value="{{ dtprApMaterno }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprApMaterno')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-calendar
-            id="dtprFecNac"
-            label="Fecha Nacimiento"
-            (afterChange)="onChangeInput($event)"
-            [defaultValue]="dtprFecNac"
-            [isRequired]="showError && requiredList.includes('dtprFecNac')"
-            ></mt-calendar>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtprCboPaisNac"
-            [enableSearchInput]="true"
-            placeHolder="Pais de nacimiento"
-            [optionList]="optionListPais"
-            (changeSelected)="onChangeSelect($event)"
-            [selectOption]="selectOptionPaisNac"
-            [isRequired]="showError && requiredList.includes('dtprCboPaisNac')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtprCboTipodoc"
-            placeHolder="Tipo de documento"
-            [optionList]="optionListTipoDoc"
-            (changeSelected)="onChangeSelect($event)"
-            [selectOption]="selectOptionTipodoc"
-            [isRequired]="showError && requiredList.includes('dtprCboTipodoc')"
-            ></mt-select>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="dtprNumDoc"
-            label="Numero de documento"
-            placeholder="Ingrese su numero de documento"
-            value="{{ dtprNumDoc }}"
-            (afterChange)="onChangeInput($event)"
-            type="number"
-            [isRequired]="showError && requiredList.includes('dtprNumDoc')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtprCboSexo"
-            placeHolder="Sexo"
-            [optionList]="optionListSexo"
-            (changeSelected)="onChangeSelect($event)"
-            [selectOption]="selectOptionSexo"
-            [isRequired]="showError && requiredList.includes('dtprCboSexo')"
-            ></mt-select>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtprCboEstadoCivil"
-            placeHolder="Estado civil"
-            [optionList]="optionListEstadoCivil"
-            (changeSelected)="onChangeSelect($event)"
-            [selectOption]="selectOptionEstadoCivil"
-            [isRequired]="showError && requiredList.includes('dtprCboEstadoCivil')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprDireccion"
-            label="Direccion"
-            placeholder="Ingrese su direccion"
-            value="{{ dtprDireccion }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprDireccion')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprReferencia"
-            label="Referencia"
-            placeholder="Ingrese referencia de direccion"
-            value="{{ dtprReferencia }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprReferencia')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprEmail"
-            label="Correo electronico"
-            placeholder="Ingrese su coreo electronico"
-            value="{{ dtprEmail }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprEmail')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprCelular"
-            label="Celular"
-            placeholder="Ingrese su numero de celular"
-            value="{{ dtprCelular }}"
-            (afterChange)="onChangeInput($event)"
-            type="number"
-            [isRequired]="showError && requiredList.includes('dtprCelular')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtprCboPension"
-            placeHolder="Regimen pensionario"
-            [optionList]="optionListPensiones"
-            (changeSelected)="onChangeSelect($event)"
-            [selectOption]="selectOptionPension"
-            [isRequired]="showError && requiredList.includes('dtprCboPension')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprContactoEmg"
-            label="Nombre contacto emergencia"
-            placeholder="Ingrese nombre de contacto"
-            value="{{ dtprContactoEmg }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('dtprContactoEmg')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="dtprNumEmerg"
-            label="Numero contacto emergencia"
-            placeholder="Ingrese Numero de contacto"
-            value="{{ dtprNumEmerg }}"
-            (afterChange)="onChangeInput($event)"
-            type="number"
-            [isRequired]="showError && requiredList.includes('dtprNumEmerg')"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section id="experiencia-laboral" *ngIf="stepSelected == 2">
-        <ion-row>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="container-title">
-              <label>Experiencia Laboral</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="btn-form">
-              <button type="button" (click)="onNextStep(2+1)" class="btn btn-primary btn-sm">
-                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-              </button>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="exlabEmpresa"
-            label="Empresa"
-            placeholder="Ingrese nombre de la Empresa"
-            value="{{ exlabEmpresa }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('exlabEmpresa')"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="exlabPuesto"
-            label="Puesto"
-            placeholder="Ingrese puesto laboral"
-            value="{{ exlabPuesto }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('exlabPuesto')"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-calendar
-            idInit="exlabFecInicio"
-            idEnd="exlabCulmino"
-            label="Fecha Trabajo"
-            labelInit="Fecha Inicio"
-            labelFin="Fecha Fin"
-            isRageDate="true"
-            (afterChangeInit)="onChangeInput($event)"
-            (afterChangeEnd)="onChangeInput($event)"
-            ></mt-calendar>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="exlabMotivo"
-            label="Motivo"
-            placeholder="Ingrese el motivo del cese"
-            value="{{ exlabMotivo }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('exlabMotivo')"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section id="formacion-academica" *ngIf="stepSelected == 3">
-        <ion-row>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="container-title">
-              <label>Formacion Academica</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="btn-form">
-              <button type="button" (click)="onNextStep(3+1)" class="btn btn-primary btn-sm">
-                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-              </button>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="frAcCentroEstudio"
-            label="Centro de estudios"
-            placeholder="Ingrese centro de estudios"
-            value="{{ frAcCentroEstudio }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('frAcCentroEstudio')"
-            ></mt-input>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="frAcTipo"
-            placeHolder="Tipo estudio"
-            [optionList]="optionListTipoEstudio"
-            (changeSelected)="onChangeSelect($event)"
-            [isRequired]="showError && requiredList.includes('frAcTipo')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="frAcCarrera"
-            label="Carrera"
-            placeholder="Ingrese su carrera"
-            value="{{ frAcCarrera }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            [isRequired]="showError && requiredList.includes('frAcCarrera')"
-            ></mt-input>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="frAcEstado"
-            placeHolder="Estado"
-            [optionList]="optionListEstadoEstudio"
-            (changeSelected)="onChangeSelect($event)"
-            [isRequired]="showError && requiredList.includes('frAcEstado')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section id="experiencia-laboral" *ngIf="stepSelected == 4">
-        <ion-row>
-          <ion-col sizeXs="7" sizeSm="7" sizeMd="7" sizeLg="7">
-            <div class="container-title">
-              <label>Datos de derecho habientes</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="5" sizeSm="5" sizeMd="5" sizeLg="5">
-            <div class="btn-form">
-              <button type="button" (click)="onNextStep(4+1)" class="btn btn-primary btn-sm">
-                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-              </button>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="drabNombres"
-            label="Apellidos y nombres"
-            placeholder="Ingrese apellidos y nombres"
-            value="{{ drabNombres }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-calendar
-            id="drabFecNac"
-            label="Fecha Nacimiento"
-            (afterChange)="onChangeInput($event)"
-            [defaultValue]="drabFecNac"
-            ></mt-calendar>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="drabParentesco"
-            label="Parentesco"
-            placeholder="Ingrese el parentesco"
-            value="{{ drabParentesco }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="drabEdad"
-            label="Edad"
-            placeholder="Ingrese la edad"
-            value="{{ drabEdad }}"
-            (afterChange)="onChangeInput($event)"
-            type="number"
-            ></mt-input>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="drabSexo"
-            placeHolder="Sexo"
-            [optionList]="optionListSexo"
-            (changeSelected)="onChangeSelect($event)"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="drabTipoDoc"
-            placeHolder="Tipo Documento"
-            [optionList]="optionListTipoDoc"
-            (changeSelected)="onChangeSelect($event)"
-            ></mt-select>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            id="drabNroDocumento"
-            label="Nro Documento"
-            placeholder="Ingrese el numero de documento"
-            value="{{ drabNroDocumento }}"
-            (afterChange)="onChangeInput($event)"
-            type="number"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            id="drabOcupacion"
-            label="Ocupacion"
-            placeholder="Ingrese ocupacion"
-            value="{{ drabOcupacion }}"
-            (afterChange)="onChangeInput($event)"
-            type="text"
-            ></mt-input>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section id="datos-salud" *ngIf="stepSelected == 5">
-        <ion-row>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="container-title">
-              <label>Datos de Salud</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-            <div class="btn-form">
-              <button (click)="onSendData()" type="button" class="btn btn-primary btn-sm">
-                <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Datos
-              </button>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-input
-            label="Alergias"
-            placeholder="Ingrese segun corresponda"
-            type="text"
-            id="dtslAlergia"
-            value="{{ dtslAlergia }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Enfermedad"
-            placeholder="Ingrese segun corresponda"
-            type="text"
-            id="dtslEnfermedad"
-            value="{{ dtslEnfermedad }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Medicamentos"
-            placeholder="Ingrese segun corresponda"
-            type="text"
-            id="dtslMedicamento"
-            value="{{ dtslMedicamento }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-input
-            label="Grupo sanguineo"
-            placeholder="Ingrese segun corresponda"
-            type="text"
-            id="dtslGrupoSanguineo"
-            value="{{ dtslGrupoSanguineo }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="container-title">
-              <label>Atecedentes</label>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <mt-select
-            id="dtslAntecedentesPol"
-            placeHolder="Tiene antecedentes policiales"
-            [optionList]="optionListStandar"
-            (changeSelected)="onChangeSelect($event)"
-            [isRequired]="showError && requiredList.includes('dtslAntecedentesPol')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtslAntecedenteJud"
-            placeHolder="Tiene antecedentes judiciales"
-            [optionList]="optionListStandar"
-            (changeSelected)="onChangeSelect($event)"
-            [isRequired]="showError && requiredList.includes('dtslAntecedenteJud')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <mt-select
-            id="dtslAntecedentePen"
-            placeHolder="Tiene antecedentes judiciales"
-            [optionList]="optionListStandar"
-            (changeSelected)="onChangeSelect($event)"
-            [isRequired]="showError && requiredList.includes('dtslAntecedentePen')"
-            ></mt-select>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section id="proceso-success" *ngIf="stepSelected == 6">
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="container-icon-success">
-              <span>
-                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-              </span>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="container-title-success">
-              <label>Proceso realizado con exito</label>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="container-subtitle-success">
-              <label>Sus datos se enviaron adecuadamente </label>
-            </div>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section id="section-button">
-        <ion-row>
-          <ion-col>
-            <button type="button" *ngIf="stepSelected == 2 || stepSelected == 3 || stepSelected == 4" (click)="onActionFuntion()" class="btn btn-primary btn-sm">{{buttonNameForm}}</button>
-            <button type="button" *ngIf="stepSelected == 2 || stepSelected == 3 || stepSelected == 4" (click)="isViewAdds = !isViewAdds" class="btn btn-light btn-sm btn-view">
-              {{ (!isViewAdds) ? "Ver lista" : "Ocultar Lista" }}
-            </button>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section *ngIf="expLaboralList.length && stepSelected == 2 && isViewAdds">
-        <ion-row>
-          <ion-col>
-            <div class="accordion" id="accordionExample">
-
-              <div class="card-information-slim" *ngFor="let data of expLaboralList;let i = index">
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="11" sizeLg="11">
-                    <ion-row id="content-card">
-                      <ion-col class="title" sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
-                        <span>{{data.empresa}}</span>
-                      </ion-col>
-                    
-                      <ion-col class="card-extra-info" sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
-                        <span>{{data.puesto}}</span><br>
-                        <span>De: {{data.desde}} Hasta: {{data.culmino}}</span><br>
-                        <span>Motivo: {{data.motivo}}</span>
-                      </ion-col>
-                    </ion-row>
-                  </ion-col>
-                  <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
-                    <div id="content-button-card" (click)="onDeleteItem('expLaboralList',i)">
-                      <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section *ngIf="forAcademicaList.length && stepSelected == 3 && isViewAdds">
-        <ion-row>
-          <ion-col>
-            <div class="accordion" id="accordionExample">
-              <div class="card-information-slim" *ngFor="let data of forAcademicaList;let i = index">
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="11" sizeLg="11">
-                    <ion-row id="content-card">
-                      <ion-col class="title" sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
-                        <span>{{data.ctrEstudio}}</span>
-                      </ion-col>
-                      <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-                        <span class="align-right">{{data.estado}}</span>
-                      </ion-col>
-                    
-                      <ion-col class="card-extra-info" sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
-                        <span>{{data.tipo}}</span><br>
-                        <span>{{data.carrera}}</span>
-                      </ion-col>
-                    </ion-row>
-                  </ion-col>
-                  <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
-                    <div id="content-button-card" (click)="onDeleteItem('forAcademicaList',i)">
-                      <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </section>
-
-      <section *ngIf="drHabientesList.length && stepSelected == 4 && isViewAdds">
-        <ion-row>
-          <ion-col>
-            <div class="accordion" id="accordionExample">
-              <div class="card-information-slim" *ngFor="let data of drHabientesList;let i = index">
-                <ion-row>
-                  <ion-col sizeXs="11" sizeSm="11" sizeMd="11" sizeLg="11">
-                    <ion-row id="content-card">
-                      <ion-col class="title" sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10">
-                        <span>{{data.nombres}} {{(data.sexo == "Hombre")?"(M)":"(F)"}}</span>
-                      </ion-col>
-                      <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-                        <span class="align-right">{{data.edad}} Años</span>
-                      </ion-col>
-                    
-                      <ion-col class="card-extra-info" sizeXs="9" sizeSm="9" sizeMd="9" sizeLg="9">
-                        <span>{{data.parentesco}}</span><br>
-                        <span>{{data.tipodoc}}: {{data.nrodoc}}</span>
-                      </ion-col>
-                      <ion-col class="align-end card-extra-info" sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
-                        <span>{{data.fchnac}}</span>
-                      </ion-col>
-                    </ion-row>
-                  </ion-col>
-                  <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
-                    <div id="content-button-card" (click)="onDeleteItem('drHabientesList',i)">
-                      <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </section>
-    </div>
-  </ion-col>
-</ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

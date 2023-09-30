@@ -122,8 +122,11 @@ export class AppComponent {
     }
 
     if (this.store.getStore('tn')) {
-      this.renderNavBar = true;
       pathActual = this.store.getStore('pathURL') || 'comprobantes';
+      if (pathActual != "postulante" && pathActual != '') {
+        this.renderNavBar = true;
+      }
+
       this.nav.navigateRoot((pathActual || {}).value);
     } else {
       this.renderNavBar = false;
@@ -155,7 +158,7 @@ export class AppComponent {
 
     document.body.addEventListener("click", function (evt) {
       let classListSelect = [...((evt || {}).target || {})["classList"]] || [];
-    
+
       if (classListSelect.indexOf("isSelectComponent") == -1) {
         selft.service.onCloseSelect.emit(true);
       }

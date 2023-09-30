@@ -48,7 +48,8 @@ export class MtFrmAddEmployeeComponent implements OnInit {
     { key: 'VS MEGA PLAZA', value: 'VS MEGA PLAZA' },
     { key: 'VS MINKA', value: 'VS MINKA' },
     { key: 'VSFA JOCKEY FULL', value: 'VSFA JOCKEY FULL' },
-    { key: 'BBW ASIA', value: 'BBW ASIA' }
+    { key: 'BBW ASIA', value: 'BBW ASIA' },
+    { key: 'ADMINISTRACION', value: 'ADMINISTRACION' }
   ];
 
   optionListTipoDoc: Array<any> = [
@@ -957,7 +958,7 @@ export class MtFrmAddEmployeeComponent implements OnInit {
   constructor(private service: ShareService) { }
 
   ngOnInit() {
-
+console.log("dataEmployeeList",this.dataEmployeeList);
     if (Object.keys(this.dataEmployeeList).length) {
       this.isUpdate = true;
       this.estadoCivil = this.dataEmployeeList['ESTADO_CIVIL'];

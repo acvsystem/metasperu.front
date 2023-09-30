@@ -240,3 +240,12 @@ nav {
         border: solid 1px #d7d7d7 !important;
     }
 }
+
+.nav-step {
+    position: sticky !important;
+}
+
+#datos-personales {
+    overflow: auto;
+    //max-height: 600px !important;
+}

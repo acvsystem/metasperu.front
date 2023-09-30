@@ -9,6 +9,7 @@
         type="{{ type == 'number' ? 'number' : type == 'password' ? viewPassword ? 'text' : 'password' : 'text' }}"
         placeholder="{{placeholder}}"
         (keyup)="onChange($event)"
+        [disabled]="isDisabled"
       ></ion-input>
       <span 
         id="inputURL" 
