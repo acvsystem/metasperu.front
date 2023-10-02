@@ -106,7 +106,7 @@ export class AppComponent {
 
     this.isMobil = window.innerWidth < 769;
     let pathActual: any = {};
-
+    pathActual = this.store.getStore('pathURL') || 'comprobantes';
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });
@@ -122,11 +122,10 @@ export class AppComponent {
     }
 
     if (this.store.getStore('tn')) {
-      pathActual = this.store.getStore('pathURL') || 'comprobantes';
-      if (pathActual != "postulante" && pathActual != '') {
+      if (((pathActual || {}).value || "") != "postulante" && ((pathActual || {}).value || "").length > 0) {
         this.renderNavBar = true;
-      }
-
+      } 
+      
       this.nav.navigateRoot((pathActual || {}).value);
     } else {
       this.renderNavBar = false;
@@ -146,9 +145,10 @@ export class AppComponent {
           (event: NavigationEnd) => {
             this.store.setStore('pathURL', location.pathname.split('/')[1]);
             pathActual = this.store.getStore('pathURL') || 'comprobantes';
-            if (!this.store.getStore('tn')) {
+            if (!this.store.getStore('tn') || (((pathActual || {}).value || "") == "postulante") || ((pathActual || {}).value || "").length == 0) {
               this.renderNavBar = false;
             }
+            this.nav.navigateRoot((pathActual || {}).value);
           }
         )
 
