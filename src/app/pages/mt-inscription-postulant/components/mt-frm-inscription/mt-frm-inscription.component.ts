@@ -1260,9 +1260,12 @@ export class MtFrmInscriptionComponent implements OnInit {
   }
 
   onAddRegister(contentName, keyList) {
+    const self = this;
     let dataKeyList = keyList || [];
     let notValueList = [];
     let dataList = {};
+    let array = [];
+    array = (self[contentName].length) ? self[contentName] : [];
 
     (dataKeyList || []).map((obj): any => {
       console.log(this[(obj || {}).property]);
@@ -1274,7 +1277,8 @@ export class MtFrmInscriptionComponent implements OnInit {
     });
 
     if (!notValueList.length) {
-      this[contentName].push(dataList);
+      (array || []).push(dataList);
+      self[contentName] = array;
       let notificationList = [{
         isSuccess: true,
         bodyNotification: "Registro agregado correctamente."

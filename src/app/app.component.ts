@@ -105,8 +105,10 @@ export class AppComponent {
     let menu = this.store.getStore('mt-menu');
 
     this.isMobil = window.innerWidth < 769;
-    let pathActual: any = {};
-    pathActual = this.store.getStore('pathURL') || 'comprobantes';
+    /*  let pathActual: any = {};
+      pathActual = {
+        value: this.store.getStore('pathURL') || location.pathname.split('/')[1]
+      };*/
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });
@@ -121,16 +123,15 @@ export class AppComponent {
       this.menuUser = menu;
     }
 
+    console.log(location.pathname.split('/')[1]);
     if (this.store.getStore('tn')) {
-      if (((pathActual || {}).value || "") != "postulante" && ((pathActual || {}).value || "").length > 0) {
+      if (location.pathname.split('/')[1] != "postulante" && location.pathname.split('/')[1].length > 0) {
         this.renderNavBar = true;
       }
-
-      this.nav.navigateRoot((pathActual || {}).value);
+      
     } else {
       this.renderNavBar = false;
     }
-
 
     try {
       this.router.events
@@ -143,20 +144,21 @@ export class AppComponent {
         )
         .subscribe(
           (event: NavigationEnd) => {
-      
-            this.store.setStore('pathURL', location.pathname.split('/')[1]);
-            pathActual = this.store.getStore('pathURL');
-            if ((pathActual || {}).value != "postulante") {
-              console.log("NavigationEnd");
 
-              if (!this.store.getStore('tn') || ((pathActual || {}).value == "postulante" || (pathActual || {}).value.length == 0)) {
-                this.renderNavBar = false;
-              }
-              this.nav.navigateRoot((pathActual || {}).value);
-            } else {
-              let path = location.pathname.split('/')[1];
-              console.log(path);
-              this.nav.navigateRoot(path);
+            if (this.store.getStore('tn')) {
+              console.log("NavigationEnd");
+              /* if (location.pathname.split('/')[1] != "postulante") {
+                 console.log("NavigationEnd");
+                 this.store.setStore('pathURL', location.pathname.split('/')[1]);
+                 pathActual = { value: this.store.getStore('pathURL') || location.pathname.split('/')[1] };
+                 if (!this.store.getStore('tn') || ((pathActual || {}).value == "postulante" || (pathActual || {}).value.length == 0)) {
+                   this.renderNavBar = false;
+                 }
+                 this.nav.navigateRoot((pathActual || {}).value);
+               } else {
+                 let path = location.pathname.split('/')[1];
+                 this.nav.navigateRoot(path);
+               }*/
             }
           }
         )
