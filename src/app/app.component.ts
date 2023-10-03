@@ -124,8 +124,8 @@ export class AppComponent {
     if (this.store.getStore('tn')) {
       if (((pathActual || {}).value || "") != "postulante" && ((pathActual || {}).value || "").length > 0) {
         this.renderNavBar = true;
-      } 
-      
+      }
+
       this.nav.navigateRoot((pathActual || {}).value);
     } else {
       this.renderNavBar = false;
@@ -143,12 +143,21 @@ export class AppComponent {
         )
         .subscribe(
           (event: NavigationEnd) => {
+      
             this.store.setStore('pathURL', location.pathname.split('/')[1]);
-            pathActual = this.store.getStore('pathURL') || 'comprobantes';
-            if (!this.store.getStore('tn') || (((pathActual || {}).value || "") == "postulante") || ((pathActual || {}).value || "").length == 0) {
-              this.renderNavBar = false;
+            pathActual = this.store.getStore('pathURL');
+            if ((pathActual || {}).value != "postulante") {
+              console.log("NavigationEnd");
+
+              if (!this.store.getStore('tn') || ((pathActual || {}).value == "postulante" || (pathActual || {}).value.length == 0)) {
+                this.renderNavBar = false;
+              }
+              this.nav.navigateRoot((pathActual || {}).value);
+            } else {
+              let path = location.pathname.split('/')[1];
+              console.log(path);
+              this.nav.navigateRoot(path);
             }
-            this.nav.navigateRoot((pathActual || {}).value);
           }
         )
 
