@@ -25,6 +25,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   headList: Array<any> = [];
   dataPaginationList: Array<any> = [];
   dataObservacion: Array<any> = [];
+  extraDataList: Array<any> = [];
   indexPageList: Array<any> = [];
   cantPagination: any = 0;
   actualIndexPage: any = 0;
@@ -85,7 +86,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   reporteFaltante: Array<any> = [];
   employeList: Array<any> = [];
   dateCalendarList: Array<any> = [];
-  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Centro Costo','Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Break', 'Accion'];
+  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Centro Costo', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Break', 'Accion'];
 
   tipoTableView: string = "allList";
   displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'Accion'];
@@ -130,8 +131,6 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     this.socket.on('sendControlAsistencia', (asistencia) => {
 
-      
-
       let arrayData = [...asistencia];
 
       arrayData.filter((dt, index) => {
@@ -142,6 +141,10 @@ export class MtControlAsistenciaComponent implements OnInit {
             this.dataObservacion.push(obs);
           });
         }
+
+        ((dt || {}).data || []).filter((obs) => {
+          this.extraDataList.push(obs);
+        });
       });
 
       this.dataPaginationList = asistencia;
@@ -181,7 +184,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      
+
     });
   }
 
@@ -303,6 +306,10 @@ export class MtControlAsistenciaComponent implements OnInit {
       if (this.dataObservacion.length) {
         this.exportToExcel(this.dataObservacion, "metasPeru_Observacion");
       }
+
+      if (this.isReportTotal && this.extraDataList.length) {
+        this.exportToExcel(this.extraDataList, "metasPeru_all_date");
+      }
     }
 
   }
@@ -334,7 +341,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   }
 
   onDateCalendar(ev) {
-   
+
     if (ev.id == "mt-input-init" || ev.id == "mt-input-end") {
       this.dateCalendarList = [];
 
