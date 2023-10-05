@@ -160,7 +160,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
   }
 
   onSaveOrUpdate(ev: any) {
-    console.log(ev);
+    
   }
 
   async openModalAddPostulant() {

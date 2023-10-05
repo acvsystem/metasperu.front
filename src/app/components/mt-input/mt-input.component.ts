@@ -16,6 +16,7 @@ export class MtInputComponent implements OnInit {
   @Input() sizeSllim: boolean = false;
   @Input() isRequired: boolean = false;
   @Input() isDisabled: boolean = false;
+  @Input() addClass: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   viewPassword: boolean = false;
   typePassword: string = "password";

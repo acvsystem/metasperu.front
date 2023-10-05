@@ -11,7 +11,6 @@ export class AuthGuardService  {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
 
     if (!this.store.getStore('tn')) {
-      console.log(route);
       let token = ((route || {}).params || {})['token'] || '';
       if (token) {
         this.store.setStore('tn', token);

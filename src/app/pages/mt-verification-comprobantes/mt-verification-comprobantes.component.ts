@@ -113,7 +113,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   onSessionList() {
     // let lista = this.socket.listeners('sessionList');
-    //console.log(lista);
   }
 
 }

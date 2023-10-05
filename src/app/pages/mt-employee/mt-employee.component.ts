@@ -22,7 +22,7 @@ export class MtEmployeeComponent implements OnInit {
 
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
 
-  constructor(private service: ShareService, public modalCtrl: ModalController) { }
+  constructor(private service: ShareService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
     this.onEmpleadoList();
@@ -36,7 +36,7 @@ export class MtEmployeeComponent implements OnInit {
 
     this.service.get(parms).then((response) => {
       let data = ((response || [])[0] || {}).data || [];
-      console.log(data);
+  
       this.dataPaginationList = data || [];
       this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
       this.dataSource.paginator = this.paginator;

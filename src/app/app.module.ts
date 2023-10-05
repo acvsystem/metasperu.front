@@ -31,6 +31,7 @@ import { MtFrmChangeStdPostulantComponent } from './pages/mt-inscription-postula
 import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
 import { MtChartDialogComponent } from './components/mt-chart-dialog/mt-chart-dialog.component';
 import { MtFrmAddEmployeeComponent } from './pages/mt-employee/components/mt-frm-add-employee/mt-frm-add-employee.component';
+import { MtViewAsistenciaComponent } from './pages/mt-control-asistencia/components/mt-view-asistencia/mt-view-asistencia.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -46,7 +47,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     MtFrmChangeStdPostulantComponent,
     MtEmployeeComponent,
     MtChartDialogComponent,
-    MtFrmAddEmployeeComponent
+    MtFrmAddEmployeeComponent,
+    MtViewAsistenciaComponent
   ],
   imports: [
     BrowserModule,

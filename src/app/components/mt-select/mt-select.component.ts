@@ -70,11 +70,13 @@ export class MtSelectComponent implements OnInit {
 
   onFilter(value) {
     let originalOptionList = [...this.originalOptionList];
-    let dataSearch = originalOptionList.filter((option) => {
-      return String(option.value).toLowerCase().indexOf(value.trim().toLowerCase()) > -1
+    let dataSearch = (originalOptionList || []).filter((option) => {
+      const acentos = { 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U' };
+      let palabraFilter = (option || {}).value.split('').map(letra => acentos[letra] || letra).join('').toString();
+      return String(palabraFilter).toUpperCase().indexOf(value.trim().toUpperCase()) > -1;
     });
 
-    this.optionList = !value.length ? originalOptionList : dataSearch;
+    this.optionList = !(value || "").length ? originalOptionList : dataSearch;
   }
 
 }

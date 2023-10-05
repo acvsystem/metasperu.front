@@ -20,6 +20,7 @@
         <mt-frm-generate-link *ngIf="bodyContent == 'mt-frm-generate-link'"></mt-frm-generate-link>
         <mt-frm-change-std-postulant [data]="dataIn" *ngIf="bodyContent == 'mt-frm-change-std-postulant'"></mt-frm-change-std-postulant>
         <mt-frm-add-employee [dataEmployeeList]="dataEmployeeList" (onResponse)="onResponseComponent($event)" *ngIf="bodyContent == 'mt-frm-add-employee'"></mt-frm-add-employee>
+        <mt-view-asistencia [dataAsistencia]="dataAsistencia" *ngIf="bodyContent == 'mt-view-asistencia'"></mt-view-asistencia>
       </div>
     </ion-col>
    <!--<ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">

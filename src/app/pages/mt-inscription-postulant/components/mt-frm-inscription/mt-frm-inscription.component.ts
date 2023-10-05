@@ -1268,7 +1268,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     array = (self[contentName].length) ? self[contentName] : [];
 
     (dataKeyList || []).map((obj): any => {
-      console.log(this[(obj || {}).property]);
+      
       if (this[(obj || {}).property] || !(obj || {}).required) {
         dataList[(obj || {}).key] = this[(obj || {}).property];
       } else {
@@ -1279,10 +1279,12 @@ export class MtFrmInscriptionComponent implements OnInit {
     if (!notValueList.length) {
       (array || []).push(dataList);
       self[contentName] = array;
+      
       let notificationList = [{
         isSuccess: true,
         bodyNotification: "Registro agregado correctamente."
       }];
+
       this.onDataStorage();
       this.onClear(keyList);
       this.service.onNotification.emit(notificationList);
@@ -1379,7 +1381,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      console.log(response);
+      
     });
   }
 

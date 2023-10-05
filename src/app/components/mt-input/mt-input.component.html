@@ -10,11 +10,12 @@
         placeholder="{{placeholder}}"
         (keyup)="onChange($event)"
         [disabled]="isDisabled"
+        class="{{addClass}}"
       ></ion-input>
       <span 
         id="inputURL" 
         (click)="onCopyText()" 
-        class="btn-copy" 
+        class="btn-copy"
         slot="end" 
         *ngIf="isCopy"
         data-bs-toggle="tooltip" 

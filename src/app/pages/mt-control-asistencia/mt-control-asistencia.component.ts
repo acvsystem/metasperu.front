@@ -6,6 +6,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MtChartDialogComponent } from '../../components/mt-chart-dialog/mt-chart-dialog.component';
+import { ModalController } from '@ionic/angular';
+import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 
 @Component({
   selector: 'mt-control-asistencia',
@@ -22,6 +24,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   bodyList: Array<any> = [];
   headList: Array<any> = [];
   dataPaginationList: Array<any> = [];
+  dataObservacion: Array<any> = [];
   indexPageList: Array<any> = [];
   cantPagination: any = 0;
   actualIndexPage: any = 0;
@@ -48,19 +51,19 @@ export class MtControlAsistenciaComponent implements OnInit {
     { key: 'AEO JOCKEY', value: 'AEO JOCKEY' },
     { key: 'AEO ASIA', value: 'AEO ASIA' },
     { key: 'BBW LA RAMBLA', value: 'BBW LA RAMBLA' },
-    { key: 'VS LA RAMBLA', value: 'VS LA RAMBLA' },
-    { key: 'VS PLAZA NORTE', value: 'VS PLAZA NORTE' },
+    { key: 'VSBA LA RAMBLA', value: 'VSBA LA RAMBLA' },
+    { key: 'VSBA PLAZA NORTE', value: 'VSBA PLAZA NORTE' },
     { key: 'BBW SAN MIGUEL', value: 'BBW SAN MIGUEL' },
-    { key: 'VS SAN MIGUEL', value: 'VS SAN MIGUEL' },
+    { key: 'VSBA SAN MIGUEL', value: 'VSBA SAN MIGUEL' },
     { key: 'BBW SALAVERRY', value: 'BBW SALAVERRY' },
-    { key: 'VS SALAVERRY', value: 'VS SALAVERRY' },
-    { key: 'VS MALL DEL SUR', value: 'VS MALL DEL SUR' },
-    { key: 'VS PURUCHUCO', value: 'VS PURUCHUCO' },
-    { key: 'VS ECOMMERCE', value: 'VS ECOMMERCE' },
+    { key: 'VSBA SALAVERRY', value: 'VSBA SALAVERRY' },
+    { key: 'VSBA MALL DEL SUR', value: 'VSBA MALL DEL SUR' },
+    { key: 'VSBA PURUCHUCO', value: 'VSBA PURUCHUCO' },
+    { key: 'VSBA ECOMMERCE', value: 'VS ECOMMERCE' },
     { key: 'BBW ECOMMERCE', value: 'BBW ECOMMERCE' },
     { key: 'AEO ECOMMERCE', value: 'AEO ECOMMERCE' },
-    { key: 'VS MEGA PLAZA', value: 'VS MEGA PLAZA' },
-    { key: 'VS MINKA', value: 'VS MINKA' },
+    { key: 'VSBA MEGA PLAZA', value: 'VSBA MEGA PLAZA' },
+    { key: 'VSBA MINKA', value: 'VSBA MINKA' },
     { key: 'VSFA JOCKEY FULL', value: 'VSFA JOCKEY FULL' },
     { key: 'BBW ASIA', value: 'BBW ASIA' }
   ];
@@ -82,7 +85,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   reporteFaltante: Array<any> = [];
   employeList: Array<any> = [];
   dateCalendarList: Array<any> = [];
-  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Break'];
+  displayedColumns: string[] = ['Nombre completo', 'Documento', 'Centro Costo','Fecha', 'Hora Ingreso', 'H.S.B', 'H.I.B', 'Hora Salida', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'H. Break', 'Accion'];
 
   tipoTableView: string = "allList";
   displayedColumnsTimerList: string[] = ['Nombre completo', 'Documento', 'H. Trabajadas', 'H. Excedentes', 'H. Faltantes', 'Accion'];
@@ -96,7 +99,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   isReporRgDate = false;
   isReportFeriado = false;
 
-  constructor(private service: ShareService, private dialog: MatDialog) { }
+  constructor(private service: ShareService, private dialog: MatDialog, private modalCtrl: ModalController) { }
 
   ngOnInit() {
     const self = this;
@@ -127,7 +130,19 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     this.socket.on('sendControlAsistencia', (asistencia) => {
 
-      console.log("socket-sendControlAsistencia", asistencia);
+      
+
+      let arrayData = [...asistencia];
+
+      arrayData.filter((dt, index) => {
+        if (dt.observacion) {
+          asistencia.splice(index, 1);
+          asistencia.splice(0, 0, dt);
+          ((dt || {}).data || []).filter((obs) => {
+            this.dataObservacion.push(obs);
+          });
+        }
+      });
 
       this.dataPaginationList = asistencia;
 
@@ -166,7 +181,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      
     });
   }
 
@@ -181,13 +196,14 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     if (this.lstCentroCosto) {
       let body = [];
+      this.dataObservacion = [];
       let centroCostoList = this.optionListMarca || [];
       let selectedOption = this.optionListExport.find((dat) => dat.value == this.functionExport);
       let tipoReporte = (selectedOption || {}).key;
       this.dataPaginationList = [];
       this.isLoadingResults = true;
       let dateList = [];
-      let nowDay = new Date().toLocaleDateString('en-CA');;
+      let nowDay = new Date().toLocaleDateString('en-CA');
       dateList = !this.dateCalendarList.length ? [nowDay] : [...this.dateCalendarList];
 
       if (dateList.length == 1) {
@@ -284,6 +300,9 @@ export class MtControlAsistenciaComponent implements OnInit {
 
     if (!this.isReportFeriado && dataJson.length) {
       this.exportToExcel(dataJson, reportName);
+      if (this.dataObservacion.length) {
+        this.exportToExcel(this.dataObservacion, "metasPeru_Observacion");
+      }
     }
 
   }
@@ -315,7 +334,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   }
 
   onDateCalendar(ev) {
-    //console.log("onDateCalendar", ev);
+   
     if (ev.id == "mt-input-init" || ev.id == "mt-input-end") {
       this.dateCalendarList = [];
 
@@ -379,6 +398,23 @@ export class MtControlAsistenciaComponent implements OnInit {
       this.isReportFeriado = true;
       this.isReportForDay = true;
     }
+  }
+
+  async onSelectedRegister(data) {
+
+
+    let modal = await this.modalCtrl.create({
+      component: MtModalContentComponent,
+      cssClass: "mt-modal modal-asistencia",
+      componentProps: {
+        nameSection: 'viewAsistencia',
+        title: 'Asistencia',
+        bodyContent: 'mt-view-asistencia',
+        dataAsistencia: data
+      }
+    });
+
+    modal.present();
   }
 
 

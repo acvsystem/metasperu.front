@@ -1,0 +1,29 @@
+<div class="content">
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <table class="table table-bordered table-responsive-sm">
+            <thead>
+              <tr>
+                <th class="columHead" *ngFor="let columHead of headList">
+                  <span>{{columHead.value}}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let columBody of dataAsistencia;let index = index">
+                <td class="columBody">{{columBody.nombreCompleto}}</td>
+                <td class="columBody">{{columBody.nroDocumento}}</td>
+                <td class="columBody">{{columBody.dia}}</td>
+                <td class="columBody">{{columBody.hrIn}}</td>
+                <td class="columBody">{{columBody.hrOut}}</td>
+                <td class="columBody">{{columBody.caja}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</div>

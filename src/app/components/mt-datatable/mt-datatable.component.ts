@@ -27,7 +27,7 @@ export class MtDatatableComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.hasOwnProperty('bodyList')) {
-      console.log(this.bodyList);
+
       (this.bodyList || []).filter((data, i) => {
         var dataList: any = [];
         var dataLength: any = Object.keys((data || {})).length - 1;

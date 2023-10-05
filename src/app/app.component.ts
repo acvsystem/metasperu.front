@@ -94,7 +94,6 @@ export class AppComponent {
       });
 
       this.menuUser = newMenu;
-      console.log(this.menuUser);
       this.store.setStore("mt-menu", JSON.stringify(this.menuUser));
     });
   }
@@ -123,12 +122,12 @@ export class AppComponent {
       this.menuUser = menu;
     }
 
-    console.log(location.pathname.split('/')[1]);
+   
     if (this.store.getStore('tn')) {
       if (location.pathname.split('/')[1] != "postulante" && location.pathname.split('/')[1].length > 0) {
         this.renderNavBar = true;
       }
-      
+
     } else {
       this.renderNavBar = false;
     }
@@ -146,9 +145,8 @@ export class AppComponent {
           (event: NavigationEnd) => {
 
             if (this.store.getStore('tn')) {
-              console.log("NavigationEnd");
+          
               /* if (location.pathname.split('/')[1] != "postulante") {
-                 console.log("NavigationEnd");
                  this.store.setStore('pathURL', location.pathname.split('/')[1]);
                  pathActual = { value: this.store.getStore('pathURL') || location.pathname.split('/')[1] };
                  if (!this.store.getStore('tn') || ((pathActual || {}).value == "postulante" || (pathActual || {}).value.length == 0)) {
@@ -168,10 +166,13 @@ export class AppComponent {
     }
 
     document.body.addEventListener("click", function (evt) {
-      let classListSelect = [...((evt || {}).target || {})["classList"]] || [];
+      let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
+      let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
 
       if (classListSelect.indexOf("isSelectComponent") == -1) {
-        selft.service.onCloseSelect.emit(true);
+        if (parentClassList.indexOf("isSelectComponent") == -1 && parentClassList.indexOf("has-focus") == -1) {
+          selft.service.onCloseSelect.emit(true);
+        }
       }
 
     });

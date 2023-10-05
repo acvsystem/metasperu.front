@@ -13,6 +13,7 @@ export class MtModalContentComponent implements OnInit {
   @Input() bodyContent: any = '';
   @Input() dataIn: any = '';
   @Input() dataEmployeeList = {};
+  @Input() dataAsistencia: Array<any> = [];
   @Output() onResponseModal: EventEmitter<any> = new EventEmitter();
   @Output() onCloseModal: EventEmitter<any> = new EventEmitter();
 
@@ -21,7 +22,7 @@ export class MtModalContentComponent implements OnInit {
   constructor(private modalLogin: ModalController, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    console.log(this.bodyContent);
+   
     this.contentHTML = this.sanitizer.bypassSecurityTrustHtml(this.bodyContent);
   }
 

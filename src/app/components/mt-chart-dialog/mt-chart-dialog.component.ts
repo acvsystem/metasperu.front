@@ -43,7 +43,6 @@ export class MtChartDialogComponent implements OnInit {
 
   ngOnInit() {
     this.chartData = this.data;
-    console.log(this.data);
   }
 
 }

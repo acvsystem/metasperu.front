@@ -69,7 +69,7 @@ export class MtConfiguracionComponent implements OnInit {
     this.onListConfiguration();
 
     this.socket.on('update:file:status', (status) => {
-      console.log(status);
+    
       let index = this.tiendasList.findIndex((tienda)=> tienda.key == status.serie);
       this.tiendasList[index].progress = status.status;
     });
@@ -134,7 +134,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      console.log(response);
+      
     });
   }
 
@@ -155,7 +155,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      console.log(response);
+    
     });
   }
 
@@ -168,7 +168,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      console.log(response);
+    
     });
   }
 
@@ -199,9 +199,9 @@ export class MtConfiguracionComponent implements OnInit {
       url: '/settings/service/email/sendTest',
       body: []
     };
-    console.log(parms);
+   
     this.service.post(parms).then((response) => {
-      console.log(response);
+     
     });
   }
 
@@ -215,7 +215,7 @@ export class MtConfiguracionComponent implements OnInit {
       let success = (response || {}).success || false;
 
       if (success) {
-        console.log(response);
+   
         this.hashAgente = (response || {}).hash;
       }
     });

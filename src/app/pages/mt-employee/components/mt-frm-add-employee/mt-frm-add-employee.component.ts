@@ -34,20 +34,20 @@ export class MtFrmAddEmployeeComponent implements OnInit {
     { key: 'AEO JOCKEY', value: 'AEO JOCKEY' },
     { key: 'AEO ASIA', value: 'AEO ASIA' },
     { key: 'BBW LA RAMBLA', value: 'BBW LA RAMBLA' },
-    { key: 'VS LA RAMBLA', value: 'VS LA RAMBLA' },
-    { key: 'VS PLAZA NORTE', value: 'VS PLAZA NORTE' },
+    { key: 'VSBA LA RAMBLA', value: 'VSBA LA RAMBLA' },
+    { key: 'VSBA PLAZA NORTE', value: 'VSBA PLAZA NORTE' },
     { key: 'BBW SAN MIGUEL', value: 'BBW SAN MIGUEL' },
-    { key: 'VS SAN MIGUEL', value: 'VS SAN MIGUEL' },
+    { key: 'VSBA SAN MIGUEL', value: 'VSBA SAN MIGUEL' },
     { key: 'BBW SALAVERRY', value: 'BBW SALAVERRY' },
-    { key: 'VS SALAVERRY', value: 'VS SALAVERRY' },
-    { key: 'VS MALL DEL SUR', value: 'VS MALL DEL SUR' },
-    { key: 'VS PURUCHUCO', value: 'VS PURUCHUCO' },
-    { key: 'VS ECOMMERCE', value: 'VS ECOMMERCE' },
+    { key: 'VSBA SALAVERRY', value: 'VSBA SALAVERRY' },
+    { key: 'VSBA MALL DEL SUR', value: 'VSBA MALL DEL SUR' },
+    { key: 'VSBA PURUCHUCO', value: 'VSBA PURUCHUCO' },
+    { key: 'VSBA ECOMMERCE', value: 'VSBA ECOMMERCE' },
     { key: 'BBW ECOMMERCE', value: 'BBW ECOMMERCE' },
     { key: 'AEO ECOMMERCE', value: 'AEO ECOMMERCE' },
-    { key: 'VS MEGA PLAZA', value: 'VS MEGA PLAZA' },
-    { key: 'VS MINKA', value: 'VS MINKA' },
-    { key: 'VSFA JOCKEY FULL', value: 'VSFA JOCKEY FULL' },
+    { key: 'VSBA MEGA PLAZA', value: 'VSBA MEGA PLAZA' },
+    { key: 'VSBA MINKA', value: 'VSBA MINKA' },
+    { key: 'VSFA JOCKEY PLAZA', value: 'VSFA JOCKEY PLAZA' },
     { key: 'BBW ASIA', value: 'BBW ASIA' },
     { key: 'ADMINISTRACION', value: 'ADMINISTRACION' }
   ];
@@ -958,7 +958,7 @@ export class MtFrmAddEmployeeComponent implements OnInit {
   constructor(private service: ShareService) { }
 
   ngOnInit() {
-console.log("dataEmployeeList",this.dataEmployeeList);
+
     if (Object.keys(this.dataEmployeeList).length) {
       this.isUpdate = true;
       this.estadoCivil = this.dataEmployeeList['ESTADO_CIVIL'];
