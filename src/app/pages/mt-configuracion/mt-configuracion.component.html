@@ -186,6 +186,7 @@
             </div>
           </ion-col>
         </ion-row>
+
       </ion-col>
 
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
@@ -211,6 +212,102 @@
                             <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
                           </li>
                         </ol>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card-content-configuration">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div class="content-view">
+                    <ion-row class="border-bottom-title">
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <span class="title card-title">Configuracion menu</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="10" sizeLg="10">
+                        <mt-select
+                        id="lstRol"
+                        placeHolder="Seleccione Rol"
+                        [optionList]="optionListRol"
+                        (changeSelected)="onChangeSelect($event)"
+                        ></mt-select>
+                      </ion-col>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                        <div class="content-button-rol">
+                          <button type="button" (click)="onSaveMenuUser()" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            Guardar
+                          </button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa fa-th-list" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </ion-col>
+                     <!-- <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
+                        <mt-input
+                        id="nombreMenu"
+                        label="Nombre Menu"
+                        placeholder="Nombre Menu"
+                        value="{{ nombreMenu }}"
+                        (afterChange)="onChangeInput($event)"
+                        type="text"
+                        ></mt-input>
+                      </ion-col>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
+                        <mt-input
+                        id="routeMenu"
+                        label="Ruta Menu"
+                        placeholder="Ruta Menu"
+                        value="{{ routeMenu }}"
+                        (afterChange)="onChangeInput($event)"
+                        type="text"
+                        ></mt-input>
+                      </ion-col>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                        <button type="button" class="btn btn-outline-secondary">
+                          Agregar
+                        </button>
+                      </ion-col>-->
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <div cdkDropListGroup>
+                          <div class="example-container">
+                            <label>Opciones</label>
+                            <div
+                              cdkDropList
+                              [cdkDropListData]="notOptionMenuUserList"
+                              [class]="!notOptionMenuUserList.length ? 'example-list not-option' : 'example-list'"
+                              (cdkDropListDropped)="drop($event)">
+                              <span *ngIf="!notOptionMenuUserList.length">No hay Opciones</span>
+                              <section *ngIf="notOptionMenuUserList.length">
+                                <div class="example-box" *ngFor="let item of notOptionMenuUserList" cdkDrag>{{item}}</div>
+                              </section>
+                            </div>
+                          </div>
+                        
+                          <div class="example-container">
+                            <label>Menu</label>
+                            <div
+                              cdkDropList
+                              [cdkDropListData]="optionMenuUserList"
+                              [class]="!optionMenuUserList.length ? 'example-list not-option' : 'example-list'"
+                              (cdkDropListDropped)="drop($event)">
+                              <span *ngIf="!optionMenuUserList.length">No hay Opciones</span>
+                              <section *ngIf="optionMenuUserList.length">
+                                <div class="example-box" *ngFor="let item of optionMenuUserList" cdkDrag>{{item}}</div>
+                              </section>
+                            </div>
+                          </div>
+                        </div>
                       </ion-col>
                     </ion-row>
                   </div>

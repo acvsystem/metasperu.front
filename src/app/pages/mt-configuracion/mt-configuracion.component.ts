@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ShareService } from '../../services/shareService';
 import { io } from "socket.io-client";
+import {
+  CdkDragDrop,
+  CdkDrag,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import { StorageService } from 'src/app/utils/storage';
 
 @Component({
   selector: 'mt-configuracion',
@@ -9,10 +18,21 @@ import { io } from "socket.io-client";
 })
 export class MtConfiguracionComponent implements OnInit {
 
+  menuAllList: Array<any> = [];
+  menuUserList: Array<any> = [];
+
+  notOptionMenuUserList: Array<any> = [];
+  optionMenuUserList: Array<any> = [];
+
+  notOptionMenuKey: Array<any> = [];
+  optionMenuKey: Array<any> = [];
+
   menuList: Array<any> = [
     "Envio de correo",
     "Programacion de tarea"
   ];
+
+  lstRol: string = "";
 
   emailList: Array<any> = [];
   emailSend: string = "";
@@ -23,6 +43,8 @@ export class MtConfiguracionComponent implements OnInit {
   dataEmailListSend: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
+  nombreMenu: string = "";
+  routeMenu: string = "";
   token: any = localStorage.getItem('tn');
   optionNivelList: Array<any> = [
     { id: "Administrador", value: "Administrador" },
@@ -61,18 +83,34 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '7A7', value: 'BBW ASIA', progress: 0 }
   ];
 
+  optionListRol: Array<any> = [];
+
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, private store: StorageService,) { }
 
   ngOnInit() {
+    this.onListPerfil();
     this.onListConfiguration();
-
+    this.onListMenu();
     this.socket.on('update:file:status', (status) => {
-    
-      let index = this.tiendasList.findIndex((tienda)=> tienda.key == status.serie);
+
+      let index = this.tiendasList.findIndex((tienda) => tienda.key == status.serie);
       this.tiendasList[index].progress = status.status;
     });
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
 
   onUpdateAgentFront() {
@@ -113,10 +151,26 @@ export class MtConfiguracionComponent implements OnInit {
     this[index] = (inputData || {}).value || "";
   }
 
-  onChangeSelect(data: any) {
+  async onChangeSelect(data: any) {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
-    this[index] = (selectData || {}).value || "";
+    this[index] = (selectData || {}).key || "";
+
+    this.onListMenuUsuario().then((menu: Array<any>) => {
+      this.notOptionMenuUserList = [];
+      this.optionMenuUserList = [];
+      this.optionMenuUserList = menu;
+
+      this.menuAllList.filter((allMenu) => {
+        if (menu.indexOf(allMenu) == -1) {
+          this.notOptionMenuUserList.push(allMenu);
+        }
+      });
+    }).catch((rej) => {
+      this.notOptionMenuUserList = [];
+      this.optionMenuUserList = [];
+      this.notOptionMenuUserList = [...this.menuAllList];
+    });
   }
 
   onSelectEmail(value) {
@@ -134,7 +188,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      
+
     });
   }
 
@@ -155,7 +209,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-    
+
     });
   }
 
@@ -168,7 +222,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-    
+
     });
   }
 
@@ -194,14 +248,80 @@ export class MtConfiguracionComponent implements OnInit {
     });
   }
 
+  onListMenuUsuario() {
+
+    return new Promise((resolve, reject) => {
+      this.optionMenuUserList = [];
+      let parms = {
+        url: '/settings/service/lista/menu/user',
+        body: {
+          ID_NVL_ACCESS: this.lstRol
+        }
+      };
+
+      this.service.post(parms).then(async (response) => {
+        let menuUser = (response || {}).data || [];
+        let menu = [];
+        menuUser.filter((menuUser) => {
+          menu.push((menuUser || {}).DESCRIPTION_MENU);
+        });
+
+        if (menu.length) {
+          resolve(menu);
+        } else {
+          reject([])
+        }
+
+      });
+    });
+
+  }
+
+  onListMenu() {
+    this.menuAllList = [];
+
+    let parms = {
+      url: '/settings/service/lista/menu'
+    };
+
+    this.service.get(parms).then((response) => {
+      let dateMenuList = (response || {}).data || [];
+      this.notOptionMenuUserList = [];
+
+      dateMenuList.filter((menu) => {
+        this.menuAllList.push(menu.DESCRIPTION_MENU);
+        this.optionMenuKey.push(menu);
+      })
+    });
+  }
+
+  onListPerfil() {
+    this.menuAllList = [];
+
+    let parms = {
+      url: '/settings/service/lista/perfil/user'
+    };
+
+    this.service.get(parms).then((response) => {
+      let datePerfilList = (response || {}).data || [];
+
+      datePerfilList.filter((perfil) => {
+        this.optionListRol.push({
+          key: perfil.ID_NVL_ACCESS,
+          value: perfil.NM_NIVEL
+        });
+      })
+    });
+  }
+
   onSendTestEmail() {
     let parms = {
       url: '/settings/service/email/sendTest',
       body: []
     };
-   
+
     this.service.post(parms).then((response) => {
-     
+
     });
   }
 
@@ -215,9 +335,39 @@ export class MtConfiguracionComponent implements OnInit {
       let success = (response || {}).success || false;
 
       if (success) {
-   
+
         this.hashAgente = (response || {}).hash;
       }
+    });
+  }
+
+  onSaveMenuUser() {
+
+    let menuUser = [];
+    let notOption = [];
+
+    this.optionMenuUserList.filter((op) => {
+      let option = this.optionMenuKey.find((mk) => mk.DESCRIPTION_MENU == op);
+      menuUser.push(option['ID_MENU_DESC']);
+    });
+
+    this.notOptionMenuUserList.filter((op) => {
+      let option = this.optionMenuKey.find((mk) => mk.DESCRIPTION_MENU == op);
+      notOption.push(option['ID_MENU_DESC']);
+    });
+
+
+    let parms = {
+      url: '/security/create/menu/profile',
+      body: {
+        idProfile: this.lstRol,
+        menu: menuUser,
+        noOption: notOption
+      }
+    };
+
+    this.service.post(parms).then((response) => {
+
     });
   }
 

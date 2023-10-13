@@ -47,6 +47,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
@@ -99,6 +100,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MatDialogModule,
     MatProgressSpinnerModule,
     ClipboardModule,
+    DragDropModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
