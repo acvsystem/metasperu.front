@@ -9,6 +9,9 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { ModalController } from '@ionic/angular';
+import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
+
 import { StorageService } from 'src/app/utils/storage';
 
 @Component({
@@ -87,7 +90,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
-  constructor(private service: ShareService, private store: StorageService,) { }
+  constructor(private modalCtrl: ModalController,private service: ShareService, private store: StorageService,) { }
 
   ngOnInit() {
     this.onListPerfil();
@@ -369,6 +372,20 @@ export class MtConfiguracionComponent implements OnInit {
     this.service.post(parms).then((response) => {
 
     });
+  }
+
+  async openModalMenuList(){
+    let modal = await this.modalCtrl.create({
+      component: MtModalContentComponent,
+      componentProps: {
+        nameSection: 'addEmployee',
+        title: 'Registrar empleado',
+        bodyContent: 'mt-menu-crud'
+      },
+      cssClass: 'mt-modal'
+    });
+
+    modal.present();
   }
 
 }

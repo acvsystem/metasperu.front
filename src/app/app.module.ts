@@ -32,6 +32,7 @@ import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
 import { MtChartDialogComponent } from './components/mt-chart-dialog/mt-chart-dialog.component';
 import { MtFrmAddEmployeeComponent } from './pages/mt-employee/components/mt-frm-add-employee/mt-frm-add-employee.component';
 import { MtViewAsistenciaComponent } from './pages/mt-control-asistencia/components/mt-view-asistencia/mt-view-asistencia.component';
+import { MtMenuCrudComponent } from './pages/mt-configuracion/component/mt-menu-crud/mt-menu-crud.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -76,7 +77,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MtEmployeeComponent,
     MtChartDialogComponent,
     MtFrmAddEmployeeComponent,
-    MtViewAsistenciaComponent
+    MtViewAsistenciaComponent,
+    MtMenuCrudComponent
   ],
   imports: [
     BrowserModule,

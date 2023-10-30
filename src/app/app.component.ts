@@ -77,14 +77,24 @@ export class AppComponent {
 
       menuUser.filter((menu) => {
         if ((menu || {}).RUTE_PAGE == 'empleados' || (menu || {}).RUTE_PAGE == 'control-asistencia' || (menu || {}).RUTE_PAGE == 'recursos-humanos') {
-          newMenu[0]['SUBMENU'].push(menu);
+          newMenu[0]['SUBMENU'].push(
+            {
+              NAME_MENU: menu.DESCRIPTION_MENU,
+              RUTE_PAGE: menu.RUTE_PAGE
+            }
+          );
         } else if ((menu || {}).RUTE_PAGE == 'comprobantes-sunat' || (menu || {}).RUTE_PAGE == 'comprobantes') {
-          newMenu[1]['SUBMENU'].push(menu);
+          newMenu[1]['SUBMENU'].push(
+            {
+              NAME_MENU: menu.DESCRIPTION_MENU,
+              RUTE_PAGE: menu.RUTE_PAGE
+            }
+          );
         } else {
           newMenu.push(
             {
               KEY: "configuracion",
-              NAME_MENU: menu.NAME_MENU,
+              NAME_MENU: menu.DESCRIPTION_MENU,
               RUTE_PAGE: menu.RUTE_PAGE,
               ISVISIBLE: true,
               SUBMENU: []
@@ -122,7 +132,7 @@ export class AppComponent {
       this.menuUser = menu;
     }
 
-   
+
     if (this.store.getStore('tn')) {
       if (location.pathname.split('/')[1] != "postulante" && location.pathname.split('/')[1].length > 0) {
         this.renderNavBar = true;
@@ -145,7 +155,7 @@ export class AppComponent {
           (event: NavigationEnd) => {
 
             if (this.store.getStore('tn')) {
-          
+
               /* if (location.pathname.split('/')[1] != "postulante") {
                  this.store.setStore('pathURL', location.pathname.split('/')[1]);
                  pathActual = { value: this.store.getStore('pathURL') || location.pathname.split('/')[1] };
