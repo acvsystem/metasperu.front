@@ -51,6 +51,8 @@ export class MtControlAsistenciaComponent implements OnInit {
     { key: 'VSBA JOCKEY', value: 'VSBA JOCKEY' },
     { key: 'AEO JOCKEY', value: 'AEO JOCKEY' },
     { key: 'AEO ASIA', value: 'AEO ASIA' },
+    { key: "VSBA MALL AVENTURA", value: "VSBA MALL AVENTURA" },
+    { key: "BBW MALL AVENTURA", value: "BBW MALL AVENTURA" },
     { key: 'BBW LA RAMBLA', value: 'BBW LA RAMBLA' },
     { key: 'VSBA LA RAMBLA', value: 'VSBA LA RAMBLA' },
     { key: 'VSBA PLAZA NORTE', value: 'VSBA PLAZA NORTE' },
@@ -106,7 +108,13 @@ export class MtControlAsistenciaComponent implements OnInit {
     const self = this;
     this.onEmpleadoList();
 
-
+    this.socket.on('sendUDPEmpleados', (response) => {
+      let notificationList = [{
+        isSuccess: true,
+        bodyNotification: "Empleados Actualizados."
+      }];
+      this.service.onNotification.emit(notificationList);
+    });
 
     this.headList = [
       {
@@ -159,6 +167,9 @@ export class MtControlAsistenciaComponent implements OnInit {
 
   }
 
+  onUpdateEmpleado(){
+    this.socket.emit('emitRRHHEmpleados');
+  }
   openDialog(nroDocumento) {
     let hrWorking = 0;
     this.chartData = [];

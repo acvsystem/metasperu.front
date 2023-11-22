@@ -33,6 +33,8 @@ export class MtFrmAddEmployeeComponent implements OnInit {
     { key: 'VSBA JOCKEY', value: 'VSBA JOCKEY' },
     { key: 'AEO JOCKEY', value: 'AEO JOCKEY' },
     { key: 'AEO ASIA', value: 'AEO ASIA' },
+    { key: "VSBA MALL AVENTURA", value: "VSBA MALL AVENTURA" },
+    { key: "BBW MALL AVENTURA", value: "BBW MALL AVENTURA" },
     { key: 'BBW LA RAMBLA', value: 'BBW LA RAMBLA' },
     { key: 'VSBA LA RAMBLA', value: 'VSBA LA RAMBLA' },
     { key: 'VSBA PLAZA NORTE', value: 'VSBA PLAZA NORTE' },

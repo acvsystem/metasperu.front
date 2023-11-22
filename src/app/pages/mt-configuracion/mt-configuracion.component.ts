@@ -68,6 +68,8 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '7A', value: 'BBW JOCKEY', progress: 0 },
     { key: 'PC', value: 'AEO JOCKEY', progress: 0 },
     { key: 'PB', value: 'AEO ASIA', progress: 0 },
+    { key: "9N", value: "VSBA MALL AVENTURA", progress: 0  },
+    { key: "7J", value: "BBW MALL AVENTURA", progress: 0  },
     { key: '7E', value: 'BBW LA RAMBLA', progress: 0 },
     { key: '9D', value: 'VS LA RAMBLA', progress: 0 },
     { key: '9B', value: 'VS PLAZA NORTE', progress: 0 },

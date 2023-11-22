@@ -22,6 +22,8 @@ export class MtFrmChangeStdPostulantComponent implements OnInit {
     { key: 'VSBA JOCKEY', value: 'VSBA JOCKEY' },
     { key: 'AEO JOCKEY', value: 'AEO JOCKEY' },
     { key: 'AEO ASIA', value: 'AEO ASIA' },
+    { key: "VSBA MALL AVENTURA", value: "VSBA MALL AVENTURA"},
+    { key: "BBW MALL AVENTURA", value: "BBW MALL AVENTURA"},
     { key: 'BBW LA RAMBLA', value: 'BBW LA RAMBLA' },
     { key: 'VS LA RAMBLA', value: 'VS LA RAMBLA' },
     { key: 'VS PLAZA NORTE', value: 'VS PLAZA NORTE' },
