@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 import { ShareService } from 'src/app/services/shareService';
-import { jsPDF } from "jspdf";
+import { jsPDF } from 'jspdf';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-
 
 @Component({
   selector: 'mt-inscription-postulant',
@@ -14,8 +13,8 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./mt-inscription-postulant.component.scss'],
 })
 export class MtInscriptionPostulantComponent implements OnInit {
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('pagePDF', { static: false }) pdfTable: ElementRef;
 
   headList: Array<any> = [];
   bodyList: Array<any> = [];
@@ -25,11 +24,8 @@ export class MtInscriptionPostulantComponent implements OnInit {
       text: 'Update',
       type: 'crud',
       fn: 'update',
-      options: [
-        { value: 'Update', fn: 'update' },
-        { value: 'Delete' }
-      ]
-    }
+      options: [{ value: 'Update', fn: 'update' }, { value: 'Delete' }],
+    },
   ];
 
   isAuth: boolean = true;
@@ -37,12 +33,12 @@ export class MtInscriptionPostulantComponent implements OnInit {
   dataPostulanteList: Array<any> = [];
   datosPersonalesList: Array<any> = [];
 
-  estadoPostulante: string = "";
-  tiendaPostulante: string = "";
+  estadoPostulante: string = '';
+  tiendaPostulante: string = '';
 
   optionListEstado: Array<any> = [
     { key: 'ACEPTADO', value: 'ACEPTADO' },
-    { key: 'PENDIENTE', value: 'PENDIENTE' }
+    { key: 'PENDIENTE', value: 'PENDIENTE' },
   ];
 
   optionListTiendas: Array<any> = [
@@ -50,8 +46,8 @@ export class MtInscriptionPostulantComponent implements OnInit {
     { key: 'VSBA JOCKEY', value: 'VSBA JOCKEY' },
     { key: 'AEO JOCKEY', value: 'AEO JOCKEY' },
     { key: 'AEO ASIA', value: 'AEO ASIA' },
-    { key: "VSBA MALL AVENTURA", value: "VSBA MALL AVENTURA"},
-    { key: "BBW MALL AVENTURA", value: "BBW MALL AVENTURA"},
+    { key: 'VSBA MALL AVENTURA', value: 'VSBA MALL AVENTURA' },
+    { key: 'BBW MALL AVENTURA', value: 'BBW MALL AVENTURA' },
     { key: 'BBW LA RAMBLA', value: 'BBW LA RAMBLA' },
     { key: 'VS LA RAMBLA', value: 'VS LA RAMBLA' },
     { key: 'VS PLAZA NORTE', value: 'VS PLAZA NORTE' },
@@ -67,76 +63,98 @@ export class MtInscriptionPostulantComponent implements OnInit {
     { key: 'VS MEGA PLAZA', value: 'VS MEGA PLAZA' },
     { key: 'VS MINKA', value: 'VS MINKA' },
     { key: 'VSFA JOCKEY FULL', value: 'VSFA JOCKEY FULL' },
-    { key: 'BBW ASIA', value: 'BBW ASIA' }
+    { key: 'BBW ASIA', value: 'BBW ASIA' },
   ];
 
-  displayedColumns: string[] = ['Nombre completo', 'Tipo Documento', 'Numero Documento', 'Tienda', 'Estado', 'Accion'];
-  dataSource = new MatTableDataSource<PeriodicElement>(this.datosPersonalesList);
+  displayedColumns: string[] = [
+    'Nombre completo',
+    'Tipo Documento',
+    'Numero Documento',
+    'Tienda',
+    'Estado',
+    'Accion',
+  ];
+  dataSource = new MatTableDataSource<PeriodicElement>(
+    this.datosPersonalesList
+  );
 
-
-  constructor(private sanitized: DomSanitizer, public modalCtrl: ModalController, private service: ShareService) { }
+  constructor(
+    private sanitized: DomSanitizer,
+    public modalCtrl: ModalController,
+    private service: ShareService
+  ) {}
 
   ngOnInit() {
     this.onData();
     this.headList = [
       {
         value: '#',
-        isSearch: false
+        isSearch: false,
       },
       {
         value: 'Nombre',
         isSearch: false,
-        propSearch: [{
-          input: true
-        }]
+        propSearch: [
+          {
+            input: true,
+          },
+        ],
       },
       {
         value: 'Apellido Paterno',
         isSearch: false,
-        propSearch: [{
-          input: true
-        }]
+        propSearch: [
+          {
+            input: true,
+          },
+        ],
       },
       {
         value: 'Apellido Materno',
         isSearch: false,
-        propSearch: [{
-          input: true
-        }]
+        propSearch: [
+          {
+            input: true,
+          },
+        ],
       },
       {
         value: 'Tipo Documento',
         isSearch: false,
-        propSearch: [{
-          input: true
-        }]
+        propSearch: [
+          {
+            input: true,
+          },
+        ],
       },
       {
         value: 'Documento',
         isSearch: false,
-        propSearch: [{
-          input: true
-        }]
+        propSearch: [
+          {
+            input: true,
+          },
+        ],
       },
       {
         value: 'Tienda',
         isSearch: false,
-        propSearch: [{
-          input: true
-        }]
+        propSearch: [
+          {
+            input: true,
+          },
+        ],
       },
       {
         value: 'Estado',
-        isSearch: false
+        isSearch: false,
       },
       {
         value: 'Accion',
-        isSearch: false
-      }
+        isSearch: false,
+      },
     ];
   }
-
-
 
   viewModal: any = -1;
   onViewSearchModal(index) {
@@ -144,9 +162,8 @@ export class MtInscriptionPostulantComponent implements OnInit {
   }
 
   onData() {
-
     let parms = {
-      url: '/rrhh/search/postulante'
+      url: '/rrhh/search/postulante',
     };
 
     this.service.get(parms).then((response) => {
@@ -156,40 +173,38 @@ export class MtInscriptionPostulantComponent implements OnInit {
         (this.datosPersonalesList || []).push((dt || {}).datos_personales);
       });
 
-      this.dataSource = new MatTableDataSource<PeriodicElement>(this.datosPersonalesList);
+      this.dataSource = new MatTableDataSource<PeriodicElement>(
+        this.datosPersonalesList
+      );
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  onSaveOrUpdate(ev: any) {
-    
-  }
+  onSaveOrUpdate(ev: any) {}
 
   async openModalAddPostulant() {
-
     let modal = await this.modalCtrl.create({
       component: MtModalContentComponent,
       componentProps: {
         nameSection: 'addPostulant',
         title: 'Ingreso a inscripcion',
-        bodyContent: 'mt-frm-add-postulant'
+        bodyContent: 'mt-frm-add-postulant',
       },
-      cssClass: 'mt-modal'
+      cssClass: 'mt-modal',
     });
 
     modal.present();
   }
 
   async openModalGenerateLink() {
-
     let modal = await this.modalCtrl.create({
       component: MtModalContentComponent,
       componentProps: {
         nameSection: 'generateLink',
         title: 'Generar URL inscripcion',
-        bodyContent: 'mt-frm-generate-link'
+        bodyContent: 'mt-frm-generate-link',
       },
-      cssClass: 'mt-modal'
+      cssClass: 'mt-modal',
     });
 
     modal.present();
@@ -211,18 +226,29 @@ export class MtInscriptionPostulantComponent implements OnInit {
     saludAntecedentes = dataPdf[0].datos_salud;
 
     const doc = new jsPDF();
-    doc.addImage('../../../assets/LOGO METAS PERU SAC.png', 'JPEG', 20, 5, 45, 10);
+    doc.addImage(
+      '../../../assets/LOGO METAS PERU SAC.png',
+      'JPEG',
+      20,
+      5,
+      45,
+      10
+    );
     doc.setFontSize(12);
-    doc.text("FICHA DE REGISTRO DE DATOS PERSONALES", 60, 20);
+    doc.text('FICHA DE REGISTRO DE DATOS PERSONALES', 60, 20);
     doc.setFont(undefined, 'bold');
-    doc.text("I.", 20, 30);
-    doc.text("DATOS PERSONALES", 30, 30);
+    doc.text('I.', 20, 30);
+    doc.text('DATOS PERSONALES', 30, 30);
     doc.setFontSize(11);
 
     doc.setFont(undefined, 'bold');
     doc.text(`Apellidos y Nombres: `, 30, 37);
     doc.setFont(undefined, 'normal');
-    doc.text(`${datosPersonales['ap_paterno']} ${datosPersonales['ap_materno']} ${datosPersonales['nombres']}`, 71, 37);
+    doc.text(
+      `${datosPersonales['ap_paterno']} ${datosPersonales['ap_materno']} ${datosPersonales['nombres']}`,
+      71,
+      37
+    );
     /** LINE */
     doc.setFont(undefined, 'bold');
     doc.text(`Fecha Nacimiento:`, 30, 44);
@@ -301,34 +327,34 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
-    doc.text("II.", 20, 118);
-    doc.text("EXPERIENCIA LABORAL", 30, 118);
+    doc.text('II.', 20, 118);
+    doc.text('EXPERIENCIA LABORAL', 30, 118);
     doc.setFontSize(10);
     let lx = 118;
     (experienciaLaboral || []).forEach((x, i) => {
       if (i <= 2) {
         doc.setFont(undefined, 'bold');
-        doc.text(`Empresa:`, 20, lx += 7);
+        doc.text(`Empresa:`, 20, (lx += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['empresa']}`, 38, lx);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Puesto:`, 30, lx += 7);
+        doc.text(`Puesto:`, 30, (lx += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['puesto']}`, 45, lx);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Desde:`, 30, lx += 7);
+        doc.text(`Desde:`, 30, (lx += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['desde']}`, 45, lx);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Hasta:`, 30, lx += 7);
+        doc.text(`Hasta:`, 30, (lx += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['culmino']}`, 45, lx);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Motivo de Cese:`, 30, lx += 7);
+        doc.text(`Motivo de Cese:`, 30, (lx += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['motivo']}`, 60, lx);
       }
@@ -336,39 +362,39 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     if (experienciaLaboral.length == 2) {
       doc.setFont(undefined, 'bold');
-      doc.text(`Empresa:`, 20, lx += 7);
+      doc.text(`Empresa:`, 20, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Puesto:`, 30, lx += 7);
+      doc.text(`Puesto:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Desde:`, 30, lx += 7);
+      doc.text(`Desde:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Hasta:`, 30, lx += 7);
+      doc.text(`Hasta:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Motivo de Cese:`, 30, lx += 7);
+      doc.text(`Motivo de Cese:`, 30, (lx += 7));
     }
 
     if (experienciaLaboral.length == 1) {
       doc.setFont(undefined, 'bold');
-      doc.text(`Empresa:`, 20, lx += 7);
+      doc.text(`Empresa:`, 20, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Puesto:`, 30, lx += 7);
+      doc.text(`Puesto:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Desde:`, 30, lx += 7);
+      doc.text(`Desde:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Hasta:`, 30, lx += 7);
+      doc.text(`Hasta:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Motivo de Cese:`, 30, lx += 7);
+      doc.text(`Motivo de Cese:`, 30, (lx += 7));
 
       doc.setFont(undefined, 'bold');
-      doc.text(`Empresa:`, 20, lx += 7);
+      doc.text(`Empresa:`, 20, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Puesto:`, 30, lx += 7);
+      doc.text(`Puesto:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Desde:`, 30, lx += 7);
+      doc.text(`Desde:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Hasta:`, 30, lx += 7);
+      doc.text(`Hasta:`, 30, (lx += 7));
       doc.setFont(undefined, 'bold');
-      doc.text(`Motivo de Cese:`, 30, lx += 7);
+      doc.text(`Motivo de Cese:`, 30, (lx += 7));
     }
 
     let lx2 = 20;
@@ -376,21 +402,21 @@ export class MtInscriptionPostulantComponent implements OnInit {
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
 
-    doc.text("III.", 20, lx += 11);
-    doc.text("FORMACION ACADEMICA", 30, lx);
+    doc.text('III.', 20, (lx += 11));
+    doc.text('FORMACION ACADEMICA', 30, lx);
     doc.setFontSize(10);
-    doc.text(`Estudios Tecnicos:`, 20, lx += 7);
+    doc.text(`Estudios Tecnicos:`, 20, (lx += 7));
 
     (experienciaAcademica || []).forEach((x, i) => {
       if (i <= 1) {
         if (x['tipo'] == 'Tecnica') {
           doc.setFont(undefined, 'bold');
-          doc.text(`Centro de estudios:`, 30, lx += 7);
+          doc.text(`Centro de estudios:`, 30, (lx += 7));
           doc.setFont(undefined, 'normal');
           doc.text(`${x['ctrEstudio']}`, 65, lx);
 
           doc.setFont(undefined, 'bold');
-          doc.text(`Carrera:`, 30, lx += 7);
+          doc.text(`Carrera:`, 30, (lx += 7));
           doc.setFont(undefined, 'normal');
           doc.text(`${x['carrera']}`, 45, lx);
 
@@ -400,10 +426,10 @@ export class MtInscriptionPostulantComponent implements OnInit {
           doc.text(`${x['estado']}`, 135, lx);
         } else {
           doc.setFont(undefined, 'bold');
-          doc.text(`Centro de estudios:`, 30, lx += 7);
+          doc.text(`Centro de estudios:`, 30, (lx += 7));
 
           doc.setFont(undefined, 'bold');
-          doc.text(`Carrera:`, 30, lx += 7);
+          doc.text(`Carrera:`, 30, (lx += 7));
 
           doc.setFont(undefined, 'bold');
           doc.text(`Estado:`, 120, lx);
@@ -413,27 +439,27 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     if (!(experienciaAcademica || []).length) {
       doc.setFont(undefined, 'bold');
-      doc.text(`Centro de estudios:`, 30, lx += 7);
+      doc.text(`Centro de estudios:`, 30, (lx += 7));
 
       doc.setFont(undefined, 'bold');
-      doc.text(`Carrera:`, 30, lx += 7);
+      doc.text(`Carrera:`, 30, (lx += 7));
 
       doc.setFont(undefined, 'bold');
       doc.text(`Estado:`, 120, lx);
     }
 
     doc.setFont(undefined, 'bold');
-    doc.text("Estudios Universitarios:", 20, lx += 7);
+    doc.text('Estudios Universitarios:', 20, (lx += 7));
     experienciaAcademica.forEach((x, i) => {
       if (i <= 4) {
         if (x['tipo'] == 'Universitario') {
           doc.setFont(undefined, 'bold');
-          doc.text(`Centro de estudios:`, 30, lx += 7);
+          doc.text(`Centro de estudios:`, 30, (lx += 7));
           doc.setFont(undefined, 'normal');
           doc.text(`${x['ctrEstudio']}`, 65, lx);
 
           doc.setFont(undefined, 'bold');
-          doc.text(`Carrera:`, 30, lx += 7);
+          doc.text(`Carrera:`, 30, (lx += 7));
           doc.setFont(undefined, 'normal');
           doc.text(`${x['carrera']}`, 45, lx);
 
@@ -443,10 +469,10 @@ export class MtInscriptionPostulantComponent implements OnInit {
           doc.text(`${x['estado']}`, 135, lx);
         } else {
           doc.setFont(undefined, 'bold');
-          doc.text(`Centro de estudios:`, 30, lx += 7);
+          doc.text(`Centro de estudios:`, 30, (lx += 7));
 
           doc.setFont(undefined, 'bold');
-          doc.text(`Carrera:`, 30, lx += 7);
+          doc.text(`Carrera:`, 30, (lx += 7));
 
           doc.setFont(undefined, 'bold');
           doc.text(`Estado:`, 120, lx);
@@ -455,22 +481,29 @@ export class MtInscriptionPostulantComponent implements OnInit {
     });
     doc.addPage();
 
-    doc.addImage('../../../assets/LOGO METAS PERU SAC.png', 'JPEG', lx2, 5, 45, 10);
+    doc.addImage(
+      '../../../assets/LOGO METAS PERU SAC.png',
+      'JPEG',
+      lx2,
+      5,
+      45,
+      10
+    );
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
-    doc.text("IV.", 20, lx2 += 3);
-    doc.text("DATOS DE DERECHOS HABIENTES", 30, lx2);
+    doc.text('IV.', 20, (lx2 += 3));
+    doc.text('DATOS DE DERECHOS HABIENTES', 30, lx2);
     doc.setFontSize(10);
 
     (datosHabientes || []).forEach((x, i) => {
       if (i <= 4) {
         doc.setFont(undefined, 'bold');
-        doc.text(`Apellidos y Nombre:`, 30, lx2 += 10);
+        doc.text(`Apellidos y Nombre:`, 30, (lx2 += 10));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['nombres']}`, 65, lx2);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Parentesco:`, 30, lx2 += 7);
+        doc.text(`Parentesco:`, 30, (lx2 += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['parentesco']}`, 51, lx2);
 
@@ -485,7 +518,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
         doc.text(`${x['sexo']}`, 161, lx2);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Tipo Documento:`, 30, lx2 += 7);
+        doc.text(`Tipo Documento:`, 30, (lx2 += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['tipodoc']}`, 60, lx2);
 
@@ -495,7 +528,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
         doc.text(`${x['nrodoc']}`, 156, lx2);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Fecha Nacimiento:`, 30, lx2 += 7);
+        doc.text(`Fecha Nacimiento:`, 30, (lx2 += 7));
         doc.setFont(undefined, 'normal');
         doc.text(`${x['fchnac']}`, 63, lx2);
 
@@ -507,10 +540,10 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
       for (let i = 0; i <= 4 - (datosHabientes || []).length; i++) {
         doc.setFont(undefined, 'bold');
-        doc.text(`Apellidos y Nombre:`, 30, lx2 += 10);
+        doc.text(`Apellidos y Nombre:`, 30, (lx2 += 10));
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Parentesco:`, 30, lx2 += 7);
+        doc.text(`Parentesco:`, 30, (lx2 += 7));
 
         doc.setFont(undefined, 'bold');
         doc.text(`Edad:`, 120, lx2);
@@ -519,13 +552,13 @@ export class MtInscriptionPostulantComponent implements OnInit {
         doc.text(`Sexo:`, 150, lx2);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Tipo Documento:`, 30, lx2 += 7);
+        doc.text(`Tipo Documento:`, 30, (lx2 += 7));
 
         doc.setFont(undefined, 'bold');
         doc.text(`Numero Documento:`, 120, lx2);
 
         doc.setFont(undefined, 'bold');
-        doc.text(`Fecha Nacimiento:`, 30, lx2 += 7);
+        doc.text(`Fecha Nacimiento:`, 30, (lx2 += 7));
 
         doc.setFont(undefined, 'bold');
         doc.text(`Ocupacion:`, 120, lx2);
@@ -533,73 +566,88 @@ export class MtInscriptionPostulantComponent implements OnInit {
     });
     doc.setFont(undefined, 'bold');
     doc.setFontSize(12);
-    doc.text("V.", 20, lx2 += 11);
-    doc.text("DATOS DE SALUD", 30, lx2);
+    doc.text('V.', 20, (lx2 += 11));
+    doc.text('DATOS DE SALUD', 30, lx2);
     doc.setFontSize(10);
 
     doc.setFont(undefined, 'bold');
-    doc.text(`Alergias:`, 30, lx2 += 7);
+    doc.text(`Alergias:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['alergias']}`, 47, lx2);
 
     doc.setFont(undefined, 'bold');
-    doc.text(`Enfermedad:`, 30, lx2 += 7);
+    doc.text(`Enfermedad:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['enfermedad']}`, 54, lx2);
 
     doc.setFont(undefined, 'bold');
-    doc.text(`Medicamentos:`, 30, lx2 += 7);
+    doc.text(`Medicamentos:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['medicamento']}`, 57, lx2);
 
     doc.setFont(undefined, 'bold');
-    doc.text(`Grupo Sanguineo:`, 30, lx2 += 7);
+    doc.text(`Grupo Sanguineo:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['grupo_sanguineo']}`, 63, lx2);
 
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
-    doc.text("VI.", 20, lx2 += 9);
-    doc.text("ANTECEDENTES", 30, lx2);
+    doc.text('VI.', 20, (lx2 += 9));
+    doc.text('ANTECEDENTES', 30, lx2);
     doc.setFontSize(10);
 
-    doc.text(`Tiene antecedentes policiales:`, 30, lx2 += 7);
+    doc.text(`Tiene antecedentes policiales:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['antecedentes_policiales']}`, 83, lx2);
 
     doc.setFont(undefined, 'bold');
-    doc.text(`Tiene antecedentes judiciales:`, 30, lx2 += 7);
+    doc.text(`Tiene antecedentes judiciales:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['antecedentes_penales']}`, 83, lx2);
 
     doc.setFont(undefined, 'bold');
-    doc.text(`Tiene antecedentes penales:`, 30, lx2 += 7);
+    doc.text(`Tiene antecedentes penales:`, 30, (lx2 += 7));
     doc.setFont(undefined, 'normal');
     doc.text(`${saludAntecedentes['antecedentes_penales']}`, 83, lx2);
     doc.addPage();
 
     let lx3 = 20;
 
-    doc.addImage('../../../assets/LOGO METAS PERU SAC.png', 'JPEG', lx3, 5, 45, 10);
+    doc.addImage(
+      '../../../assets/LOGO METAS PERU SAC.png',
+      'JPEG',
+      lx3,
+      5,
+      45,
+      10
+    );
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
-    doc.text("VII.", 20, lx3 += 3);
-    doc.text("DECLARACION JURADA", 30, lx3);
+    doc.text('VII.', 20, (lx3 += 3));
+    doc.text('DECLARACION JURADA', 30, lx3);
     doc.setFont(undefined, 'normal');
     doc.setFontSize(10);
-    doc.text("DECLARO  QUE TODOS  LOS  DATOS CONSIGNADOS  EN  LA  PRESEN FICHA  SON", 30, lx3 += 7);
-    doc.text("EXACTOS Y VERDADEROS. ASI MISMO, DECLARO QUE EH LEIDO Y ENCONTRADO", 30, lx3 += 7);
-    doc.text("CONFORME LOS DATOS ANTES DESCRITOS.", 30, lx3 += 7);
+    doc.text(
+      'DECLARO  QUE TODOS  LOS  DATOS CONSIGNADOS  EN  LA  PRESEN FICHA  SON',
+      30,
+      (lx3 += 7)
+    );
+    doc.text(
+      'EXACTOS Y VERDADEROS. ASI MISMO, DECLARO QUE EH LEIDO Y ENCONTRADO',
+      30,
+      (lx3 += 7)
+    );
+    doc.text('CONFORME LOS DATOS ANTES DESCRITOS.', 30, (lx3 += 7));
 
-    doc.text("_____________________________________________", 30, lx3 += 40);
-    doc.text("Firma y Huella", 65, lx3 += 7);
+    doc.text('_____________________________________________', 30, (lx3 += 40));
+    doc.text('Firma y Huella', 65, (lx3 += 7));
 
     doc.line(130, 80, 180, 80);
     doc.line(130, 110, 180, 110);
     doc.line(130, 80, 130, 110);
     doc.line(180, 110, 180, 80);
 
-    doc.text("V.B. RR.HH", 145, 85);
+    doc.text('V.B. RR.HH', 145, 85);
 
     let date = new Date();
     const months = {
@@ -614,14 +662,14 @@ export class MtInscriptionPostulantComponent implements OnInit {
       8: 'Septiembre',
       9: 'Octubre',
       10: 'Noviembre',
-      11: 'Diciembre'
-    }
+      11: 'Diciembre',
+    };
 
     let day = date.getDate();
     let month = date.getMonth();
     let year = date.getFullYear();
 
-    let fecha = day + " de " + months[month] + " del " + year;
+    let fecha = day + ' de ' + months[month] + ' del ' + year;
 
     doc.setFont(undefined, 'bold');
     doc.text(fecha, 30, 106);
@@ -641,54 +689,66 @@ export class MtInscriptionPostulantComponent implements OnInit {
     doc.line(160, 130, 160, 205);
     doc.line(195, 130, 195, 205);
 
-    doc.text("Pulgar Derecho", 25, 135);
-    doc.text("Indice Derecho", 61, 135);
-    doc.text("Medio Derecho", 95, 135);
-    doc.text("Anular Derecho", 130, 135);
-    doc.text("Meñique Derecho", 164, 135);
+    doc.text('Pulgar Derecho', 25, 135);
+    doc.text('Indice Derecho', 61, 135);
+    doc.text('Medio Derecho', 95, 135);
+    doc.text('Anular Derecho', 130, 135);
+    doc.text('Meñique Derecho', 164, 135);
 
-    doc.text("Pulgar Izquierdo", 25, 172);
-    doc.text("Indice Izquierdo", 61, 172);
-    doc.text("Medio Izquierdo", 95, 172);
-    doc.text("Anular Izquierdo", 130, 172);
-    doc.text("Meñique Izquierdo", 164, 172);
+    doc.text('Pulgar Izquierdo', 25, 172);
+    doc.text('Indice Izquierdo', 61, 172);
+    doc.text('Medio Izquierdo', 95, 172);
+    doc.text('Anular Izquierdo', 130, 172);
+    doc.text('Meñique Izquierdo', 164, 172);
 
     doc.setFont(undefined, 'bold');
-    doc.text("LLENAR SOLO AL INGRESO DEL POSTULANTE", 70, 220);
-    doc.text("_________________________________________", 70, 221);
+    doc.text('LLENAR SOLO AL INGRESO DEL POSTULANTE', 70, 220);
+    doc.text('_________________________________________', 70, 221);
 
     doc.setFont(undefined, 'normal');
 
-    doc.text("FECHA DE INGRESO:", 30, 240);
-    doc.text("INGRESO APROBADO POR:", 30, 250);
-    doc.text("______________________________________________________", 80, 250);
+    doc.text('FECHA DE INGRESO:', 30, 240);
+    doc.text('INGRESO APROBADO POR:', 30, 250);
+    doc.text('______________________________________________________', 80, 250);
 
-    doc.text("_____________________________________________", 30, 270);
-    doc.text("Firma y Huella", 62, 277);
+    doc.text('_____________________________________________', 30, 270);
+    doc.text('Firma y Huella', 62, 277);
 
     doc.line(130, 260, 180, 260);
     doc.line(130, 290, 180, 290);
     doc.line(130, 260, 130, 290);
     doc.line(180, 290, 180, 260);
 
-    doc.text("V.B. RR.HH", 145, 265);
+    doc.text('V.B. RR.HH', 145, 265);
 
     doc.autoPrint();
-    doc.save("FICHA DE DATOS.pdf");
+    doc.save('FICHA DE DATOS.pdf');
   }
 
+  public downloadAsPDF() {
+    const doc = new jsPDF("p", "pt", "a4");
+
+    let pdfTable: any = document.querySelector('#pagePDF');
+    console.log(pdfTable);
+    doc.html(pdfTable, {
+      callback: function (doc) {
+        doc.save('newpdf.pdf');
+      }
+    });
+
+    //doc.save('tableToPdf.pdf');
+  }
 
   async openModalChangeEstado(ev) {
-
     let modal = await this.modalCtrl.create({
       component: MtModalContentComponent,
       componentProps: {
         nameSection: 'addPostulant',
         title: 'Cambio de estado',
         bodyContent: 'mt-frm-change-std-postulant',
-        dataIn: ev
+        dataIn: ev,
       },
-      cssClass: 'mt-modal'
+      cssClass: 'mt-modal',
     });
 
     modal.present();
@@ -698,8 +758,6 @@ export class MtInscriptionPostulantComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
-
 }
 
 export interface PeriodicElement {
