@@ -32,6 +32,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
   isPostulant: boolean = false;
   dataPostulanteList: Array<any> = [];
   datosPersonalesList: Array<any> = [];
+  isLoadPDF: boolean = false;
 
   estadoPostulante: string = '';
   tiendaPostulante: string = '';
@@ -724,17 +725,137 @@ export class MtInscriptionPostulantComponent implements OnInit {
     doc.autoPrint();
     doc.save('FICHA DE DATOS.pdf');
   }
+  onePostulantData = [];
+  onePostulantExpLAb = [];
+  onPostulantFormEst = [];
+  arrFrTecnica = [];
+  arrFrUniv = [];
+  arrdDtosHabientes = [];
+  arrSaludAntecedentes = [];
+  datePDF = "";
+  public downloadAsPDF(keyPostulant) {
+    const self = this;
+    self.isLoadPDF = true;
+    self.onePostulantExpLAb = [];
+    let dataPdf = this.dataPostulanteList.filter((dp) => dp.id == keyPostulant);
+    let arrExpLab = [];
+    let arrFrAcademica = [];
 
-  public downloadAsPDF() {
-    const doc = new jsPDF("p", "pt", "a4");
+    let date = new Date();
+    const months = {
+      0: 'Enero',
+      1: 'Febrero',
+      2: 'Marzo',
+      3: 'Abril',
+      4: 'Mayo',
+      5: 'Junio',
+      6: 'Julio',
+      7: 'Agosto',
+      8: 'Septiembre',
+      9: 'Octubre',
+      10: 'Noviembre',
+      11: 'Diciembre',
+    };
 
-    let pdfTable: any = document.querySelector('#pagePDF');
-    console.log(pdfTable);
-    doc.html(pdfTable, {
-      callback: function (doc) {
-        doc.save('newpdf.pdf');
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+
+    self.datePDF = day + ' de ' + months[month] + ' del ' + year;
+
+    arrExpLab = ((dataPdf || [])[0] || {}).experiencia_laboral;
+    arrFrAcademica = ((dataPdf || [])[0] || {}).formacion_academica;
+
+    let datosHabientes: Array<any> = [];
+    let datosPersonales: Array<any> = [];
+    let saludAntecedentes: Array<any> = [];
+
+    datosHabientes = ((dataPdf || [])[0] || {}).derecho_habiente;
+    datosPersonales = ((dataPdf || [])[0] || {}).datos_personales;
+    self.arrSaludAntecedentes = ((dataPdf || [])[0] || {}).datos_salud;
+
+    self.onePostulantData.push(((dataPdf || [])[0] || {}).datos_personales);
+
+    self.onPostulantFormEst.push(
+      ((dataPdf || [])[0] || {}).formacion_academica
+    );
+
+
+    for (let i = 0; i <= 3; i++) {
+      self.arrdDtosHabientes.push({
+        edad:((datosHabientes || [])[i] || {}).edad || '',
+        fchnac:((datosHabientes || [])[i] || {}).fchnac || '',
+        nombres:((datosHabientes || [])[i] || {}).nombres || '',
+        nrodoc:((datosHabientes || [])[i] || {}).nrodoc || '',
+        ocupacion:((datosHabientes || [])[i] || {}).ocupacion || '',
+        parentesco: ((datosHabientes || [])[i] || {}).parentesco || '',
+        sexo: ((datosHabientes || [])[i] || {}).sexo || '',
+        tipodoc: ((datosHabientes || [])[i] || {}).tipodoc || ''
+      });
+    }
+    console.log(self.arrdDtosHabientes);
+    for (let i = 0; i <= 2; i++) {
+      self.onePostulantExpLAb.push({
+        culmino: ((arrExpLab || [])[i] || {}).culmino || '',
+        desde: ((arrExpLab || [])[i] || {}).desde || '',
+        empresa: ((arrExpLab || [])[i] || {}).empresa || '',
+        motivo: ((arrExpLab || [])[i] || {}).motivo || '',
+        puesto: ((arrExpLab || [])[i] || {}).puesto || '',
+      });
+    }
+    
+    for (let i = 0; i <= 1; i++) {
+
+      if (!self.arrFrUniv.length && self.arrFrTecnica.length) {
+        if ((((arrFrAcademica || [])[i] || {}).tipo || '') != 'Tecnica') {
+          self.arrFrUniv.push({
+            carrera: ((arrFrAcademica || [])[i] || {}).carrera || '',
+            ctrEstudio: ((arrFrAcademica || [])[i] || {}).ctrEstudio || '',
+            estado: ((arrFrAcademica || [])[i] || {}).estado || '',
+            tipo: ((arrFrAcademica || [])[i] || {}).tipo || '',
+          });
+        } else {
+          self.arrFrUniv.push({
+            carrera: ((arrFrAcademica || [])[i] || {}).carrera || '',
+            ctrEstudio: ((arrFrAcademica || [])[i] || {}).ctrEstudio || '',
+            estado: ((arrFrAcademica || [])[i] || {}).estado || '',
+            tipo: ((arrFrAcademica || [])[i] || {}).tipo || '',
+          });
+        }
       }
-    });
+
+      if (!self.arrFrTecnica.length) {
+        console.log((((arrFrAcademica || [])[i] || {}).tipo || ''));
+        if ((((arrFrAcademica || [])[i] || {}).tipo || '') == 'Tecnica') {
+          self.arrFrTecnica.push({
+            carrera: ((arrFrAcademica || [])[i] || {}).carrera || '',
+            ctrEstudio: ((arrFrAcademica || [])[i] || {}).ctrEstudio || '',
+            estado: ((arrFrAcademica || [])[i] || {}).estado || '',
+            tipo: ((arrFrAcademica || [])[i] || {}).tipo || '',
+          });
+        } else {
+          self.arrFrTecnica.push({
+            carrera: ((arrFrAcademica || [])[i] || {}).carrera || '',
+            ctrEstudio: ((arrFrAcademica || [])[i] || {}).ctrEstudio || '',
+            estado: ((arrFrAcademica || [])[i] || {}).estado || '',
+            tipo: ((arrFrAcademica || [])[i] || {}).tipo || '',
+          });
+        }
+      }
+    }
+
+    const doc = new jsPDF('p', 'pt', 'a4');
+
+    setTimeout(() => {
+      let pdfTable: any = document.querySelector('#pagePDF');
+      console.log(pdfTable);
+      doc.html(pdfTable, {
+        callback: function (doc) {
+          self.isLoadPDF = false;
+          doc.save('newpdf.pdf');
+        },
+      });
+    }, 2000);
 
     //doc.save('tableToPdf.pdf');
   }

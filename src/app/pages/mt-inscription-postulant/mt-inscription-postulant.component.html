@@ -1,344 +1,368 @@
 <ion-content>
-
-  <div id="pagePDF" #pagePDF style="width: 595px;border: 1px solid;border-bottom: 0px;height: auto;">
-    <div style="height: 40px;">
-      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 10px;">
-    </div>
-    <div style="height: 30px;text-align: center;">
-        <b style="font-size: 11px;text-decoration: underline;">FICHA DE REGISTRO DE DATOS PERSONALES</b>
-    </div>
-  
-    <div style="padding-left: 16px;">
-      <b style="font-size: 11px;padding-left: 32px;">I.</b><b style="font-size: 11px;padding-left: 15px;">DATOS PERSONALES</b><br>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombres:</b><label style="font-size: 11px;padding-left: 2px;">Barreda Carrasco Angeles Brisa</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 11px;padding-left: 2px;width: 129px;display: inline-block;">9/17/2000</div><b style="font-size: 11px;">País Nacimiento:</b><label style="font-size: 11px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 11px;padding-left: 2px;width: 137px;display: inline-block;">DNI</div><b style="font-size: 11px;">Número Documento:</b><label style="font-size: 11px;padding-left: 2px;">75675757</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Sexo:</b><div style="font-size: 11px;padding-left: 2px;width: 196px;display: inline-block;">Femenino</div><b style="font-size: 11px;">Estado Civil:</b>
-      </div>
-      <div style="height: 21px;">   
-          <b style="font-size: 11px;padding-left: 53px;">Domicilio:</b><div style="font-size: 11px;padding-left: 2px;width: 291px;display: inline-block;">Calle Huamachuco N°305 </div>
-      </div>  
-      <div style="height: 21px;">   
-          <b style="font-size: 11px;padding-left: 53px;">Referencia:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">ss</div><br>
-      </div>
-      <div style="height: 21px;">    
-          <b style="font-size: 11px;padding-left: 53px;">Correo Electrónico:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">patatavim.uwu@gmail.com</div>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Celular:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">921368499</div>
-      </div>
-      <div style="height: 21px;">    
-          <b style="font-size: 11px;padding-left: 53px;">Régimen Pensionario:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">AFP </div>
-      </div>
-      <div style="height: 21px;">    
-          <b style="font-size: 11px;padding-left: 53px;">Nombre Contacto de Emergencia:</b><label style="font-size: 11px;padding-left: 2px;">sss</label>
-      </div>
-      <div style="height: 40px;">    
-          <b style="font-size: 11px;padding-left: 53px;">Número Contacto de Emergencia:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">111</div>
-      </div>
+  <div class="loadingPdf" *ngIf="isLoadPDF">
+    <div class="loader"></div>
   </div>
-  
-  <div style="padding-left: 16px;">
-    <b style="font-size: 11px;padding-left: 32px;">II.</b><b style="font-size: 11px;padding-left: 12px;">EXPERIENCIA LABORAL</b><br>
-    <section>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 32px;">Empresa:</b>
+  <section style="display: none;">
+    <div id="pagePDF" #pagePDF style="width: 595px;border: 1px solid;border-bottom: 0px;height: auto;" *ngFor="let postulant of onePostulantData">
+      <div style="height: 40px;">
+        <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 10px;">
       </div>
-      <div style="height: 21px;"> 
-        <b style="font-size: 11px;padding-left: 53px;">Puesto:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">DNI</div>
+      <div style="height: 30px;text-align: center;">
+          <b style="font-size: 11px;text-decoration: underline;">FICHA DE REGISTRO DE DATOS PERSONALES</b>
       </div>
-      <div style="height: 30px;">
-        <b style="font-size: 11px;padding-left: 53px;">Desde:</b><div style="font-size: 11px;padding-left: 2px;width: 189px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 11px;">Hasta:</b><label style="font-size: 11px;padding-left: 2px;">peru</label>
-      </div> 
-      <div style="height: 21px;"> 
-        <b style="font-size: 11px;padding-left: 53px;">Motivo de Cese:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">DNI</div>
-      </div>
-    </section>
-    <section>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 32px;">Empresa:</b>
-      </div>
-      <div style="height: 21px;"> 
-        <b style="font-size: 11px;padding-left: 53px;">Puesto:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">DNI</div>
-      </div>
-      <div style="height: 30px;">
-        <b style="font-size: 11px;padding-left: 53px;">Desde:</b><div style="font-size: 11px;padding-left: 2px;width: 189px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 11px;">Hasta:</b><label style="font-size: 11px;padding-left: 2px;">peru</label>
-      </div> 
-      <div style="height: 21px;"> 
-        <b style="font-size: 11px;padding-left: 53px;">Motivo de Cese:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">DNI</div>
-      </div>
-    </section>
-    <section>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 32px;">Empresa:</b>
-      </div>
-      <div style="height: 21px;"> 
-        <b style="font-size: 11px;padding-left: 53px;">Puesto:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">DNI</div>
-      </div>
-      <div style="height: 30px;">
-        <b style="font-size: 11px;padding-left: 53px;">Desde:</b><div style="font-size: 11px;padding-left: 2px;width: 189px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 11px;">Hasta:</b><label style="font-size: 11px;padding-left: 2px;">peru</label>
-      </div> 
-      <div style="height: 21px;"> 
-        <b style="font-size: 11px;padding-left: 53px;">Motivo de Cese:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">DNI</div>
-      </div>
-    </section>
     
-</div>
-
-<div style="padding-left: 16px;">
-  <b style="font-size: 11px;padding-left: 32px;">III.</b><b style="font-size: 10px;padding-left: 11px;">FORMACION ACADEMICA</b><br>
-  <div style="height: 21px;">
-    <b style="font-size: 11px;padding-left: 32px;">Estudios Técnicos:</b>
+      <div style="padding-left: 16px;">
+        <b style="font-size: 11px;padding-left: 32px;">I.</b><b style="font-size: 11px;padding-left: 15px;">DATOS PERSONALES</b><br>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombres:</b><label style="font-size: 11px;padding-left: 2px;">{{postulant.ap_paterno}} {{postulant.ap_materno}} {{postulant.nombres}}</label>
+        </div>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 11px;padding-left: 2px;width: 129px;display: inline-block;">{{postulant.fec_nacimiento}}</div><b style="font-size: 11px;">País Nacimiento:</b><label style="font-size: 11px;padding-left: 2px;">{{postulant.pais_nacimiento}}</label>
+        </div>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 11px;padding-left: 2px;width: 137px;display: inline-block;">{{postulant.tipo_documento}}</div><b style="font-size: 11px;">Número Documento:</b><label style="font-size: 11px;padding-left: 2px;">{{postulant.num_documento}}</label>
+        </div>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Sexo:</b><div style="font-size: 11px;padding-left: 2px;width: 196px;display: inline-block;">{{postulant.sexo}}</div><b style="font-size: 11px;">Estado Civil:</b><div style="font-size: 11px;padding-left: 2px;width: 196px;display: inline-block;">{{postulant.estado_civil}}</div>
+        </div>
+        <div style="height: 21px;">   
+            <b style="font-size: 11px;padding-left: 53px;">Domicilio:</b><div style="font-size: 11px;padding-left: 2px;width: 291px;display: inline-block;">{{postulant.direccion}}</div>
+        </div>  
+        <div style="height: 21px;">   
+            <b style="font-size: 11px;padding-left: 53px;">Referencia:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{postulant.referencia}}</div><br>
+        </div>
+        <div style="height: 21px;">    
+            <b style="font-size: 11px;padding-left: 53px;">Correo Electrónico:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{postulant.email}}</div>
+        </div>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Celular:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{postulant.nro_celular}}</div>
+        </div>
+        <div style="height: 21px;">    
+            <b style="font-size: 11px;padding-left: 53px;">Régimen Pensionario:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{postulant.tipo_pension}} </div>
+        </div>
+        <div style="height: 21px;">    
+            <b style="font-size: 11px;padding-left: 53px;">Nombre Contacto de Emergencia:</b><label style="font-size: 11px;padding-left: 2px;">{{postulant.contacto_emergengia}}</label>
+        </div>
+        <div style="height: 40px;">    
+            <b style="font-size: 11px;padding-left: 53px;">Número Contacto de Emergencia:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{postulant.numero_emergencia}}</div>
+        </div>
+    </div>
+    
+    <div style="padding-left: 16px;">
+      <b style="font-size: 11px;padding-left: 32px;">II.</b><b style="font-size: 11px;padding-left: 12px;">EXPERIENCIA LABORAL</b><br>
+      <section *ngFor="let expLab of onePostulantExpLAb">
+        <div style="height: 21px;">
+          <b style="font-size: 11px;padding-left: 32px;">Empresa:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">{{expLab.empresa}}</div>
+        </div>
+        <div style="height: 21px;"> 
+          <b style="font-size: 11px;padding-left: 53px;">Puesto:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">{{expLab.puesto}}</div>
+        </div>
+        <div style="height: 30px;">
+          <b style="font-size: 11px;padding-left: 53px;">Desde:</b><div style="font-size: 11px;padding-left: 2px;width: 189px;display: inline-block;">{{expLab.desde}}</div><b style="font-size: 11px;">Hasta:</b><label style="font-size: 11px;padding-left: 2px;">{{expLab.culmino}}</label>
+        </div> 
+        <div style="height: 21px;"> 
+          <b style="font-size: 11px;padding-left: 53px;">Motivo de Cese:</b><div style="font-size: 11px;padding-left: 2px;width: 97px;display: inline-block;">{{expLab.motivo}}</div>
+        </div>
+      </section>      
   </div>
-  <div style="height: 21px;">
-    <b style="font-size: 11px;padding-left: 53px;">Centro de estudio:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
+  
+  <div style="padding-left: 16px;padding-top: 20px;">
+    <b style="font-size: 11px;padding-left: 32px;">III.</b><b style="font-size: 10px;padding-left: 11px;">FORMACION ACADEMICA</b><br>
+    <section >
+    <div style="height: 21px;">
+      <b style="font-size: 11px;padding-left: 32px;">Estudios Técnicos:</b>
+    </div>
+    <section *ngFor="let frmEst of arrFrTecnica">
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">Centro de estudio:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{frmEst.ctrEstudio}}</div>
+      </div>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">Carrera:</b><div style="font-size: 11px;padding-left: 2px;width: 277px;display: inline-block;">{{frmEst.carrera}}</div><b style="font-size: 11px;">Estado:</b><label style="font-size: 11px;padding-left: 2px;">{{frmEst.estado}}</label>
+      </div>
+    </section>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 32px;">Estudios Universitarios:</b>
+      </div>
+      <section *ngFor="let frmEstUnv of arrFrUniv">
+        <div style="height: 21px;">
+          <b style="font-size: 11px;padding-left: 53px;">Centro de estudio:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{frmEstUnv.ctrEstudio}}</div>
+        </div>
+        <div style="height: 60px;">
+          <b style="font-size: 11px;padding-left: 53px;">Carrera:</b><div style="font-size: 11px;padding-left: 2px;width: 277px;display: inline-block;">{{frmEstUnv.carrera}}</div><b style="font-size: 11px;">Estado:</b><label style="font-size: 11px;padding-left: 2px;">{{frmEstUnv.estado}}</label>
+        </div>
+      </section>
+    </section>
   </div>
-  <div style="height: 21px;">
-    <b style="font-size: 11px;padding-left: 53px;">Carrera:</b><div style="font-size: 11px;padding-left: 2px;width: 277px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 11px;">Estado:</b><label style="font-size: 11px;padding-left: 2px;">peru</label>
+  
+    <div>
+      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 20px;padding-bottom: 10px;">
+    </div>
+    <div style="padding-left: 16px;">
+      <b style="font-size: 11px;padding-left: 32px;">IV.</b><b style="font-size: 10px;padding-left: 9px;">DATOS DE DERECHO HABIENTES</b><br>
+      <section style="padding-bottom: 10px;" *ngFor="let dtHabientes of arrdDtosHabientes">
+        <div style="height: 21px;">
+          <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombre:</b><div style="font-size: 9px;padding-left: 2px;display: inline-block;">{{dtHabientes.nombres}}</div>
+        </div>
+        <div style="height: 21px;">
+          <b style="font-size: 11px;padding-left: 53px;">Parentesco:</b><div style="font-size: 9px;padding-left: 2px;width: 163px;display: inline-block;">{{dtHabientes.parentesco}}</div><div style="width: 80px;display: inline-block;"><b style="font-size: 10px;">Edad:</b><label style="font-size: 9px;padding-left: 2px;">{{dtHabientes.edad}}</label></div><b style="font-size: 10px;">Sexo:</b><label style="font-size: 9px;padding-left: 2px;">{{dtHabientes.sexo}}</label>
+        </div>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 9px;padding-left: 2px;width: 137px;display: inline-block;">{{dtHabientes.tipodoc}}</div><b style="font-size: 10px;">N° Documento:</b><label style="font-size: 9px;padding-left: 2px;">{{dtHabientes.nrodoc}}</label>
+        </div>
+        <div style="height: 21px;">
+            <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 9px;padding-left: 2px;width: 129px;display: inline-block;">{{dtHabientes.fchnac}}</div><b style="font-size: 10px;">Ocupación:</b><label style="font-size: 9px;padding-left: 2px;">{{dtHabientes.ocupacion}}</label>
+        </div>
+      </section>
+    </div>
+    <div style="padding-left: 16px;padding-top: 20px;">
+      <b style="font-size: 11px;padding-left: 32px;">V.</b><b style="font-size: 11px;padding-left: 9px;">DATOS DE SALUD</b><br>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">ALERGIAS:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.alergias}}</div>
+      </div>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">ENFERMEDAD:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.enfermedad}}</div>
+      </div>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">MEDICAMENTOS:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.medicamento}}</div>
+      </div>
+      <div style="height: 40px;">
+        <b style="font-size: 11px;padding-left: 53px;">GRUPO SANGUINEO:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.grupo_sanguineo}}</div>
+      </div>
   </div>
-  <div style="height: 21px;">
-    <b style="font-size: 11px;padding-left: 32px;">Estudios Universitarios:</b>
+  <div style="padding-left: 16px;">
+      <b style="font-size: 11px;padding-left: 32px;">VI.</b><b style="font-size: 11px;padding-left: 11px;">ANTECEDENTES</b><br>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">Tiene antecedentes policiales:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.antecedentes_policiales}}</div>
+      </div>
+      <div style="height: 21px;">
+        <b style="font-size: 11px;padding-left: 53px;">Tiene antecedentes judiciales:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.antecedentes_judiciales}}</div>
+      </div>
+      <div style="height: 120px;">
+        <b style="font-size: 11px;padding-left: 53px;">Tiene antecedentes penales:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">{{arrSaludAntecedentes.antecedentes_penales}}</div>
+      </div>
   </div>
-  <div style="height: 21px;">
-    <b style="font-size: 11px;padding-left: 53px;">Centro de estudio:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-  </div>
-  <div style="height: 60px;">
-    <b style="font-size: 11px;padding-left: 53px;">Carrera:</b><div style="font-size: 11px;padding-left: 2px;width: 277px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 11px;">Estado:</b><label style="font-size: 11px;padding-left: 2px;">peru</label>
-  </div>
-</div>
-
+  
   <div>
-    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 30px;padding-bottom: 10px;">
+    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 50px;padding-bottom: 10px;">
   </div>
-  <div style="padding-left: 16px;">
-    <b style="font-size: 11px;padding-left: 32px;">IV.</b><b style="font-size: 10px;padding-left: 9px;">DATOS DE DERECHO HABIENTES</b><br>
-    <section style="padding-bottom: 10px;">
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombre:</b><div style="font-size: 9px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-      </div>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Parentesco:</b><div style="font-size: 9px;padding-left: 2px;width: 163px;display: inline-block;">dddddddddddddddddddd</div><div style="width: 80px;display: inline-block;"><b style="font-size: 10px;">Edad:</b><label style="font-size: 9px;padding-left: 2px;">peru</label></div><b style="font-size: 10px;">Sexo:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 9px;padding-left: 2px;width: 137px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">N° Documento:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 9px;padding-left: 2px;width: 129px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">Ocupación:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-    </section>
-    <section style="padding-bottom: 10px;">
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombre:</b><div style="font-size: 9px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-      </div>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Parentesco:</b><div style="font-size: 9px;padding-left: 2px;width: 163px;display: inline-block;">dddddddddddddddddddd</div><div style="width: 80px;display: inline-block;"><b style="font-size: 10px;">Edad:</b><label style="font-size: 9px;padding-left: 2px;">peru</label></div><b style="font-size: 10px;">Sexo:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 9px;padding-left: 2px;width: 137px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">N° Documento:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 9px;padding-left: 2px;width: 129px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">Ocupación:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-    </section>
-    <section style="padding-bottom: 10px;">
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombre:</b><div style="font-size: 9px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-      </div>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Parentesco:</b><div style="font-size: 9px;padding-left: 2px;width: 163px;display: inline-block;">dddddddddddddddddddd</div><div style="width: 80px;display: inline-block;"><b style="font-size: 10px;">Edad:</b><label style="font-size: 9px;padding-left: 2px;">peru</label></div><b style="font-size: 10px;">Sexo:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 9px;padding-left: 2px;width: 137px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">N° Documento:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 9px;padding-left: 2px;width: 129px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">Ocupación:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-    </section>
-    <section style="padding-bottom: 10px;">
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombre:</b><div style="font-size: 9px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-      </div>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Parentesco:</b><div style="font-size: 9px;padding-left: 2px;width: 163px;display: inline-block;">dddddddddddddddddddd</div><div style="width: 80px;display: inline-block;"><b style="font-size: 10px;">Edad:</b><label style="font-size: 9px;padding-left: 2px;">peru</label></div><b style="font-size: 10px;">Sexo:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 9px;padding-left: 2px;width: 137px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">N° Documento:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 9px;padding-left: 2px;width: 129px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">Ocupación:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-    </section>
-    <section style="padding-bottom: 10px;">
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Apellidos y Nombre:</b><div style="font-size: 9px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-      </div>
-      <div style="height: 21px;">
-        <b style="font-size: 11px;padding-left: 53px;">Parentesco:</b><div style="font-size: 9px;padding-left: 2px;width: 163px;display: inline-block;">dddddddddddddddddddd</div><div style="width: 80px;display: inline-block;"><b style="font-size: 10px;">Edad:</b><label style="font-size: 9px;padding-left: 2px;">peru</label></div><b style="font-size: 10px;">Sexo:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Tipo Documento:</b><div style="font-size: 9px;padding-left: 2px;width: 137px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">N° Documento:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-      <div style="height: 21px;">
-          <b style="font-size: 11px;padding-left: 53px;">Fecha Nacimiento:</b><div style="font-size: 9px;padding-left: 2px;width: 129px;display: inline-block;">dddddddddddddddddddd</div><b style="font-size: 10px;">Ocupación:</b><label style="font-size: 9px;padding-left: 2px;">peru</label>
-      </div>
-    </section>
+  <div style="width: 48%;display: inline-block;padding-left: 16px;">
+    <b style="font-size: 11px;padding-left: 32px;">VII.</b><b style="font-size: 11px;padding-left: 9px;">DECLARACION JURADA</b><br>
+    <div style="height: 103px;text-align: justify;width: 506px;font-size: 10px;padding-left: 32px;">
+      <label style="line-height: 12.5px;">
+        DECLARO QUE TODOS LOS DATOS CONSIGNADOS EN LA PRESENTE FICHA SON EXACTOS Y VERDADEROS. ASI MISMO, DECLARO QUE HE LEIDO Y ENCONTRADO CONFORME LOS DATOS ANTES DESCRITOS
+      </label>
+    </div>
+    <div style="width: 145%;display: inline-block;top: 1px;position: relative;">
+      <hr style="margin-left: 6%;margin-right: 33%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <label style="font-size: 10px;padding-left: 119px;">Firma y Huella</label>
+    </div>
+    <div style="width: 121px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: -21px;left: 390px;">
+      <label style="font-size: 10px;padding-left: 36px;">V.B. RR.HH</label>
+    </div>
+    <div style="top: -55px;position: relative;">
+      <b  style="font-size: 10px;padding-left: 39px;">{{datePDF}}</b>
+    </div>
   </div>
-  <div style="padding-left: 16px;">
-    <b style="font-size: 11px;padding-left: 32px;">V.</b><b style="font-size: 11px;padding-left: 9px;">DATOS DE SALUD</b><br>
-    <div style="height: 21px;">
-      <b style="font-size: 11px;padding-left: 53px;">ALERGIAS:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-    </div>
-    <div style="height: 21px;">
-      <b style="font-size: 11px;padding-left: 53px;">ENFERMEDAD:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-    </div>
-    <div style="height: 21px;">
-      <b style="font-size: 11px;padding-left: 53px;">MEDICAMENTOS:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-    </div>
-    <div style="height: 40px;">
-      <b style="font-size: 11px;padding-left: 53px;">GRUPO SANGUINEO:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">dddddddddddddddddddd</div>
-    </div>
-</div>
-<div style="padding-left: 16px;">
-    <b style="font-size: 11px;padding-left: 32px;">VI.</b><b style="font-size: 11px;padding-left: 11px;">ANTECEDENTES</b><br>
-    <div style="height: 21px;">
-      <b style="font-size: 11px;padding-left: 53px;">Tiene antecedentes policiales:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">NO</div>
-    </div>
-    <div style="height: 21px;">
-      <b style="font-size: 11px;padding-left: 53px;">Tiene antecedentes judiciales:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">NO</div>
-    </div>
-    <div style="height: 105px;">
-      <b style="font-size: 11px;padding-left: 53px;">Tiene antecedentes penales:</b><div style="font-size: 11px;padding-left: 2px;display: inline-block;">NO</div>
-    </div>
-</div>
-
-<div>
-  <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 30px;padding-bottom: 10px;">
-</div>
-<div style="width: 48%;display: inline-block;padding-left: 16px;">
-  <b style="font-size: 11px;padding-left: 32px;">VII.</b><b style="font-size: 11px;padding-left: 9px;">DECLARACION JURADA</b><br>
-  <div style="height: 103px;text-align: justify;width: 506px;font-size: 10px;padding-left: 32px;">
-    <label style="line-height: 12.5px;">
-      DECLARO QUE TODOS LOS DATOS CONSIGNADOS EN LA PRESENTE FICHA SON EXACTOS Y VERDADEROS. ASI MISMO, DECLARO QUE HE LEIDO Y ENCONTRADO CONFORME LOS DATOS ANTES DESCRITOS
-    </label>
+  <div style="padding-left: 26px;height: 222px;padding-top: 26px;">
+    <table style="border-spacing: 0;">
+      <tr>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Pulgar Derecho</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Indice Derecho</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Medio Derecho</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Anular Derecho</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Meñique Derecho</th>
+      </tr>
+      <tr>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-bottom: 0;"></td>
+      </tr>
+  </table>
+    <table style="border-spacing: 0;">
+      <tr>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Pulgar Izquierdo</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Indice Izquierdo</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Medio Izquierdo</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Anular Izquierdo</th>
+          <th style="font-size: 10px;border: 0.3px solid;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Meñique Izquierdo</th>
+      </tr>
+      <tr>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
+          <td style="border: 0.3px solid;height: 60px;"></td>
+      </tr>
+    </table>
   </div>
-  <div style="width: 145%;display: inline-block;top: 1px;position: relative;">
-    <hr style="margin-left: 6%;margin-right: 33%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
-    <label style="font-size: 10px;padding-left: 119px;">Firma y Huella</label>
+  <div style="height: 31px;text-align: center;">
+    <b style="font-size: 11px;text-decoration: underline;">LLENAR SOLO AL INGRESO DEL POSTULANTE</b>
   </div>
-  <div style="width: 121px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: -21px;left: 390px;">
+  <div style="height: 40px;">
+    <label style="font-size: 10px;padding-left: 39px;">FECHA DE INGRESO:</label>
+  </div>
+  <div style="height: 78px;">
+    <label style="font-size: 10px;padding-left: 39px;">INGRESO APROBADO POR:_________________________________________________________</label>
+  </div>
+  <div style="width: 58%;display: inline-block;top: 1px;position: relative;">
+    <hr style="margin-left: 12%;margin-right: 27%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 0.5px solid #2f2f2f;margin-bottom: 0;">
+    <label style="font-size: 10px;padding-left: 83px;">FIRMA DE QUIEN APRUEBA</label>
+  </div>
+  <div style="width: 121px;height: 76px;border: 0.5px solid #2f2f2f;display: inline-block;">
     <label style="font-size: 10px;padding-left: 36px;">V.B. RR.HH</label>
   </div>
-  <div style="top: -55px;position: relative;">
-    <b  style="font-size: 10px;padding-left: 39px;">28 de Octubre de 2023</b>
+  <div>
+    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 90px;">
   </div>
-</div>
-<div style="padding-left: 26px;height: 222px;padding-top: 26px;">
-  <table style="border-spacing: 0;">
-    <tr>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Pulgar Derecho</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Indice Derecho</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Medio Derecho</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Anular Derecho</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Meñique Derecho</th>
-    </tr>
-    <tr>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;border-bottom: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-bottom: 0;"></td>
-    </tr>
-</table>
-  <table style="border-spacing: 0;">
-    <tr>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Pulgar Izquierdo</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Indice Izquierdo</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Medio Izquierdo</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-right: 0;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Anular Izquierdo</th>
-        <th style="font-size: 10px;border: 0.3px solid;border-bottom: 0;width: 106px;font-weight: 100;text-align: center;">Meñique Izquierdo</th>
-    </tr>
-    <tr>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;border-right: 0;"></td>
-        <td style="border: 0.3px solid;height: 60px;"></td>
-    </tr>
-  </table>
-</div>
-<div style="height: 31px;text-align: center;">
-  <b style="font-size: 11px;text-decoration: underline;">LLENAR SOLO AL INGRESO DEL POSTULANTE</b>
-</div>
-<div style="height: 40px;">
-  <label style="font-size: 10px;padding-left: 39px;">FECHA DE INGRESO:</label>
-</div>
-<div style="height: 78px;">
-  <label style="font-size: 10px;padding-left: 39px;">INGRESO APROBADO POR:_________________________________________________________</label>
-</div>
-<div style="width: 58%;display: inline-block;top: 1px;position: relative;">
-  <hr style="margin-left: 12%;margin-right: 27%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 0.5px solid #2f2f2f;margin-bottom: 0;">
-  <label style="font-size: 10px;padding-left: 83px;">FIRMA DE QUIEN APRUEBA</label>
-</div>
-<div style="width: 121px;height: 76px;border: 0.5px solid #2f2f2f;display: inline-block;">
-  <label style="font-size: 10px;padding-left: 36px;">V.B. RR.HH</label>
-</div>
-<div>
-  <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 90px;">
-</div>
-<div style="height: 12px;text-align: center;">
-  <b style="font-size: 10px;">LEY N° 28882</b><br>
-</div>
-<div style="height: 12px;text-align: center;">
-  <b style="font-size: 10px;">LEY DE SIMPLIFICACION DE LA CERTIFICACION DOMICILIARIA</b><br>
-</div>
-<div style="height: 15px;text-align: center;">
-  <b style="font-size: 10px;">DECLARACION JURADA DE DOMICILIO</b>
-</div>
-<div style="height: 12px;text-align: center;">
-  <label style="font-size: 10px;">(Ley de Procedimientos Administrativos N° 27444)</label>
-</div>
-<div style="height: 43px;text-align: center;">
-  <label style="font-size: 10px;">(Ley de Simplificación Administrativa N° 25035)</label>
-</div>
-<div>
-  <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
+  <div style="height: 12px;text-align: center;">
+    <b style="font-size: 10px;">LEY N° 28882</b><br>
+  </div>
+  <div style="height: 12px;text-align: center;">
+    <b style="font-size: 10px;">LEY DE SIMPLIFICACION DE LA CERTIFICACION DOMICILIARIA</b><br>
+  </div>
+  <div style="height: 15px;text-align: center;">
+    <b style="font-size: 10px;">DECLARACION JURADA DE DOMICILIO</b>
+  </div>
+  <div style="height: 12px;text-align: center;">
+    <label style="font-size: 10px;">(Ley de Procedimientos Administrativos N° 27444)</label>
+  </div>
+  <div style="height: 43px;text-align: center;">
+    <label style="font-size: 10px;">(Ley de Simplificación Administrativa N° 25035)</label>
+  </div>
+  <div *ngFor="let dtp of onePostulantData">
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+          Yo, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado(a) con DNI {{dtp.num_documento}}, en pleno ejercicio de mis derechos ciudadanos y de conformidad con lo dispuesto en la Ley N° 28882 de Simplificación de la Certificación Domiciliaria, DECLARO BAJO JURAMENTO que mi domicilio actual se encuentra ubicado en Calle Huamachuco N°305, distrito de Socabaya, provincia de Lima, departamento de Arequipa.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+          En caso de que la información que proporciono resulte falsa, declaro haber incurrido en los delitos de falsa declaración en procesos administrativos (Art. 411 del Código Penal), falsedad ideológica o falsedad genérica (Arts. 427, 428 y 438 del Código Penal) en concordancia con el Art. IV, 1.7 del Título Preliminar de la Ley N° 27333 del Procedimiento Administrativo General (Principio de presunción de veracidad)
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
+      <label>En señal de conformidad firmo el presente documento.</label>
+    </div>
+  </div>
+  <div style="width: 72%;display: inline-block;top: 1px;position: relative;">
+    <hr style="margin-left: 16%;margin-right: 39%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+    <label style="font-size: 10px;padding-left: 149px;">FIRMA</label>
+  </div>
+  <div style="width: 64px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: -13px;margin-left: 20px;">
+  </div>
+  <div>
+    <label style="font-size: 10px;position: relative;top: -17px;padding-left: 446px;">Huella Dactilar</label>
+  </div>
+  
+  <div>
+    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 360px;">
+  </div>
+  <div style="height: 44px;text-align: center;">
+    <b style="font-size: 10px;">SOLICITUD DE APERTURA DE LA CUENTA CTS</b><br>
+  </div>
+  <div *ngFor="let dtp of onePostulantData">
+    <div style="font-size: 10px;text-align: justify;height: 30px;">
+      <label style="line-height: 12.5px;padding-left: 72px;">
+        Señores:
+      </label>
+    </div>
+    <div style="font-size: 10px;text-align: justify;height: 57px;padding-left: 72px;">
+      <label style="line-height: 12.5px;">
+        METAS PERU S.A.C.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 33px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        Es grato dirigirme a ustedes, a fin de solicitar la apertura de una cuenta de haberes corriente con la siguiente denominación
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 33px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        Yo, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, con DNI {{dtp.num_documento}}, solicito que la empresa METAS PERU
+        S.A.C. con RUC 20600516885 me apertura la cuenta de CTS en el BANCO INTERBANK.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
+      <label>Para mayor constancia y validez y en cumplimiento, firmo y pongo mi huella dactilar al pie del presente documento para los fines legales correspondientes.</label>
+    </div>
+  </div>
+  <div style="width: 64px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: 119px;margin-left: 72px;">
+  </div>
+  <div>
+    <label style="font-size: 10px;position: relative;top: 115px;padding-left: 70px;">Huella Dactilar</label>
+  </div>
+  <div  *ngFor="let dtp of onePostulantData" style="width: 100%;display: inline-block;top: 1px;position: relative;">
+    <hr style="margin-left: 58%;margin-right: 12%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+    <label style="font-size: 10px;padding-left: 425px;">FIRMA</label>
+    <div style="text-align: end;padding-right: 69px;">
+      <label style="font-size: 10px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+      <label style="font-size: 10px;">DNI {{dtp.num_documento}}</label>
+    </div>
+  </div>
+  
+  <div>
+    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 360px;">
+  </div>
+  <div style="height: 44px;text-align: center;margin-top: 47px;">
+    <label style="font-size: 10px;">CUENTA DE DEPOSITO DE HABERES</label><br>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;"  *ngFor="let dtp of onePostulantData">
     <label style="line-height: 12.5px;">
-        Yo, Barreda Carrasco Angeles Brisa, identificado(a) con DNI 75675757, en pleno ejercicio de mis derechos ciudadanos y de conformidad con lo dispuesto en la Ley N° 28882 de Simplificación de la Certificación Domiciliaria, DECLARO BAJO JURAMENTO que mi domicilio actual se encuentra ubicado en Calle Huamachuco N°305, distrito de Socabaya, provincia de Lima, departamento de Arequipa.
+      Yo, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado con el DNI {{dtp.num_documento}}, pongo en conocimiento a la empresa METAS PERU S.A.C identificada con RUC N° 20600516885 que:
     </label>
   </div>
-  <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
+  
+  
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+    <div style="width: 22px;height: 22px;border: 1px solid #2f2f2f;display: inline-block;margin-top: 5px;">
+    </div>
+    <div style="width: 415px;display: inline-block;margin-left: 5px;">
+      <label style="line-height: 12.5px;margin-top: 4px;">
+        Cuento con Cuenta de Ahorros en el banco________________________	, con número de cuenta	______________________________ y CCI		______________________________	.  </label>
+    </div>
+  </div>
+  
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+    <div style="width: 22px;height: 22px;border: 1px solid #2f2f2f;display: inline-block;">
+    </div>
+    <div style="width: 415px;display: inline-block;margin-left: 5px;">
+      <label style="line-height: 12.5px;">
+        Solicito la apertura de una Cuenta Sueldo con el banco INTERBANK. 
+      </label>
+    </div>
+  </div>
+  
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 100px;margin: 0 auto;">
     <label style="line-height: 12.5px;">
-        En caso de que la información que proporciono resulte falsa, declaro haber incurrido en los delitos de falsa declaración en procesos administrativos (Art. 411 del Código Penal), falsedad ideológica o falsedad genérica (Arts. 427, 428 y 438 del Código Penal) en concordancia con el Art. IV, 1.7 del Título Preliminar de la Ley N° 27333 del Procedimiento Administrativo General (Principio de presunción de veracidad)
+      Así mismo, acepto que de no brindar la información de la cuenta para el depósito de haberes con cinco (05) días hábiles previos a las fechas de pagos, la empresa procederá a realizar la apertura de una cuenta sueldo por oficio, eximiendo de tal manera a la empresa de cualquier reclamo.  </label>
+  </div>
+  
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 100px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      {{datePDF}}
     </label>
   </div>
-  <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
-    <label>En señal de conformidad firmo el presente documento.</label>
+  
+  <div style="width: 72%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+    <hr style="margin-left: 16%;margin-right: 39%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+    <label style="font-size: 10px;padding-left: 69px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+    <label style="font-size: 10px;padding-left: 69px;">DNI {{dtp.num_documento}}</label>
   </div>
-</div>
-<div style="width: 72%;display: inline-block;top: 1px;position: relative;">
-  <hr style="margin-left: 16%;margin-right: 39%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
-  <label style="font-size: 10px;padding-left: 149px;">FIRMA</label>
-</div>
-<div style="width: 64px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: -13px;margin-left: 20px;">
-</div>
-<div>
-  <label style="font-size: 10px;position: relative;top: -17px;padding-left: 446px;">Huella Dactilar</label>
-</div>
-
-<div>
-  <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 360px;">
-</div>
-<div style="height: 44px;text-align: center;">
-  <b style="font-size: 10px;">SOLICITUD DE APERTURA DE LA CUENTA CTS</b><br>
-</div>
-<div>
+  <div style="width: 64px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: -13px;margin-left: 20px;">
+  </div>
+  <div>
+    <label style="font-size: 10px;position: relative;top: -17px;padding-left: 446px;">Huella Dactilar</label>
+  </div>
+  
+  
+  <div>
+    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 259px;">
+  </div>
+  <div style="height: 44px;text-align: center;margin-top: 47px;">
+    <b style="font-size: 10px;">SOLICITUD DE AFILIACION A SISTEMA DE PENSIONES</b><br>
+  </div>
   <div style="font-size: 10px;text-align: justify;height: 30px;">
     <label style="line-height: 12.5px;padding-left: 72px;">
       Señores:
@@ -351,39 +375,280 @@
   </div>
   <div style="width: 450px;font-size: 10px;text-align: justify;height: 33px;margin: 0 auto;">
     <label style="line-height: 12.5px;">
-      Es grato dirigirme a ustedes, a fin de solicitar la apertura de una cuenta de haberes corriente con la siguiente denominación
+      Es grato dirigirme a ustedes a fin de poner en conocimiento que, luego de leer el boletín informativo sobre los tipos de sistemas de pensiones, he tomado la siguiente decisión.
     </label>
   </div>
-  <div style="width: 450px;font-size: 10px;text-align: justify;height: 33px;margin: 0 auto;">
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 58px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
     <label style="line-height: 12.5px;">
-      Yo, Barreda Carrasco Angeles Brisa, con DNI 75675757, solicito que la empresa METAS PERU
-      S.A.C. con RUC 20600516885 me apertura la cuenta de CTS en el BANCO INTERBANK.
+      Yo, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado(a) con DNI {{dtp.num_documento}}, solicito mi afiliación al sistema de pensiones de tipo:  </label>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+    <div style="width: 22px;height: 22px;border: 1px solid #2f2f2f;display: inline-block;">
+    </div>
+    <div style="width: 415px;display: inline-block;margin-left: 5px;">
+      <label style="line-height: 12.5px;">
+        Deseo Afiliarme al Sistema Nacional de Pensiones (SNP – ONP) 
+      </label>
+    </div>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+    <div style="width: 22px;height: 22px;border: 1px solid #2f2f2f;display: inline-block;">
+    </div>
+    <div style="width: 415px;display: inline-block;margin-left: 5px;">
+      <label style="line-height: 12.5px;">
+        Deseo Afiliarme al Sistema Privado de Pensiones (SPP-AFP)
+      </label>
+    </div>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+    <div style="width: 22px;height: 22px;border: 1px solid #2f2f2f;display: inline-block;">
+    </div>
+    <div style="width: 415px;display: inline-block;margin-left: 5px;">
+      <label style="line-height: 12.5px;">
+        Cuento con Sistema Nacional de Pensiones (SNP-ONP)
+      </label>
+    </div>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+    <div style="width: 22px;height: 22px;border: 1px solid #2f2f2f;display: inline-block;">
+    </div>
+    <div style="width: 415px;display: inline-block;margin-left: 5px;">
+      <label style="line-height: 12.5px;">
+        Cuento con Sistema Privado de Pensiones (SPP-AFP)
+      </label>
+    </div>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 48px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      Para mayor constancia y validez y en cumplimiento, firmo y pongo mi huella dactilar al pie del presente documento para los fines legales correspondientes.  
     </label>
   </div>
-  <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
-    <label>Para mayor constancia y validez y en cumplimiento, firmo y pongo mi huella dactilar al pie del presente documento para los fines legales correspondientes.</label>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 100px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      {{datePDF}}
+    </label>
   </div>
-</div>
-<div style="width: 64px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: 119px;margin-left: 72px;">
-</div>
-<div>
-  <label style="font-size: 10px;position: relative;top: 115px;padding-left: 70px;">Huella Dactilar</label>
-</div>
-<div style="width: 100%;display: inline-block;top: 1px;position: relative;">
-  <hr style="margin-left: 58%;margin-right: 12%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
-  <label style="font-size: 10px;padding-left: 425px;">FIRMA</label>
-  <div style="text-align: end;padding-right: 69px;">
-    <label style="font-size: 10px;">Barreda Carrasco Angeles Brisa</label><br>
-    <label style="font-size: 10px;">DNI 75675757</label>
+  <div style="width: 72%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+    <hr style="margin-left: 16%;margin-right: 39%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+    <label style="font-size: 10px;padding-left: 69px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+    <label style="font-size: 10px;padding-left: 69px;">DNI {{dtp.num_documento}}</label>
   </div>
-</div>
-
-<div style="height: 100px;"></div>
-
-
-
-
+  <div style="width: 64px;height: 76px;border: 1px solid #2f2f2f;display: inline-block;position: relative;top: -13px;margin-left: 20px;">
   </div>
+  <div>
+    <label style="font-size: 10px;position: relative;top: -17px;padding-left: 446px;">Huella Dactilar</label>
+  </div>
+  
+  <div>
+    <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 90px;">
+  </div>
+  <div style="height: 55px;text-align: center;">
+      <b style="font-size: 10px;text-decoration: underline;">AUTORIZACION DE ENTREGA DIGITAL DE BOLETAS DE PAGO Y DOCUMENTO LABORALES Y DE</b> <br>
+      <b style="font-size: 10px;text-decoration: underline;">USO Y TRATAMIENTO DE DATOS PERSONALES</b>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 53px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
+    <label style="line-height: 12.5px;">
+      El que suscribe, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado con DNI {{dtp.num_documento}}, con domicilio en Calle Huamachuco N°305, Distrito de Socabaya, Provincia de Arequipa, Departamento de Lima, declaro y autorizo lo siguiente:  </label>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 153px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+     <b style="text-decoration: underline;">PRIMERO.-</b> Mediante el presente, <b> AUTORIZO a mi empleador Metas Perú S.A.C.</b> que la entrega de los Documentos Laborales tales como: Boletas de Pagos, Boletas de Liquidaciones, Hoja de Liquidación de beneficios sociales, Certificado de Trabajo, Certificado de T-Registro , Hoja de Liquidación de Compensación por Tiempo de Servicio (CTS), Hojas de Liquidación de la participación de Utilidades por el ejercicio gravable, Gratificaciones, Certificados de Renta y Retenciones de Quinta Categoría, Comprobante de Retenciones por Aportes al Sistema Privado de Pensiones, entre otros documentos laborales que entregue <b> Metas Perú S.A.C.</b>, será a través del empleo de tecnologías de la información y comunicación, el cual remitirá una vía de enlace a mi correo electrónico: patatavim.uwu@gmail.com, a fin de ingresar a un aplicativo que me brindara libre acceso a esta documentación. Esto de acuerdo a lo establecido por los artículos 3.1. y 3.2. del Decreto Legislativo N° 009-2011-TR.
+    </label>
+  </div>
+  <div style="width: 450px;font-size: 10px;text-align: justify;height: 40px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      Asimismo, autorizo a que mi empleador pueda comunicarme el envió de estos documentos laborales mediante mensajes de texto a mi teléfono celular personal N° 921368499.
+    </label>
+   </div>
+   <div style="width: 450px;font-size: 10px;text-align: justify;height: 81px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      <b style="text-decoration: underline;"> SEGUNDO.- </b> Declaro que el correo electrónico y número de celular señalados en el punto anterior son de mi propiedad y se encuentran plenamente activos. Me comprometo a mantenerlo actualizado durante el periodo de mi vinculo laboral con <b> Metas Perú S.A.C.</b> La vigencia y actualización de mi correo electrónico y número de celular estarán a cargo y bajo mi exclusiva responsabilidad.  </label>
+   </div>
+   <div style="width: 450px;font-size: 10px;text-align: justify;height: 43px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      Dejo constancia que <b> Metas Perú S.A.C.</b> me garantiza la constancia de emisión y un razonable acceso a estos documentos sin necesidad de confirmar la recepción de los mismos. 
+    </label>
+   </div>
+   <div style="width: 450px;font-size: 10px;text-align: justify;height: 71px;margin: 0 auto;">
+    <label style="line-height: 12.5px;">
+      <b style="text-decoration: underline;"> TERCERO.- </b> Declaro por el presente documento que tengo pleno acceso a los medios informáticos indicados. Cualquier problema técnico que surja eventualmente, me comprometo a reportarlo a la oficina de Recursos Humanos de <b> Metas Perú S.A.C. </b>, a efectos de que me brinden el soporte necesario.
+    </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 200px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        <b style="text-decoration: underline;"> CUARTO.-</b> De conformidad con la Ley N° 29733, Ley de Protección de Datos Personales y su Reglamento aprobado por Decreto Supremo N° 003-2013-JUS, manifiesto mi consentimiento previo, expreso e informado, así como autorizo a mi empleador <b>Metas Perú S.A.C.</b> a que recopile, registre, organice, almacene, conserve, modifique, transfiera y, en general, trate en sus instalaciones la información, datos personales y sensibles que hayan sido proporcionados, directamente por mi persona y/o conocidos por Metas Perú S.A.C. en el marco de la relación laboral que nos vincula, incluyendo, pero no limitándose a nombre, cargo, documento de identidad, domicilio, edad, genero, correo electrónico, educación, régimen laboral, tipo de contrato, jornada de trabajo, afiliación sindical, resultados de exámenes medico ocupacionales, ingreso y su periodicidad, cuentas bancarias, depositarios de beneficios sociales, cargas o gravámenes aplicables sobre sus ingresos o remuneraciones, pólizas y coberturas de seguros, régimen previsional e información de derechohabientes.
+      </label>
+    </div>
+    <div style="width: 89%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+      <hr style="margin-left: 28%;margin-right: 78px;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <div style="text-align: center;">
+        <label style="font-size: 10px;padding-left: 69px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+        <label style="font-size: 10px;padding-left: 69px;">DNI {{dtp.num_documento}}</label>
+      </div>
+    </div>
+  
+  
+    <div>
+      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 48px;">
+    </div>
+    <div style="height: 77px;text-align: center;margin-top: 108px;">
+        <b style="font-size: 10px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE REGLAMENTO INTERNO DE TRABAJO</b> <br>
+        <b style="font-size: 10px;text-decoration: underline;">R.I.T.</b>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 73px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
+      <label style="line-height: 12.5px;">
+        Yo {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificada con DNI {{dtp.num_documento}}, declaro haber recibido el Reglamento Interno de Trabajo de la empresa Metas Perú, así mismo, me comprometo a cumplirlo a cabalidad durante toda mi relación laboral con la empresa.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 245px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        En tal sentido, firmo el presente documento en señal de conformidad con lo declarado.
+      </label>
+    </div>
+    <div style="width: 100%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+      <hr style="margin-left: 58%;margin-right: 12%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <div style="text-align: end;padding-right: 69px;">
+        <label style="font-size: 10px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+        <label style="font-size: 10px;">DNI {{dtp.num_documento}}</label>
+      </div>
+    </div>
+  
+    <div>
+      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 263px;">
+    </div>
+    <div style="height: 77px;text-align: center;margin-top: 40px;">
+        <b style="font-size: 10px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE MANUAL DE ORGANIZACIÓN Y FUNCIONES</b> <br>
+        <b style="font-size: 10px;text-decoration: underline;">MOF</b>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 73px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
+      <label style="line-height: 12.5px;">
+        Yo {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificada con DNI {{dtp.num_documento}}, declaro haber recibido el Manual de Organización y Funciones – MOF, de la empresa Metas Perú, así mismo, me comprometo a cumplirlo a cabalidad durante toda mi relación laboral con la empresa.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 245px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        En tal sentido, firmo el presente documento en señal de conformidad con lo declarado.
+      </label>
+    </div>
+    <div style="width: 100%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+      <hr style="margin-left: 58%;margin-right: 12%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <div style="text-align: end;padding-right: 69px;">
+        <label style="font-size: 10px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+        <label style="font-size: 10px;">DNI {{dtp.num_documento}}</label>
+      </div>
+    </div>
+  
+    <div>
+      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 332px;">
+    </div>
+    <div style="height: 77px;text-align: center;margin-top: 40px;">
+        <b style="font-size: 10px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE REGLAMENTO INTERNO DE SEGURIDAD Y</b> <br>
+        <b style="font-size: 10px;text-decoration: underline;">SALUD EN EL TRABAJO – RISST</b>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 73px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
+      <label style="line-height: 12.5px;">
+        Yo {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}} identificado con DNI {{dtp.num_documento}}, manifiesto haber recibido y tomado conocimiento del Reglamento Interno de Seguridad y Salud en el Trabajo de Metas Perú S.A.C., el cual me comprometo a cumplir estrictamente durante el desempeño de mis labores, este registro será entregado al área correspondiente para evidenciarlo en caso sea necesario.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 43px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        En tal sentido, firmo el presente documento en señal de conformidad con lo declarado.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 245px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        {{datePDF}}
+      </label>
+    </div>
+    <div style="width: 100%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+      <hr style="margin-left: 58%;margin-right: 12%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <div style="text-align: end;padding-right: 69px;">
+        <label style="font-size: 10px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+        <label style="font-size: 10px;">DNI {{dtp.num_documento}}</label>
+      </div>
+    </div>
+  
+  
+    <div>
+      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 332px;">
+    </div>
+    <div style="height: 77px;text-align: center;margin-top: 40px;">
+        <b style="font-size: 10px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE POLITICA DE PREVENCION E INTERVENCION</b> <br>
+        <b style="font-size: 10px;text-decoration: underline;">FRENTE AL HOSTIGAMIENTO SEXUAL</b>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 73px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
+      <label style="line-height: 12.5px;">
+        Yo {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}} identificado con DNI {{dtp.num_documento}}, manifiesto haber recibido y tomado conocimiento de la Política de Prevención e Intervención frente al Hostigamiento Sexual de Metas Perú S.A.C., el cual me comprometo a cumplir estrictamente durante el desempeño de mis labores, este registro será entregado al área correspondiente para evidenciarlo en caso sea necesario.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 43px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        En tal sentido, firmo el presente documento en señal de conformidad con lo declarado.
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 245px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        {{datePDF}}
+      </label>
+    </div>
+    <div style="width: 100%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+      <hr style="margin-left: 58%;margin-right: 12%;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <div style="text-align: end;padding-right: 69px;">
+        <label style="font-size: 10px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+        <label style="font-size: 10px;">DNI {{dtp.num_documento}}</label>
+      </div>
+    </div>
+  
+  
+  
+    <div>
+      <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 110px;padding-left: 16px;padding-top: 244px;">
+    </div>
+    <div style="height: 77px;text-align: center;margin-top: 40px;">
+        <b style="font-size: 10px;text-decoration: underline;">DECLARACION JURADA</b> <br>
+        <b style="font-size: 10px;text-decoration: underline;">CONFLICTO DE INTERESES</b>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 43px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
+      <label style="line-height: 12.5px;">
+        Yo <b>{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</b>, identificado(a) con <b>DNI N° {{dtp.num_documento}}</b>, con domicilio en <b>Calle Huamachuco N°305</b>, distrito de Socabaya, provincia y departamento de Lima, declaro que:
+      </label>
+    </div>
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+      <div style="width: 31px;height: 31px;border: 1px solid #2f2f2f;display: inline-block;margin-top: 6px;">
+      </div>
+      <div style="width: 415px;display: inline-block;margin-left: 5px;">
+        <label style="line-height: 12.5px;margin-top: 4px;">
+          No guardo relación con personal de hasta el cuarto grado de consanguinidad o segundo grado de afinidad desempeñando cargos de dirección, administración y/o confianza dentro de la empresa Metas Perú S.A.C.
+        </label>
+      </div>
+    </div>
+    
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
+      <div style="width: 31px;height: 31px;border: 1px solid #2f2f2f;display: inline-block;margin-top: 3px;">
+      </div>
+      <div style="width: 415px;display: inline-block;margin-left: 7px;">
+        <label style="line-height: 12.5px;">
+          Guardo relación con personal de hasta el cuarto grado de consanguinidad o segundo grado de afinidad desempeñando cargos de dirección, administración y/o confianza dentro de la empresa Metas Perú S.A.C. 
+        </label>
+      </div>
+    </div>
+  
+    <div style="width: 450px;font-size: 10px;text-align: justify;height: 348px;margin: 0 auto;">
+      <label style="line-height: 12.5px;">
+        Así mismo, reconozco que brindar información falsa y/o la omisión de esta se considera una falta grave, pudiendo ser causal de despido, sin perjuicio de las acciones civiles y/o penales a las que hubiera lugar.
+      </label>
+    </div>
+    <div style="width: 89%;display: inline-block;top: 1px;position: relative;" *ngFor="let dtp of onePostulantData">
+      <hr style="margin-left: 28%;margin-right: 78px;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
+      <div style="text-align: center;">
+        <label style="font-size: 10px;padding-left: 69px;">{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</label><br>
+        <label style="font-size: 10px;padding-left: 69px;">DNI {{dtp.num_documento}}</label>
+      </div>
+    </div>
+  
+  
+    </div>
+  </section>
   <div id="content" class="full-center" #content>
     <div class="card-content" *ngIf="isAuth">
       <ion-row>

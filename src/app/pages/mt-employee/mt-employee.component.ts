@@ -36,7 +36,7 @@ export class MtEmployeeComponent implements OnInit {
 
     this.service.get(parms).then((response) => {
       let data = ((response || [])[0] || {}).data || [];
-  
+      
       this.dataPaginationList = data || [];
       this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
       this.dataSource.paginator = this.paginator;

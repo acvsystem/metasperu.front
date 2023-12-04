@@ -138,7 +138,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     //this.onPaginationData(1);
 
     this.socket.on('sendControlAsistencia', (asistencia) => {
-
+      console.log(asistencia);
       let arrayData = [...asistencia];
 
       arrayData.filter((dt, index) => {
@@ -274,7 +274,7 @@ export class MtControlAsistenciaComponent implements OnInit {
       let documentosListAdded = [];
       this.employeList.filter((ejb) => {
         let cantFeriado = 0;
-
+console.log(empleadosAsistencia);
         (empleadosAsistencia || []).find((emp) => {
           let addedEmp = documentosListAdded.filter((added) => added.dni == emp.documento && added.fecha == (emp || {}).fecha);
 
@@ -287,7 +287,7 @@ export class MtControlAsistenciaComponent implements OnInit {
           }
         });
 
-        let nombreCompleto = `${(ejb || {}).AP_PATERNO} ${(ejb || {}).AP_MATERNO} ${(ejb || {}).NOM_EMPLEADO}`;
+        let nombreCompleto = `${(ejb || {}).AP_PATERNO || ""} ${(ejb || {}).AP_MATERNO || ""} ${(ejb || {}).NOM_EMPLEADO || ""}`;
 
         this.reporteList.push({ 'PERIODO': this.lstPeriodo.trim(), 'CODIGO': (ejb || {}).CODIGO_EJB.trim(), 'TRABAJADOR': nombreCompleto, 'DIA-NOC': '', 'TAR-DIU': '', 'HOR-LAC': '', 'HED-25%': '', 'HED-35%': '', 'HED-50%': '', 'HED-100': '', 'HSI-MPL': '', 'DES-LAB': '', 'DIA-FER': cantFeriado, 'DIA-SUM': '', 'DIA-RES': '', 'PER-HOR': '' });
 
