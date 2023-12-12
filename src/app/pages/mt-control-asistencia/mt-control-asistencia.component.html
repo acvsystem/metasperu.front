@@ -1,8 +1,11 @@
 <ion-content>
+  <div class="loadingPdf" *ngIf="isLoadPDF">
+    <div class="loader"></div>
+  </div>
   <div id="content" class="full-center" id="controlAsistencia">
     <div class="card-content">
       <ion-row>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="1" sizeLg="1">
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
           <mt-input
           id="lstPeriodo"
           label="Periodo"
@@ -12,44 +15,7 @@
           type="text"
           ></mt-input>
         </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
-          <mt-select
-          id="lstCentroCosto"
-          placeHolder="Centro de costo"
-          [optionList]="optionListMarca"
-          (changeSelected)="onChangeSelect($event)"
-          ></mt-select>
-        </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="5" sizeLg="5">
-          <mt-calendar
-          *ngIf="tipoTableView == 'allList'"
-          label="fecha"
-          isMultiSelect="true"
-          (afterChange)="onDateCalendar($event)"
-          ></mt-calendar>
-        </ion-col>
-        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-          <div class="content-button-filter">
-            <button type="button" (click)="searchData()"class="btn btn-outline-secondary">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </button>
-            <button type="button" (click)="exportReporte()"class="btn btn-outline-primary">
-              <i class="fa fa-download" aria-hidden="true"></i>
-            </button>
-            <button type="button" (click)="onUpdateEmpleado()"class="btn btn-outline-primary">
-              <i class="fa fa-suitcase" aria-hidden="true"></i> Actualizar
-            </button>
-          </div>
-        </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
-          <div class="content-filter">
-            <mat-form-field>
-              <mat-label>Filter</mat-label>
-              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
-            </mat-form-field>
-          </div>
-        </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="4" sizeLg="4">
           <mt-calendar
           label="fecha"
           isRageDate="true"
@@ -58,6 +24,43 @@
           (afterChangeInit)="onDateCalendar($event)"
           (afterChangeEnd)="onDateCalendar($event)"
           ></mt-calendar>
+        </ion-col>
+       <!-- <ion-col sizeXs="6" sizeSm="6" sizeMd="2" sizeLg="2">
+          <mt-select
+          id="lstCentroCosto"
+          placeHolder="Centro de costo"
+          [optionList]="optionListMarca"
+          (changeSelected)="onChangeSelect($event)"
+          ></mt-select>
+        </ion-col>-->
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
+          <mt-calendar
+          *ngIf="tipoTableView == 'allList'"
+          label="fecha"
+          isMultiSelect="true"
+          (afterChange)="onDateCalendar($event)"
+          ></mt-calendar>
+        </ion-col>
+        <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
+          <div class="content-button-filter">
+            <button type="button" (click)="searchData()"class="btn btn-outline-secondary">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+            <button type="button" (click)="exportReporte()"class="btn btn-outline-primary">
+              <i class="fa fa-download" aria-hidden="true"></i>
+            </button>
+            <button type="button" (click)="onUpdateEmpleado()" class="btn btn-outline-primary"> 
+              <i class="fa fa-refresh" aria-hidden="true"></i> EJB
+            </button>
+          </div>
+        </ion-col>
+        <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+          <div class="content-filter">
+            <mat-form-field>
+              <mat-label>Filter</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+            </mat-form-field>
+          </div>
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="4" sizeLg="4">
           <div class="content-option-report">

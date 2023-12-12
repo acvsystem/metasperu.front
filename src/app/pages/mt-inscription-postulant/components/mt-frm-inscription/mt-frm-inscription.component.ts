@@ -923,6 +923,8 @@ export class MtFrmInscriptionComponent implements OnInit {
     }
   ];
 
+  optionListDepartamento: Array<any> = [];
+
   optionListStandar: Array<any> = [
     {
       "key": "Si",
@@ -1070,6 +1072,19 @@ export class MtFrmInscriptionComponent implements OnInit {
 
   ngOnInit() {
     this.onValidateLink();
+    this.onDepartamentoList();
+  }
+
+  onDepartamentoList(){
+    this.token = this.navStart.snapshot.paramMap.get('token') || '';
+
+    let parms = {
+      url: '/settings/service/lista/departamento'
+    };
+
+    this.service.get(parms).then((response) => {
+    console.log(response);
+    });
   }
 
   onValidateLink() {

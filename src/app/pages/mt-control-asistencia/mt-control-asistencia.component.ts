@@ -43,7 +43,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   lstPeriodo: string = "";
   isClearMulti: boolean = false;
   isClearRage: boolean = false;
-
+  isLoadPDF: boolean = false;
   chartData: Array<any> = [];
 
   optionListTiendas: Array<any> = [
@@ -109,6 +109,8 @@ export class MtControlAsistenciaComponent implements OnInit {
     this.onEmpleadoList();
 
     this.socket.on('sendUDPEmpleados', (response) => {
+      self.isLoadPDF = false;
+      console.log(response);
       let notificationList = [{
         isSuccess: true,
         bodyNotification: "Empleados Actualizados."
@@ -168,8 +170,11 @@ export class MtControlAsistenciaComponent implements OnInit {
   }
 
   onUpdateEmpleado(){
+    const self = this;
+    self.isLoadPDF = true;
     this.socket.emit('emitRRHHEmpleados');
   }
+  
   openDialog(nroDocumento) {
     let hrWorking = 0;
     this.chartData = [];
@@ -208,7 +213,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   searchData() {
     const self = this;
 
-    if (this.lstCentroCosto) {
+    if (this.dateCalendarList.length) {
       let body = [];
       this.dataObservacion = [];
       let centroCostoList = this.optionListMarca || [];
@@ -230,7 +235,7 @@ export class MtControlAsistenciaComponent implements OnInit {
           "isReportTotal": this.isReportTotal,
           "isReporRgDate": this.isReporRgDate,
           "isReportFeriado": this.isReportFeriado,
-          "centroCosto": this.lstCentroCosto,
+          "centroCosto": "VSFA",
           "dateList": dateList
         }
       );
@@ -239,7 +244,7 @@ export class MtControlAsistenciaComponent implements OnInit {
     } else {
       let notificationList = [{
         isCaution: true,
-        bodyNotification: "Seleccione el centro de costo."
+        bodyNotification: "Seleccione fecha a solicitar."
       }];
       this.service.onNotification.emit(notificationList);
     }

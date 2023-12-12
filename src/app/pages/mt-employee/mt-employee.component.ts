@@ -5,6 +5,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 import * as XLSX from 'xlsx';
+import { io } from "socket.io-client";
 
 @Component({
   selector: 'mt-employee',
@@ -19,13 +20,33 @@ export class MtEmployeeComponent implements OnInit {
   headList: Array<any> = [];
   displayedColumns: string[] = ['Nro', 'Codigo EJB', 'Nombre completo', 'Tipo Documento', 'Numero Documento', 'Tienda', 'Salario', 'Fecha Ingreso', 'Cargo', 'Estado', 'Accion'];
   selectedEmployee: Array<any> = [];
-
+  isLoadPDF: boolean = false;
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
+  token: any = localStorage.getItem('tn');
+  socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
   constructor(private service: ShareService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
+    const self = this;
     this.onEmpleadoList();
+
+    this.socket.on('sendUDPEmpleados', (response) => {
+      self.isLoadPDF = false;
+      console.log(response);
+      this.onEmpleadoList();
+      let notificationList = [{
+        isSuccess: true,
+        bodyNotification: "Empleados Actualizados."
+      }];
+      this.service.onNotification.emit(notificationList);
+    });
+  }
+
+  onUpdateEmpleado(){
+    const self = this;
+    self.isLoadPDF = true;
+    this.socket.emit('emitRRHHEmpleados');
   }
 
   onEmpleadoList() {
