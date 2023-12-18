@@ -923,7 +923,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     }
   ];
 
-  optionListDepartamento: Array<any> = [];
+
 
   optionListStandar: Array<any> = [
     {
@@ -1012,6 +1012,9 @@ export class MtFrmInscriptionComponent implements OnInit {
   dtprCboPaisNac: string = "";
   dtprCboTipodoc: string = "";
   dtprCboEstadoCivil: string = "";
+  dtprCboDepartamento: string = "";
+  dtprCboProvincia: string = "";
+  dtprCboDistrito_1: string = "";
   dtprCboSexo: string = "";
   dtprCboDistrito: string = "";
   dtprCboPension: string = "";
@@ -1062,6 +1065,111 @@ export class MtFrmInscriptionComponent implements OnInit {
   isViewAdds: boolean = false;
   token: string = "";
 
+  optionListDepartamento: Array<any> = [];
+  selectOptionDepartamento = {};
+  optionListProvincia: Array<any> = [];
+  selectOptionProvincia = {};
+  optionListDistrito: Array<any> = [];
+  selectOptionDistrito_1 = {};
+
+  dtprCboVia: string = "";
+  optionListVia: Array<any> = [
+    {
+      "key": "Avenida",
+      "value": "Avenida"
+    },
+    {
+      "key": "Jiron",
+      "value": "Jiron"
+    },
+    {
+      "key": "Calle",
+      "value": "Calle"
+    },
+    {
+      "key": "Alameda",
+      "value": "Alameda"
+    },
+    {
+      "key": "Malecon",
+      "value": "Malecon"
+    }
+  ];
+
+  selectOptionVia = {};
+
+  dtprCboZonaDomicilio: string = "";
+  optionListZonaDom: Array<any> = [
+    {
+      "key": "Urbanizacion",
+      "value": "Urbanizacion"
+    },
+    {
+      "key": "Pueblo Joven",
+      "value": "Pueblo Joven"
+    },
+    {
+      "key": "Unidad Vecinal",
+      "value": "Unidad Vecinal"
+    },
+    {
+      "key": "Conjunto Habitacional",
+      "value": "Conjunto Habitacional"
+    },
+    {
+      "key": "Asentamiento Humano",
+      "value": "Asentamiento Humano"
+    },
+    {
+      "key": "Cooperativa",
+      "value": "Cooperativa"
+    },
+    {
+      "key": "Residencial",
+      "value": "Residencial"
+    },
+    {
+      "key": "Zona Industrial",
+      "value": "Zona Industrial"
+    },
+    {
+      "key": "Grupo",
+      "value": "Grupo"
+    },
+    {
+      "key": "Caserio",
+      "value": "Caserio"
+    },
+    {
+      "key": "Fundo",
+      "value": "Fundo"
+    }
+  ];
+  selectOptionZonaDom = {};
+
+  dtprCboTipovivienda: string = "";
+  optionListTpVivienda: Array<any> = [
+    {
+      "key": "Propia",
+      "value": "Propia"
+    },
+    {
+      "key": "Alquilada",
+      "value": "Alquilada"
+    },
+    {
+      "key": "Familiar",
+      "value": "Familiar"
+    }
+  ];
+  selectOptionTpvivienda = {};
+  dtprNombreVia: string = "";
+  dtprNroDomicilio: string = "";
+  dtprNroDepartamento: string = "";
+  dtprManzana: string = "";
+  dtprLote: string = "";
+  dtprNombreZona: string = "";
+
   constructor(private store: StorageService, private service: ShareService, private nav: NavController, private navStart: ActivatedRoute) {
     let storeStep = this.store.getStore("mtStep") || 1;
     this.onNextStep(storeStep);
@@ -1075,7 +1183,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.onDepartamentoList();
   }
 
-  onDepartamentoList(){
+  onDepartamentoList(){    
     this.token = this.navStart.snapshot.paramMap.get('token') || '';
 
     let parms = {
@@ -1083,8 +1191,66 @@ export class MtFrmInscriptionComponent implements OnInit {
     };
 
     this.service.get(parms).then((response) => {
-    console.log(response);
+      let data = response || [];
+
+      data.filter((rs)=>{
+        this.optionListDepartamento.push({
+          key: (rs ||{}).ID_DEPARTAMENTO,
+          value: (rs ||{}).NOMBRE_DEPARTAMENTO
+        });
+      });
+
     });
+  }
+provinciaList = [];
+  onProvinciaList(value){
+    this.optionListProvincia = [];
+    let selected = this.optionListDepartamento.find((dp)=> (dp ||{}).value == value);
+    let parms_ = {
+      url: '/settings/service/lista/provincia',
+      parms:[
+        {key:'id_departamento',value:(selected ||{}).key}
+      ]
+    };
+
+    if((selected ||{}).key){
+      this.service.get(parms_).then((response) => {
+        let data = response || [];
+        this.provinciaList = data || [];
+        data.filter((rs)=>{
+          this.optionListProvincia.push({
+            key: (rs ||{}).ID_PROVINCIA,
+            value: (rs ||{}).NOMBRE_PROVINCIA
+          });
+        });
+      });
+    }
+
+  }
+
+  onDistrito(value){
+    this.optionListDistrito = [];
+    let selected = this.provinciaList.find((dp)=> (dp ||{}).NOMBRE_PROVINCIA == value);
+    let parms_ = {
+      url: '/settings/service/lista/distrito',
+      parms:[
+        {key:'id_provincia',value:(selected ||{}).ID_PROVINCIA},
+        {key:'id_departamento',value:(selected ||{}).ID_DEPARTAMENTO}
+      ]
+    };
+
+    if((selected ||{}).ID_PROVINCIA && (selected ||{}).ID_DEPARTAMENTO){
+      this.service.get(parms_).then((response) => {
+        let data = response || [];
+  
+        data.filter((rs)=>{
+          this.optionListDistrito.push({
+            key: (rs ||{}).ID_DISTRITO,
+            value: (rs ||{}).NOMBRE_DISTRITO
+          });
+        });
+      });
+    }
   }
 
   onValidateLink() {
@@ -1128,7 +1294,10 @@ export class MtFrmInscriptionComponent implements OnInit {
           "dtprCboTipodoc",
           "dtprCboEstadoCivil",
           "dtprCboSexo",
-          "dtprCboPension"
+          "dtprCboPension",
+          "dtprCboDepartamento",
+          "dtprCboProvincia",
+          "dtprCboDistrito_1"
         ];
 
         break;
@@ -1311,7 +1480,6 @@ export class MtFrmInscriptionComponent implements OnInit {
       this.service.onNotification.emit(notificationList);
     }
 
-
   }
 
   onClear(keyList) {
@@ -1343,6 +1511,15 @@ export class MtFrmInscriptionComponent implements OnInit {
     } else {
       this.requiredList.push(index);
     }
+
+    if(index == "dtprCboDepartamento"){
+      this.onProvinciaList((selectData || {}).value);
+    }
+
+    if(index == "dtprCboProvincia"){
+      this.onDistrito((selectData || {}).value)
+    }
+    
     this.onDataStorage();
   }
 
@@ -1367,7 +1544,19 @@ export class MtFrmInscriptionComponent implements OnInit {
         email: this.dtprEmail,
         tipo_pension: this.dtprCboPension,
         contacto_emergengia: this.dtprContactoEmg,
-        numero_emergencia: this.dtprNumEmerg
+        numero_emergencia: this.dtprNumEmerg,
+        departamento_ubigeo : this.dtprCboDepartamento,
+        provincia_ubigeo: this.dtprCboProvincia,
+        distrito_ubigeo: this.dtprCboDistrito_1,
+        tipo_via: this.dtprCboVia,
+        nombre_via: this.dtprNombreVia,
+        nro_domicilio: this.dtprNroDomicilio,
+        nro_departamento: this.dtprNroDepartamento,
+        ds_manzana: this.dtprManzana,
+        ds_lote: this.dtprLote,
+        tipo_zona: this.dtprCboZonaDomicilio,
+        nombre_zona: this.dtprNombreZona,
+        tipo_vivienda: this.dtprCboTipovivienda
       },
       experiencia_laboral: this.expLaboralList,
       formacion_academica: this.forAcademicaList,
@@ -1421,6 +1610,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.dtprCboTipodoc = (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc;
     this.dtprNumDoc = (datosPersonales || {}).num_documento || this.dtprNumDoc;
     this.dtprCboSexo = (datosPersonales || {}).sexo || this.dtprCboSexo;
+    this.dtprCboDepartamento = (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento;
     this.selectOptionSexo = {
       key: (datosPersonales || {}).sexo || this.dtprCboSexo,
       value: (datosPersonales || {}).sexo || this.dtprCboSexo
@@ -1442,6 +1632,21 @@ export class MtFrmInscriptionComponent implements OnInit {
       value: (datosPersonales || {}).tipo_pension || this.dtprCboPension
     };
 
+    this.selectOptionDepartamento = {
+      key: (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento,
+      value: (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento
+    }
+
+    this.selectOptionProvincia = {
+      key: (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia,
+      value: (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia
+    }
+
+    this.selectOptionDistrito_1 = {
+      key: (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1,
+      value: (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1
+    }
+
     this.dtprCboEstadoCivil = (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil;
     this.dtprCboDistrito = (datosPersonales || {}).distrito || this.dtprCboDistrito;
     this.dtprDireccion = (datosPersonales || {}).direccion || this.dtprDireccion;
@@ -1450,6 +1655,15 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.dtprCboPension = (datosPersonales || {}).tipo_pension || this.dtprCboPension;
     this.dtprContactoEmg = (datosPersonales || {}).contacto_emergengia || this.dtprContactoEmg;
     this.dtprNumEmerg = (datosPersonales || {}).numero_emergencia || this.dtprNumEmerg;
+    this.dtprCboVia = (datosPersonales || {}).tipo_via || this.dtprCboVia;
+    this.dtprNombreVia = (datosPersonales || {}).nombre_via || this.dtprNombreVia;
+    this.dtprNroDomicilio = (datosPersonales || {}).nro_domicilio || this.dtprNroDomicilio;
+    this.dtprNroDepartamento = (datosPersonales || {}).nro_departamento || this.dtprNroDepartamento;
+    this.dtprManzana = (datosPersonales || {}).ds_manzana || this.dtprManzana;
+    this.dtprLote = (datosPersonales || {}).ds_lote || this.dtprLote;
+    this.dtprCboZonaDomicilio = (datosPersonales || {}).tipo_zona || this.dtprCboZonaDomicilio;
+    this.dtprNombreZona = (datosPersonales || {}).nombre_zona || this.dtprNombreZona;
+    this.dtprCboTipovivienda = (datosPersonales || {}).tipo_vivienda || this.dtprCboTipovivienda;
 
     this.expLaboralList = experienciaLaboral || this.expLaboralList;
     this.forAcademicaList = formacionAcademica || this.forAcademicaList;

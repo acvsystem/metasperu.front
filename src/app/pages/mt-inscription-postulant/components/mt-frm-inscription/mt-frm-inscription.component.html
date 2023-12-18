@@ -129,64 +129,6 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-              <mt-select
-              id="dtprCboDepartamento"
-              placeHolder="Departamento"
-              [optionList]="optionListDepartamento"
-              (changeSelected)="onChangeSelect($event)"
-              [selectOption]="selectOptionDepartamento"
-              [isRequired]="showError && requiredList.includes('dtprCboDepartamento')"
-              ></mt-select>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-              <mt-input
-              id="dtprDireccion"
-              label="Direccion"
-              placeholder="Ingrese su Distrito"
-              value="{{ dtprDireccion }}"
-              (afterChange)="onChangeInput($event)"
-              type="text"
-              [isRequired]="showError && requiredList.includes('dtprDireccion')"
-            ></mt-input>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-              <mt-input
-              id="dtprDireccion"
-              label="Direccion"
-              placeholder="Ingrese su Provincia"
-              value="{{ dtprDireccion }}"
-              (afterChange)="onChangeInput($event)"
-              type="text"
-              [isRequired]="showError && requiredList.includes('dtprDireccion')"
-            ></mt-input>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-              <mt-input
-              id="dtprDireccion"
-              label="Direccion"
-              placeholder="Ingrese su Departamento"
-              value="{{ dtprDireccion }}"
-              (afterChange)="onChangeInput($event)"
-              type="text"
-              [isRequired]="showError && requiredList.includes('dtprDireccion')"
-            ></mt-input>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <mt-input
-              id="dtprReferencia"
-              label="Referencia"
-              placeholder="Ingrese referencia de direccion"
-              value="{{ dtprReferencia }}"
-              (afterChange)="onChangeInput($event)"
-              type="text"
-              [isRequired]="showError && requiredList.includes('dtprReferencia')"
-            ></mt-input>
-            </ion-col>
-          </ion-row>
-          <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <mt-input
               id="dtprEmail"
@@ -250,6 +192,162 @@
             ></mt-input>
             </ion-col>
           </ion-row>
+          <br>
+          <ion-row>
+            <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <div class="container-title">
+                <label>Datos Domiciliarios</label>
+              </div>
+            </ion-col>
+          </ion-row>
+          <br>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-select
+              id="dtprCboVia"
+              placeHolder="Tipo de Via"
+              [optionList]="optionListVia"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionDepartamento"
+              [isRequired]="showError && requiredList.includes('dtprCboDepartamento')"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="8" sizeLg="8">
+              <mt-input
+              id="dtprNombreVia"
+              label="Nombre Via"
+              placeholder="Nombre (calle/jiron/pasaje/etc)"
+              value="{{ dtprNombreVia }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprNombreVia')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+         <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+              <mt-input
+              id="dtprNroDomicilio"
+              label="Nº de Domicilio"
+              placeholder="Numero de Domicilio"
+              value="{{ dtprNroDomicilio }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprNroDomicilio')"
+            ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+              <mt-input
+              id="dtprNroDepartamento"
+              label="Nº de Departamento"
+              placeholder="Numero de Departamento"
+              value="{{ dtprNroDepartamento }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprNroDepartamento')"
+            ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+              <mt-input
+              id="dtprManzana"
+              label="Manzana"
+              placeholder="Manzana"
+              value="{{ dtprManzana }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprManzana')"
+            ></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+              <mt-input
+              id="dtprLote"
+              label="Lote"
+              placeholder="Lote"
+              value="{{ dtprLote }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprLote')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-select
+              id="dtprCboZonaDomicilio"
+              placeHolder="Zona del Domicilio"
+              [optionList]="optionListZonaDom"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionZonaDom"
+              [isRequired]="showError && requiredList.includes('dtprCboZonaDomicilio')"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="8" sizeLg="8">
+              <mt-input
+              id="dtprNombreZona"
+              label="Nombre de la Zona"
+              placeholder="Nombre de la Zona"
+              value="{{ dtprNombreZona }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprNombreZona')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-select
+              id="dtprCboDepartamento"
+              placeHolder="Departamento"
+              [optionList]="optionListDepartamento"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionDepartamento"
+              
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-select
+              id="dtprCboProvincia"
+              placeHolder="Provincia"
+              [optionList]="optionListProvincia"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionProvincia"
+              [isRequired]="showError && requiredList.includes('dtprCboProvincia')"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-select
+              id="dtprCboDistrito_1"
+              placeHolder="Distrito"
+              [optionList]="optionListDistrito"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionDistrito_1"
+              [isRequired]="showError && requiredList.includes('dtprCboDistrito_1')"
+              ></mt-select>
+            </ion-col>
+          </ion-row>
+       <!--  <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-select
+              id="dtprCboTipovivienda"
+              placeHolder="Tipo de Vivienda"
+              [optionList]="optionListTpVivienda"
+              (changeSelected)="onChangeSelect($event)"
+              [selectOption]="selectOptionTpvivienda"
+              [isRequired]="showError && requiredList.includes('dtprCboTipovivienda')"
+              ></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="8" sizeLg="8">
+              <mt-input
+              id="dtprReferencia"
+              label="Referencia"
+              placeholder="Ingrese referencia de direccion"
+              value="{{ dtprReferencia }}"
+              (afterChange)="onChangeInput($event)"
+              type="text"
+              [isRequired]="showError && requiredList.includes('dtprReferencia')"
+            ></mt-input>
+            </ion-col>
+          </ion-row>-->
         </section>
   
         <section id="experiencia-laboral" *ngIf="stepSelected == 2">
