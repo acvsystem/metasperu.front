@@ -1275,7 +1275,7 @@ provinciaList = [];
     if (step == null || typeof step == 'undefined') {
       step = this.stepSelected;
     }
-
+    console.log(this.stepSelected);
     switch (String(step)) {
       case '1':
         fieldsToValidate = [
@@ -1284,7 +1284,6 @@ provinciaList = [];
           "dtprApMaterno",
           "dtprFecNac",
           "dtprNumDoc",
-          "dtprDireccion",
           "dtprReferencia",
           "dtprEmail",
           "dtprCelular",
@@ -1316,20 +1315,26 @@ provinciaList = [];
   }
 
   onNextStep(nroStep) {
-    this.requiredList = this.getRequiredByStep(this.stepSelected);
+    const self = this;
+    self.requiredList = self.getRequiredByStep(self.stepSelected);
+    
     this.onStoreOfData();
-    if (this.requiredList.length && this.stepSelected != nroStep) {
-      this.showError = true;
-    }
 
-    if (!this.requiredList.length) {
-      this.isComplete = false;
-      this.stepSelected = nroStep;
-      this.store.setStore("mtStep", this.stepSelected);
-      this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
-      this.onDataStorage();
-      this.onDataRegister();
-    }
+    setTimeout(()=>{
+      if (self.requiredList.length && self.stepSelected != nroStep) {
+        self.showError = true;
+      }
+  
+      if (!self.requiredList.length) {
+        console.log(self.requiredList);
+        this.isComplete = false;
+        this.stepSelected = nroStep;
+        this.store.setStore("mtStep", this.stepSelected);
+        this.buttonNameForm = this.stepSelected == 2 ? "Agregar Exp. Laboral" : this.stepSelected == 3 ? "Agregar form. Acad." : this.stepSelected == 4 ? "Agregar derec. Hab." : "";
+        this.onDataStorage();
+        this.onDataRegister();
+      }
+    },5000);
   }
 
   onAddExpLab() {
@@ -1590,6 +1595,7 @@ provinciaList = [];
   }
 
   onStoreOfData() {
+    const self = this;
     let dataStore = this.store.getStore('inscription');
 
     let datosPersonales = ((dataStore || [])[0] || {}).datos_personales || {};
@@ -1611,6 +1617,8 @@ provinciaList = [];
     this.dtprNumDoc = (datosPersonales || {}).num_documento || this.dtprNumDoc;
     this.dtprCboSexo = (datosPersonales || {}).sexo || this.dtprCboSexo;
     this.dtprCboDepartamento = (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento;
+    this.dtprCboProvincia = (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia;
+    this.dtprCboDistrito_1 = (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1;
     this.selectOptionSexo = {
       key: (datosPersonales || {}).sexo || this.dtprCboSexo,
       value: (datosPersonales || {}).sexo || this.dtprCboSexo
@@ -1678,8 +1686,10 @@ provinciaList = [];
     this.dtslAntecedentePen = (datosSalud || {}).antecedentes_penales || this.dtslAntecedentePen;
 
     this.requiredList.filter((index) => {
+      
       if (this[index]) {
-        this.requiredList = (this.requiredList || []).filter(required => required != index);
+        self.requiredList = (self.requiredList || []).filter(required => required != index);
+        console.log(self.requiredList);
       }
     });
 

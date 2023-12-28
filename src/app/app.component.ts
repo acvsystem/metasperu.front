@@ -22,7 +22,7 @@ export class AppComponent {
   menuUser: any = [];
   isSubMenuRrhh: boolean = false;
   isSubMenuSistemas: boolean = false;
-
+  isStart = 0;
   constructor(
     private httpService: HttpService,
     private router: Router,
@@ -32,7 +32,9 @@ export class AppComponent {
     private menu: MenuController
   ) {
     this.httpService.eventShowLoading.subscribe((response) => {
-      this.isShowLoading = response;
+      setTimeout(()=>{
+        this.isShowLoading = response;
+      },1000)
     });
 
     this.service.onProfileUser.subscribe((profile) => {
