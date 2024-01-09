@@ -1183,7 +1183,7 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.onDepartamentoList();
   }
 
-  onDepartamentoList(){    
+  onDepartamentoList() {
     this.token = this.navStart.snapshot.paramMap.get('token') || '';
 
     let parms = {
@@ -1193,34 +1193,34 @@ export class MtFrmInscriptionComponent implements OnInit {
     this.service.get(parms).then((response) => {
       let data = response || [];
 
-      data.filter((rs)=>{
+      data.filter((rs) => {
         this.optionListDepartamento.push({
-          key: (rs ||{}).ID_DEPARTAMENTO,
-          value: (rs ||{}).NOMBRE_DEPARTAMENTO
+          key: (rs || {}).ID_DEPARTAMENTO,
+          value: (rs || {}).NOMBRE_DEPARTAMENTO
         });
       });
 
     });
   }
-provinciaList = [];
-  onProvinciaList(value){
+  provinciaList = [];
+  onProvinciaList(value) {
     this.optionListProvincia = [];
-    let selected = this.optionListDepartamento.find((dp)=> (dp ||{}).value == value);
+    let selected = this.optionListDepartamento.find((dp) => (dp || {}).value == value);
     let parms_ = {
       url: '/settings/service/lista/provincia',
-      parms:[
-        {key:'id_departamento',value:(selected ||{}).key}
+      parms: [
+        { key: 'id_departamento', value: (selected || {}).key }
       ]
     };
 
-    if((selected ||{}).key){
+    if ((selected || {}).key) {
       this.service.get(parms_).then((response) => {
         let data = response || [];
         this.provinciaList = data || [];
-        data.filter((rs)=>{
+        data.filter((rs) => {
           this.optionListProvincia.push({
-            key: (rs ||{}).ID_PROVINCIA,
-            value: (rs ||{}).NOMBRE_PROVINCIA
+            key: (rs || {}).ID_PROVINCIA,
+            value: (rs || {}).NOMBRE_PROVINCIA
           });
         });
       });
@@ -1228,25 +1228,25 @@ provinciaList = [];
 
   }
 
-  onDistrito(value){
+  onDistrito(value) {
     this.optionListDistrito = [];
-    let selected = this.provinciaList.find((dp)=> (dp ||{}).NOMBRE_PROVINCIA == value);
+    let selected = this.provinciaList.find((dp) => (dp || {}).NOMBRE_PROVINCIA == value);
     let parms_ = {
       url: '/settings/service/lista/distrito',
-      parms:[
-        {key:'id_provincia',value:(selected ||{}).ID_PROVINCIA},
-        {key:'id_departamento',value:(selected ||{}).ID_DEPARTAMENTO}
+      parms: [
+        { key: 'id_provincia', value: (selected || {}).ID_PROVINCIA },
+        { key: 'id_departamento', value: (selected || {}).ID_DEPARTAMENTO }
       ]
     };
 
-    if((selected ||{}).ID_PROVINCIA && (selected ||{}).ID_DEPARTAMENTO){
+    if ((selected || {}).ID_PROVINCIA && (selected || {}).ID_DEPARTAMENTO) {
       this.service.get(parms_).then((response) => {
         let data = response || [];
-  
-        data.filter((rs)=>{
+
+        data.filter((rs) => {
           this.optionListDistrito.push({
-            key: (rs ||{}).ID_DISTRITO,
-            value: (rs ||{}).NOMBRE_DISTRITO
+            key: (rs || {}).ID_DISTRITO,
+            value: (rs || {}).NOMBRE_DISTRITO
           });
         });
       });
@@ -1317,16 +1317,15 @@ provinciaList = [];
   onNextStep(nroStep) {
     const self = this;
     self.requiredList = self.getRequiredByStep(self.stepSelected);
-    
+
     this.onStoreOfData();
 
-    setTimeout(()=>{
+   setTimeout(() => {
       if (self.requiredList.length && self.stepSelected != nroStep) {
         self.showError = true;
       }
-  
+
       if (!self.requiredList.length) {
-        console.log(self.requiredList);
         this.isComplete = false;
         this.stepSelected = nroStep;
         this.store.setStore("mtStep", this.stepSelected);
@@ -1334,7 +1333,7 @@ provinciaList = [];
         this.onDataStorage();
         this.onDataRegister();
       }
-    },5000);
+    }, 500);
   }
 
   onAddExpLab() {
@@ -1457,7 +1456,7 @@ provinciaList = [];
     array = (self[contentName].length) ? self[contentName] : [];
 
     (dataKeyList || []).map((obj): any => {
-      
+
       if (this[(obj || {}).property] || !(obj || {}).required) {
         dataList[(obj || {}).key] = this[(obj || {}).property];
       } else {
@@ -1468,7 +1467,7 @@ provinciaList = [];
     if (!notValueList.length) {
       (array || []).push(dataList);
       self[contentName] = array;
-      
+
       let notificationList = [{
         isSuccess: true,
         bodyNotification: "Registro agregado correctamente."
@@ -1517,14 +1516,14 @@ provinciaList = [];
       this.requiredList.push(index);
     }
 
-    if(index == "dtprCboDepartamento"){
+    if (index == "dtprCboDepartamento") {
       this.onProvinciaList((selectData || {}).value);
     }
 
-    if(index == "dtprCboProvincia"){
+    if (index == "dtprCboProvincia") {
       this.onDistrito((selectData || {}).value)
     }
-    
+
     this.onDataStorage();
   }
 
@@ -1550,7 +1549,7 @@ provinciaList = [];
         tipo_pension: this.dtprCboPension,
         contacto_emergengia: this.dtprContactoEmg,
         numero_emergencia: this.dtprNumEmerg,
-        departamento_ubigeo : this.dtprCboDepartamento,
+        departamento_ubigeo: this.dtprCboDepartamento,
         provincia_ubigeo: this.dtprCboProvincia,
         distrito_ubigeo: this.dtprCboDistrito_1,
         tipo_via: this.dtprCboVia,
@@ -1590,108 +1589,119 @@ provinciaList = [];
     };
 
     this.service.post(parms).then((response) => {
-      
+
     });
   }
 
   onStoreOfData() {
-    const self = this;
-    let dataStore = this.store.getStore('inscription');
 
-    let datosPersonales = ((dataStore || [])[0] || {}).datos_personales || {};
-    let experienciaLaboral = ((dataStore || [])[0] || {}).experiencia_laboral || {};
-    let formacionAcademica = ((dataStore || [])[0] || {}).formacion_academica || {};
-    let derechosHabiente = ((dataStore || [])[0] || {}).derecho_habiente || {};
-    let datosSalud = ((dataStore || [])[0] || {}).datos_salud || {};
+    return new Promise((resolve, reject) => {
+      const self = this;
+      let dataStore = this.store.getStore('inscription');
 
-    let optionPais: any = this.optionListPais.filter((pais) => pais.value == (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac)
+      let datosPersonales = ((dataStore || [])[0] || {}).datos_personales || {};
+      let experienciaLaboral = ((dataStore || [])[0] || {}).experiencia_laboral || {};
+      let formacionAcademica = ((dataStore || [])[0] || {}).formacion_academica || {};
+      let derechosHabiente = ((dataStore || [])[0] || {}).derecho_habiente || {};
+      let datosSalud = ((dataStore || [])[0] || {}).datos_salud || {};
+
+      let optionPais: any = this.optionListPais.filter((pais) => pais.value == (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac)
 
 
-    this.dtprNombre = (datosPersonales || {}).nombres || this.dtprNombre;
-    this.dtprCelular = (datosPersonales || {}).nro_celular || this.dtprCelular;
-    this.dtprApPaterno = (datosPersonales || {}).ap_paterno || this.dtprApPaterno;
-    this.dtprApMaterno = (datosPersonales || {}).ap_materno || this.dtprApMaterno;
-    this.dtprFecNac = (datosPersonales || {}).fec_nacimiento || this.dtprFecNac;
-    this.dtprCboPaisNac = (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac;
-    this.dtprCboTipodoc = (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc;
-    this.dtprNumDoc = (datosPersonales || {}).num_documento || this.dtprNumDoc;
-    this.dtprCboSexo = (datosPersonales || {}).sexo || this.dtprCboSexo;
-    this.dtprCboDepartamento = (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento;
-    this.dtprCboProvincia = (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia;
-    this.dtprCboDistrito_1 = (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1;
-    this.selectOptionSexo = {
-      key: (datosPersonales || {}).sexo || this.dtprCboSexo,
-      value: (datosPersonales || {}).sexo || this.dtprCboSexo
-    };
-    this.selectOptionPaisNac = {
-      key: (optionPais || {}).key,
-      value: (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac
-    };
-    this.selectOptionTipodoc = {
-      key: (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc,
-      value: (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc
-    };
-    this.selectOptionEstadoCivil = {
-      key: (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil,
-      value: (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil
-    };
-    this.selectOptionPension = {
-      key: (datosPersonales || {}).tipo_pension || this.dtprCboPension,
-      value: (datosPersonales || {}).tipo_pension || this.dtprCboPension
-    };
+      this.dtprNombre = (datosPersonales || {}).nombres || this.dtprNombre;
+      this.dtprCelular = (datosPersonales || {}).nro_celular || this.dtprCelular;
+      this.dtprApPaterno = (datosPersonales || {}).ap_paterno || this.dtprApPaterno;
+      this.dtprApMaterno = (datosPersonales || {}).ap_materno || this.dtprApMaterno;
+      this.dtprFecNac = (datosPersonales || {}).fec_nacimiento || this.dtprFecNac;
+      this.dtprCboPaisNac = (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac;
+      this.dtprCboTipodoc = (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc;
+      this.dtprNumDoc = (datosPersonales || {}).num_documento || this.dtprNumDoc;
+      this.dtprCboSexo = (datosPersonales || {}).sexo || this.dtprCboSexo;
+      this.dtprCboDepartamento = (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento;
+      this.dtprCboProvincia = (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia;
+      this.dtprCboDistrito_1 = (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1;
+      this.selectOptionSexo = {
+        key: (datosPersonales || {}).sexo || this.dtprCboSexo,
+        value: (datosPersonales || {}).sexo || this.dtprCboSexo
+      };
+      this.selectOptionPaisNac = {
+        key: (optionPais || {}).key,
+        value: (datosPersonales || {}).pais_nacimiento || this.dtprCboPaisNac
+      };
+      this.selectOptionTipodoc = {
+        key: (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc,
+        value: (datosPersonales || {}).tipo_documento || this.dtprCboTipodoc
+      };
+      this.selectOptionEstadoCivil = {
+        key: (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil,
+        value: (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil
+      };
+      this.selectOptionPension = {
+        key: (datosPersonales || {}).tipo_pension || this.dtprCboPension,
+        value: (datosPersonales || {}).tipo_pension || this.dtprCboPension
+      };
 
-    this.selectOptionDepartamento = {
-      key: (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento,
-      value: (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento
-    }
-
-    this.selectOptionProvincia = {
-      key: (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia,
-      value: (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia
-    }
-
-    this.selectOptionDistrito_1 = {
-      key: (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1,
-      value: (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1
-    }
-
-    this.dtprCboEstadoCivil = (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil;
-    this.dtprCboDistrito = (datosPersonales || {}).distrito || this.dtprCboDistrito;
-    this.dtprDireccion = (datosPersonales || {}).direccion || this.dtprDireccion;
-    this.dtprReferencia = (datosPersonales || {}).referencia || this.dtprReferencia;
-    this.dtprEmail = (datosPersonales || {}).email || this.dtprEmail;
-    this.dtprCboPension = (datosPersonales || {}).tipo_pension || this.dtprCboPension;
-    this.dtprContactoEmg = (datosPersonales || {}).contacto_emergengia || this.dtprContactoEmg;
-    this.dtprNumEmerg = (datosPersonales || {}).numero_emergencia || this.dtprNumEmerg;
-    this.dtprCboVia = (datosPersonales || {}).tipo_via || this.dtprCboVia;
-    this.dtprNombreVia = (datosPersonales || {}).nombre_via || this.dtprNombreVia;
-    this.dtprNroDomicilio = (datosPersonales || {}).nro_domicilio || this.dtprNroDomicilio;
-    this.dtprNroDepartamento = (datosPersonales || {}).nro_departamento || this.dtprNroDepartamento;
-    this.dtprManzana = (datosPersonales || {}).ds_manzana || this.dtprManzana;
-    this.dtprLote = (datosPersonales || {}).ds_lote || this.dtprLote;
-    this.dtprCboZonaDomicilio = (datosPersonales || {}).tipo_zona || this.dtprCboZonaDomicilio;
-    this.dtprNombreZona = (datosPersonales || {}).nombre_zona || this.dtprNombreZona;
-    this.dtprCboTipovivienda = (datosPersonales || {}).tipo_vivienda || this.dtprCboTipovivienda;
-
-    this.expLaboralList = experienciaLaboral || this.expLaboralList;
-    this.forAcademicaList = formacionAcademica || this.forAcademicaList;
-    this.drHabientesList = derechosHabiente || this.drHabientesList;
-
-    this.dtslAlergia = (datosSalud || {}).alergias || this.dtslAlergia;
-    this.dtslEnfermedad = (datosSalud || {}).enfermedad || this.dtslEnfermedad;
-    this.dtslMedicamento = (datosSalud || {}).medicamento || this.dtslMedicamento;
-    this.dtslGrupoSanguineo = (datosSalud || {}).grupo_sanguineo || this.dtslGrupoSanguineo;
-    this.dtslAntecedentesPol = (datosSalud || {}).antecedentes_policiales || this.dtslAntecedentesPol;
-    this.dtslAntecedenteJud = (datosSalud || {}).antecedentes_judiciales || this.dtslAntecedenteJud;
-    this.dtslAntecedentePen = (datosSalud || {}).antecedentes_penales || this.dtslAntecedentePen;
-
-    this.requiredList.filter((index) => {
-      
-      if (this[index]) {
-        self.requiredList = (self.requiredList || []).filter(required => required != index);
-        console.log(self.requiredList);
+      this.selectOptionDepartamento = {
+        key: (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento,
+        value: (datosPersonales || {}).departamento_ubigeo || this.dtprCboDepartamento
       }
+
+      this.selectOptionProvincia = {
+        key: (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia,
+        value: (datosPersonales || {}).provincia_ubigeo || this.dtprCboProvincia
+      }
+
+      this.selectOptionDistrito_1 = {
+        key: (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1,
+        value: (datosPersonales || {}).distrito_ubigeo || this.dtprCboDistrito_1
+      }
+
+      this.dtprCboEstadoCivil = (datosPersonales || {}).estado_civil || this.dtprCboEstadoCivil;
+      this.dtprCboDistrito = (datosPersonales || {}).distrito || this.dtprCboDistrito;
+      this.dtprDireccion = (datosPersonales || {}).direccion || this.dtprDireccion;
+      this.dtprReferencia = (datosPersonales || {}).referencia || this.dtprReferencia;
+      this.dtprEmail = (datosPersonales || {}).email || this.dtprEmail;
+      this.dtprCboPension = (datosPersonales || {}).tipo_pension || this.dtprCboPension;
+      this.dtprContactoEmg = (datosPersonales || {}).contacto_emergengia || this.dtprContactoEmg;
+      this.dtprNumEmerg = (datosPersonales || {}).numero_emergencia || this.dtprNumEmerg;
+      this.dtprCboVia = (datosPersonales || {}).tipo_via || this.dtprCboVia;
+      this.dtprNombreVia = (datosPersonales || {}).nombre_via || this.dtprNombreVia;
+      this.dtprNroDomicilio = (datosPersonales || {}).nro_domicilio || this.dtprNroDomicilio;
+      this.dtprNroDepartamento = (datosPersonales || {}).nro_departamento || this.dtprNroDepartamento;
+      this.dtprManzana = (datosPersonales || {}).ds_manzana || this.dtprManzana;
+      this.dtprLote = (datosPersonales || {}).ds_lote || this.dtprLote;
+      this.dtprCboZonaDomicilio = (datosPersonales || {}).tipo_zona || this.dtprCboZonaDomicilio;
+      this.dtprNombreZona = (datosPersonales || {}).nombre_zona || this.dtprNombreZona;
+      this.dtprCboTipovivienda = (datosPersonales || {}).tipo_vivienda || this.dtprCboTipovivienda;
+
+      this.expLaboralList = experienciaLaboral || this.expLaboralList;
+      this.forAcademicaList = formacionAcademica || this.forAcademicaList;
+      this.drHabientesList = derechosHabiente || this.drHabientesList;
+
+      this.dtslAlergia = (datosSalud || {}).alergias || this.dtslAlergia;
+      this.dtslEnfermedad = (datosSalud || {}).enfermedad || this.dtslEnfermedad;
+      this.dtslMedicamento = (datosSalud || {}).medicamento || this.dtslMedicamento;
+      this.dtslGrupoSanguineo = (datosSalud || {}).grupo_sanguineo || this.dtslGrupoSanguineo;
+      this.dtslAntecedentesPol = (datosSalud || {}).antecedentes_policiales || this.dtslAntecedentesPol;
+      this.dtslAntecedenteJud = (datosSalud || {}).antecedentes_judiciales || this.dtslAntecedenteJud;
+      this.dtslAntecedentePen = (datosSalud || {}).antecedentes_penales || this.dtslAntecedentePen;
+
+      this.requiredList.filter((index) => {
+
+        if (this[index]) {
+          self.requiredList = (self.requiredList || []).filter(required => required != index);
+        }
+      });
+
+      if (this.requiredList.length) {
+        resolve(this.requiredList);
+      }
+
+      
+
     });
+
+
 
   }
 

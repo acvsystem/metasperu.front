@@ -1,0 +1,34 @@
+<div class="content">
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
+          <table class="table table-bordered table-responsive-sm">
+            <thead>
+              <tr>
+                <th class="columHead" *ngFor="let columHead of headList;let i = index">
+                  <span>{{columHead.value}}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let columBody of dataPaginationList;let index = index">
+                <td class="columBody">{{index + 1}}</td>
+                <td class="columBody">{{columBody.nombre_via}}</td>
+                <td class="columBody">{{columBody.nro_domicilio}}</td>
+                <td class="columBody">{{columBody.nro_departamento}}</td>
+                <td class="columBody">{{columBody.desc_manzana}}</td>
+                <td class="columBody">{{columBody.desc_lote}}</td>
+                <td class="columBody">{{columBody.tipo_zona}}</td>
+                <td class="columBody">{{columBody.nombre_zona}}</td>
+                <td class="columBody">{{columBody.departamento_ubigeo}}</td>
+                <td class="columBody">{{columBody.provincia_ubigeo}}</td>
+                <td class="columBody">{{columBody.distrito_ubigeo}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</div>

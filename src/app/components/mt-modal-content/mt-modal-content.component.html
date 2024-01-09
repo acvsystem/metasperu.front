@@ -22,6 +22,7 @@
         <mt-frm-add-employee [dataEmployeeList]="dataEmployeeList" (onResponse)="onResponseComponent($event)" *ngIf="bodyContent == 'mt-frm-add-employee'"></mt-frm-add-employee>
         <mt-view-asistencia [dataAsistencia]="dataAsistencia" *ngIf="bodyContent == 'mt-view-asistencia'"></mt-view-asistencia>
         <mt-menu-crud *ngIf="bodyContent == 'mt-menu-crud'"></mt-menu-crud>
+        <mt-frm-address-postulant [data]="dataIn" *ngIf="bodyContent == 'mt-frm-address-postulant'"></mt-frm-address-postulant>
       </div>
     </ion-col>
    <!--<ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">

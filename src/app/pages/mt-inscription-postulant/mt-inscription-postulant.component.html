@@ -234,7 +234,7 @@
   <div *ngFor="let dtp of onePostulantData">
     <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
       <label style="line-height: 12.5px;">
-          Yo, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado(a) con DNI {{dtp.num_documento}}, en pleno ejercicio de mis derechos ciudadanos y de conformidad con lo dispuesto en la Ley N° 28882 de Simplificación de la Certificación Domiciliaria, DECLARO BAJO JURAMENTO que mi domicilio actual se encuentra ubicado en Calle Huamachuco N°305, distrito de Socabaya, provincia de Lima, departamento de Arequipa.
+          Yo, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado(a) con DNI {{dtp.num_documento}}, en pleno ejercicio de mis derechos ciudadanos y de conformidad con lo dispuesto en la Ley N° 28882 de Simplificación de la Certificación Domiciliaria, DECLARO BAJO JURAMENTO que mi domicilio actual se encuentra ubicado en {{dtp.nro_domicilio}} {{dtp.nro_departamento}} {{dtp.desc_manzana}} {{dtp.desc_lote}} {{dtp.tipo_zona}} {{dtp.nombre_zona}}, distrito de {{dtp.distrito_ubigeo}}, provincia de {{dtp.provincia_ubigeo}}, departamento de {{dtp.departamento_ubigeo}}.
       </label>
     </div>
     <div style="width: 450px;font-size: 10px;text-align: justify;height: 88px;margin: 0 auto;">
@@ -448,7 +448,7 @@
   </div>
   <div style="width: 450px;font-size: 10px;text-align: justify;height: 53px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
     <label style="line-height: 12.5px;">
-      El que suscribe, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado con DNI {{dtp.num_documento}}, con domicilio en Calle Huamachuco N°305, Distrito de Socabaya, Provincia de Arequipa, Departamento de Lima, declaro y autorizo lo siguiente:  </label>
+      El que suscribe, {{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}, identificado con DNI {{dtp.num_documento}}, con domicilio en {{dtp.nro_domicilio}} {{dtp.nro_departamento}} {{dtp.desc_manzana}} {{dtp.desc_lote}} {{dtp.tipo_zona}} {{dtp.nombre_zona}}, distrito de {{dtp.distrito_ubigeo}}, provincia de {{dtp.provincia_ubigeo}}, departamento de {{dtp.departamento_ubigeo}}, declaro y autorizo lo siguiente:  </label>
   </div>
   <div style="width: 450px;font-size: 10px;text-align: justify;height: 153px;margin: 0 auto;">
     <label style="line-height: 12.5px;">
@@ -609,10 +609,11 @@
         <b style="font-size: 10px;text-decoration: underline;">CONFLICTO DE INTERESES</b>
     </div>
     <div style="width: 450px;font-size: 10px;text-align: justify;height: 43px;margin: 0 auto;" *ngFor="let dtp of onePostulantData">
-      <label style="line-height: 12.5px;">
-        Yo <b>{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</b>, identificado(a) con <b>DNI N° {{dtp.num_documento}}</b>, con domicilio en <b>Calle Huamachuco N°305</b>, distrito de Socabaya, provincia y departamento de Lima, declaro que:
+      <label style="line-height: 12.5px;">{{dtp.nro_domicilio}} {{dtp.nro_departamento}} {{dtp.desc_manzana}} {{dtp.desc_lote}} {{dtp.tipo_zona}} {{dtp.nombre_zona}}, distrito de {{dtp.distrito_ubigeo}}, provincia de {{dtp.provincia_ubigeo}}, departamento de {{dtp.departamento_ubigeo}}
+        Yo <b>{{dtp.ap_paterno}} {{dtp.ap_materno}} {{dtp.nombres}}</b>, identificado(a) con <b>DNI N° {{dtp.num_documento}}</b>, con domicilio en <b>{{dtp.nro_domicilio}} {{dtp.nro_departamento}} {{dtp.desc_manzana}} {{dtp.desc_lote}} {{dtp.tipo_zona}} {{dtp.nombre_zona}}</b>, distrito de {{dtp.distrito_ubigeo}}, provincia de {{dtp.provincia_ubigeo}} y departamento de {{dtp.departamento_ubigeo}}, declaro que:
       </label>
     </div>
+    <br>
     <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
       <div style="width: 31px;height: 31px;border: 1px solid #2f2f2f;display: inline-block;margin-top: 6px;">
       </div>
@@ -622,7 +623,7 @@
         </label>
       </div>
     </div>
-    
+    <br>
     <div style="width: 450px;font-size: 10px;text-align: justify;height: 57px;margin: 0 auto;display: flex;">
       <div style="width: 31px;height: 31px;border: 1px solid #2f2f2f;display: inline-block;margin-top: 3px;">
       </div>
@@ -632,7 +633,7 @@
         </label>
       </div>
     </div>
-  
+  <br>
     <div style="width: 450px;font-size: 10px;text-align: justify;height: 348px;margin: 0 auto;">
       <label style="line-height: 12.5px;">
         Así mismo, reconozco que brindar información falsa y/o la omisión de esta se considera una falta grave, pudiendo ser causal de despido, sin perjuicio de las acciones civiles y/o penales a las que hubiera lugar.
@@ -712,6 +713,9 @@
                       </button>
                       <button mat-flat-button color="primary" (click)="openModalChangeEstado(element)">
                         <i class="fa fa-exchange" aria-hidden="true"></i>
+                      </button>
+                      <button mat-flat-button color="primary" (click)="openModalDireccion(element)">
+                        <i class="fa fa-address-card" aria-hidden="true"></i>
                       </button>
                     </td>
                   </ng-container>

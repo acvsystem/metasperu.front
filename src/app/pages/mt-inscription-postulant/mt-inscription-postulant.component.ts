@@ -211,6 +211,21 @@ export class MtInscriptionPostulantComponent implements OnInit {
     modal.present();
   }
 
+  async openModalDireccion(ev) {
+    let modal = await this.modalCtrl.create({
+      component: MtModalContentComponent,
+      componentProps: {
+        nameSection: 'addressPostulant',
+        title: 'Direccion de postulante',
+        bodyContent: 'mt-frm-address-postulant',
+        dataIn: ev,
+      },
+      cssClass: 'mt-modal',
+    });
+
+    modal.present();
+  }
+
   async onPDF(keyPostulant) {
     let dataPdf = this.dataPostulanteList.filter((dp) => dp.id == keyPostulant);
 
@@ -737,6 +752,15 @@ export class MtInscriptionPostulantComponent implements OnInit {
     const self = this;
     self.isLoadPDF = true;
     self.onePostulantExpLAb = [];
+    let datosHabientes: Array<any> = [];
+    let datosPersonales: Array<any> = [];
+    let saludAntecedentes: Array<any> = [];
+    self.onePostulantData = [];
+    self.onPostulantFormEst = [];
+    self.arrdDtosHabientes = [];
+    self.onePostulantExpLAb = [];
+    self.arrFrUniv = [];
+    self.arrFrTecnica = [];
     let dataPdf = this.dataPostulanteList.filter((dp) => dp.id == keyPostulant);
     let arrExpLab = [];
     let arrFrAcademica = [];
@@ -765,10 +789,6 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     arrExpLab = ((dataPdf || [])[0] || {}).experiencia_laboral;
     arrFrAcademica = ((dataPdf || [])[0] || {}).formacion_academica;
-
-    let datosHabientes: Array<any> = [];
-    let datosPersonales: Array<any> = [];
-    let saludAntecedentes: Array<any> = [];
 
     datosHabientes = ((dataPdf || [])[0] || {}).derecho_habiente;
     datosPersonales = ((dataPdf || [])[0] || {}).datos_personales;
@@ -847,8 +867,9 @@ export class MtInscriptionPostulantComponent implements OnInit {
     const doc = new jsPDF('p', 'pt', 'a4');
 
     setTimeout(() => {
-      let pdfTable: any = document.querySelector('#pagePDF');
-      console.log(pdfTable);
+      let pdfTable: any = "";
+      pdfTable = document.querySelector('#pagePDF');
+
       doc.html(pdfTable, {
         callback: function (doc) {
           self.isLoadPDF = false;
