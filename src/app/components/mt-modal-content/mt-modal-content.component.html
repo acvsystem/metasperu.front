@@ -23,6 +23,7 @@
         <mt-view-asistencia [dataAsistencia]="dataAsistencia" *ngIf="bodyContent == 'mt-view-asistencia'"></mt-view-asistencia>
         <mt-menu-crud *ngIf="bodyContent == 'mt-menu-crud'"></mt-menu-crud>
         <mt-frm-address-postulant [data]="dataIn" *ngIf="bodyContent == 'mt-frm-address-postulant'"></mt-frm-address-postulant>
+        <mt-select-contratos *ngIf="bodyContent == 'mt-select-contratos'" (outputData)="onResponseComponent($event)"></mt-select-contratos>
       </div>
     </ion-col>
    <!--<ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">

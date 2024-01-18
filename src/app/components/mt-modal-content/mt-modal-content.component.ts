@@ -16,6 +16,7 @@ export class MtModalContentComponent implements OnInit {
   @Input() dataAsistencia: Array<any> = [];
   @Output() onResponseModal: EventEmitter<any> = new EventEmitter();
   @Output() onCloseModal: EventEmitter<any> = new EventEmitter();
+  @Output() outputData = new EventEmitter<string>();
 
   contentHTML: any = '';
 
@@ -29,11 +30,16 @@ export class MtModalContentComponent implements OnInit {
   oncloseModal() {
     this.dataEmployeeList = {};
     this.onCloseModal.emit(true);
+    this.outputData.emit();
     this.modalLogin.dismiss();
   }
 
   onResponseComponent($event) {
     if (this.bodyContent == "mt-frm-add-employee" && $event) {
+      this.onResponseModal.emit($event);
+      this.oncloseModal();
+    }
+    if (this.bodyContent == "mt-select-contratos" && $event) {
       this.onResponseModal.emit($event);
       this.oncloseModal();
     }

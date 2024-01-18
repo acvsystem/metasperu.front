@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
@@ -14,7 +14,11 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class MtInscriptionPostulantComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild('pagePDF', { static: false }) pdfTable: ElementRef;
+  @ViewChild('pagePDF_FC', { static: false }) pagePDF_FC: ElementRef;
+  @ViewChild('pagePDF_1', { static: false }) pdfTable_1: ElementRef;
+  @ViewChild('pagePDF_2', { static: false }) pdfTable_2: ElementRef;
+  @ViewChild('pagePDF_3', { static: false }) pdfTable_3: ElementRef;
+  @ViewChild('pagePDF_4', { static: false }) pdfTable_4: ElementRef;
 
   headList: Array<any> = [];
   bodyList: Array<any> = [];
@@ -83,7 +87,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
     private sanitized: DomSanitizer,
     public modalCtrl: ModalController,
     private service: ShareService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.onData();
@@ -181,7 +185,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
     });
   }
 
-  onSaveOrUpdate(ev: any) {}
+  onSaveOrUpdate(ev: any) { }
 
   async openModalAddPostulant() {
     let modal = await this.modalCtrl.create({
@@ -748,8 +752,47 @@ export class MtInscriptionPostulantComponent implements OnInit {
   arrdDtosHabientes = [];
   arrSaludAntecedentes = [];
   datePDF = "";
-  public downloadAsPDF(keyPostulant) {
+  fechaInContrato: string = "";
+  fechaOutContrato: string = "";
+  emisionContrato:string = "";
+  salarioContrato:string = "";
+  nomenclatura:string = "";
+
+  async openModalSelectContrato(keyPostulant) {
+    let onResponseModal = new EventEmitter();
+
+    onResponseModal.subscribe((outputData) => {
+      let data = {
+        keyPostulant: keyPostulant,
+        outputData: (outputData || {}).opContrato,
+        fcIn: (outputData || {}).fechaInContrato,
+        fcOut: (outputData || {}).fechaOutContrato,
+        salario: (outputData || {}).salario
+      }
+
+      this.downloadAsPDF(data);
+    });
+
+    let modal = await this.modalCtrl.create({
+      component: MtModalContentComponent,
+      componentProps: {
+        title: 'Seleccion de tipo de contrato',
+        bodyContent: 'mt-select-contratos',
+        onResponseModal: onResponseModal
+      },
+      cssClass: 'mt-modal',
+
+    });
+
+    return await modal.present();
+  }
+
+  async downloadAsPDF(data) {
     const self = this;
+    let keyPostulant = (data || {}).keyPostulant;
+    let optContrato = (data || {}).outputData;
+    this.salarioContrato = (data || {}).salario;
+
     self.isLoadPDF = true;
     self.onePostulantExpLAb = [];
     let datosHabientes: Array<any> = [];
@@ -785,8 +828,15 @@ export class MtInscriptionPostulantComponent implements OnInit {
     let month = date.getMonth();
     let year = date.getFullYear();
 
-    self.datePDF = day + ' de ' + months[month] + ' del ' + year;
+    let initContrato = ((data || {}).fcIn).split('-');
+    let outContrato = ((data || {}).fcOut).split('-');
 
+    this.fechaInContrato = initContrato[2] + ' de ' + months[initContrato[1] - 1] + ' de ' + initContrato[0];
+    this.fechaOutContrato = outContrato[2] + ' de ' + months[outContrato[1] - 1] + ' de ' + outContrato[0];
+
+    self.datePDF = day + ' de ' + months[month] + ' del ' + year;
+    this.emisionContrato = day + ' de ' + months[month] + ' de ' + year;
+    
     arrExpLab = ((dataPdf || [])[0] || {}).experiencia_laboral;
     arrFrAcademica = ((dataPdf || [])[0] || {}).formacion_academica;
 
@@ -796,6 +846,20 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     self.onePostulantData.push(((dataPdf || [])[0] || {}).datos_personales);
 
+    self.onePostulantData.filter((data)=>{
+      if(data.sexo == "Hombre"){
+        this.nomenclatura = "el sr.";
+      }
+
+      if(data.sexo == "Mujer" && data.estado_civil == "Solera(o)"){
+        this.nomenclatura = "la srta.";
+      }
+
+      if(data.sexo == "Mujer" && data.estado_civil == "Casada(o)"){
+        this.nomenclatura = "la sra.";
+      }
+    });
+
     self.onPostulantFormEst.push(
       ((dataPdf || [])[0] || {}).formacion_academica
     );
@@ -803,11 +867,11 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     for (let i = 0; i <= 3; i++) {
       self.arrdDtosHabientes.push({
-        edad:((datosHabientes || [])[i] || {}).edad || '',
-        fchnac:((datosHabientes || [])[i] || {}).fchnac || '',
-        nombres:((datosHabientes || [])[i] || {}).nombres || '',
-        nrodoc:((datosHabientes || [])[i] || {}).nrodoc || '',
-        ocupacion:((datosHabientes || [])[i] || {}).ocupacion || '',
+        edad: ((datosHabientes || [])[i] || {}).edad || '',
+        fchnac: ((datosHabientes || [])[i] || {}).fchnac || '',
+        nombres: ((datosHabientes || [])[i] || {}).nombres || '',
+        nrodoc: ((datosHabientes || [])[i] || {}).nrodoc || '',
+        ocupacion: ((datosHabientes || [])[i] || {}).ocupacion || '',
         parentesco: ((datosHabientes || [])[i] || {}).parentesco || '',
         sexo: ((datosHabientes || [])[i] || {}).sexo || '',
         tipodoc: ((datosHabientes || [])[i] || {}).tipodoc || ''
@@ -823,7 +887,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
         puesto: ((arrExpLab || [])[i] || {}).puesto || '',
       });
     }
-    
+
     for (let i = 0; i <= 1; i++) {
 
       if (!self.arrFrUniv.length && self.arrFrTecnica.length) {
@@ -868,17 +932,42 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
     setTimeout(() => {
       let pdfTable: any = "";
-      pdfTable = document.querySelector('#pagePDF');
+      let nameDocument: any = {};
+      let arrTipoDocument = [
+        {
+          "key": "pagePDF_1",
+          "value": "CONTRATO PART TIME"
+        },
+        {
+          "key": "pagePDF_2",
+          "value": "CONTRATO POR TEMPORADA"
+        },
+        {
+          "key": "pagePDF_3",
+          "value": "CONTRATO POR NECESIDAD DE MERCADO"
+        },
+        {
+          "key": "pagePDF_4",
+          "value": "CONTRATO POR INICIO O INCREMENTO DE ACTIVIDAD"
+        },
+        {
+          "key": "pagePDF_FC",
+          "value": "FICHA DE DATOS"
+        }
+      ];
+
+      pdfTable = document.querySelector(`#${optContrato}`);
+
+      nameDocument = arrTipoDocument.find((pdf) => (pdf || {}).key == optContrato);
 
       doc.html(pdfTable, {
         callback: function (doc) {
           self.isLoadPDF = false;
-          doc.save('newpdf.pdf');
+          doc.save(`${nameDocument.value}.pdf`);
         },
       });
     }, 2000);
 
-    //doc.save('tableToPdf.pdf');
   }
 
   async openModalChangeEstado(ev) {
