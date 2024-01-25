@@ -35,6 +35,7 @@ import { MtViewAsistenciaComponent } from './pages/mt-control-asistencia/compone
 import { MtMenuCrudComponent } from './pages/mt-configuracion/component/mt-menu-crud/mt-menu-crud.component';
 import { MtFrmAddressPostulantComponent } from './pages/mt-inscription-postulant/components/mt-frm-address-postulant/mt-frm-address-postulant.component';
 import { MtSelectContratosComponent } from './pages/mt-inscription-postulant/components/mt-select-contratos/mt-select-contratos.component';
+import { MtNetworkComponent } from './pages/mt-verification-comprobantes/components/mt-network/mt-network.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -82,7 +83,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MtViewAsistenciaComponent,
     MtMenuCrudComponent,
     MtFrmAddressPostulantComponent,
-    MtSelectContratosComponent
+    MtSelectContratosComponent,
+    MtNetworkComponent
   ],
   imports: [
     BrowserModule,

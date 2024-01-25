@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { io } from "socket.io-client";
 import { ShareService } from '../../services/shareService';
+import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
+import { ModalController } from '@ionic/angular';
+
 @Component({
   selector: 'app-mt-verification-comprobantes',
   templateUrl: './mt-verification-comprobantes.component.html',
@@ -19,12 +22,26 @@ export class MtVerificationComprobantesComponent implements OnInit {
   token: any = localStorage.getItem('tn');
   socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
 
-  constructor() { }
+  constructor(public modalCtrl: ModalController,) { }
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Online', 'Server ICG','Network']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
+
+    this.socket.on('appResNetScan', (data) => {
+      let resNet = [];
+      let parseData = [];
+      resNet = JSON.parse(data);
+      (resNet || []).filter((netdata: any) => {
+        let mac = netdata.addresses.mac;
+        parseData.push({
+          ip: netdata.addresses.ipv4 || "Desconocido",
+          mac: netdata.addresses.mac || "Desconocido",
+          referencia : netdata.vendor[mac] || "Desconocido"
+        });
+      });
+    });
 
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
@@ -89,7 +106,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('conexion:serverICG:send', (conexion) => {
-     
+
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo && data.conexICG != isConect));
@@ -107,13 +124,30 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   }
 
-  public onVerify() {
-    this.socket.emit('comunicationFront', 'angular');
+  onVerify() {
+    this.socket.emit('emitScanNet', 'angular');
+    //this.socket.emit('comunicationFront', 'angular');
   }
 
   onSessionList() {
     // let lista = this.socket.listeners('sessionList');
   }
+
+  async openModalSelectContrato() {
+
+     let modal = await this.modalCtrl.create({
+      component: MtModalContentComponent,
+      componentProps: {
+        title: 'Herramientas de Red',
+        bodyContent: 'mt-network'
+      },
+      cssClass: 'mt-modal',
+
+    });
+
+    return await modal.present();
+  }
+
 
 }
 

@@ -1,6 +1,6 @@
-<ion-content>
-  <div id="content" class="full-center">
-    <div class="card-content">
+<ion-content style="display: none;">
+  <div id="content" class="full-center"> 
+    <div class="card-content" >
       <ion-row>
         <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
           <button (click)="onVerify()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh"
@@ -61,6 +61,9 @@
                     </td>
                     <td class="columBody">
                       <div [ngClass]="[columBody.conexICG == 1 ? 'blob blue': 'blob red']"></div>
+                    </td>
+                    <td class="columBody">
+                      <button (click)="openModalSelectContrato()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
                     </td>
                   </tr>
                 </tbody>
@@ -136,6 +139,7 @@
           </ion-row>
         </ion-col>
       </ion-row>
-    </div>
+    </div> 
   </div>
 </ion-content>
+<mt-network></mt-network>

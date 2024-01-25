@@ -1,0 +1,56 @@
+
+<ion-toolbar color="medium">
+  <ion-buttons slot="start">
+    <ion-button> <i class="fa fa-reply" aria-hidden="true"></i> </ion-button>
+  </ion-buttons>
+  <ion-buttons slot="end">
+    <ion-title>192.168.20.1</ion-title>
+  </ion-buttons>
+  <ion-title>VS LA RAMBLA</ion-title>
+</ion-toolbar>
+
+<div class="content">
+
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+      <mt-input
+      label="IP"
+      placeholder="Ingrese la ip"
+      type="text"
+    ></mt-input>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
+      <div class="content-button">
+        <button type="button" class="btn btn-primary btn-sm">Ping</button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="onScanNet()">Escanear Red</button>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      <div class="content-console-view">
+        <div class="console-loading" *ngIf="isLoading">
+          <div class="loader"></div>
+        </div>
+        <section class="content-scan-net" *ngIf="isNetScan && !isLoading">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">IP Address</th>
+                <th scope="col">MAC</th>
+                <th scope="col">Referencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let net of arNetResponse">
+                <td>{{net.ip}}</td>
+                <td>{{net.mac}}</td>
+                <td>{{net.referencia}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </ion-col>
+  </ion-row>
+</div>

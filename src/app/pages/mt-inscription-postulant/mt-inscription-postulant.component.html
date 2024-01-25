@@ -75,7 +75,7 @@
           N°2101</b>, distrito de <b>San Isidro</b>, Provincia de <b>Lima</b>, Departamento de <b>Lima</b>, debidamente representada por
           el señor <b>Johnny Germano Cozzolino</b>, identificado con <b>Carne De Extranjería N°001763881</b>, según
           consta inscrito en la <b>Partida Electrónica N°13451744</b> de los Registros Públicos de Lima, a quien en
-          adelante se le denominará simplemente <b>El Empleador</b>; y de la otra parte la srta. <b>{{postulant.nombres}} {{postulant.ap_paterno}} 
+          adelante se le denominará simplemente <b>El Empleador</b>; y de la otra parte {{nomenclatura}} <b>{{postulant.nombres}} {{postulant.ap_paterno}} 
           {{postulant.ap_materno}}</b>; con <b>DNI N°{{postulant.num_documento}}</b> domiciliado en <b>{{postulant.nro_domicilio}} {{postulant.nro_departamento}} {{postulant.desc_manzana}} {{postulant.desc_lote}} {{postulant.tipo_zona}} {{postulant.nombre_zona}}</b>, distrito de
           <b>{{postulant.distrito_ubigeo}}</b>, a quien en adelante se le denominará simplemente <b>El Trabajador</b>; en los términos y
           condiciones siguientes:
@@ -881,7 +881,7 @@
             </label>
           </div>
         </div>
-        <div style="height: 30px;text-align: center;margin-bottom:90px;width: 100%;padding-top: 80px;">
+        <div style="height: 30px;text-align: center;margin-bottom:100px;width: 100%;padding-top: 80px;">
           <label style="text-align: center;font-style: italic;font-family: math;">
             Av. Javier Prado Este 560, Oficina N° 2101 SAN ISIDRO <br>
             Teléfonos 01-746 0910 <br>
@@ -896,7 +896,7 @@
         <b style="font-size: 11px;">ANEXO DEL CONTRATO DE TRABAJO</b><br>
         <b style="font-size: 11px;text-decoration: underline;">Recomendaciones de Seguridad y Salud en el Trabajo</b>
       </div>
-      <div style="width: 523px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 523px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;padding-bottom: 10px;">
           De conformidad con lo dispuesto en el literal c) del artículo 35 de la Ley N° 29783 y D.S. No005-2012-
           TR. Artículo 30, Ley de Seguridad y Salud en el Trabajo, detallamos las recomendaciones de Seguridad
@@ -956,8 +956,8 @@
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;text-align: center;">
             <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
             <label style="font-size: 10px;text-align: center;">
-              Daniela Janet Cotrina Moncada <br>
-              DNI N° 71306822
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+              DNI N° {{postulant.num_documento}}
             </label>
           </div>
         </div>
@@ -991,9 +991,9 @@
           <b style="font-size: 11px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE CONTRATO</b>
       </div>
     
-      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;">
-          Por medio de la presente yo, <strong>Daniela Janet Cotrina Moncada</strong> con <strong>DNI N°71306822</strong>, trabajador (a)
+          Por medio de la presente yo, <strong>{{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</strong> con <strong>DNI N°{{postulant.num_documento}}</strong>, trabajador (a)
           de la empresa <strong>Metas Perú S.A.C.</strong> con <strong> R.U.C. N°20600516885 </strong>, debidamente representada por su
           Apoderado <strong>Johnny Germano Cozzolino</strong>, identificado con <strong>Carne de Extranjería N°001763881</strong>.
         </label>
@@ -1004,19 +1004,19 @@
         <br><br>
         <label>
           He firmado mi contrato de trabajo y he recibido una copia de este, el cual tiene un plazo de duración <strong>un
-          (01) mes</strong>, el mismo que regirá a partir del <strong>01 de Enero de 2024</strong> y finalizará el <strong>31 de Enero de 2024</strong>,
-          firmo en señal de conformidad, al <strong>28 de Diciembre de 2023</strong>.
+          (01) mes</strong>, el mismo que regirá a partir del <strong>{{fechaInContrato}}</strong> y finalizará el <strong>{{fechaOutContrato}}</strong>,
+          firmo en señal de conformidad, al <strong>{{emisionContrato}}</strong>.
         </label>
         <label style="padding-top: 90px;">
           ____________________________________________ (FIRMA Y HUELLA DIGITAL)
-        </label>
+        </label><br>
         <label>
           <strong>
-            Daniela Janet Cotrina Moncada
+            {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}
           </strong>
           <br>
           <strong>
-            DNI N° 71306822
+            DNI N° {{postulant.num_documento}}
           </strong>
         </label>
         <br>
@@ -1041,7 +1041,7 @@
       <div style="height: 27px;">
         <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 10px;">
       </div>
-      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <div style="height: 30px;text-align: center;">
           <b style="font-size: 11px;text-decoration: underline;">CONTRATO DE TRABAJO SUJETO A MODALIDAD</b>
         </div>
@@ -1053,8 +1053,8 @@
           Isidro</b>, Provincia de <b>Lima</b>, Departamento de <b>Lima</b>, debidamente representada por el señor <b>Johnny
           Germano Cozzolino</b>, identificado con Carne De Extranjería N°001763881, según consta inscrito en la
           Partida Electrónica N°13451744 de los Registros Públicos de Lima, a quien en adelante se le
-          denominará simplemente <b>El Empleador</b>; y de la otra parte la srta. <b>Daniela Janet Cotrina Moncada</b>; con
-          <b>DNI N°71306822</b> domiciliado en <b>Avenida Jose Pardo 640 Dpto 403-A</b>, distrito de <b>Miraflores</b>, a quien en
+          denominará simplemente <b>El Empleador</b>; y de la otra parte {{nomenclatura}} <b>{{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</b>; con
+          <b>DNI N°{{postulant.num_documento}}</b> domiciliado en <b>{{postulant.nro_domicilio}} {{postulant.nro_departamento}} {{postulant.desc_manzana}} {{postulant.desc_lote}} {{postulant.tipo_zona}} {{postulant.nombre_zona}}</b>, distrito de <b>{{postulant.distrito_ubigeo}}</b>, a quien en
           adelante se le denominará simplemente <b>El Trabajador</b>; en los términos y condiciones siguientes:
         </label>
         <br>
@@ -1075,8 +1075,8 @@
         <br>
         <label style="line-height: 12.5px;padding-bottom: 10px;">
           <b>Segundo: Del Plazo</b><br>
-          El plazo de duración del presente contrato es de <b>un (01) mes</b> y rige desde el <b>01 de Enero de 2024</b>, fecha
-          en que debe empezar sus labores <b>El Trabajador</b> hasta el <b>31 de Enero de 2024</b>, fecha en que termina el
+          El plazo de duración del presente contrato es de <b>un (01) mes</b> y rige desde el <b>{{fechaInContrato}}</b>, fecha
+          en que debe empezar sus labores <b>El Trabajador</b> hasta el <b>{{fechaOutContrato}}</b>, fecha en que termina el
           contrato.
           Las partes convienen en que, en aplicación del artículo 10 de la Ley de Productividad y Competitividad Laboral, se
           convenga un periodo de prueba de tres (03) meses según lo establecido
@@ -1105,8 +1105,7 @@
         <br>
         <label style="line-height: 12.5px;padding-bottom: 10px;">
           <b>Quinto: La Remuneración</b><br>
-          <b>El Trabajador</b> percibirá como contraprestación un ingreso mensual de <b>S/ 1500 (UN MIL QUINIENTOS
-          CON 00/100)</b>.
+          <b>El Trabajador</b> percibirá como contraprestación un ingreso mensual de <b>{{salarioContrato}}</b>.
           Las ausencias injustificadas por parte de <b>El Trabajador</b> implicarán la pérdida de la remuneración, en
           proporción a la duración de dicha ausencia; sin perjuicio del ejercicio de las facultades disciplinarias
           propias de <b>El Empleador</b>, según lo previsto en la legislación laboral y en el Reglamento Interno de
@@ -1512,7 +1511,7 @@
       <div style="height: 40px;">
         <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 10px;">
       </div>
-      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;padding-bottom: 10px;">   
           <b>Décimo Octava: Del Compromiso de No Hacer</b><br>
           <b>El Trabajador</b> se obliga a no participar, él ni algún familiar directo hasta el 3° grado de consanguinidad,
@@ -1554,8 +1553,8 @@
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;text-align: center;">
             <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
             <label style="font-size: 10px;text-align: center;">
-              Daniela Janet Cotrina Moncada <br>
-              DNI N° 71306822
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+              DNI N° {{postulant.num_documento}}
             </label>
           </div>
         </div>
@@ -1570,7 +1569,7 @@
       <div style="height: 40px;">
         <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 10px;">
       </div>
-      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 478px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <div style="height: 30px;text-align: center;">
           <b style="font-size: 11px;text-decoration: underline;">ACUERDO DE COMPENSACIÓN DE SOBRETIEMPO CON DESCANSO</b>
         </div>
@@ -1580,8 +1579,8 @@
           Provincia de <b>Lima</b>, Departamento de <b>Lima</b>; debidamente representada por el Señor <b>Johnny Germano
           Cozzolino</b>, identificado con <b>Carné de Extranjería N° 001763881</b>, con poder inscrito en la <b>Partida
           Electrónica N°13451744</b>, del Registro de Personas Jurídicas de los Registros Públicos de Lima; a quién en
-          adelante se le denominará <b>La Empresa</b>; y de la otra parte <b>la srta. Daniela Janet Cotrina Moncada</b>
-          identificado con <b>DNI N° 71306822</b> a quien en adelante se denominará <b>El Trabajador</b>; en los términos y
+          adelante se le denominará <b>La Empresa</b>; y de la otra parte <b>{{nomenclatura}} {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</b>
+          identificado con <b>DNI N° {{postulant.num_documento}}</b> a quien en adelante se denominará <b>El Trabajador</b>; en los términos y
           condiciones siguientes:
         </label>
         <br>
@@ -1629,8 +1628,8 @@
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;text-align: center;">
             <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
             <label style="font-size: 10px;text-align: center;">
-              Daniela Janet Cotrina Moncada <br>
-              DNI N° 71306822
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+              DNI N° {{postulant.num_documento}}
             </label>
           </div>
         </div>
@@ -1647,7 +1646,7 @@
       <div style="height: 40px;">
         <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 10px;">
       </div>
-      <div style="width: 522px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 522px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <div style="height: 60px;text-align: center;">
           <b style="font-size: 11px;text-decoration: underline;">ANEXO DEL CONTRATO DE TRABAJO</b><br>
           <b style="font-size: 11px;text-decoration: underline;">Recomendaciones de Seguridad y Salud en el Trabajo</b>
@@ -1711,8 +1710,8 @@
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;text-align: center;">
             <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
             <label style="font-size: 10px;text-align: center;">
-              Daniela Janet Cotrina Moncada <br>
-              DNI N° 71306822
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+              DNI N° {{postulant.num_documento}}
             </label>
           </div>
         </div>
@@ -1747,9 +1746,9 @@
           <b style="font-size: 11px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE CONTRATO</b>
       </div>
     
-      <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;">
-          Por medio de la presente yo, <strong>Daniela Janet Cotrina Moncada</strong> con <strong>DNI N°71306822</strong>, trabajador (a)
+          Por medio de la presente yo, <strong>{{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</strong> con <strong>DNI N°{{postulant.num_documento}}</strong>, trabajador (a)
           de la empresa <strong>Metas Perú S.A.C.</strong> con <strong> R.U.C. N°20600516885 </strong>, debidamente representada por su
           Apoderado <strong>Johnny Germano Cozzolino</strong>, identificado con <strong>Carne de Extranjería N°001763881</strong>.
         </label>
@@ -1760,19 +1759,19 @@
         <br><br>
         <label>
           He firmado mi contrato de trabajo y he recibido una copia de este, el cual tiene un plazo de duración <strong>un
-          (01) mes</strong>, el mismo que regirá a partir del <strong>01 de Enero de 2024</strong> y finalizará el <strong>31 de Enero de 2024</strong>,
-          firmo en señal de conformidad, al <strong>28 de Diciembre de 2023</strong>.
+          (01) mes</strong>, el mismo que regirá a partir del <strong>{{fechaInContrato}}</strong> y finalizará el <strong>{{fechaOutContrato}}</strong>,
+          firmo en señal de conformidad, al <strong>{{emisionContrato}}</strong>.
         </label>
         <label style="padding-top: 90px;">
           ____________________________________________ (FIRMA Y HUELLA DIGITAL)
-        </label>
+        </label><br>
         <label>
           <strong>
-            Daniela Janet Cotrina Moncada
+            {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}
           </strong>
           <br>
           <strong>
-            DNI N° 71306822
+            DNI N° {{postulant.num_documento}}
           </strong>
         </label>
         <br>
@@ -1803,7 +1802,7 @@
       <div style="height: 30px;text-align: center;">
         <b style="font-size: 11px;text-decoration: underline;">CONTRATO DE TRABAJO SUJETO A MODALIDAD</b>
       </div>
-      <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;padding-bottom: 10px;">
           Conste por el presente documento el Contrato de Trabajo a plazo fijo bajo la modalidad de “Contrato de
           Temporada” que celebran al amparo del Art. 58 de la Ley de Productividad y Competitividad Laboral
@@ -1812,8 +1811,8 @@
           Provincia de <b>Lima</b>, Departamento de <b>Lima</b>, debidamente representada por el señor <b>Johnny Germano
           Cozzolino</b>, identificado con <b>Carne De Extranjería N°001763881</b>, según consta inscrito en la <b>Partida
           Electrónica N°13451744</b> de los Registros Públicos de Lima, a quien en adelante se le denominará
-          simplemente <b>El Empleador</b>; y de la otra parte la srta. <b>Daniela Janet Cotrina Moncada</b>; con <b>DNI
-          N°71306822</b> domiciliado en <b>Avenida Jose Pardo 640 Dpto 403-A</b>, distrito de <b>Miraflores</b>, a quien en
+          simplemente <b>El Empleador</b>; y de la otra parte {{nomenclatura}} <b>{{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</b>; con <b>DNI
+          N°{{postulant.num_documento}}</b> domiciliado en <b>{{postulant.nro_domicilio}} {{postulant.nro_departamento}} {{postulant.desc_manzana}} {{postulant.desc_lote}} {{postulant.tipo_zona}} {{postulant.nombre_zona}}</b>, distrito de <b>{{postulant.distrito_ubigeo}}</b>, a quien en
           adelante se le denominará simplemente <b>El Trabajador</b>; en los términos y condiciones siguientes:
         </label>
         <br>
@@ -1834,8 +1833,8 @@
         <br>
         <label style="line-height: 12.5px;padding-bottom: 10px;">
           <b>Segundo: Del Plazo</b><br>
-          El plazo de duración del presente contrato es de <b>un (01) mes</b> y rige desde el <b>01 de Enero de 2024</b>, fecha
-          en que debe empezar sus labores <b>El Trabajador</b> hasta el <b>31 de Enero de 2024</b>, fecha en que termina el
+          El plazo de duración del presente contrato es de <b>un (01) mes</b> y rige desde el <b>{{fechaInContrato}}</b>, fecha
+          en que debe empezar sus labores <b>El Trabajador</b> hasta el <b>{{fechaOutContrato}}</b>, fecha en que termina el
           contrato.
           Las partes convienen en que, en aplicación del artículo 10 de la Ley de Productividad y Competitividad Laboral, se
           convenga un periodo de prueba de tres (03) meses según lo establecido
@@ -1864,8 +1863,7 @@
         <br>
         <label style="line-height: 12.5px;padding-bottom: 10px;">
           <b>Quinto: La Remuneración</b><br>
-          <b>El Trabajador</b> percibirá como contraprestación un ingreso mensual de <b>S/ 1500 (UN MIL QUINIENTOS
-          CON 00/100).</b>
+          <b>El Trabajador</b> percibirá como contraprestación un ingreso mensual de <b>{{salarioContrato}}.</b>
           Las ausencias injustificadas por parte de <b>El Trabajador</b> implicarán la pérdida de la remuneración, en
           proporción a la duración de dicha ausencia; sin perjuicio del ejercicio de las facultades disciplinarias
           propias de <b>El Empleador</b>, según lo previsto en la legislación laboral y en el Reglamento Interno de
@@ -2245,7 +2243,7 @@
         <img src="../../../assets/LOGO METAS PERU SAC.png" style="width: 118px;padding-left: 16px;padding-top: 30px;">
       </div>
       <br>
-      <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;">
          <b>Décimo Octava: Del Compromiso de No Hacer</b><br><br>
          <b>El Trabajador</b> se obliga a no participar, él ni algún familiar directo hasta el 3° grado de consanguinidad,
@@ -2283,8 +2281,8 @@
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;text-align: center;">
             <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
             <label style="font-size: 10px;text-align: center;">
-              Daniela Janet Cotrina Moncada <br>
-              DNI N° 71306822
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+              DNI N° {{postulant.num_documento}}
             </label>
           </div>
         </div>
@@ -2304,15 +2302,15 @@
         <b style="font-size: 11px;text-decoration: underline;">FICHA DE REGISTRO DE DATOS PERSONALES</b>
       </div>
       <br><br>
-      <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;">
           Conste por el presente documento, el Acuerdo que celebran, de una parte <b>Metas Perú S.A.C.</b> con <b>R.U.C.
           No20600516885</b> y domicilio fiscal en la <b>Av. Javier Prado Este 560, Oficina N°2101</b>, distrito de <b>San Isidro</b>,
           Provincia de <b>Lima</b>, Departamento de <b>Lima</b>; debidamente representada por el Señor <b>Johnny Germano
           Cozzolino</b>, identificado con <b>Carné de Extranjería N° 001763881</b>, con poder inscrito en la <b>Partida
           Electrónica N°13451744</b>, del Registro de Personas Jurídicas de los Registros Públicos de Lima; a quién en
-          adelante se le denominará <b>La Empresa</b>; y de la otra parte <b>la srta. Daniela Janet Cotrina Moncada</b>
-          identificado con <b>DNI N° 71306822</b> a quien en adelante se denominará El Trabajador; en los términos y
+          adelante se le denominará <b>La Empresa</b>; y de la otra parte <b>{{nomenclatura}} {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</b>
+          identificado con <b>DNI N° {{postulant.num_documento}}</b> a quien en adelante se denominará El Trabajador; en los términos y
           condiciones siguientes: <br><br>
           <b>Primero: Voluntariedad del Acuerdo</b><br><br>
           <b>La Empresa y El Trabajador</b> declaran conocer el contenido y alcances del Decreto Supremo 007-2002-TR,
@@ -2337,7 +2335,7 @@
           beneficio de <b>La Empresa</b>. En consecuencia, los tiempos que pueda dedicar <b>El Trabajador</b> fuera de la
           jornada ordinaria en actividades distintas y sin previa autorización de <b>La Empresa</b>, no serán consideradas
           como sobre tiempo. <br><br>
-          Suscrito en dos ejemplares de un mismo contenido y para un solo efecto, a los 28 de Diciembre de 2023.
+          Suscrito en dos ejemplares de un mismo contenido y para un solo efecto, a los {{emisionContrato}}.
         </label>
         <div style="display: inline-flex;width: 100%;padding-top: 50px;">
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;text-align: center;">
@@ -2374,7 +2372,7 @@
         <b style="font-size: 11px;text-decoration: underline;">Recomendaciones de Seguridad y Salud en el Trabajo</b>
       </div>
       <br>
-      <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+      <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
         <label style="line-height: 12.5px;">
           De conformidad con lo dispuesto en el literal c) del artículo 35 de la Ley N° 29783 y D.S. No005-2012-
           TR. Artículo 30, Ley de Seguridad y Salud en el Trabajo, detallamos las recomendaciones de Seguridad
@@ -2434,8 +2432,8 @@
           <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;text-align: center;">
             <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
             <label style="font-size: 10px;text-align: center;">
-              Daniela Janet Cotrina Moncada <br>
-              DNI N° 71306822
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+              DNI N° {{postulant.num_documento}}
             </label>
           </div>
         </div>
@@ -2469,9 +2467,9 @@
             <b style="font-size: 11px;text-decoration: underline;">CONSTANCIA DE RECEPCION DE CONTRATO</b>
         </div>
       
-        <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+        <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
           <label style="line-height: 12.5px;">
-            Por medio de la presente yo, <strong>Daniela Janet Cotrina Moncada</strong> con <strong>DNI N°71306822</strong>, trabajador (a)
+            Por medio de la presente yo, <strong>{{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</strong> con <strong>DNI N°{{postulant.num_documento}}</strong>, trabajador (a)
             de la empresa <strong>Metas Perú S.A.C.</strong> con <strong> R.U.C. N°20600516885 </strong>, debidamente representada por su
             Apoderado <strong>Johnny Germano Cozzolino</strong>, identificado con <strong>Carne de Extranjería N°001763881</strong>.
           </label>
@@ -2482,19 +2480,19 @@
           <br><br>
           <label>
             He firmado mi contrato de trabajo y he recibido una copia de este, el cual tiene un plazo de duración <strong>un
-            (01) mes</strong>, el mismo que regirá a partir del <strong>01 de Enero de 2024</strong> y finalizará el <strong>31 de Enero de 2024</strong>,
-            firmo en señal de conformidad, al <strong>28 de Diciembre de 2023</strong>.
+            (01) mes</strong>, el mismo que regirá a partir del <strong>{{fechaInContrato}}</strong> y finalizará el <strong>{{fechaOutContrato}}</strong>,
+            firmo en señal de conformidad, al <strong>{{emisionContrato}}</strong>.
           </label>
           <label style="padding-top: 90px;">
             ____________________________________________ (FIRMA Y HUELLA DIGITAL)
-          </label>
+          </label><br>
           <label>
             <strong>
-              Daniela Janet Cotrina Moncada
+              {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}
             </strong>
             <br>
             <strong>
-              DNI N° 71306822
+              DNI N° {{postulant.num_documento}}
             </strong>
           </label>
           <br>
@@ -2519,7 +2517,7 @@
           <b style="font-size: 11px;text-decoration: underline;">CONTRATO DE TRABAJO A TIEMPO PARCIAL</b>
         </div>
         <br>
-        <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+        <div style="width: 455px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
           <label style="line-height: 12.5px;padding-bottom: 10px;">
             Conste por el presente documento el Contrato de Trabajo a Tiempo parcial bajo la modalidad de
             “Contrato por Necesidades del Mercado” que celebran al amparo del Art. 58 de la Ley de
@@ -2529,8 +2527,7 @@
             debidamente representada por el señor <b>Johnny Germano Cozzolino</b>, identificado con <b>Carne De
             Extranjería N°001763881</b>, según consta inscrito en la <b>Partida Electrónica N°13451744</b> de los
             Registros Públicos de Lima, a quien en adelante se le denominará simplemente <b>El Empleador</b>; y de
-            la otra parte la srta. <b>Daniela Janet Cotrina Moncada</b>; con <b>DNI N°71306822</b> domiciliado en <b>Avenida
-            Jose Pardo 640 Dpto 403-A</b>, distrito de <b>Miraflores</b>, a quien en adelante se le denominará
+            la otra parte {{nomenclatura}} <b>{{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}}</b>; con <b>DNI N°{{postulant.num_documento}}</b> domiciliado en <b>{{postulant.nro_domicilio}} {{postulant.nro_departamento}} {{postulant.desc_manzana}} {{postulant.desc_lote}} {{postulant.tipo_zona}} {{postulant.nombre_zona}}</b>, distrito de <b>{{postulant.distrito_ubigeo}}</b>, a quien en adelante se le denominará
             simplemente <b>El Trabajador</b>; en los términos y condiciones siguientes:
           </label>
           <br>
@@ -2666,8 +2663,8 @@
             <div style="width: 45%;display: inline-block;top: 1px;position: relative;margin-left: 45px;">
               <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
               <label style="font-size: 10px;text-align: left;">
-                Daniela Janet Cotrina Moncada <br>
-                DNI N° 71306822
+                {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+                DNI N° {{postulant.num_documento}}
               </label>
             </div>
           </div>
@@ -2688,7 +2685,7 @@
           <b style="font-size: 11px;text-decoration: underline;">Recomendaciones de Seguridad y Salud en el Trabajo</b>
         </div>
         <br>
-        <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;">
+        <div style="width: 527px;font-size: 10px;text-align: justify;height: auto;margin: 0 auto;" *ngFor="let postulant of onePostulantData">
           <label style="line-height: 12.5px;">
             De conformidad con lo dispuesto en el literal (c) del artículo 35 de la Ley N° 29783 y D.S. No005-2012-
             TR. Artículo 30, Ley de Seguridad y Salud en el Trabajo, detallamos las recomendaciones de Seguridad
@@ -2751,8 +2748,8 @@
             <div style="width: 40%;display: inline-block;top: 1px;position: relative;margin-left: 100px;">
               <hr style="margin-left: 0;margin-right: 0;border-bottom: 0;border-left: 0;border-right: 0;border-top: 1px solid #2f2f2f;margin-bottom: 0;">
               <label style="font-size: 10px;text-align: left;">
-                Daniela Janet Cotrina Moncada <br>
-                DNI N° 71306822
+                {{postulant.nombres}} {{postulant.ap_paterno}} {{postulant.ap_materno}} <br>
+                DNI N° {{postulant.num_documento}}
               </label>
             </div>
           </div>
@@ -2766,7 +2763,7 @@
         </div>
       </div>
   </section>
-<br><br><br><br>
+
   <section style="display: none !important;">
     <div id="pagePDF_FC" #pagePDF_FC style="width: 595px;border: 1px solid;border-bottom: 0px;height: auto;" *ngFor="let postulant of onePostulantData">
       <div style="height: 40px;">
