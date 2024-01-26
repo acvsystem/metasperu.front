@@ -23,9 +23,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Conexion Comprobantes', 'Conexion ICG']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Conexion Comprobantes', 'Conexion ICG']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
-
+    this.onTransacciones();
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
       dataList = sunat || [];
@@ -68,6 +68,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
             Tienda: (dataSocket || {}).DESCRIPCION,
             isVerification: (dataSocket || {}).VERIFICACION,
             cant_comprobantes: (dataSocket || {}).CANT_COMPROBANTES,
+            transacciones: 0,
             online: (dataSocket || {}).ISONLINE,
             conexICG: 0
           });
@@ -85,6 +86,15 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.bodyList || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
           }
         });
+      }
+      
+    });
+
+    this.socket.on('dataTransaction', (dataSocket) => {
+      let codigo = (dataSocket || [])[0].code;
+      let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+      if (indexData != -1) {
+        (this.bodyList || [])[indexData].transacciones = (dataSocket || [])[0].transaciones;
       }
     });
 
@@ -106,8 +116,12 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   }
 
-  public onVerify() {
+  onVerify() {
     this.socket.emit('comunicationFront', 'angular');
+  }
+
+  onTransacciones() {
+    this.socket.emit('emitTransaction', 'angular');
   }
 
   onSessionList() {

@@ -272,3 +272,16 @@ ion-item {
         }
     }
 }
+
+.card-content {
+    button {
+        margin-right: 10px !important;
+    }
+}
+
+.content-button {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important; 
+}

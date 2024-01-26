@@ -2,11 +2,13 @@
   <div id="content" class="full-center">
     <div class="card-content">
       <ion-row>
-        <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2">
-          <button (click)="onVerify()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-refresh"
-              aria-hidden="true"></i></button>
+        <ion-col sizeXs="5" sizeSm="5" sizeMd="5" sizeLg="5">
+          <div class="content-button">
+            <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
+            <button (click)="onTransacciones()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Transacciones</button>
+          </div>
         </ion-col>
-        <ion-col sizeXs="10" sizeSm="10" sizeMd="10" sizeLg="10" class="aling-right content-btn-fact">
+        <ion-col sizeXs="7" sizeSm="7" sizeMd="7" sizeLg="7" class="aling-right content-btn-fact">
           <div class="content-status-server" *ngFor="let status of statusServerList">
             <div class="status-conect">
               <div [ngClass]="[isConnectServer == 'true' ? 'blob blue': 'blob red']"></div>
@@ -126,6 +128,12 @@
                         *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
                       <span class="badge bg-danger"
                         *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+                    </td>
+                    <td class="columBody">
+                      <span class="badge bg-success-comprobantes"
+                      *ngIf="columBody.transacciones == 0">0</span>
+                      <span class="badge bg-danger"
+                      *ngIf="columBody.transacciones != 0">{{columBody.transacciones}}</span>
                     </td>
                     <td class="columBody">
                       <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
