@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 })
 export class MtNetworkComponent implements OnInit {
   token: any = localStorage.getItem('tn');
-  socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
+  socket = io('http://172.26.46.13:4200', { query: { code: 'app', token: this.token } });
   arNetResponse: Array<any> = [];
   isLoading: boolean = false;
   isNetScan: boolean = false;
@@ -19,7 +19,8 @@ export class MtNetworkComponent implements OnInit {
     this.socket.on('appResNetScan', (data) => {
       let resNet = [];
       this.arNetResponse = [];
-      resNet = JSON.parse(data);
+      console.log(data);
+    /*  resNet = JSON.parse(data);
       (resNet || []).filter((netdata: any) => {
         let mac = netdata.addresses.mac;
         this.arNetResponse.push({
@@ -27,7 +28,7 @@ export class MtNetworkComponent implements OnInit {
           mac: netdata.addresses.mac || "Desconocido",
           referencia: netdata.vendor[mac] || "Desconocido"
         });
-      });
+      });*/
 
       this.isLoading = false;
     });

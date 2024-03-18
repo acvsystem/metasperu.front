@@ -20,7 +20,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isVisibleStatus: boolean = false;
   statusServerList: any = [];
   token: any = localStorage.getItem('tn');
-  socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
+  socket = io('http://172.26.46.13:4200', { query: { code: 'app', token: this.token } });
 
   constructor(public modalCtrl: ModalController,) { }
 
@@ -30,7 +30,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
 
     this.socket.on('appResNetScan', (data) => {
-      let resNet = [];
+      
+     /* let resNet = [];
       let parseData = [];
       resNet = JSON.parse(data);
       (resNet || []).filter((netdata: any) => {
@@ -40,7 +41,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
           mac: netdata.addresses.mac || "Desconocido",
           referencia : netdata.vendor[mac] || "Desconocido"
         });
-      });
+      });*/
     });
 
     this.socket.on('sendNotificationSunat', (sunat) => {
@@ -146,7 +147,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     return await modal.present();
-  }
+  }                                                                                                         
 
 
 }

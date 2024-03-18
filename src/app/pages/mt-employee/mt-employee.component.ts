@@ -23,7 +23,7 @@ export class MtEmployeeComponent implements OnInit {
   isLoadPDF: boolean = false;
   dataSource = new MatTableDataSource<PeriodicElement>(this.dataPaginationList);
   token: any = localStorage.getItem('tn');
-  socket = io('http://159.65.226.239:4200', { query: { code: 'app', token: this.token } });
+  socket = io('http://172.26.46.13s:4200', { query: { code: 'app', token: this.token } });
 
   constructor(private service: ShareService, private modalCtrl: ModalController) { }
 
