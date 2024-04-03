@@ -23,7 +23,7 @@
                   <span class="subtitle">¿Ya tienes una cuenta?</span><span class="btnLogin" (click)="onLoginRoute()">Logeate</span>
                 </div>
               </ion-col>
-              <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                 <mt-input
                   id="userName"
                   label="Usuario"
@@ -33,7 +33,7 @@
                   (afterChange)="onChangeInput($event)"
                 ></mt-input>
               </ion-col>
-              <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                 <mt-input
                   id="password"
                   label="Contraseña"
@@ -44,25 +44,12 @@
                 ></mt-input>
               </ion-col>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <span class="subtitle">Informacion Perfil</span>
-              </ion-col>
-              <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
                 <mt-input
-                  id="nombreProfile"
-                  label="Nombre"
-                  placeholder="Ingrese su nombre"
+                  id="email"
+                  label="email"
+                  placeholder="Ingrese su correo"
                   type="text"
-                  value="{{ nombreProfile }}"
-                  (afterChange)="onChangeInput($event)"
-                ></mt-input>
-              </ion-col>
-              <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-                <mt-input
-                  id="apellidoProfile"
-                  label="Apellido"
-                  placeholder="Ingrese su apellido"
-                  type="text"
-                  value="{{ apellidoProfile }}"
+                  value="{{ email }}"
                   (afterChange)="onChangeInput($event)"
                 ></mt-input>
               </ion-col>

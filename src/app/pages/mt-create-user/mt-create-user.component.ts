@@ -13,6 +13,7 @@ export class MtCreateUserComponent implements OnInit {
   
   userName: string = "";
   password: string = "";
+  email: string = "";
   nombreProfile: string = "";
   apellidoProfile: string = "";
   token: string = '';
@@ -40,8 +41,7 @@ export class MtCreateUserComponent implements OnInit {
     let bodyRegister = {
       usuario: this.userName,
       password: this.password,
-      nombreProfile: this.nombreProfile,
-      apellidoProfile: this.apellidoProfile
+      email: this.email
     }
 
     let validForm = Object.values(bodyRegister).filter((value) => value == "");

@@ -13,6 +13,7 @@ import { ModalController } from '@ionic/angular';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 
 import { StorageService } from 'src/app/utils/storage';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'mt-configuracion',
@@ -44,15 +45,13 @@ export class MtConfiguracionComponent implements OnInit {
   passEmailService: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
+  selectOption: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
   nombreMenu: string = "";
   routeMenu: string = "";
   token: any = localStorage.getItem('tn');
-  optionNivelList: Array<any> = [
-    { id: "Administrador", value: "Administrador" },
-    { id: "rrhh", value: "RRhh" }
-  ];
+  optionNivelList: Array<any> = [];
 
   optionListHashNivel: Array<any> = [
     { id: "ADMINSITRADOR", value: "ADMINITRADOR" },
@@ -68,8 +67,8 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '7A', value: 'BBW JOCKEY', progress: 0 },
     { key: 'PC', value: 'AEO JOCKEY', progress: 0 },
     { key: 'PB', value: 'AEO ASIA', progress: 0 },
-    { key: "9N", value: "VSBA MALL AVENTURA", progress: 0  },
-    { key: "7J", value: "BBW MALL AVENTURA", progress: 0  },
+    { key: "9N", value: "VSBA MALL AVENTURA", progress: 0 },
+    { key: "7J", value: "BBW MALL AVENTURA", progress: 0 },
     { key: '7E', value: 'BBW LA RAMBLA', progress: 0 },
     { key: '9D', value: 'VS LA RAMBLA', progress: 0 },
     { key: '9B', value: 'VS PLAZA NORTE', progress: 0 },
@@ -90,14 +89,15 @@ export class MtConfiguracionComponent implements OnInit {
 
   optionListRol: Array<any> = [];
 
-  socket = io('http://172.26.46.13:4200', { query: { code: 'app', token: this.token } });
+  socket = io('http://190.117.53.247:3600', { query: { code: 'app', token: this.token } });
 
-  constructor(private modalCtrl: ModalController,private service: ShareService, private store: StorageService,) { }
+  constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService,private cdr:ChangeDetectorRef) { }
 
   ngOnInit() {
     this.onListPerfil();
     this.onListConfiguration();
     this.onListMenu();
+    this.onListRoles();
     this.socket.on('update:file:status', (status) => {
 
       let index = this.tiendasList.findIndex((tienda) => tienda.key == status.serie);
@@ -223,11 +223,28 @@ export class MtConfiguracionComponent implements OnInit {
 
     let parms = {
       url: '/settings/service/email/register',
-      body: { path: 'create-account', email: this.emailLinkRegistro, nivel: nivelUser }
+      body: { path: 'create-account', email: this.emailLinkRegistro, nivel: this.selectOption }
     };
 
     this.service.post(parms).then((response) => {
 
+    });
+  }
+
+  onListRoles() {
+    const self = this;
+    let parms = {
+      url: '/settings/service/lista/roles'
+    };
+
+    this.service.get(parms).then((response) => {
+      let rolesList = (response || {}).data || [];
+      (rolesList || []).filter((rol) => {
+        self.optionNivelList.push(
+          { id: (rol || {}).nom_rol, value: (rol || {}).nom_rol });
+      });
+      console.log(self.optionNivelList);
+     // self.cdr.detectChanges();
     });
   }
 
@@ -376,7 +393,7 @@ export class MtConfiguracionComponent implements OnInit {
     });
   }
 
-  async openModalMenuList(){
+  async openModalMenuList() {
     let modal = await this.modalCtrl.create({
       component: MtModalContentComponent,
       componentProps: {

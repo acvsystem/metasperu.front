@@ -31,6 +31,7 @@ export class AppComponent {
     private service: ShareService,
     private menu: MenuController
   ) {
+    console.log(this.menuUser);
     this.httpService.eventShowLoading.subscribe((response) => {
       setTimeout(()=>{
         this.isShowLoading = response;
@@ -51,62 +52,12 @@ export class AppComponent {
     });
 
     this.service.onMenuUser.subscribe((menu) => {
-      this.menuUser = [];
+      const self = this;
+      self.menuUser = [];
       this.store.removeStore("mt-menu");
-      let newMenu = [
-        {
-          KEY: "rrhh",
-          NAME_MENU: "Recursos Humanos",
-          ISVISIBLE: false,
-          RUTE_PAGE: "",
-          SUBMENU: []
-        }
-      ];
 
-      let menuUser = menu;
-
-      if (this.profileUser[0].nivel == "ADMINISTRADOR") {
-        newMenu.push(
-          {
-            KEY: "sistemas",
-            NAME_MENU: "Sistemas",
-            RUTE_PAGE: "",
-            ISVISIBLE: false,
-            SUBMENU: []
-          }
-        );
-      }
-
-      menuUser.filter((menu) => {
-        if ((menu || {}).RUTE_PAGE == 'empleados' || (menu || {}).RUTE_PAGE == 'control-asistencia' || (menu || {}).RUTE_PAGE == 'recursos-humanos') {
-          newMenu[0]['SUBMENU'].push(
-            {
-              NAME_MENU: menu.DESCRIPTION_MENU,
-              RUTE_PAGE: menu.RUTE_PAGE
-            }
-          );
-        } else if ((menu || {}).RUTE_PAGE == 'comprobantes-sunat' || (menu || {}).RUTE_PAGE == 'comprobantes') {
-          newMenu[1]['SUBMENU'].push(
-            {
-              NAME_MENU: menu.DESCRIPTION_MENU,
-              RUTE_PAGE: menu.RUTE_PAGE
-            }
-          );
-        } else {
-          newMenu.push(
-            {
-              KEY: "configuracion",
-              NAME_MENU: menu.DESCRIPTION_MENU,
-              RUTE_PAGE: menu.RUTE_PAGE,
-              ISVISIBLE: true,
-              SUBMENU: []
-            }
-          );
-        }
-      });
-
-      this.menuUser = newMenu;
-      this.store.setStore("mt-menu", JSON.stringify(this.menuUser));
+      self.menuUser = menu;
+      this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
     });
   }
 

@@ -17,7 +17,7 @@ export class ShareService {
   @Output() onNotification: EventEmitter<any> = new EventEmitter();
   @Output() onCloseSelect: EventEmitter<any> = new EventEmitter();
 
-  serverRute: string = 'http://159.65.226.239:4200';
+  serverRute: string = 'http://190.117.53.247:3600';
 
   constructor(private store: StorageService, private xhr: HttpService) { }
 

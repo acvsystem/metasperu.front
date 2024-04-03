@@ -20,7 +20,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isVisibleStatus: boolean = false;
   statusServerList: any = [];
   token: any = localStorage.getItem('tn');
-  socket = io('http://172.26.46.13:4200', { query: { code: 'app', token: this.token } });
+  socket = io('http://190.117.53.247:3600', { query: { code: 'app', token: this.token } });
 
   constructor(public modalCtrl: ModalController,) { }
 
