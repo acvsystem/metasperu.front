@@ -17,7 +17,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isConnectServer: string = 'false';
   isVisibleStatus: boolean = false;
   statusServerList: any = [];
-  socket = io('http://190.117.53.247:3200', { query: { code: 'app' } });
+  socket = io('http://190.117.53.171:3200', { query: { code: 'app' } });
 
   constructor() { }
 
