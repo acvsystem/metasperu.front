@@ -89,7 +89,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   optionListRol: Array<any> = [];
 
-  socket = io('http://190.117.53.247:3600', { query: { code: 'app', token: this.token } });
+  socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });
 
   constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService,private cdr:ChangeDetectorRef) { }
 

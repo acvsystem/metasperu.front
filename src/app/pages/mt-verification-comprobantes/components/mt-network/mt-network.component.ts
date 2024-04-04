@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 })
 export class MtNetworkComponent implements OnInit {
   token: any = localStorage.getItem('tn');
-  socket = io('http://190.117.53.247:3600', { query: { code: 'app', token: this.token } });
+  socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });
   arNetResponse: Array<any> = [];
   isLoading: boolean = false;
   isNetScan: boolean = false;

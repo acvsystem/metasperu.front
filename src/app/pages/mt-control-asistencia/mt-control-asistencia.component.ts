@@ -20,7 +20,7 @@ export class MtControlAsistenciaComponent implements OnInit {
   @ViewChild('MatPaginator_2') paginator_timerList: MatPaginator;
 
   token: any = localStorage.getItem('tn');
-  socket = io('http://190.117.53.247:3600', { query: { code: 'app', token: this.token } });
+  socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });
   bodyList: Array<any> = [];
   headList: Array<any> = [];
   dataPaginationList: Array<any> = [];
