@@ -9,9 +9,11 @@ import { ShareService } from 'src/app/services/shareService';
 export class MtMenuCrudComponent implements OnInit {
   nombreMenu: string = "";
   nombreRuta: string = "";
+  nombreIco: string = "";
   headList: Array<any> = [
     { value: "Descripcion" },
-    { value: "Ruta" }
+    { value: "Ruta" },
+    { value: "ico" }
   ];
   dataPaginationList: Array<any> = [];
 
@@ -19,7 +21,7 @@ export class MtMenuCrudComponent implements OnInit {
 
   ngOnInit() {
     this.onListMenu();
-   }
+  }
 
   onChangeInput(data: any) {
     let inputData = data || {};
@@ -32,9 +34,42 @@ export class MtMenuCrudComponent implements OnInit {
     this.dataPaginationList.push(
       {
         description: this.nombreMenu.toUpperCase(),
-        ruta: this.nombreRuta
+        ruta: this.nombreRuta,
+        ico: this.nombreIco
       }
     );
+
+    let bodyRegister = {
+      menu: this.nombreMenu.toUpperCase(),
+      ruta: this.nombreRuta,
+      ico: this.nombreIco
+    }
+
+    let parms = {
+      url: '/settings/service/registrar/menu',
+      body: bodyRegister
+    };
+
+
+    this.service.post(parms).then((response) => {
+    });
+
+  }
+
+  onDeleteMenu(id) {
+    let bodyRegister = {
+      id: id
+    }
+
+    let parms = {
+      url: '/settings/service/delete/menu',
+      body: bodyRegister
+    };
+
+
+    this.service.post(parms).then((response) => {
+      this.onListMenu();
+    });
   }
 
   onListMenu() {
@@ -50,12 +85,18 @@ export class MtMenuCrudComponent implements OnInit {
       dateMenuList.filter((menu) => {
         this.dataPaginationList.push(
           {
-            description: menu.DESCRIPTION_MENU,
-            ruta: '****'
+            id: menu.ID_MENU,
+            description: menu.NOMBRE_MENU,
+            ruta: menu.RUTA,
+            ico: menu.ICO
           }
         );
       })
     });
+  }
+
+  onSelected(ev) {
+    console.log(ev);
   }
 
 

@@ -1,6 +1,7 @@
+
 <div class="content">
   <ion-row>
-    <ion-col sizeXs="6" sizeSm="6" sizeMd="5" sizeLg="5">
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
       <mt-input
       id="nombreMenu"
       label="Nombre Menu"
@@ -10,12 +11,22 @@
       type="text"
       ></mt-input>
     </ion-col>
-    <ion-col sizeXs="6" sizeSm="6" sizeMd="5" sizeLg="5">
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="3">
       <mt-input
       id="nombreRuta"
       label="Ruta"
       placeholder="Nombre Ruta"
       value="{{ nombreRuta }}"
+      (afterChange)="onChangeInput($event)"
+      type="text"
+      ></mt-input>
+    </ion-col>
+    <ion-col sizeXs="6" sizeSm="6" sizeMd="3" sizeLg="4">
+      <mt-input
+      id="nombreIco"
+      label="Icono"
+      placeholder="script icono"
+      value="{{ nombreIco }}"
       (afterChange)="onChangeInput($event)"
       type="text"
       ></mt-input>
@@ -30,21 +41,29 @@
     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-          <table class="table table-bordered table-responsive-sm">
-            <thead>
-              <tr>
-                <th class="columHead" *ngFor="let columHead of headList;let i = index">
-                  <span>{{columHead.value}}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let columBody of dataPaginationList;let index = index">
-                <td class="columBody">{{columBody.description}}</td>
-                <td class="columBody">{{columBody.ruta}}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div>
+            <table class="table table-bordered table-responsive-sm">
+              <thead>
+                <tr>
+                  <th class="columHead" *ngFor="let columHead of headList;let i = index">
+                    <span>{{columHead.value}}</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let columBody of dataPaginationList;let index = index" (click)="onSelected($event)">
+                  <td class="columBody">{{columBody.description}}</td>
+                  <td class="columBody">{{columBody.ruta}}</td>
+                  <td class="columBody">{{columBody.ico}}</td>
+                  <td class="columBody">
+                    <button (click)="onDeleteMenu(columBody.id)" type="button" class="btn btn-danger btn-sm">
+                      <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ion-col>
       </ion-row>
     </ion-col>

@@ -198,36 +198,6 @@
                   <div class="content-view">
                     <ion-row class="border-bottom-title">
                       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                        <span class="title card-title">Estatus de actualizacion</span>
-                      </ion-col>
-                    </ion-row>
-                    <ion-row>
-                      <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
-                        <ol class="list-group">
-                          <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
-                            <div class="ms-2 me-auto">
-                              <div class="fw-bold">{{tienda.value}}</div>
-                            </div>
-                            <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i class="fa fa-check" aria-hidden="true"></i></span>
-                            <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
-                          </li>
-                        </ol>
-                      </ion-col>
-                    </ion-row>
-                  </div>
-                </ion-col>
-              </ion-row>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <div class="card-content-configuration">
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                  <div class="content-view">
-                    <ion-row class="border-bottom-title">
-                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                         <span class="title card-title">Configuracion menu</span>
                       </ion-col>
                     </ion-row>
@@ -236,7 +206,7 @@
                         <mt-select
                         id="lstRol"
                         placeHolder="Seleccione Rol"
-                        [optionList]="optionListRol"
+                        [optionList]="optionNivelList"
                         (changeSelected)="onChangeSelect($event)"
                         ></mt-select>
                       </ion-col>
@@ -244,7 +214,6 @@
                         <div class="content-button-rol">
                           <button type="button" (click)="onSaveMenuUser()" class="btn btn-outline-secondary btn-sm">
                             <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                            Guardar
                           </button>
                           <button (click)="openModalMenuList()" type="button" class="btn btn-outline-secondary btn-sm">
                             <i class="fa fa-th-list" aria-hidden="true"></i>
@@ -291,6 +260,38 @@
             </div>
           </ion-col>
         </ion-row>
+        <!--
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="card-content-configuration">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div class="content-view">
+                    <ion-row class="border-bottom-title">
+                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <span class="title card-title">Estatus de actualizacion</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                        <ol class="list-group">
+                          <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
+                            <div class="ms-2 me-auto">
+                              <div class="fw-bold">{{tienda.value}}</div>
+                            </div>
+                            <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i class="fa fa-check" aria-hidden="true"></i></span>
+                            <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
+                          </li>
+                        </ol>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
+        -->
       </ion-col>
     </ion-row>
   </div>

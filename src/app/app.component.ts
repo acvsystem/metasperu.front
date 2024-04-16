@@ -6,7 +6,7 @@ import { StorageService } from './utils/storage';
 import { NavController } from '@ionic/angular';
 import { ShareService } from './services/shareService';
 import { MenuController } from '@ionic/angular';
-
+import {UAParser} from 'ua-parser-js';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -65,8 +65,17 @@ export class AppComponent {
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
-
     this.isMobil = window.innerWidth < 769;
+    var myOwnListOfBrowsers = [
+      [/(mybrowser)\/([\w\.]+)/i], [UAParser.BROWSER.NAME, UAParser.BROWSER.VERSION]
+  ];
+  /*var myParser = new UAParser({ browser: myOwnListOfBrowsers });
+    console.log(myParser.getBrowser()); // {}
+    console.log(myParser.getOS()); // {}
+    console.log(myParser.getUA()); // {}
+    console.log(myParser.getEngine()); // {}
+    console.log(myParser.getResult()); // {}
+    console.log(myParser);*/
     /*  let pathActual: any = {};
       pathActual = {
         value: this.store.getStore('pathURL') || location.pathname.split('/')[1]

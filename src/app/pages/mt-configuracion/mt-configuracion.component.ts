@@ -52,7 +52,7 @@ export class MtConfiguracionComponent implements OnInit {
   routeMenu: string = "";
   token: any = localStorage.getItem('tn');
   optionNivelList: Array<any> = [];
-
+  selectOptionNivel= {};
   optionListHashNivel: Array<any> = [
     { id: "ADMINSITRADOR", value: "ADMINITRADOR" },
     { id: "SERVER", value: "SERVER" },
@@ -154,13 +154,13 @@ export class MtConfiguracionComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
-  }
+  } 
 
   async onChangeSelect(data: any) {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-
+    console.log(data);
     this.onListMenuUsuario().then((menu: Array<any>) => {
       this.notOptionMenuUserList = [];
       this.optionMenuUserList = [];
@@ -219,11 +219,12 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onSendLinkRegister() {
-    var nivelUser = this.selectNivel;
+    const self = this;
+    var nivelUser = self.selectNivel;
 
     let parms = {
       url: '/settings/service/email/register',
-      body: { path: 'create-account', email: this.emailLinkRegistro, nivel: this.selectOption }
+      body: { path: 'create-account', email: this.emailLinkRegistro, nivel: nivelUser }
     };
 
     this.service.post(parms).then((response) => {
@@ -241,7 +242,7 @@ export class MtConfiguracionComponent implements OnInit {
       let rolesList = (response || {}).data || [];
       (rolesList || []).filter((rol) => {
         self.optionNivelList.push(
-          { id: (rol || {}).nom_rol, value: (rol || {}).nom_rol });
+          { key: (rol || {}).id_rol, value: (rol || {}).nom_rol });
       });
       console.log(self.optionNivelList);
      // self.cdr.detectChanges();
@@ -285,7 +286,7 @@ export class MtConfiguracionComponent implements OnInit {
         let menuUser = (response || {}).data || [];
         let menu = [];
         menuUser.filter((menuUser) => {
-          menu.push((menuUser || {}).DESCRIPTION_MENU);
+          menu.push((menuUser || {}).NOMBRE_MENU);
         });
 
         if (menu.length) {
@@ -311,7 +312,7 @@ export class MtConfiguracionComponent implements OnInit {
       this.notOptionMenuUserList = [];
 
       dateMenuList.filter((menu) => {
-        this.menuAllList.push(menu.DESCRIPTION_MENU);
+        this.menuAllList.push(menu.NOMBRE_MENU);
         this.optionMenuKey.push(menu);
       })
     });
@@ -369,13 +370,13 @@ export class MtConfiguracionComponent implements OnInit {
     let notOption = [];
 
     this.optionMenuUserList.filter((op) => {
-      let option = this.optionMenuKey.find((mk) => mk.DESCRIPTION_MENU == op);
-      menuUser.push(option['ID_MENU_DESC']);
+      let option = this.optionMenuKey.find((mk) => mk.NOMBRE_MENU == op);
+      menuUser.push(option['ID_MENU']);
     });
 
     this.notOptionMenuUserList.filter((op) => {
-      let option = this.optionMenuKey.find((mk) => mk.DESCRIPTION_MENU == op);
-      notOption.push(option['ID_MENU_DESC']);
+      let option = this.optionMenuKey.find((mk) => mk.NOMBRE_MENU == op);
+      notOption.push(option['ID_MENU']);
     });
 
 
