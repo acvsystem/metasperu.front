@@ -1,0 +1,179 @@
+<ion-content>
+  <div id="content">
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h3 class="number-text text-red">20</h3>
+                    <p class="subtitle text-sm text-muted mb-0">Cantidad Tiendas</p>
+                  </div>
+                  <div class="content-icon">
+                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer py-3 bg-red-light">
+                <div class="row align-items-center text-red">
+                  <div class="col-10">
+                    <p class="mb-0">ver mas</p>
+                  </div>
+                  <div class="col-2 text-end"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h3 class="number-text text-red">20</h3>
+                    <p class="subtitle text-sm text-muted mb-0">clientes blanco</p>
+                  </div>
+                  <div class="content-icon">
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer py-3 bg-red-light">
+                <div class="row align-items-center text-red">
+                  <div class="col-10">
+                    <p class="mb-0">ver mas</p>
+                  </div>
+                  <div class="col-2 text-end"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h3 class="number-text text-red">0</h3>
+                    <p class="subtitle text-sm text-muted mb-0">Errores Sunat</p>
+                  </div>
+                  <div class="content-icon">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer py-3 bg-red-light">
+                <div class="row align-items-center text-red">
+                  <div class="col-10">
+                    <p class="mb-0">ver mas</p>
+                  </div>
+                  <div class="col-2 text-end"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h3 class="number-text text-red">200</h3>
+                    <p class="subtitle text-sm text-muted mb-0">Empleados</p>
+                  </div>
+                  <div class="content-icon">
+                    <i class="fa fa-suitcase" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer py-3 bg-red-light">
+                <div class="row align-items-center text-red">
+                  <div class="col-10">
+                    <p class="mb-0">ver mas</p>
+                  </div>
+                  <div class="col-2 text-end"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let columBody of bodyList;let index = index">
+              <td class="columBody">{{index + 1}}</td>
+              <td class="columBody">{{columBody.codigo}}</td>
+              <td class="columBody">{{columBody.Tienda}}</td>
+              <td class="columBody">
+                <span class="badge bg-success-comprobantes" *ngIf="columBody.isVerification == 1">ready</span>
+                <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
+              </td>
+              <td class="columBody">
+                <span class="badge bg-success-comprobantes"
+                  *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                <span class="badge bg-danger"
+                  *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+              </td>
+              <td class="columBody">
+                <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
+              </td>
+              <td class="columBody">
+                <div [ngClass]="[columBody.conexICG == 1 ? 'blob blue': 'blob red']"></div>
+              </td>
+              <td class="columBody">
+                <button (click)="openModalSelectContrato()" type="button" class="btn btn-outline-primary btn-sm"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral only-mobil">
+        <ion-row *ngFor="let columBody of bodyList">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+            <ion-item class="item-mobile">
+              <ion-avatar slot="start" class="full-center">
+                {{columBody.codigo}}
+                <span
+                  class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status"
+                  *ngIf="columBody.online == 1">
+                  <span class="visually-hidden">New alerts</span>
+                </span>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status"
+                  *ngIf="columBody.online == 0">
+                  <span class="visually-hidden">New alerts</span>
+                </span>
+              </ion-avatar>
+              <div class="body">
+                <div class="content-title">
+                  <span class="title">{{columBody.Tienda}}</span>
+                  <span class="status"><i class="fa fa-check-circle" aria-hidden="true"
+                      *ngIf="columBody.isVerification == 1"></i></span>
+                  <span class="status"><i class="fa fa-times" aria-hidden="true"
+                      *ngIf="columBody.isVerification == 0"></i></span>
+                </div>
+              </div>
+              <div slot="end" class="estados">
+                <span class="badge rounded-pill bg-success"
+                  *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                <span class="badge rounded-pill bg-danger"
+                  *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+              </div>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

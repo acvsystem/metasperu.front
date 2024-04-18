@@ -36,6 +36,7 @@ import { MtMenuCrudComponent } from './pages/mt-configuracion/component/mt-menu-
 import { MtFrmAddressPostulantComponent } from './pages/mt-inscription-postulant/components/mt-frm-address-postulant/mt-frm-address-postulant.component';
 import { MtSelectContratosComponent } from './pages/mt-inscription-postulant/components/mt-select-contratos/mt-select-contratos.component';
 import { MtNetworkComponent } from './pages/mt-verification-comprobantes/components/mt-network/mt-network.component';
+import { MtDashboardComponent } from './pages/mt-dashboard/mt-dashboard.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -53,6 +54,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+
 
 @NgModule({
   declarations: [
@@ -84,7 +86,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MtMenuCrudComponent,
     MtFrmAddressPostulantComponent,
     MtSelectContratosComponent,
-    MtNetworkComponent
+    MtNetworkComponent,
+    MtDashboardComponent
   ],
   imports: [
     BrowserModule,

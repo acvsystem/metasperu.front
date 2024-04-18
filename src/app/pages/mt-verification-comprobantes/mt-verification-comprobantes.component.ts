@@ -17,7 +17,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   bodyListSunat: Array<any> = [];
   actionButton: boolean = true;
   isConnectServer: string = 'false';
-  isVisibleStatus: boolean = false;
+  isVisibleStatus: boolean = true;
   statusServerList: any = [];
   token: any = localStorage.getItem('tn');
   socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });

@@ -11,6 +11,7 @@ import { MtRecursosHumanosComponent } from './pages/mt-recursos-humanos/mt-recur
 import { MtControlAsistenciaComponent } from './pages/mt-control-asistencia/mt-control-asistencia.component';
 import { MtFrmInscriptionComponent } from './pages/mt-inscription-postulant/components/mt-frm-inscription/mt-frm-inscription.component';
 import { MtEmployeeComponent } from './pages/mt-employee/mt-employee.component';
+import { MtDashboardComponent } from './pages/mt-dashboard/mt-dashboard.component';
 
 const routes: Routes = [
   {
@@ -58,6 +59,11 @@ const routes: Routes = [
   {
     path: 'empleados',
     component: MtEmployeeComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'dashboard',
+    component: MtDashboardComponent,
     canActivate: [authGuard]
   },
   {
