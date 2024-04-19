@@ -10,6 +10,7 @@ export class MtDashboardComponent implements OnInit {
   headList: Array<any> = [];
   headListSunat: Array<any> = [];
   bodyList: Array<any> = [];
+  bodyListSunat: Array<any> = [];
   token: any = localStorage.getItem('tn');
   socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });
 
@@ -18,6 +19,7 @@ export class MtDashboardComponent implements OnInit {
   ngOnInit() {
     const self = this;
     this.headList = ['Codigo', 'Tienda', 'Comprobantes', 'Online']
+    this.headListSunat = ['Nro Correlativo', 'Num documento', 'Estado Sunat', 'Estado Comprobante', 'Emision']
 
     this.socket.on('sessionConnect', (listaSession) => {
       console.log(listaSession);
@@ -50,6 +52,12 @@ export class MtDashboardComponent implements OnInit {
           }
         });
       }
+    });
+
+    
+    this.socket.emit('consultingClient', 'angular');
+    this.socket.on('resClient', (listaSession) => {
+      console.log(listaSession);
     });
   }
 
