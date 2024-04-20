@@ -12,6 +12,7 @@ export class MtDashboardComponent implements OnInit {
   bodyList: Array<any> = [];
   bodyListSunat: Array<any> = [];
   token: any = localStorage.getItem('tn');
+  countClientes: any = 0;
   socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });
 
   constructor() { }
@@ -54,10 +55,12 @@ export class MtDashboardComponent implements OnInit {
       }
     });
 
-    
+
     this.socket.emit('consultingClient', 'angular');
-    this.socket.on('resClient', (listaSession) => {
-      console.log(listaSession);
+    this.socket.on('sendDataClient', (listaSession) => {
+      let cantidad = JSON.parse(listaSession)[0].clientCant;
+      console.log(cantidad);
+      this.countClientes += cantidad;
     });
   }
 
