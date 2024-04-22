@@ -8,8 +8,8 @@
               <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                   <div>
-                    <h3 class="number-text text-red">20</h3>
-                    <p class="subtitle text-sm text-muted mb-0">Cantidad Tiendas</p>
+                    <h3 class="number-text text-red">{{countTiendasOnline}}</h3>
+                    <p class="subtitle text-sm text-muted mb-0">Tiendas Online</p>
                   </div>
                   <div class="content-icon">
                     <i class="fa fa-shopping-bag" aria-hidden="true"></i>
@@ -138,16 +138,10 @@
               </thead>
               <tbody>
                 <tr *ngFor="let columBody of bodyListSunat;let index = index">
-                  <td class="columBody">{{index + 1}}</td>
-                  <td class="columBody">{{columBody.cod_documento}}</td>
                   <td class="columBody">{{columBody.nro_correlativo}}</td>
-                  <td class="columBody">{{columBody.nom_aquiriente}}</td>
                   <td class="columBody">{{columBody.nro_documento}}</td>
-                  <td class="columBody">{{columBody.tipo_doc_adquiriente}}</td>
-                  <td class="columBody">{{columBody.observacion}}</td>
                   <td class="columBody">{{columBody.estado_sunat}}</td>
                   <td class="columBody">{{columBody.estado_comprobante}}</td>
-                  <td class="columBody">{{columBody.codigo_sunat}}</td>
                   <td class="columBody">{{columBody.fecha_emision}}</td>
                 </tr>
                 <tr>
