@@ -17,15 +17,17 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isConnectServer: string = 'false';
   isVisibleStatus: boolean = false;
   statusServerList: any = [];
+  countClientes: any = 0;
   socket = io('http://190.117.53.171:3200', { query: { code: 'app' } });
 
   constructor() { }
 
   ngOnInit() {
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Conexion Comprobantes', 'Conexion ICG']
+    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes Blanco', 'Conexion Comprobantes', 'Conexion ICG']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
     this.onTransacciones();
+    this.onListClientesNull();
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
       dataList = sunat || [];
@@ -69,6 +71,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
             isVerification: (dataSocket || {}).VERIFICACION,
             cant_comprobantes: (dataSocket || {}).CANT_COMPROBANTES,
             transacciones: 0,
+            clientes_null: 0,
             online: (dataSocket || {}).ISONLINE,
             conexICG: 0
           });
@@ -87,7 +90,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
           }
         });
       }
-      
+
     });
 
     this.socket.on('dataTransaction', (dataSocket) => {
@@ -114,6 +117,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.isConnectServer = isConect;
     });
 
+    this.socket.on('sendDataClient', (dataSocket) => {
+      let codigo = (dataSocket || [])[0].code;
+      let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+      if (indexData != -1) {
+        (this.bodyList || [])[indexData].clientes_null = (dataSocket || [])[0].clientCant;
+      }
+    });
+
   }
 
   onVerify() {
@@ -122,6 +133,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   onTransacciones() {
     this.socket.emit('emitTransaction', 'angular');
+  }
+
+  onListClientesNull(){
+    this.socket.emit('cleanClient', 'angular');
+  }
+
+  onClientesNull() {
+    this.socket.emit('emitCleanClient', 'angular');
   }
 
   onSessionList() {

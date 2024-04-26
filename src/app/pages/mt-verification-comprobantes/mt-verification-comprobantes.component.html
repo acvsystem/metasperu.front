@@ -6,6 +6,7 @@
           <div class="content-button">
             <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
             <button (click)="onTransacciones()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Transacciones</button>
+            <button (click)="onClientesNull()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Clientes</button>
           </div>
         </ion-col>
         <ion-col sizeXs="7" sizeSm="7" sizeMd="7" sizeLg="7" class="aling-right content-btn-fact">
@@ -134,6 +135,12 @@
                       *ngIf="columBody.transacciones == 0">0</span>
                       <span class="badge bg-danger"
                       *ngIf="columBody.transacciones != 0">{{columBody.transacciones}}</span>
+                    </td>
+                    <td class="columBody">
+                      <span class="badge bg-success-comprobantes"
+                      *ngIf="columBody.clientes_null == 0">0</span>
+                      <span class="badge bg-danger"
+                      *ngIf="columBody.clientes_null != 0">{{columBody.clientes_null}}</span>
                     </td>
                     <td class="columBody">
                       <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
