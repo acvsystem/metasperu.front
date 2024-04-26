@@ -69,6 +69,7 @@ export class MtDashboardComponent implements OnInit {
 
     this.socket.emit('consultingClient', 'angular');
     this.socket.on('sendDataClient', (listaSession) => {
+      this.countClientes = 0;
       let cantidad = JSON.parse(listaSession)[0].clientCant;
       console.log(cantidad);
       this.countClientes += cantidad;
