@@ -27,7 +27,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes Blanco', 'Conexion Comprobantes', 'Conexion ICG']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
     this.onTransacciones();
-    this.onListClientesNull();
+    //this.onListClientesNull();
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
       dataList = sunat || [];
@@ -118,6 +118,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('sendDataClient', (dataSocket) => {
+      console.log(dataSocket);
       let codigo = (dataSocket || [])[0].code;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {

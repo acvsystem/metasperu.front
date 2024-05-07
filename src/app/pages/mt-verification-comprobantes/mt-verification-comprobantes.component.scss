@@ -283,5 +283,10 @@ ion-item {
     display: flex !important;
     align-items: center !important;
     width: 100% !important;
-    height: 100% !important; 
+    height: 100% !important;
+
+    i {
+        margin-right: 5px !important;
+    }
 }
+
