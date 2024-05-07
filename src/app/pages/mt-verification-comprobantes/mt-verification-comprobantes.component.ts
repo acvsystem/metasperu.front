@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
 import { Socket } from 'ngx-socket-io';
 import { map } from 'rxjs/operators';
+import { ShareService } from 'src/app/services/shareService';
 @Component({
   selector: 'app-mt-verification-comprobantes',
   templateUrl: './mt-verification-comprobantes.component.html',
@@ -23,7 +24,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   contadorCliente: any = 0;
   contadorCajaOnline: any = 0;
 
-  constructor() { }
+  constructor(private service: ShareService) { }
 
   ngOnInit() {
     const self = this;
@@ -64,7 +65,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.on('sessionConnect', (listaSession) => {
       let dataList = [];
       dataList = listaSession || [];
-
       if (dataList.length > 1) {
         this.bodyList = [];
         (dataList || []).filter((dataSocket: any) => {
@@ -81,11 +81,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
         });
 
         (this.bodyList || []).filter((data: any) => {
-        
-          if(data.online){
+
+          if (data.online) {
             this.contadorCajaOnline += 1;
           }
-          
+
         });
       } else {
         (dataList || []).filter((dataSocket: any) => {
@@ -100,12 +100,32 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.bodyList || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
           }
         });
+        this.isShowLoading = false;
       }
 
     });
 
     this.socket.on('dataTransaction', (dataSocket) => {
       let codigo = (dataSocket || [])[0].code;
+      this.contadorCliente += 1;
+      if (this.contadorCliente == this.contadorCajaOnline) {
+        this.isShowLoading = false;
+        let notificationList = [{
+          isSuccess: true,
+          bodyNotification: "Proceso Exitoso."
+        }];
+
+        this.service.onNotification.emit(notificationList);
+      } else {
+        this.isShowLoading = false;
+        let notificationList = [{
+          isCaution: true,
+          bodyNotification: "No se ejecuto el proceso en algunas cajas."
+        }];
+
+        this.service.onNotification.emit(notificationList);
+      }
+
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {
         (this.bodyList || [])[indexData].transacciones = (dataSocket || [])[0].transaciones;
@@ -131,11 +151,26 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
     this.socket.on('sendDataClient', (dataSocket) => {
       this.contadorCliente += 1;
-     console.log(this.contadorCliente,dataSocket[0].code);
 
       if (this.contadorCliente == this.contadorCajaOnline) {
         this.isShowLoading = false;
+        let notificationList = [{
+          isSuccess: true,
+          bodyNotification: "Proceso Exitoso."
+        }];
+
+        this.service.onNotification.emit(notificationList);
+      } else {
+        this.isShowLoading = false;
+        let notificationList = [{
+          isCaution: true,
+          bodyNotification: "No se ejecuto el proceso en algunas cajas."
+        }];
+
+        this.service.onNotification.emit(notificationList);
       }
+
+
       let codigo = (dataSocket || [])[0].code;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {
@@ -146,10 +181,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
   }
 
   onVerify() {
+    this.isShowLoading = true;
+    this.contadorCliente = 0;
     this.socket.emit('comunicationFront', 'angular');
   }
 
   onTransacciones() {
+    this.isShowLoading = true;
+    this.contadorCliente = 0;
     this.socket.emit('emitTransaction', 'angular');
   }
 
@@ -160,6 +199,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
   }
 
   onClientesNull() {
+    this.isShowLoading = true;
+    this.contadorCliente = 0;
     this.socket.emit('emitCleanClient', 'angular');
   }
 
