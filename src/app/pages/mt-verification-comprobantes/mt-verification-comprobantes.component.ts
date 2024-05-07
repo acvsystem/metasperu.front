@@ -19,6 +19,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
   statusServerList: any = [];
   countClientes: any = 0;
   socket = io('http://190.117.53.171:3200', { query: { code: 'app' } });
+  isShowLoading: boolean = false;
+  contadorCliente: any = 0;
+  contadorCajaOnline: any = 0;
 
   constructor() { }
 
@@ -76,6 +79,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
             conexICG: 0
           });
         });
+
+        (this.bodyList || []).filter((data: any) => {
+        
+          if(data.online){
+            this.contadorCajaOnline += 1;
+          }
+          
+        });
       } else {
         (dataList || []).filter((dataSocket: any) => {
           let codigo = (dataSocket || {}).CODIGO_TERMINAL;
@@ -117,8 +128,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.isConnectServer = isConect;
     });
 
+
     this.socket.on('sendDataClient', (dataSocket) => {
-      console.log(dataSocket);
+      this.contadorCliente += 1;
+     console.log(this.contadorCliente,dataSocket[0].code);
+
+      if (this.contadorCliente == this.contadorCajaOnline) {
+        this.isShowLoading = false;
+      }
       let codigo = (dataSocket || [])[0].code;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {
@@ -136,7 +153,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.emit('emitTransaction', 'angular');
   }
 
-  onListClientesNull(){
+  onListClientesNull() {
+    this.isShowLoading = true;
+    this.contadorCliente = 0;
     this.socket.emit('cleanClient', 'angular');
   }
 
