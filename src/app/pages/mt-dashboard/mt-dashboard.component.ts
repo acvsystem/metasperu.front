@@ -15,7 +15,7 @@ export class MtDashboardComponent implements OnInit {
   countClientes: any = 0;
   countTiendasOnline: any = 0;
   countTiendasOffline: any = 0;
-  socket = io('http://190.117.53.171:3600', { query: { code: 'app', token: this.token } });
+  socket = io('http://38.187.8.22:3600', { query: { code: 'app', token: this.token } });
 
   constructor() { }
 
