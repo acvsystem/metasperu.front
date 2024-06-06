@@ -19,6 +19,7 @@ import { MtFrmInscriptionComponent } from './pages/mt-inscription-postulant/comp
 import { MtNavStepComponent } from './components/mt-nav-step/mt-nav-step.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
 import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
+import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
@@ -37,7 +38,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtFrmInscriptionComponent,
     MtNavStepComponent,
     MtVerificationComprobantesComponent,
-    MtNotificationComponent
+    MtNotificationComponent,
+    MtArticulosComponent
   ],
   imports: [
     BrowserModule, 

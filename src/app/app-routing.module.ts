@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MtLoginComponent } from './pages/mt-login/mt-login.component';
-import { MtInscriptionPostulantComponent } from './pages/mt-inscription-postulant/mt-inscription-postulant.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
+import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.component';
+import { AuthGuardService as authGuard } from './services/authGuardServices';
 
 const routes: Routes = [
   {
@@ -14,12 +15,14 @@ const routes: Routes = [
     component: MtLoginComponent
   },
   {
-    path: 'inscription',
-    component: MtInscriptionPostulantComponent
+    path: 'comprobantes',
+    component: MtVerificationComprobantesComponent,
+    canActivate: [authGuard]
   },
   {
-    path: 'comprobantes',
-    component: MtVerificationComprobantesComponent
+    path: 'inventario',
+    component: MtArticulosComponent,
+    canActivate: [authGuard]
   }
 ];
 

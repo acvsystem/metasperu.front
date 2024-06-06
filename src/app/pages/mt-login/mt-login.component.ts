@@ -31,11 +31,14 @@ export class MtLoginComponent implements OnInit {
 
 
   onLogin() {
+
+    console.log(this.userName, this.password);
+    /*
     this.shrService.createToken(this.userName, this.password).then((token) => {
       if (token) {
         this.nav.navigateRoot('comprobantes');
       }
-    });
+    });*/
   }
 
   onChangeInput(data: any) {
