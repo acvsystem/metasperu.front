@@ -1,22 +1,68 @@
-<ion-app>
-  <mt-notification></mt-notification>
+<ion-progress-bar 
+  class="{{ isShowLoading ? 'show' : 'hide' }}" 
+  type="indeterminate" 
+  style="z-index: 1000;">
+</ion-progress-bar>
+
+<ion-app [class]="[isMobil ? 'renderMobil':'']">
+  
   <ion-menu contentId="main-content">
     <ion-header>
       <ion-toolbar>
         <ion-title>METAS PERU</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding"></ion-content>
+    <ion-content class="ion-padding">
+      <section *ngFor="let menu of menuUser" class="content-item">
+        <div (click)="menu.ISVISIBLE = !menu.ISVISIBLE" *ngIf="menu.submenu.length" class="item-menu">
+          <span>{{menu.nombre_menu}}</span>
+        </div>
+        <div (click)="onNavigatorRoute(menu.ruta)" *ngIf="!menu.submenu.length"  class="item-menu">
+          <span>{{menu.nombre_menu}}</span>
+        </div>
+        <section *ngIf="menu.ISVISIBLE" class="all-content-submenu">       
+          <section *ngFor="let submenu of menu.submenu" class="content-submenu">   
+            <div class="line-vertical"></div>
+            <div class="line-horizontal"></div>
+            <div (click)="onNavigatorRoute(submenu.ruta)" class="submenu-item" >
+              <span>{{submenu.nombre_submenu}}</span>
+            </div>
+          </section>
+        </section>
+
+      </section>
+    </ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
-    <ion-header>
+    <ion-header *ngIf="renderNavBar" [class]="[isMobil ? 'renderMobil':'']">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>METAS PERU</ion-title>
+        <ion-title class="headerTitle">METAS PERU</ion-title>
+        <div slot="end" class="content-profile">
+          <div class="profile-name" *ngFor="let profile of profileUser">
+            <span class="name">
+              <label>{{profile.name_1}}</label><label>&nbsp;{{profile.name_2}}</label>
+            </span>
+            <span class="nivel">{{profile.nivel}}</span>
+          </div>
+          <div class="profile-logo">
+            <ion-avatar slot="start">
+              <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+          </div>
+          <div class="profile-ico" (click)="isVisiblePopover = !isVisiblePopover">
+            <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+          </div>
+        </div>
       </ion-toolbar>
+      <mt-popover *ngIf="isVisiblePopover"
+        [menuList]="menuList"
+        (onClickedCallback)="onFunctionMenu($event)"
+      ></mt-popover>
     </ion-header>
+    
     <ion-content class="ion-padding">
       <ion-router-outlet></ion-router-outlet>
     </ion-content>
