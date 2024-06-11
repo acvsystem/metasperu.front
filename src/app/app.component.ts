@@ -39,11 +39,11 @@ export class AppComponent {
     });
 
     this.service.onProfileUser.subscribe((profile) => {
+      console.log(profile);
       this.profileUser = [];
       let newProfile = {
         name_1: profile.name.split(' ')[0],
-        name_2: profile.name.split(' ')[1],
-        nivel: profile.nivel
+        nivel: profile.name.split(' ')[0]
       };
 
       this.profileUser.push(newProfile);

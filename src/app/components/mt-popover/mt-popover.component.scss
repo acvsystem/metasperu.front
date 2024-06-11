@@ -1,0 +1,40 @@
+.menu-profile {
+    position: absolute !important;
+    top: 72px !important;
+    right: 0px !important;
+    display: grid !important;
+    width: 180px !important;
+    padding: 8px 5px !important;
+    background: white !important;
+    border-radius: 5px !important;
+    border: 1px solid #e1e1e1 !important;
+    box-shadow: 0 40px 40px rgb(0 0 0 / 6%);
+    transition: 0.25s !important;
+    font-size: 14px !important;
+}
+
+.menu-profile::before {
+    content: "" !important;
+    background: inherit !important;
+    border-top: 1px solid #e1e1e1 !important;
+    border-right: 1px solid #e1e1e1 !important;
+    position: absolute !important;
+    top: -7px !important;
+    right: 22px !important;
+    width: 12px !important;
+    height: 12px !important;
+    rotate: -45deg !important;
+}
+
+.menu-profile {
+    span {
+        cursor: pointer !important;
+        border: none !important;
+        padding: 0 5px !important;
+        border-radius: 5px !important;
+    }
+
+    span:hover {
+        background: #efebeb !important;
+    }
+}

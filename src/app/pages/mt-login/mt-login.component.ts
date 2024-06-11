@@ -20,19 +20,19 @@ export class MtLoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    document.addEventListener('keydown', (event) => {
-      var keyValue = event.key;
-      if (keyValue == "Enter") {
-        this.onLogin();
-      }
-    }, false);
+    /* document.addEventListener('keydown', (event) => {
+       var keyValue = event.key;
+       if (keyValue == "Enter") {
+         this.onLogin();
+       }
+     }, false);*/
   }
 
 
   onLogin() {
     this.shrService.createToken(this.userName, this.password).then((token) => {
       if (token) {
-        this.nav.navigateRoot('comprobantes');
+        this.onRouteDefault();
       }
     });
   }
@@ -41,6 +41,16 @@ export class MtLoginComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
+  }
+
+  onRouteDefault() {
+    let profileUser = this.store.getStore('mt-profile');
+    if ((profileUser || {}).nivel == "INVENTARIO") {
+      this.nav.navigateRoot('inventario');
+    } else if ((profileUser || {}).nivel == "SISTEMAS") {
+      this.nav.navigateRoot('comprobantes');
+    }
+
   }
 
 }

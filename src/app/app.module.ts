@@ -20,6 +20,7 @@ import { MtNavStepComponent } from './components/mt-nav-step/mt-nav-step.compone
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
 import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
 import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.component';
+import { MtPopoverComponent } from './components/mt-popover/mt-popover.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
@@ -39,7 +40,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtNavStepComponent,
     MtVerificationComprobantesComponent,
     MtNotificationComponent,
-    MtArticulosComponent
+    MtArticulosComponent,
+    MtPopoverComponent
   ],
   imports: [
     BrowserModule, 
