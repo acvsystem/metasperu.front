@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'mt-input',
@@ -12,16 +13,29 @@ export class MtInputComponent implements OnInit {
   @Input() placeholder: string = "placeholder";
   @Input() value: string = "";
   @Input() isCopy: boolean = false;
+  @Input() sizeSllim: boolean = false;
+  @Input() isRequired: boolean = false;
+  @Input() isDisabled: boolean = false;
+  @Input() addClass: string = "";
+  @Output() afterChange: EventEmitter<any> = new EventEmitter();
   viewPassword: boolean = false;
   typePassword: string = "password";
 
-  constructor() { }
+  constructor(private clipboard: Clipboard) { }
 
   ngOnInit() { }
 
   onCopyText() {
-    var copyTextarea = document.getElementById("inputURL") as HTMLInputElement;
-    copyTextarea.select();
-    document.execCommand("copy");
+    var copyTextarea = document.getElementById(`${this.id}`) as HTMLInputElement;
+    //copyTextarea.select();
+    this.clipboard.copy;
+    //document.execCommand("copy");
+  }
+
+  onChange(ev: any) {
+    const self = this;
+    let value = (ev.target.value || '').trim();
+    // this.checkout.setValues(this.id, value);
+    this.afterChange.emit({ id: self.id, value: value });
   }
 }

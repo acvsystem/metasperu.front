@@ -20,25 +20,21 @@ export class MtLoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-/*
     document.addEventListener('keydown', (event) => {
       var keyValue = event.key;
       if (keyValue == "Enter") {
         this.onLogin();
       }
-    }, false);*/
+    }, false);
   }
 
 
   onLogin() {
-
-    console.log(this.userName, this.password);
-    /*
     this.shrService.createToken(this.userName, this.password).then((token) => {
       if (token) {
         this.nav.navigateRoot('comprobantes');
       }
-    });*/
+    });
   }
 
   onChangeInput(data: any) {

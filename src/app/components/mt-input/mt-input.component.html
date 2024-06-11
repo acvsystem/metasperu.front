@@ -1,17 +1,22 @@
-<ion-row class="desktop-item">
+
+<ion-row [ngClass]="[isRequired ? 'desktop-item required': 'desktop-item']">
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-    <ion-item class="input-item">
+    <ion-item  [ngClass]="[sizeSllim ? 'input-item inputSellim': 'input-item']">
       <ion-label position="floating">{{label}}</ion-label>
       <ion-input 
+        style="color: rgba(0, 0, 0, 0.65) !important;"
         id={{id}} 
         [value]="value"
-        type="{{ type == 'password' ? viewPassword ? 'text' : 'password' : 'text' }}"
+        type="{{ type == 'number' ? 'number' : type == 'password' ? viewPassword ? 'text' : 'password' : 'text' }}"
         placeholder="{{placeholder}}"
+        (keyup)="onChange($event)"
+        [disabled]="isDisabled"
+        class="{{addClass}}"
       ></ion-input>
       <span 
         id="inputURL" 
         (click)="onCopyText()" 
-        class="btn-copy" 
+        class="btn-copy"
         slot="end" 
         *ngIf="isCopy"
         data-bs-toggle="tooltip" 
