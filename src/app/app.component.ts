@@ -6,7 +6,7 @@ import { StorageService } from './utils/storage';
 import { NavController } from '@ionic/angular';
 import { ShareService } from './services/shareService';
 import { MenuController } from '@ionic/angular';
-import {UAParser} from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -31,15 +31,22 @@ export class AppComponent {
     private service: ShareService,
     private menu: MenuController
   ) {
-    console.log(this.menuUser);
+
     this.httpService.eventShowLoading.subscribe((response) => {
-      setTimeout(()=>{
+      setTimeout(() => {
         this.isShowLoading = response;
-      },1000)
+      }, 1000)
     });
 
+    let profileUser = this.store.getStore('mt-profile');
+
+    if ((profileUser || {}).nivel == "SISTEMAS") {
+      this.menuUser = this.store.getStore('mt-menu') || [];
+
+    }
+    
     this.service.onProfileUser.subscribe((profile) => {
-      console.log(profile);
+      const self = this;
       this.profileUser = [];
       let newProfile = {
         name_1: profile.name.split(' ')[0],
@@ -49,15 +56,34 @@ export class AppComponent {
       this.profileUser.push(newProfile);
       this.store.removeStore("mt-profile");
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
+      let profileUser = this.store.getStore('mt-profile');
+      if ((profileUser || {}).nivel == "SISTEMAS") {
+        self.menuUser = [{
+          ISVISIBLE: true,
+          nombre_menu: "INVENTARIO",
+          ruta: "inventario"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "COMPROBANTES",
+          ruta: "comprobantes"
+        }
+      ];
+
+        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      }
+
+
+
     });
 
     this.service.onMenuUser.subscribe((menu) => {
-      const self = this;
+      /*const self = this;
       self.menuUser = [];
       this.store.removeStore("mt-menu");
 
       self.menuUser = menu;
-      this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      this.store.setStore("mt-menu", JSON.stringify(self.menuUser));*/
     });
   }
 
@@ -68,14 +94,14 @@ export class AppComponent {
     this.isMobil = window.innerWidth < 769;
     var myOwnListOfBrowsers = [
       [/(mybrowser)\/([\w\.]+)/i], [UAParser.BROWSER.NAME, UAParser.BROWSER.VERSION]
-  ];
-  /*var myParser = new UAParser({ browser: myOwnListOfBrowsers });
-    console.log(myParser.getBrowser()); // {}
-    console.log(myParser.getOS()); // {}
-    console.log(myParser.getUA()); // {}
-    console.log(myParser.getEngine()); // {}
-    console.log(myParser.getResult()); // {}
-    console.log(myParser);*/
+    ];
+    /*var myParser = new UAParser({ browser: myOwnListOfBrowsers });
+      console.log(myParser.getBrowser()); // {}
+      console.log(myParser.getOS()); // {}
+      console.log(myParser.getUA()); // {}
+      console.log(myParser.getEngine()); // {}
+      console.log(myParser.getResult()); // {}
+      console.log(myParser);*/
     /*  let pathActual: any = {};
       pathActual = {
         value: this.store.getStore('pathURL') || location.pathname.split('/')[1]
@@ -89,10 +115,10 @@ export class AppComponent {
       this.profileUser.push(profileUser);
     }
 
-    if (menu) {
+   /* if (menu) {
       this.menuUser = [];
       this.menuUser = menu;
-    }
+    }*/
 
 
     if (this.store.getStore('tn')) {
@@ -117,8 +143,18 @@ export class AppComponent {
           (event: NavigationEnd) => {
 
             if (this.store.getStore('tn')) {
+              let profileUser = this.store.getStore('mt-profile');
+              if ((profileUser || {}).nivel == "INVENTARIO") {
+                this.service.onViewPageAdmin.emit(false);
+                this.nav.navigateRoot('inventario');
+              }
 
-              /* if (location.pathname.split('/')[1] != "postulante") {
+              if ((profileUser || {}).nivel == "SISTEMAS") {
+                this.service.onViewPageAdmin.emit(true);
+              }
+
+
+              /* if (location.pathname.split('/')[1] == "comprobantes" && ) {
                  this.store.setStore('pathURL', location.pathname.split('/')[1]);
                  pathActual = { value: this.store.getStore('pathURL') || location.pathname.split('/')[1] };
                  if (!this.store.getStore('tn') || ((pathActual || {}).value == "postulante" || (pathActual || {}).value.length == 0)) {
@@ -163,6 +199,7 @@ export class AppComponent {
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;
+    this.menuUser = [];
     this.service.onDisconnectSocket.emit(true);
   }
 

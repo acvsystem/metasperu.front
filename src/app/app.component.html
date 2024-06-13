@@ -14,22 +14,9 @@
     </ion-header>
     <ion-content class="ion-padding">
       <section *ngFor="let menu of menuUser" class="content-item">
-        <div (click)="menu.ISVISIBLE = !menu.ISVISIBLE" *ngIf="menu.submenu.length" class="item-menu">
+        <div (click)="onNavigatorRoute(menu.ruta)" *ngIf="menu.ISVISIBLE"  class="item-menu">
           <span>{{menu.nombre_menu}}</span>
         </div>
-        <div (click)="onNavigatorRoute(menu.ruta)" *ngIf="!menu.submenu.length"  class="item-menu">
-          <span>{{menu.nombre_menu}}</span>
-        </div>
-        <section *ngIf="menu.ISVISIBLE" class="all-content-submenu">       
-          <section *ngFor="let submenu of menu.submenu" class="content-submenu">   
-            <div class="line-vertical"></div>
-            <div class="line-horizontal"></div>
-            <div (click)="onNavigatorRoute(submenu.ruta)" class="submenu-item" >
-              <span>{{submenu.nombre_submenu}}</span>
-            </div>
-          </section>
-        </section>
-
       </section>
     </ion-content>
   </ion-menu>

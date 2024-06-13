@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { Socket } from 'ngx-socket-io';
 import { map } from 'rxjs/operators';
 import { ShareService } from 'src/app/services/shareService';
+import { StorageService } from 'src/app/utils/storage';
 @Component({
   selector: 'app-mt-verification-comprobantes',
   templateUrl: './mt-verification-comprobantes.component.html',
@@ -23,10 +24,21 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isShowLoading: boolean = false;
   contadorCliente: any = 0;
   contadorCajaOnline: any = 0;
+  isViewPage: boolean  = false;
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService,private store: StorageService,) { }
 
   ngOnInit() {
+    this.service.onViewPageAdmin.subscribe((view) => {
+      this.isViewPage = view;
+    });
+
+    let profileUser = this.store.getStore('mt-profile');
+
+    if ((profileUser || {}).nivel == "SISTEMAS") {
+      this.isViewPage = true;
+    }
+
     const self = this;
     this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes Blanco', 'Conexion Comprobantes', 'Conexion ICG']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
