@@ -26,12 +26,14 @@
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/status-bar": "4.1.1",
     "@ionic/angular": "^6.1.9",
+    "file-saver": "^2.0.5",
     "http-server": "^14.1.1",
     "ionicons": "^6.0.3",
     "ngx-socket-io": "^4.4.0",
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.6.1",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

@@ -2,16 +2,17 @@
 
 <ion-content>
   <div id="content" class="full-center-page">
+    <span class="loader"></span>
     <div class="card-content">
       <ion-row>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
           <div >
-            <button  type="button" class="btn btn-primary btn-sm"><i class="fa fa-search" aria-hidden="true"></i> Consultar</button>
+            <button  type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i class="fa fa-search" aria-hidden="true"></i> Cargar Inventario</button>
           </div>
         </ion-col>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
           <div class="content-button">
-            <button  type="button" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>
+            <button  type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>
           </div>
         </ion-col>
       </ion-row>
