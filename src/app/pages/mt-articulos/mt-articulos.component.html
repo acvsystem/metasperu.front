@@ -2,7 +2,29 @@
 
 <ion-content>
   <div id="content" class="full-center-page">
-    <span class="loader"></span>
+    <div class="console-loading" *ngIf="isLoading">
+      <div class="loader"></div>
+    </div>
+  <!--  <div class="console-loading" *ngIf="isProccess">
+      <table class="table table-bordered table-hover table-process">
+        <thead>
+          <tr>
+            <th class="columHead" *ngFor="let columHead of headListTienda;let i = index">{{columHead}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let columBody of onListTiendas;let index = index" class="columData">
+            <td class="columBody">{{columBody.name}}</td>
+            <td class="columBody">{{columBody.procesar}}</td>
+            <td class="columBody">{{columBody.procesado}}</td>
+            <td class="columBody">
+              <span *ngIf="columBody.procesar == columBody.procesado" style="color: green;"><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>
+              <span *ngIf="columBody.procesar != columBody.procesado"><i class="fa fa-circle-o" aria-hidden="true"></i></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>-->
     <div class="card-content">
       <ion-row>
         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
@@ -27,6 +49,9 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr *ngIf="!onDataView.length" style="text-align: center;">
+                    <td colspan="27">No hay datos para mostrar</td>
+                  </tr>
                   <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
                     <td class="columBody">{{columBody.cPreferencia}}</td>
                     <td class="columBody">{{columBody.cCodigoBarra}}</td>

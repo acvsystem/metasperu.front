@@ -15,7 +15,7 @@ export class MtArticulosComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
 
   headList = ['Preferencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Talla', 'Color', 'BBW JK', 'VS ARQ', 'BBW ARQ', 'BBW RAMB', 'VS RAMB', 'VS PN', 'BBW SM', 'VS SM', 'BBW SLV', 'VS SLV', 'VS MSUR', 'VS PURU', 'VS ECOM', 'BW ECOM', 'VS MGP', 'VS MINKA', 'VSFA JK', 'BBW ASIA'];
-
+  headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
   onReporteList: Array<any> = [];
 
   onDataView: Array<any> = [];
@@ -23,7 +23,31 @@ export class MtArticulosComponent implements OnInit {
   vPageActualTable: number = 1;
   vPageAnteriorTable: number = 0;
   vNumPaginas: number = 0;
+  isLoading: boolean = false;
+  isProccess: boolean = false;
+  nameExcel: string = "";
 
+
+  onListTiendas: Array<any> = [
+    { code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
+    { code: '9N', name: 'VS MALL AVENTURA', procesar: 0, procesado: -1 },
+    { code: '7J', name: 'BBW MALL AVENTURA', procesar: 0, procesado: -1 },
+    { code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
+    { code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
+    { code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
+    { code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
+    { code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
+    { code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
+    { code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
+    { code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
+    { code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
+    { code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
+    { code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
+    { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
+    { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 }
+  ];
   constructor() { }
 
   ngOnInit() {
@@ -54,6 +78,7 @@ export class MtArticulosComponent implements OnInit {
 
     self.vPageAnteriorTable = pageAnt;
     self.vPageActualTable = pageAct;
+    self.isProccess = false;
   }
 
   onViewPrevius() {
@@ -84,14 +109,18 @@ export class MtArticulosComponent implements OnInit {
   }
 
   onExcelExport() {
-    this.exportAsExcelFile(this.onReporteList, "inventario");
+    const self = this;
+    self.isLoading = true;
+    this.exportAsExcelFile(this.onReporteList, self.nameExcel);
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
+    const self = this;
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
     this.saveAsExcelFile(excelBuffer, excelFileName);
+    self.isLoading = false;
   }
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
@@ -103,22 +132,36 @@ export class MtArticulosComponent implements OnInit {
 
   onCargaInventario() {
     const self = this;
-
+    self.isLoading = true;
     this.socket.emit('comunicationStock', 'angular');
 
     this.socket.on('dataStock', (dataInventario) => {
-      console.log(dataInventario);
-      let codigoTienda = (dataInventario[0]).cCodigoTienda;
+      let codigoTienda = (dataInventario || [])[0].cCodigoTienda;
+      let tiendaData = this.onListTiendas.find((property) => (property || {}).code == codigoTienda);
+      this.onReporteList = dataInventario;
+      this.nameExcel = "INVENTARIO-"+tiendaData['name'];
+      self.isLoading = false;
+      console.log(this.onReporteList);
+      /* let dataIn = [];
+       dataInventario.filter((data, i) => {
+         if (i < dataInventario.length) {
+           dataIn.push(data);
+         }
+       });
+ 
+       this.onProcessData(dataIn);*/
+    });
+  }
 
-      let dataResponse = [];
+  onProcessData(dataInventario) {
+    return new Promise((resolve, reject) => {
+      console.log(dataInventario.length);
+      const self = this;
+      let codigoTienda = (dataInventario || [])[0].cCodigoTienda;
+
+      //let dataResponse = [];
       let dataProcess = [];
-      let dataServer = [];
-
-      dataInventario.filter((data, i) => {
-        if (i < 2000) {
-          dataServer.push(data);
-        }
-      });
+      let dataServer = dataInventario;
 
       let tiendasList = [
         { code: '7A', property: 'bbw_jockey', ready: false },
@@ -141,81 +184,47 @@ export class MtArticulosComponent implements OnInit {
         { code: '7A7', property: 'bbw_asia', ready: false }
       ];
 
-      let tiendaIndex = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
-      tiendasList[tiendaIndex]['ready'] = true;
+      /*   let tiendaIndex = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
+         tiendasList[tiendaIndex]['ready'] = true;
+   
+         let countReady = 0;
+   
+         tiendasList.filter((tienda) => {
+           if ((tienda || {}).ready == true) {
+             countReady += 1;
+           }
+         });*/
 
-      let countReady = 0;
+      // if (countReady == 1) {
 
-      tiendasList.filter((tienda) => {
-        if ((tienda || {}).ready == true) {
-          countReady += 1;
+      dataProcess = dataServer;
+      let indexTienda = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
+      self.onListTiendas[indexTienda]['procesar'] = dataInventario.length;
+
+      (dataProcess || []).filter((data, i) => {
+
+        let index = self.onReporteList.findIndex((res) => ((res || {}).cCodigoBarra == (data || {}).cCodigoBarra) && ((res || {}).cFamilia == (data || {}).cFamilia));
+
+        if (index != -1) {
+          let codigoExist = (data || {}).cCodigoTienda;
+          let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
+          let stockProducto = typeof (data || {}).cStock != 'undefined' ? (data || {})[(valueSock || {}).property] : 0;
+          //let index = self.onReporteList.findIndex((dataIndex) => ((dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra) && ((dataIndex || {}).cFamilia == (data || {}).cFamilia));
+          self.onReporteList[index][(valueSock || {}).property] = stockProducto + self.onReporteList[index][(valueSock || {}).property];
+
+        } else {
+          self.onReporteList.push(data);
         }
+        self.onListTiendas[indexTienda]['procesado'] = i + 1;
+
       });
 
-      if (countReady == 1) {
+      this.onPaginator();
+      this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
-        dataProcess = dataServer;
-        
-        (dataProcess || []).filter((data, i) => {
-
-          let isExist = self.onReporteList.find((res) => ((res || {}).cCodigoBarra == (data || {}).cCodigoBarra) && ((res || {}).cFamilia == (data || {}).cFamilia));
-          
-          if (typeof isExist != 'undefined') {
-            let codigoExist = (data || {}).cCodigoTienda;
-            let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
-
-            let index = self.onReporteList.findIndex((dataIndex) => ((dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra) && ((dataIndex || {}).cFamilia == (data || {}).cFamilia));
-            self.onReporteList[index][(valueSock || {}).property] = (data || {}).cStock;
-
-          } else {
-            let codigoTienda = (data || {}).cCodigoTienda;
-
-            let valueSock = tiendasList.find((property) => (property || {}).code == codigoTienda);
-
-            self.onReporteList.push({
-              "cPreferencia": (data || {}).cPreferencia,
-              "cCodigoBarra": (data || {}).cCodigoBarra,
-              "cDescripcion": (data || {}).cDescripcion,
-              "cDepartamento": (data || {}).cDepartamento,
-              "cSeccion": (data || {}).cSeccion,
-              "cFamilia": (data || {}).cFamilia,
-              "cSubfamilia": (data || {}).cSubfamilia,
-              "cTalla": (data || {}).cTalla,
-              "cColor": (data || {}).cColor,
-              "bbw_jockey": 0,
-              "vs_m_aventura": 0,
-              "bbw_m_aventura": 0,
-              "bbw_rambla": 0,
-              "vs_rambla": 0,
-              "vs_p_norte": 0,
-              "bbw_s_miguel": 0,
-              "vs_s_miguel": 0,
-              "bbw_salaverry": 0,
-              "vs_salaverry": 0,
-              "vs_m_sur": 0,
-              "vs_puruchuco": 0,
-              "vs_ecom": 0,
-              "bbw_ecom": 0,
-              "vs_m_plaza": 0,
-              "vs_minka": 0,
-              "vs_full": 0,
-              "bbw_asia": 0
-            });
-
-            let index = self.onReporteList.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
-            self.onReporteList[index][(valueSock || {})['property']] = (data || {}).cStock;
-
-          }
-        });
-             
-        this.onPaginator();
-        this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
-
-      }
-
+      resolve(true);
+      // }
     });
-
-
   }
 
 }
