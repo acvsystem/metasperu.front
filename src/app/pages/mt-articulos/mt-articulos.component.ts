@@ -26,6 +26,7 @@ export class MtArticulosComponent implements OnInit {
   isLoading: boolean = false;
   isProccess: boolean = false;
   nameExcel: string = "";
+  optionListEmail: Array<any> = [];
   tiendasList: Array<any> = [
     { key: '7A', value: 'BBW JOCKEY', progress: -1 },
     { key: "9N", value: "VSBA MALL AVENTURA", progress: -1 },
@@ -67,7 +68,7 @@ export class MtArticulosComponent implements OnInit {
     { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 }
   ];
-  constructor() { }
+  constructor(private http:shareService) { }
 
   ngOnInit() {
     this.onReporteList = this.onReporteList;
@@ -80,6 +81,14 @@ export class MtArticulosComponent implements OnInit {
       let codigoTienda = (dataParse || {}).code;
       let tiendaIndex = this.tiendasList.findIndex((property) => (property || {}).key == codigoTienda);
       (this.tiendasList[tiendaIndex] || {})['progress'] = (dataParse || {}).progress == 100 ? 0 : (dataParse || {}).progress;
+    });
+
+    let parms = {
+      url: '/security/login'
+    };
+
+    return this.get(parms).then((response) => {
+
     });
   }
 
@@ -234,6 +243,13 @@ export class MtArticulosComponent implements OnInit {
       resolve(true);
       // }
     });
+  }
+
+  async onChangeSelect(data: any) {
+    let selectData = data || {};
+    let index = (selectData || {}).selectId || "";
+    this[index] = (selectData || {}).key || "";
+    console.log(selectData);
   }
 
 }

@@ -109,6 +109,12 @@
                 <ion-row class="border-bottom-title">
                   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                     <div style="text-align: center;">
+                      <mt-select
+                      id="selectedHashNivel"
+                      placeHolder="Nivel Hash"
+                      [optionList]="optionListEmail"
+                      (changeSelected)="onChangeSelect($event)"
+                      ></mt-select>
                       <button  type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i class="fa fa-search" aria-hidden="true"></i> Generar y Enviar Email</button>
                     </div>
                   </ion-col>
