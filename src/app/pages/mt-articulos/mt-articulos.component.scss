@@ -307,13 +307,13 @@ ion-item {
 }
 
 #content {
-    height: 100% !important;
+    //height: 100% !important;
     background-color: white !important;
 }
 
 .full-center-page {
-    display: flex !important;
-    justify-content: center !important;
+    //display: flex !important;
+    //justify-content: center !important;
 }
 
 .pagination {
@@ -388,4 +388,8 @@ ion-item {
 
 .table-process {
     width: 50% !important;
+}
+
+.title {
+    color: black !important;
 }

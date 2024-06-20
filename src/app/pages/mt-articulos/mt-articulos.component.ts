@@ -26,7 +26,26 @@ export class MtArticulosComponent implements OnInit {
   isLoading: boolean = false;
   isProccess: boolean = false;
   nameExcel: string = "";
-
+  tiendasList: Array<any> = [
+    { key: '7A', value: 'BBW JOCKEY', progress: -1 },
+    { key: "9N", value: "VSBA MALL AVENTURA", progress: -1 },
+    { key: "7J", value: "BBW MALL AVENTURA", progress: -1 },
+    { key: '7E', value: 'BBW LA RAMBLA', progress: -1 },
+    { key: '9D', value: 'VS LA RAMBLA', progress: -1 },
+    { key: '9B', value: 'VS PLAZA NORTE', progress: -1 },
+    { key: '7C', value: 'BBW SAN MIGUEL', progress: -1 },
+    { key: '9C', value: 'VS SAN MIGUEL', progress: -1 },
+    { key: '7D', value: 'BBW SALAVERRY', progress: -1 },
+    { key: '9I', value: 'VS SALAVERRY', progress: -1 },
+    { key: '9G', value: 'VS MALL DEL SUR', progress: -1 },
+    { key: '9H', value: 'VS PURUCHUCO', progress: -1 },
+    { key: '9M', value: 'VS ECOMMERCE', progress: -1 },
+    { key: '7F', value: 'BBW ECOMMERCE', progress: -1 },
+    { key: '9K', value: 'VS MEGA PLAZA', progress: -1 },
+    { key: '9L', value: 'VS MINKA', progress: -1 },
+    { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1 },
+    { key: '7A7', value: 'BBW ASIA', progress: -1 }
+  ];
 
   onListTiendas: Array<any> = [
     { code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
@@ -55,6 +74,13 @@ export class MtArticulosComponent implements OnInit {
 
     this.onPaginator();
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
+
+    this.socket.on('dataStock', (dataInventario) => {
+      let dataParse = JSON.parse(dataInventario);
+      let codigoTienda = (dataParse || {}).code;
+      let tiendaIndex = this.tiendasList.findIndex((property) => (property || {}).key == codigoTienda);
+      (this.tiendasList[tiendaIndex] || {})['progress'] = (dataParse || {}).progress == 100 ? 0 : (dataParse || {}).progress;
+    });
   }
 
   onViewDataTable(pageAnt, pageAct) {
@@ -134,23 +160,6 @@ export class MtArticulosComponent implements OnInit {
     const self = this;
     self.isLoading = true;
     this.socket.emit('comunicationStock', 'angular');
-
-    this.socket.on('dataStock', (dataInventario) => {
-      let codigoTienda = (dataInventario || [])[0].cCodigoTienda;
-      let tiendaData = this.onListTiendas.find((property) => (property || {}).code == codigoTienda);
-      this.onReporteList = dataInventario;
-      this.nameExcel = "INVENTARIO-"+tiendaData['name'];
-      self.isLoading = false;
-      console.log(this.onReporteList);
-      /* let dataIn = [];
-       dataInventario.filter((data, i) => {
-         if (i < dataInventario.length) {
-           dataIn.push(data);
-         }
-       });
- 
-       this.onProcessData(dataIn);*/
-    });
   }
 
   onProcessData(dataInventario) {
