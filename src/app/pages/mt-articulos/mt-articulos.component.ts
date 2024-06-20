@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ShareService } from '../../services/shareService';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -25,7 +26,9 @@ export class MtArticulosComponent implements OnInit {
   vNumPaginas: number = 0;
   isLoading: boolean = false;
   isProccess: boolean = false;
+  isError: boolean = false;
   nameExcel: string = "";
+  selectedEmail: string = "";
   optionListEmail: Array<any> = [];
   tiendasList: Array<any> = [
     { key: '7A', value: 'BBW JOCKEY', progress: -1 },
@@ -68,7 +71,7 @@ export class MtArticulosComponent implements OnInit {
     { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 }
   ];
-  constructor(private http:shareService) { }
+  constructor(private http: ShareService) { }
 
   ngOnInit() {
     this.onReporteList = this.onReporteList;
@@ -84,11 +87,19 @@ export class MtArticulosComponent implements OnInit {
     });
 
     let parms = {
-      url: '/security/login'
+      url: '/security/emailList'
     };
 
-    return this.get(parms).then((response) => {
+    return this.http.get(parms).then((response) => {
+      let data = response || [];
+      data.filter((list) => {
+        this.optionListEmail.push({
+          key: list.mail,
+          value: list.mail
+        });
+      });
 
+      console.log(this.optionListEmail);
     });
   }
 
@@ -167,8 +178,12 @@ export class MtArticulosComponent implements OnInit {
 
   onCargaInventario() {
     const self = this;
-    self.isLoading = true;
-    this.socket.emit('comunicationStock', 'angular');
+    if (this.selectedEmail.length) {
+      self.isLoading = true;
+      this.socket.emit('comunicationStock', this.selectedEmail);
+    } else {
+      this.isError = true;
+    }
   }
 
   onProcessData(dataInventario) {
@@ -249,7 +264,7 @@ export class MtArticulosComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-    console.log(selectData);
+    this.isError = false;
   }
 
 }

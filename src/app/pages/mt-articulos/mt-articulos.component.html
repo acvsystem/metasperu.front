@@ -109,13 +109,14 @@
                 <ion-row class="border-bottom-title">
                   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                     <div style="text-align: center;">
+                      <button  type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i class="fa fa-repeat" aria-hidden="true"></i> Generar y Enviar Email</button>
                       <mt-select
-                      id="selectedHashNivel"
-                      placeHolder="Nivel Hash"
+                      id="selectedEmail"
+                      placeHolder="Email"
                       [optionList]="optionListEmail"
                       (changeSelected)="onChangeSelect($event)"
                       ></mt-select>
-                      <button  type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i class="fa fa-search" aria-hidden="true"></i> Generar y Enviar Email</button>
+                      <span *ngIf="isError" style="color: red;">Seleccione el correo donde se enviaran los reportes</span>
                     </div>
                   </ion-col>
                 </ion-row>
