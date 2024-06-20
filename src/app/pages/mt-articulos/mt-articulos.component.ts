@@ -71,6 +71,8 @@ export class MtArticulosComponent implements OnInit {
     { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 }
   ];
+  petitionTiendaList: Array<any> = [];
+
   constructor(private http: ShareService) { }
 
   ngOnInit() {
@@ -180,15 +182,27 @@ export class MtArticulosComponent implements OnInit {
     const self = this;
     if (this.selectedEmail.length) {
       self.isLoading = true;
-      this.socket.emit('comunicationStock', this.selectedEmail);
+      this.socket.emit('comunicationStock', this.selectedEmail,this.petitionTiendaList);
     } else {
       this.isError = true;
     }
   }
 
+  onCheked(ev, code) {
+    let isChecked = ev.target.checked;
+    let index = this.petitionTiendaList.findIndex((tienda) => tienda.code == code);
+    
+    if (isChecked && index == -1) {
+      this.petitionTiendaList.push({
+        code: code
+      });
+    } else {
+      this.petitionTiendaList.splice(index, 1);
+    }
+  }
+
   onProcessData(dataInventario) {
     return new Promise((resolve, reject) => {
-      console.log(dataInventario.length);
       const self = this;
       let codigoTienda = (dataInventario || [])[0].cCodigoTienda;
 
