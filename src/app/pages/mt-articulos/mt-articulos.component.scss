@@ -393,3 +393,16 @@ ion-item {
 .title {
     color: black !important;
 }
+
+.form-check .form-check-input {
+    float: right !important;
+    text-align: end !important;
+}
+
+.all-checked {
+    text-align: end !important;
+    
+    label {
+        margin-right: 42px !important;
+    }
+}

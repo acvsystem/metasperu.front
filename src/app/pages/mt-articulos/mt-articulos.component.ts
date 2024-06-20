@@ -31,24 +31,24 @@ export class MtArticulosComponent implements OnInit {
   selectedEmail: string = "";
   optionListEmail: Array<any> = [];
   tiendasList: Array<any> = [
-    { key: '7A', value: 'BBW JOCKEY', progress: -1 },
-    { key: "9N", value: "VSBA MALL AVENTURA", progress: -1 },
-    { key: "7J", value: "BBW MALL AVENTURA", progress: -1 },
-    { key: '7E', value: 'BBW LA RAMBLA', progress: -1 },
-    { key: '9D', value: 'VS LA RAMBLA', progress: -1 },
-    { key: '9B', value: 'VS PLAZA NORTE', progress: -1 },
-    { key: '7C', value: 'BBW SAN MIGUEL', progress: -1 },
-    { key: '9C', value: 'VS SAN MIGUEL', progress: -1 },
-    { key: '7D', value: 'BBW SALAVERRY', progress: -1 },
-    { key: '9I', value: 'VS SALAVERRY', progress: -1 },
-    { key: '9G', value: 'VS MALL DEL SUR', progress: -1 },
-    { key: '9H', value: 'VS PURUCHUCO', progress: -1 },
-    { key: '9M', value: 'VS ECOMMERCE', progress: -1 },
-    { key: '7F', value: 'BBW ECOMMERCE', progress: -1 },
-    { key: '9K', value: 'VS MEGA PLAZA', progress: -1 },
-    { key: '9L', value: 'VS MINKA', progress: -1 },
-    { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1 },
-    { key: '7A7', value: 'BBW ASIA', progress: -1 }
+    { key: '7A', value: 'BBW JOCKEY', progress: -1, checked: false },
+    { key: "9N", value: "VSBA MALL AVENTURA", progress: -1, checked: false },
+    { key: "7J", value: "BBW MALL AVENTURA", progress: -1, checked: false },
+    { key: '7E', value: 'BBW LA RAMBLA', progress: -1, checked: false },
+    { key: '9D', value: 'VS LA RAMBLA', progress: -1, checked: false },
+    { key: '9B', value: 'VS PLAZA NORTE', progress: -1, checked: false },
+    { key: '7C', value: 'BBW SAN MIGUEL', progress: -1, checked: false },
+    { key: '9C', value: 'VS SAN MIGUEL', progress: -1, checked: false },
+    { key: '7D', value: 'BBW SALAVERRY', progress: -1, checked: false },
+    { key: '9I', value: 'VS SALAVERRY', progress: -1, checked: false },
+    { key: '9G', value: 'VS MALL DEL SUR', progress: -1, checked: false },
+    { key: '9H', value: 'VS PURUCHUCO', progress: -1, checked: false },
+    { key: '9M', value: 'VS ECOMMERCE', progress: -1, checked: false },
+    { key: '7F', value: 'BBW ECOMMERCE', progress: -1, checked: false },
+    { key: '9K', value: 'VS MEGA PLAZA', progress: -1, checked: false },
+    { key: '9L', value: 'VS MINKA', progress: -1, checked: false },
+    { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1, checked: false },
+    { key: '7A7', value: 'BBW ASIA', progress: -1, checked: false }
   ];
 
   onListTiendas: Array<any> = [
@@ -182,7 +182,7 @@ export class MtArticulosComponent implements OnInit {
     const self = this;
     if (this.selectedEmail.length) {
       self.isLoading = true;
-      this.socket.emit('comunicationStock', this.selectedEmail,this.petitionTiendaList);
+      this.socket.emit('comunicationStock', this.selectedEmail, this.petitionTiendaList);
     } else {
       this.isError = true;
     }
@@ -190,15 +190,32 @@ export class MtArticulosComponent implements OnInit {
 
   onCheked(ev, code) {
     let isChecked = ev.target.checked;
-    let index = this.petitionTiendaList.findIndex((tienda) => tienda.code == code);
-    
-    if (isChecked && index == -1) {
-      this.petitionTiendaList.push({
-        code: code
-      });
+
+    if (code != 'all') {
+      let index = this.petitionTiendaList.findIndex((tienda) => tienda.code == code);
+
+      if (isChecked && index == -1) {
+        this.petitionTiendaList.push({
+          code: code
+        });
+      } else {
+        this.petitionTiendaList.splice(index, 1);
+      }
     } else {
-      this.petitionTiendaList.splice(index, 1);
+      this.tiendasList.forEach(x => x.checked = isChecked);
+      if (this.petitionTiendaList.length != 18) {
+        this.petitionTiendaList = [];
+        this.tiendasList.filter((tn) => {
+          this.petitionTiendaList.push({
+            code: tn.key
+          });
+        });
+      } else {
+        this.petitionTiendaList = [];
+      }
     }
+
+
   }
 
   onProcessData(dataInventario) {
