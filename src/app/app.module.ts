@@ -21,6 +21,7 @@ import { MtVerificationComprobantesComponent } from './pages/mt-verification-com
 import { MtNotificationComponent } from './components/mt-notification/mt-notification.component';
 import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.component';
 import { MtPopoverComponent } from './components/mt-popover/mt-popover.component';
+import { MtSelectComponent } from './components/mt-select/mt-select.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
@@ -41,12 +42,13 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     MtVerificationComprobantesComponent,
     MtNotificationComponent,
     MtArticulosComponent,
-    MtPopoverComponent
+    MtPopoverComponent,
+    MtSelectComponent
   ],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
-    AppRoutingModule, 
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
     SocketIoModule.forRoot(confSocket),
     HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

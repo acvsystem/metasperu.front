@@ -1,0 +1,31 @@
+<ion-row class="desktop-item">
+  <ion-col [ngClass]="[isRequired ? 'required': '']" sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+    <div class="{{activeSelect ? 'select-menu active isSelectComponent':'select-menu isSelectComponent'}}">
+      <div class="select-btn isSelectComponent" (click)="onOpenSelect()">
+        <span class="option-text select-placeholder isSelectComponent" *ngIf="!nameOptionSelected.length">{{placeHolder}}</span>
+        <span class="option-text isSelectComponent" *ngIf="nameOptionSelected.length">{{nameOptionSelected}}</span>
+        <i class="fa fa-angle-down isSelectComponent" aria-hidden="true"></i>
+      </div>
+
+      <div class="options isSelectComponent">
+        <div class="content-search isSelectComponent" *ngIf="enableSearchInput">
+          <mt-input
+          id="sboSearch"
+          label="Buscar"
+          placeholder="Buscar"
+          value="{{ sboSearch }}"
+          (afterChange)="onChangeInput($event)"
+          type="text"
+          addClass="isSelectComponent"
+        ></mt-input>
+        </div>
+        <ul class="isSelectComponent">
+          <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option isSelectComponent" *ngFor="let option of optionList">
+            <span class="option-text isSelectComponent">{{ option.value }}</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </ion-col>
+</ion-row>
