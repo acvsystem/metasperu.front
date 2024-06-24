@@ -297,3 +297,39 @@ ion-item {
 .hide {
     display: none !important;
 }
+
+.table {
+
+    //box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    thead {
+        background-color: #636363 !important;
+        color: white !important;
+    }
+
+    .columHead,
+    .columBody {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        text-align: center !important;
+    }
+}
+
+.columData {
+    background-color: white !important;
+}
+
+#content {
+    //height: 100% !important;
+    background-color: white !important;
+}
+
+@media (max-width:1061px) {
+    .content-button-comp {
+        width: 170px !important;
+
+        .mobil-margin-button {
+            margin-bottom: 10px !important;
+            width: 90% !important;
+        }
+    }
+}

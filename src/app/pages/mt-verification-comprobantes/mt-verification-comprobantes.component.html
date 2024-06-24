@@ -8,15 +8,19 @@
   <div id="content" class="full-center">
     <div class="card-content">
       <ion-row>
-        <ion-col sizeXs="5" sizeSm="5" sizeMd="5" sizeLg="5">
+        <ion-col sizeXs="5" sizeSm="5" sizeMd="7" sizeLg="7">
           <div class="content-button">
-            <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
-            <button (click)="onTransacciones()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Transacciones</button>
-            <button (click)="onListClientesNull()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-search" aria-hidden="true"></i>Consultar Clientes</button>
-            <button (click)="onClientesNull()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-trash" aria-hidden="true"></i>Limpiar Clientes</button>
+            <div class="content-button-comp">
+              <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
+              <button (click)="onTransacciones()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> Transacciones</button>
+            </div>
+            <div class="content-button-comp">
+              <button (click)="onListClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-search" aria-hidden="true"></i>Consultar Clientes</button>
+              <button (click)="onClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash" aria-hidden="true"></i>Limpiar Clientes</button>
+            </div>
           </div>
         </ion-col>
-        <ion-col sizeXs="7" sizeSm="7" sizeMd="7" sizeLg="7" class="aling-right content-btn-fact">
+        <ion-col sizeXs="7" sizeSm="7" sizeMd="5" sizeLg="5" class="aling-right content-btn-fact">
           <div class="content-status-server" *ngFor="let status of statusServerList">
             <div class="status-conect">
               <div [ngClass]="[isConnectServer == 'true' ? 'blob blue': 'blob red']"></div>
@@ -116,7 +120,7 @@
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-              <table class="table table-bordered">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
