@@ -1,6 +1,4 @@
-c
-
-button .btn {
+c button .btn {
     width: 100% !important;
 }
 
@@ -263,6 +261,8 @@ ion-item {
 }
 
 .card-content {
+    overflow: auto !important;
+
     button {
         margin-right: 10px !important;
     }
@@ -387,8 +387,28 @@ ion-item {
 
 .all-checked {
     text-align: end !important;
-    
+
     label {
         margin-right: 42px !important;
     }
+}
+
+@media (max-width:1061px) {
+    .content-button-comp {
+        width: 100% !important;
+
+        .mobil-margin-button {
+            margin-bottom: 10px !important;
+            width: 90% !important;
+        }
+
+        button {
+            margin-left: 10px !important;
+        }
+    }
+}
+
+.postition-start {
+    display: flex !important;
+    justify-content: left !important;
 }

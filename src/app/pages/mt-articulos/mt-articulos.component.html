@@ -2,9 +2,9 @@
 
 <ion-content>
   <div id="content" class="full-center-page">
-   <!-- <div class="console-loading" *ngIf="isLoading">
+    <div class="console-loading" *ngIf="isLoading">
       <div class="loader"></div>
-    </div>-->
+    </div>
   <!--  <div class="console-loading" *ngIf="isProccess">
       <table class="table table-bordered table-hover table-process">
         <thead>
@@ -25,16 +25,24 @@
         </tbody>
       </table>
     </div>-->
-  <!--  <div class="card-content">
+   <div class="card-content">
       <ion-row>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-          <div >
-            <button  type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i class="fa fa-search" aria-hidden="true"></i> Cargar Inventario</button>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <div class="content-button-comp">
+            <mt-select
+            id="selectedUS"
+            placeHolder="Unidad de servico"
+            [optionList]="onListMarcas"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </div>
         </ion-col>
-        <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
-          <div class="content-button">
-            <button  type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <div class="content-button postition-start">
+            <div class="content-button-comp">
+              <button  type="button" class="btn btn-primary btn-sm" (click)="onStockTable()"><i class="fa fa-search" aria-hidden="true"></i></button> 
+              <button  type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>  
+            </div>
           </div>
         </ion-col>
       </ion-row>
@@ -58,47 +66,48 @@
                     <td class="columBody">{{columBody.cDescripcion}}</td>
                     <td class="columBody">{{columBody.cDepartamento}}</td>
                     <td class="columBody">{{columBody.cSeccion}}</td>
-                    <td class="columBody">{{columBody.cFamilia}}</td>
-                    <td class="columBody">{{columBody.cSubfamilia}}</td>
                     <td class="columBody">{{columBody.cTalla}}</td>
                     <td class="columBody">{{columBody.cColor}}</td>
-                    <td class="columBody">{{columBody.bbw_jockey}}</td>
-                    <td class="columBody">{{columBody.vs_m_aventura}}</td>
-                    <td class="columBody">{{columBody.bbw_m_aventura}}</td>
-                    <td class="columBody">{{columBody.bbw_rambla}}</td>
-                    <td class="columBody">{{columBody.vs_rambla}}</td>
-                    <td class="columBody">{{columBody.vs_p_norte}}</td>
-                    <td class="columBody">{{columBody.bbw_s_miguel}}</td>
-                    <td class="columBody">{{columBody.vs_s_miguel}}</td>
-                    <td class="columBody">{{columBody.bbw_salaverry}}</td>
-                    <td class="columBody">{{columBody.vs_salaverry}}</td>
-                    <td class="columBody">{{columBody.vs_m_sur}}</td>
-                    <td class="columBody">{{columBody.vs_puruchuco}}</td>
-                    <td class="columBody">{{columBody.vs_ecom}}</td>
-                    <td class="columBody">{{columBody.bbw_ecom}}</td>
-                    <td class="columBody">{{columBody.vs_m_plaza}}</td>
-                    <td class="columBody">{{columBody.vs_minka}}</td>
-                    <td class="columBody">{{columBody.vs_full}}</td>
-                    <td class="columBody">{{columBody.bbw_asia}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_jockey}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_m_aventura}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_m_aventura}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_rambla}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_rambla}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_p_norte}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_s_miguel}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_s_miguel}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_salaverry}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_salaverry}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_m_sur}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_puruchuco}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_ecom}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_ecom}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_m_plaza}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_minka}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_full}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_asia}}</td>
                   </tr>
                 </tbody>
               </table>
+         <!--     
               <nav aria-label="..." class="pagination">
                 <ul class="pagination">
                   <li class="page-item">
                     <a class="page-link" (click)="onViewPrevius()">Previous</a>
                   </li>
-                  <li class="page-item" *ngFor="let pagina of onListPagination"><a class="page-link" (click)="onViewDataTable(pagina.pAnterior,pagina.pActual)">{{pagina.pActual}}</a></li>
+                  <li class="page-item" *ngFor="let pagina of onListPagination| slice:0:5"><a class="page-link" (click)="onViewDataTable(pagina.pAnterior,pagina.pActual)">{{pagina.pActual}}</a></li>
                   <li class="page-item">
                     <a class="page-link" (click)="onViewNext()">Next</a>
                   </li>
                 </ul>
               </nav>
+              -->
             </ion-col>
           </ion-row>
         </ion-col>
       </ion-row>
-    </div>-->
+    </div>
+
     <div class="card-content">
       <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
@@ -153,6 +162,7 @@
       </ion-col>
       </ion-row>
     </div>
+
   </div>
 </ion-content>
 
