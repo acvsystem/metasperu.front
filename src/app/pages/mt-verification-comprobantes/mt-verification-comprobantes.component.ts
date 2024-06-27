@@ -24,9 +24,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isShowLoading: boolean = false;
   contadorCliente: any = 0;
   contadorCajaOnline: any = 0;
-  isViewPage: boolean  = false;
-
-  constructor(private service: ShareService,private store: StorageService,) { }
+  isViewPage: boolean = false;
+  conxOnline: Array<any> = [];
+  constructor(private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
     this.service.onViewPageAdmin.subscribe((view) => {
@@ -75,11 +75,18 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('sessionConnect', (listaSession) => {
+
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {
         this.bodyList = [];
         (dataList || []).filter((dataSocket: any) => {
+
+          if ((dataSocket || {}).ISONLINE == 1) {
+            this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+          }
+
+
           (this.bodyList || []).push({
             codigo: (dataSocket || {}).CODIGO_TERMINAL,
             Tienda: (dataSocket || {}).DESCRIPCION,
@@ -101,6 +108,19 @@ export class MtVerificationComprobantesComponent implements OnInit {
         });
       } else {
         (dataList || []).filter((dataSocket: any) => {
+
+          if ((dataSocket || {}).ISONLINE == 1) {
+            let index = this.conxOnline.findIndex((conx) => conx == (dataSocket || {}).CODIGO_TERMINAL);
+            console.log(index);
+            if (index == -1) {
+              this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+            }
+          }
+
+          if ((dataSocket || {}).ISONLINE == 0) {
+            this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
+          }
+
           let codigo = (dataSocket || {}).CODIGO_TERMINAL;
           let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
           if (indexData != -1) {
@@ -114,7 +134,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
         });
         this.isShowLoading = false;
       }
-
+      console.log(this.conxOnline);
+      this.store.removeStore("conx_online");
+      this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
     });
 
     this.socket.on('dataTransaction', (dataSocket) => {

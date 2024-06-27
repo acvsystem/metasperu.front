@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ShareService } from '../../services/shareService';
+import { StorageService } from 'src/app/utils/storage';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -80,10 +81,46 @@ export class MtArticulosComponent implements OnInit {
 
   petitionTiendaList: Array<any> = [];
   compTiendaList: Array<any> = [];
-  proccessData:Array<any> = [];
-  constructor(private http: ShareService) { }
+  proccessData: Array<any> = [];
+  tiendasPetition: Array<any> = [];
+  conxOnline: Array<any> = [];
+  constructor(private http: ShareService, private store: StorageService) { }
 
   ngOnInit() {
+
+    this.socket.on('sessionConnect', (listaSession) => {
+
+      let dataList = [];
+      dataList = listaSession || [];
+      if (dataList.length > 1) {
+        (dataList || []).filter((dataSocket: any) => {
+
+          if ((dataSocket || {}).ISONLINE == 1) {
+            this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+          }
+
+        });
+      } else {
+        (dataList || []).filter((dataSocket: any) => {
+
+          if ((dataSocket || {}).ISONLINE == 1) {
+            let index = this.conxOnline.findIndex((conx) => conx == (dataSocket || {}).CODIGO_TERMINAL);
+            if (index == -1) {
+              this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+            }
+          }
+
+          if ((dataSocket || {}).ISONLINE == 0) {
+            this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
+          }
+        });
+
+      }
+     
+      this.store.removeStore("conx_online");
+      this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
+    });
+
 
     this.onReporteList = this.onReporteList;
 
@@ -92,11 +129,11 @@ export class MtArticulosComponent implements OnInit {
 
     this.socket.on('dataStockParse', async (data) => {
       this.proccessData.push(data[0].cCodigoTienda);
-      if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == 11) {
+      if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
       }
 
-      if (this.selectedUS ==  'BATH AND BODY WORKS' && this.proccessData.length == 7) {
+      if (this.selectedUS == 'BATH AND BODY WORKS' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
       }
 
@@ -126,6 +163,7 @@ export class MtArticulosComponent implements OnInit {
 
       console.log(this.optionListEmail);
     });
+    
   }
 
   onViewDataTable(pageAnt, pageAct) {
@@ -344,12 +382,21 @@ export class MtArticulosComponent implements OnInit {
     this[index] = (selectData || {}).key || "";
     this.isError = false;
 
-    if ((selectData || {}).key == 'VICTORIA SECRET' && index != 'selectedEmail') {
+    if (index != 'selectedEmail') {
+      this.onProcessPetition((selectData || {}).key);
+    }
+
+  }
+
+  onProcessPetition(undNegocio) {
+    let storeConxOnline = this.store.getStore('conx_online');
+    if (undNegocio == 'VICTORIA SECRET') {
       this.onDataView = [];
       this.onReporteList = [];
+      this.compTiendaList = [];
       this.nameExcel = "vs";
       this.headList = ['Preferencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color', 'VS ARQ', 'VS RAMB', 'VS PN', 'VS SM', 'VS SLV', 'VS MSUR', 'VS PURU', 'VS ECOM', 'VS MGP', 'VS MINKA', 'VSFA JK']
-      this.compTiendaList = [
+      let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
         { code: '9B' },
@@ -362,13 +409,56 @@ export class MtArticulosComponent implements OnInit {
         { code: '9L' },
         { code: '9F' }
       ];
+
+      codeTiendas.filter((tienda) => {
+        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
+        console.log(index);
+        if (index > -1) {
+          this.compTiendaList.push(tienda.code);
+        }
+      });
+
+      this.tiendasPetition = [
+        { code: '9N' },
+        { code: '9D' },
+        { code: '9B' },
+        { code: '9C' },
+        { code: '9I' },
+        { code: '9G' },
+        { code: '9H' },
+        { code: '9M' },
+        { code: '9K' },
+        { code: '9L' },
+        { code: '9F' }
+      ];
+
     }
-    if ((selectData || {}).key == 'BATH AND BODY WORKS' && index != 'selectedEmail') {
+
+    if (undNegocio == 'BATH AND BODY WORKS') {
       this.onDataView = [];
       this.onReporteList = [];
+      this.compTiendaList = [];
       this.nameExcel = "bbw";
       this.headList = ['Preferencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color', 'BBW JK', 'BBW ARQ', 'BBW RAMB', 'BBW SM', 'BBW SLV', 'BW ECOM', 'BBW ASIA']
-      this.compTiendaList = [
+      let codeTiendas = [
+        { code: '7A' },
+        { code: '7J' },
+        { code: '7E' },
+        { code: '7C' },
+        { code: '7D' },
+        { code: '7F' },
+        { code: '7A7' }
+      ];
+      codeTiendas.filter((tienda) => {
+
+        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
+
+        if (index > -1) {
+          this.compTiendaList.push(tienda.code);
+        }
+      });
+
+      this.tiendasPetition = [
         { code: '7A' },
         { code: '7J' },
         { code: '7E' },
@@ -378,15 +468,15 @@ export class MtArticulosComponent implements OnInit {
         { code: '7A7' }
       ];
     }
-
-  }
+  };
 
   onStockTable() {
     this.onDataView = [];
     this.onReporteList = [];
     this.proccessData = [];
     this.isLoading = true;
-    this.socket.emit('comunicationStockTable', this.compTiendaList);
+    this.onProcessPetition(this.selectedUS);
+    this.socket.emit('comunicationStockTable', this.tiendasPetition);
   }
 
 
