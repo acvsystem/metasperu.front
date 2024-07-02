@@ -16,7 +16,7 @@ const EXCEL_EXTENSION = '.xlsx';
 export class MtArticulosComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
 
-  headList = ['Preferencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color'];
+  headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
   onReporteList: Array<any> = [];
 
@@ -116,7 +116,7 @@ export class MtArticulosComponent implements OnInit {
         });
 
       }
-     
+
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
     });
@@ -163,7 +163,7 @@ export class MtArticulosComponent implements OnInit {
 
       console.log(this.optionListEmail);
     });
-    
+
   }
 
   onViewDataTable(pageAnt, pageAct) {
@@ -289,24 +289,24 @@ export class MtArticulosComponent implements OnInit {
       let dataServer = dataInventario;
 
       let tiendasList = [
-        { code: '7A', property: 'bbw_jockey', ready: false },
-        { code: '9N', property: 'vs_m_aventura', ready: false },
-        { code: '7J', property: 'bbw_m_aventura', ready: false },
-        { code: '7E', property: 'bbw_rambla', ready: false },
-        { code: '9D', property: 'vs_rambla', ready: false },
-        { code: '9B', property: 'vs_p_norte', ready: false },
-        { code: '7C', property: 'bbw_s_miguel', ready: false },
-        { code: '9C', property: 'vs_s_miguel', ready: false },
-        { code: '7D', property: 'bbw_salaverry', ready: false },
-        { code: '9I', property: 'vs_salaverry', ready: false },
-        { code: '9G', property: 'vs_m_sur', ready: false },
-        { code: '9H', property: 'vs_puruchuco', ready: false },
-        { code: '9M', property: 'vs_ecom', ready: false },
-        { code: '7F', property: 'bbw_ecom', ready: false },
-        { code: '9K', property: 'vs_m_plaza', ready: false },
-        { code: '9L', property: 'vs_minka', ready: false },
-        { code: '9F', property: 'vs_full', ready: false },
-        { code: '7A7', property: 'bbw_asia', ready: false }
+        { code: '7A', property_r: 'BBW_JOC', property: 'bbw_jockey', ready: false },
+        { code: '9N', property_r: 'VS_AQP', property: 'vs_m_aventura', ready: false },
+        { code: '7J', property_r: 'BBW_AQP', property: 'bbw_m_aventura', ready: false },
+        { code: '7E', property_r: 'BBW_LRB', property: 'bbw_rambla', ready: false },
+        { code: '9D', property_r: 'VS_LRB', property: 'vs_rambla', ready: false },
+        { code: '9B', property_r: 'VS_PN', property: 'vs_p_norte', ready: false },
+        { code: '7C', property_r: 'BBW_PSM', property: 'bbw_s_miguel', ready: false },
+        { code: '9C', property_r: 'VS_PSM', property: 'vs_s_miguel', ready: false },
+        { code: '7D', property_r: 'BBW_RPS', property: 'bbw_salaverry', ready: false },
+        { code: '9I', property_r: 'VS_RPS', property: 'vs_salaverry', ready: false },
+        { code: '9G', property_r: 'VS_PSM', property: 'vs_m_sur', ready: false },
+        { code: '9H', property_r: 'VS_PUR', property: 'vs_puruchuco', ready: false },
+        { code: '9M', property_r: 'VS_ECOM', property: 'vs_ecom', ready: false },
+        { code: '7F', property_r: 'BBW_ECOM', property: 'bbw_ecom', ready: false },
+        { code: '9K', property_r: 'VS_MEP', property: 'vs_m_plaza', ready: false },
+        { code: '9L', property_r: 'VS_MNK', property: 'vs_minka', ready: false },
+        { code: '9F', property_r: 'VSFA_JOC', property: 'vs_full', ready: false },
+        { code: '7A7', property_r: 'BBW_ASIA', property: 'bbw_asia', ready: false }
       ];
 
       dataProcess = dataServer;
@@ -319,49 +319,53 @@ export class MtArticulosComponent implements OnInit {
           let codigoExist = (data || {}).cCodigoTienda;
           let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
           let indexProductoExist = self.onReporteList.findIndex((articulo) => (articulo || {}).cCodigoBarra == (data || {}).cCodigoBarra);
-          self.onReporteList[indexProductoExist][(valueSock || {}).property] = (data || {})[(valueSock || {}).property];
+          self.onReporteList[indexProductoExist][(valueSock || {}).property_r] = (data || {})[(valueSock || {}).property];
         } else {
 
           if (this.selectedUS == 'VICTORIA SECRET') {
+            console.log(data);
+
             self.onReporteList.push({
-              "cPreferencia": (data || {}).cPreferencia,
               "cCodigoBarra": (data || {}).cCodigoBarra,
-              "cDescripcion": (data || {}).cDescripcion,
-              "cDepartamento": (data || {}).cDepartamento,
-              "cSeccion": (data || {}).cSeccion,
-              "cTalla": (data || {}).cTalla,
-              "cColor": (data || {}).cColor,
-              "vs_m_aventura": (data || {}).vs_m_aventura || 0,
-              "vs_rambla": (data || {}).vs_rambla || 0,
-              "vs_p_norte": (data || {}).vs_p_norte || 0,
-              "vs_s_miguel": (data || {}).vs_s_miguel || 0,
-              "vs_salaverry": (data || {}).vs_salaverry || 0,
-              "vs_m_sur": (data || {}).vs_m_sur || 0,
-              "vs_puruchuco": (data || {}).vs_puruchuco || 0,
-              "vs_ecom": (data || {}).vs_ecom || 0,
-              "vs_m_plaza": (data || {}).vs_m_plaza || 0,
-              "vs_minka": (data || {}).vs_minka || 0,
-              "vs_full": (data || {}).vs_full || 0
-            });
-          }
-          if (this.selectedUS == 'BATH AND BODY WORKS') {
-            self.onReporteList.push({
-              "cPreferencia": (data || {}).cPreferencia,
-              "cCodigoBarra": (data || {}).cCodigoBarra,
+              "cReferencia": (data || {}).cReferencia,
               "cDescripcion": (data || {}).cDescripcion,
               "cDepartamento": (data || {}).cDepartamento,
               "cSeccion": (data || {}).cSeccion,
               "cFamilia": (data || {}).cFamilia,
-              "cSubfamilia": (data || {}).cSubfamilia,
+              "cSubFamilia": (data || {}).cSubFamilia,
               "cTalla": (data || {}).cTalla,
               "cColor": (data || {}).cColor,
-              "bbw_jockey": (data || {}).bbw_jockey || 0,
-              "bbw_m_aventura": (data || {}).bbw_m_aventura || 0,
-              "bbw_rambla": (data || {}).bbw_rambla || 0,
-              "bbw_s_miguel": (data || {}).bbw_s_miguel || 0,
-              "bbw_salaverry": (data || {}).bbw_salaverry || 0,
-              "bbw_ecom": (data || {}).bbw_ecom || 0,
-              "bbw_asia": (data || {}).bbw_asia || 0,
+              "VS_AQP": (data || {}).vs_m_aventura || 0,
+              "VS_LRB": (data || {}).vs_rambla || 0,
+              "VS_PN": (data || {}).vs_p_norte || 0,
+              "VS_PSM": (data || {}).vs_s_miguel || 0,
+              "VS_RPS": (data || {}).vs_salaverry || 0,
+              "VS_MDS": (data || {}).vs_m_sur || 0,
+              "VS_PUR": (data || {}).vs_puruchuco || 0,
+              "VS_ECOM": (data || {}).vs_ecom || 0,
+              "VS_MEP": (data || {}).vs_m_plaza || 0,
+              "VS_MNK": (data || {}).vs_minka || 0,
+              "VSFA_JOC": (data || {}).vs_full || 0
+            });
+          }
+          if (this.selectedUS == 'BATH AND BODY WORKS') {
+            self.onReporteList.push({
+              "cCodigoBarra": (data || {}).cCodigoBarra,
+              "cReferencia": (data || {}).cReferencia,
+              "cDescripcion": (data || {}).cDescripcion,
+              "cDepartamento": (data || {}).cDepartamento,
+              "cSeccion": (data || {}).cSeccion,
+              "cFamilia": (data || {}).cFamilia,
+              "cSubFamilia": (data || {}).cSubFamilia,
+              "cTalla": (data || {}).cTalla,
+              "cColor": (data || {}).cColor,
+              "BBW_JOC": (data || {}).bbw_jockey || 0,
+              "BBW_AQP": (data || {}).bbw_m_aventura || 0,
+              "BBW_LRB": (data || {}).bbw_rambla || 0,
+              "BBW_PSM": (data || {}).bbw_s_miguel || 0,
+              "BBW_RPS": (data || {}).bbw_salaverry || 0,
+              "BBW_ECOM": (data || {}).bbw_ecom || 0,
+              "BBW_ASIA": (data || {}).bbw_asia || 0
             });
           }
         }
@@ -395,7 +399,7 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Preferencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color', 'VS ARQ', 'VS RAMB', 'VS PN', 'VS SM', 'VS SLV', 'VS MSUR', 'VS PURU', 'VS ECOM', 'VS MGP', 'VS MINKA', 'VSFA JK']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC']
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
@@ -439,7 +443,7 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "bbw";
-      this.headList = ['Preferencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color', 'BBW JK', 'BBW ARQ', 'BBW RAMB', 'BBW SM', 'BBW SLV', 'BW ECOM', 'BBW ASIA']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Talla', 'Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA']
       let codeTiendas = [
         { code: '7A' },
         { code: '7J' },

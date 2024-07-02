@@ -61,31 +61,34 @@
                     <td colspan="27">No hay datos para mostrar</td>
                   </tr>
                   <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
-                    <td class="columBody">{{columBody.cPreferencia}}</td>
                     <td class="columBody">{{columBody.cCodigoBarra}}</td>
+                    <td class="columBody">{{columBody.cReferencia}}</td>
+                    
                     <td class="columBody">{{columBody.cDescripcion}}</td>
                     <td class="columBody">{{columBody.cDepartamento}}</td>
                     <td class="columBody">{{columBody.cSeccion}}</td>
+                    <td class="columBody">{{columBody.cFamilia}}</td>
+                    <td class="columBody">{{columBody.cSubFamilia}}</td>
                     <td class="columBody">{{columBody.cTalla}}</td>
                     <td class="columBody">{{columBody.cColor}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_jockey}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_m_aventura}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_m_aventura}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_rambla}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_rambla}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_p_norte}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_s_miguel}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_s_miguel}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_salaverry}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_salaverry}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_m_sur}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_puruchuco}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_ecom}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_ecom}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_m_plaza}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_minka}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.vs_full}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.bbw_asia}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_JOC}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_AQP}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_AQP}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_LRB}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_LRB}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_PN}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_PSM}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_PSM}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_RPS}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_RPS}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_MDS}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_PUR}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_ECOM}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_ECOM}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_MEP}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_MNK}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VSFA_JOC}}</td>
+                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_ASIA}}</td>
                   </tr>
                 </tbody>
               </table>
