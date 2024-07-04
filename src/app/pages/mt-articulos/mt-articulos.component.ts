@@ -128,6 +128,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
+      console.log(data);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -287,7 +288,7 @@ export class MtArticulosComponent implements OnInit {
       let dataResponse = [];
       let dataProcess = [];
       let dataServer = dataInventario;
-
+      
       let tiendasList = [
         { code: '7A', property_r: 'BBW_JOC', property: 'bbw_jockey', ready: false },
         { code: '9N', property_r: 'VS_AQP', property: 'vs_m_aventura', ready: false },
