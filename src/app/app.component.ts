@@ -68,6 +68,12 @@ export class AppComponent {
           nombre_menu: "COMPROBANTES",
           ruta: "comprobantes"
         }
+        ,
+        {
+          ISVISIBLE: true,
+          nombre_menu: "CONFIGURACION",
+          ruta: "configuracion"
+        }
       ];
 
         this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
