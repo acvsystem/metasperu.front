@@ -16,7 +16,7 @@ const EXCEL_EXTENSION = '.xlsx';
 export class MtArticulosComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
 
-  headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Talla', 'Color', 'Familia', 'SubFamilia'];
+  headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia','SubFamilia','Temporada','Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
   onReporteList: Array<any> = [];
 
@@ -128,7 +128,6 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-      console.log(data);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -162,7 +161,6 @@ export class MtArticulosComponent implements OnInit {
         });
       });
 
-      console.log(this.optionListEmail);
     });
 
   }
@@ -318,14 +316,14 @@ export class MtArticulosComponent implements OnInit {
         let index = self.onReporteList.findIndex((res) => ((res || {}).cCodigoBarra == (data || {}).cCodigoBarra));
         if (index != -1) {
           let codigoExist = (data || {}).cCodigoTienda;
+
           let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
           let indexProductoExist = self.onReporteList.findIndex((articulo) => (articulo || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           self.onReporteList[indexProductoExist][(valueSock || {}).property_r] = (data || {})[(valueSock || {}).property];
+          self.onReporteList[indexProductoExist]['cTemporada'] = (data || {})['cTemporada'] != "" || (data || {})['cTemporada'] != null || (data || {})['cTemporada'] != 'null' ? (data || {})['cTemporada'] : self.onReporteList[indexProductoExist]['cTemporada'];
         } else {
 
           if (this.selectedUS == 'VICTORIA SECRET') {
-            console.log(data);
-
             self.onReporteList.push({
               "cCodigoBarra": (data || {}).cCodigoBarra,
               "cReferencia": (data || {}).cReferencia,
@@ -334,6 +332,7 @@ export class MtArticulosComponent implements OnInit {
               "cSeccion": (data || {}).cSeccion,
               "cFamilia": (data || {}).cFamilia,
               "cSubFamilia": (data || {}).cSubFamilia,
+              "cTemporada": (data || {}).cTemporada,
               "cTalla": (data || {}).cTalla,
               "cColor": (data || {}).cColor,
               "VS_AQP": (data || {}).vs_m_aventura || 0,
@@ -358,6 +357,7 @@ export class MtArticulosComponent implements OnInit {
               "cSeccion": (data || {}).cSeccion,
               "cFamilia": (data || {}).cFamilia,
               "cSubFamilia": (data || {}).cSubFamilia,
+              "cTemporada": (data || {}).cTemporada,
               "cTalla": (data || {}).cTalla,
               "cColor": (data || {}).cColor,
               "BBW_JOC": (data || {}).bbw_jockey || 0,
@@ -400,7 +400,7 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC']
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
@@ -417,7 +417,6 @@ export class MtArticulosComponent implements OnInit {
 
       codeTiendas.filter((tienda) => {
         let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
-        console.log(index);
         if (index > -1) {
           this.compTiendaList.push(tienda.code);
         }
@@ -444,7 +443,7 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "bbw";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Talla', 'Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada','Talla','Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA']
       let codeTiendas = [
         { code: '7A' },
         { code: '7J' },

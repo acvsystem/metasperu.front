@@ -184,6 +184,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
     this.socket.on('sendDataClient', (dataSocket) => {
+      console.log(dataSocket);
       this.contadorCliente += 1;
 
       if (this.contadorCliente == this.contadorCajaOnline) {
