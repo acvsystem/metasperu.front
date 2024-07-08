@@ -113,7 +113,7 @@
           </ion-col>
         </ion-row>
       </ion-col>
-<!--
+
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
@@ -123,39 +123,17 @@
                 <div class="content-view">
                   <ion-row class="border-bottom-title">
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <span class="title card-title">Configuracion de usuarios</span>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <span class="card-subtitle">Enviar link de registro</span>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <mt-select
-                      id="selectNivel"
-                      placeHolder="Nivel de cuenta"
-                      [optionList]="optionNivelList"
-                      (changeSelected)="onChangeSelect($event)"
-                      ></mt-select>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col sizeXs="11" sizeSm="11" sizeMd="6" sizeLg="6">
-                      <mt-input
-                      id="emailLinkRegistro"
-                      label="Email"
-                      placeholder="Correo electronico a enviar"
-                      value="{{ emailLinkRegistro }}"
-                      (afterChange)="onChangeInput($event)"
-                      type="text"
-                    ></mt-input>
+                      <span class="title card-title">Clientes a eliminar o descatalogar</span>
                     </ion-col>
                   </ion-row>
                   <ion-row>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                      <button (click)="onSendLinkRegister()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar link de registro</button>
+                      <button type="button" (click)="onSaveClientes()" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                        <textarea id="vListaClientes" class="form-control" rows="3" (change)="onValueChange($event)" [value]="vListaClientes"></textarea>
                     </ion-col>
                   </ion-row>
                 </div>
@@ -165,7 +143,7 @@
           </ion-col>
         </ion-row>
       </ion-col>
--->
+
     </ion-row>
   </div>
 </ion-content>

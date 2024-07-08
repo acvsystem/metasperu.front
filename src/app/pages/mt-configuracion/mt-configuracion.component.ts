@@ -44,7 +44,7 @@ export class MtConfiguracionComponent implements OnInit {
   routeMenu: string = "";
   token: any = localStorage.getItem('tn');
   optionNivelList: Array<any> = [];
-  selectOptionNivel= {};
+  selectOptionNivel = {};
   optionListHashNivel: Array<any> = [
     { id: "ADMINSITRADOR", value: "ADMINITRADOR" },
     { id: "SERVER", value: "SERVER" },
@@ -77,20 +77,48 @@ export class MtConfiguracionComponent implements OnInit {
   ];
 
   optionListRol: Array<any> = [];
-
+  vListaClientes: String = "";
   socket = io('http://38.187.8.22:3200', { query: { code: 'app', token: this.token } });
 
-  constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService,private cdr:ChangeDetectorRef) { }
+  constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-   /* this.onListPerfil();
-    this.onListConfiguration();
-    this.onListMenu();
-    this.onListRoles();*/
+    /* this.onListPerfil();
+     this.onListConfiguration();
+     this.onListMenu();
+     this.onListRoles();*/
     this.socket.on('update:file:status', (status) => {
       let index = this.tiendasList.findIndex((tienda) => tienda.key == status.serie);
       (this.tiendasList[index] || {})['progress'] = (status || {}).status == 100 ? 0 : (status || {}).progress;
     });
+
+    this.onListClient();
+  }
+
+  onSaveClientes() {
+    let parms = {
+      url: '/security/service/cliente/list/delete',
+      body: [{ cliente: this.vListaClientes }]
+    };
+    console.log(parms);
+    this.service.post(parms).then((response) => {
+      console.log(response);
+    });
+  }
+
+  onListClient() {
+    let parms = {
+      url: '/security/service/cliente/list/delete'
+    };
+    this.service.get(parms).then((response) => {
+      this.vListaClientes = response.toString();
+      console.log(response.toString());
+    });
+  }
+
+  public onValueChange(event: Event): void {
+    const value = (event.target as any).value;
+    this[event.target['id']] = value;
   }
 
 
@@ -131,7 +159,7 @@ export class MtConfiguracionComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
-  } 
+  }
 
   async onChangeSelect(data: any) {
     let selectData = data || {};
@@ -222,7 +250,7 @@ export class MtConfiguracionComponent implements OnInit {
           { key: (rol || {}).id_rol, value: (rol || {}).nom_rol });
       });
       console.log(self.optionNivelList);
-     // self.cdr.detectChanges();
+      // self.cdr.detectChanges();
     });
   }
 
