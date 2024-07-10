@@ -26,6 +26,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
   contadorCajaOnline: any = 0;
   isViewPage: boolean = false;
   conxOnline: Array<any> = [];
+  vListaClientes: string = '';
+
   constructor(private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
@@ -43,7 +45,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes Blanco', 'Conexion Comprobantes', 'Conexion ICG']
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
     this.onTransacciones();
-    //this.onListClientesNull();
+    this.onListClient();
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
       dataList = sunat || [];
@@ -230,13 +232,22 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onListClientesNull() {
     this.isShowLoading = true;
     this.contadorCliente = 0;
-    this.socket.emit('cleanClient', 'angular');
+    this.socket.emit('cleanClient', this.vListaClientes.split(','));
   }
 
   onClientesNull() {
     this.isShowLoading = true;
     this.contadorCliente = 0;
-    this.socket.emit('emitCleanClient', 'angular');
+    this.socket.emit('emitCleanClient', this.vListaClientes.split(','));
+  }
+
+  onListClient() {
+    let parms = {
+      url: '/security/service/cliente/list/delete'
+    };
+    this.service.get(parms).then((response) => {
+      this.vListaClientes = response.toString();
+    });
   }
 
   onSessionList() {
