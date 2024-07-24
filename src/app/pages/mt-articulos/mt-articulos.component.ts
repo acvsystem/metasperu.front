@@ -278,6 +278,7 @@ export class MtArticulosComponent implements OnInit {
   }
 
   onProcessData(dataInventario) {
+   
     return new Promise((resolve, reject) => {
       const self = this;
 
@@ -286,7 +287,7 @@ export class MtArticulosComponent implements OnInit {
       let dataResponse = [];
       let dataProcess = [];
       let dataServer = dataInventario;
-      
+
       let tiendasList = [
         { code: '7A', property_r: 'BBW_JOC', property: 'bbw_jockey', ready: false },
         { code: '9N', property_r: 'VS_AQP', property: 'vs_m_aventura', ready: false },
@@ -298,7 +299,7 @@ export class MtArticulosComponent implements OnInit {
         { code: '9C', property_r: 'VS_PSM', property: 'vs_s_miguel', ready: false },
         { code: '7D', property_r: 'BBW_RPS', property: 'bbw_salaverry', ready: false },
         { code: '9I', property_r: 'VS_RPS', property: 'vs_salaverry', ready: false },
-        { code: '9G', property_r: 'VS_PSM', property: 'vs_m_sur', ready: false },
+        { code: '9G', property_r: 'VS_MDS', property: 'vs_m_sur', ready: false },
         { code: '9H', property_r: 'VS_PUR', property: 'vs_puruchuco', ready: false },
         { code: '9M', property_r: 'VS_ECOM', property: 'vs_ecom', ready: false },
         { code: '7F', property_r: 'BBW_ECOM', property: 'bbw_ecom', ready: false },
@@ -324,6 +325,7 @@ export class MtArticulosComponent implements OnInit {
         } else {
 
           if (this.selectedUS == 'VICTORIA SECRET') {
+            
             self.onReporteList.push({
               "cCodigoBarra": (data || {}).cCodigoBarra,
               "cReferencia": (data || {}).cReferencia,
