@@ -77,7 +77,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('sessionConnect', (listaSession) => {
-
+      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {

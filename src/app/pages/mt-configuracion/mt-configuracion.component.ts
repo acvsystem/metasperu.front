@@ -73,7 +73,9 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '9K', value: 'VS MEGA PLAZA', progress: -1 },
     { key: '9L', value: 'VS MINKA', progress: -1 },
     { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1 },
-    { key: '7A7', value: 'BBW ASIA', progress: -1 }
+    { key: '7A7', value: 'BBW ASIA', progress: -1 },
+    { key: '9P', value: 'VS MALL PLAZA', progress: -1},
+    { key: '7I', value: 'BBW MALL PLAZA', progress: -1}
   ];
 
   optionListRol: Array<any> = [];

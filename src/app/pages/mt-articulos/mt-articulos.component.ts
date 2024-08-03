@@ -50,7 +50,9 @@ export class MtArticulosComponent implements OnInit {
     { key: '9K', value: 'VS MEGA PLAZA', progress: -1, checked: false },
     { key: '9L', value: 'VS MINKA', progress: -1, checked: false },
     { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1, checked: false },
-    { key: '7A7', value: 'BBW ASIA', progress: -1, checked: false }
+    { key: '7A7', value: 'BBW ASIA', progress: -1, checked: false },
+    { key: '9P', value: 'VS MALL PLAZA', progress: -1, checked: false },
+    { key: '7I', value: 'BB MALL PLAZA', progress: -1, checked: false }
   ];
 
   onListTiendas: Array<any> = [
@@ -306,8 +308,11 @@ export class MtArticulosComponent implements OnInit {
         { code: '9K', property_r: 'VS_MEP', property: 'vs_m_plaza', ready: false },
         { code: '9L', property_r: 'VS_MNK', property: 'vs_minka', ready: false },
         { code: '9F', property_r: 'VSFA_JOC', property: 'vs_full', ready: false },
-        { code: '7A7', property_r: 'BBW_ASIA', property: 'bbw_asia', ready: false }
+        { code: '7A7', property_r: 'BBW_ASIA', property: 'bbw_asia', ready: false },
+        { code: '9P', property_r: 'VS_TRJ', property: 'vs_trj', ready: false },
+        { code: '7I', property_r: 'BBW_TRJ', property: 'bbw_trj', ready: false }
       ];
++-8
 
       dataProcess = dataServer;
       let indexTienda = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
