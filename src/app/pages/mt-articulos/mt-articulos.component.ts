@@ -16,7 +16,7 @@ const EXCEL_EXTENSION = '.xlsx';
 export class MtArticulosComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
 
-  headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia','SubFamilia','Temporada','Talla', 'Color', 'Familia', 'SubFamilia'];
+  headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
   onReporteList: Array<any> = [];
 
@@ -30,6 +30,7 @@ export class MtArticulosComponent implements OnInit {
   isError: boolean = false;
   nameExcel: string = "";
   selectedEmail: string = "";
+  barcode: string = "";
   selectedUS: string = "";
   optionListEmail: Array<any> = [];
   tiendasList: Array<any> = [
@@ -88,9 +89,18 @@ export class MtArticulosComponent implements OnInit {
   proccessData: Array<any> = [];
   tiendasPetition: Array<any> = [];
   conxOnline: Array<any> = [];
+  isVendedor: boolean = false;
+
   constructor(private http: ShareService, private store: StorageService) { }
 
   ngOnInit() {
+
+    let profileUser = this.store.getStore('mt-profile');
+    if ((profileUser || {}).nivel == "VSBA" || (profileUser || {}).nivel == "BBW") {
+      this.isVendedor = true;
+      let undServicio = (profileUser || {}).nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+      this.onProcessPetition(undServicio);
+    }
 
     this.socket.on('sessionConnect', (listaSession) => {
 
@@ -282,7 +292,7 @@ export class MtArticulosComponent implements OnInit {
   }
 
   onProcessData(dataInventario) {
-   
+
     return new Promise((resolve, reject) => {
       const self = this;
 
@@ -355,7 +365,7 @@ export class MtArticulosComponent implements OnInit {
               "VS_MEP": (data || {}).vs_m_plaza || 0,
               "VS_MNK": (data || {}).vs_minka || 0,
               "VSFA_JOC": (data || {}).vs_full || 0,
-              "VS_M_PLAZA" : (data || {}).vs_mall_plaza || 0
+              "VS_M_PLAZA": (data || {}).vs_mall_plaza || 0
             });
           }
           if (this.selectedUS == 'BATH AND BODY WORKS') {
@@ -377,7 +387,7 @@ export class MtArticulosComponent implements OnInit {
               "BBW_RPS": (data || {}).bbw_salaverry || 0,
               "BBW_ECOM": (data || {}).bbw_ecom || 0,
               "BBW_ASIA": (data || {}).bbw_asia || 0,
-              "BBW_M_PLAZA" : (data || {}).bbw_m_plaza || 0
+              "BBW_M_PLAZA": (data || {}).bbw_m_plaza || 0
             });
           }
         }
@@ -411,7 +421,7 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC','VS-M-PLAZA']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-M-PLAZA']
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
@@ -456,7 +466,7 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "bbw";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada','Talla','Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA','BBW-M-PLAZA']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA', 'BBW-M-PLAZA']
       let codeTiendas = [
         { code: '7A' },
         { code: '7J' },
@@ -490,12 +500,28 @@ export class MtArticulosComponent implements OnInit {
   };
 
   onStockTable() {
-    this.onDataView = [];
-    this.onReporteList = [];
-    this.proccessData = [];
-    this.isLoading = true;
-    this.onProcessPetition(this.selectedUS);
-    this.socket.emit('comunicationStockTable', this.tiendasPetition);
+    if(this.barcode.length || this.selectedUS.length){
+      this.onDataView = [];
+      this.onReporteList = [];
+      this.proccessData = [];
+      this.isLoading = true;
+  
+      if (!this.isVendedor) {
+        this.onProcessPetition(this.selectedUS);
+      } else {
+        let profileUser = this.store.getStore('mt-profile');
+        let undServicio = (profileUser || {}).nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+        this.onProcessPetition(undServicio);
+      }
+
+      this.socket.emit('comunicationStockTable', this.tiendasPetition,this.barcode);
+    }
+  }
+
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
   }
 
 

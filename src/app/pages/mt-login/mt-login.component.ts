@@ -45,7 +45,7 @@ export class MtLoginComponent implements OnInit {
 
   onRouteDefault() {
     let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).nivel == "INVENTARIO") {
+    if ((profileUser || {}).nivel == "INVENTARIO" || (profileUser || {}).nivel == "VSBA" || (profileUser || {}).nivel == "BBW") {
       this.nav.navigateRoot('inventario');
     } else if ((profileUser || {}).nivel == "SISTEMAS") {
       this.nav.navigateRoot('comprobantes');

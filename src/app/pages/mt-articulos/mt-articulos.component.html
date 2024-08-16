@@ -28,7 +28,7 @@
    <div class="card-content">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-          <div class="content-button-comp">
+          <div class="content-button-comp" *ngIf="!isVendedor">
             <mt-select
             id="selectedUS"
             placeHolder="Unidad de servico"
@@ -36,6 +36,15 @@
             (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </div>
+          <mt-input
+          *ngIf="isVendedor"
+          id="barcode"
+          label="Codigo de barra"
+          placeholder="Codigo de barra"
+          type="text"
+          value="{{ barcode }}"
+          (afterChange)="onChangeInput($event)"
+        ></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
           <div class="content-button postition-start">
@@ -114,7 +123,7 @@
       </ion-row>
     </div>
 
-    <div class="card-content">
+    <div class="card-content" *ngIf="!isVendedor">
       <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
         <div class="card-content-configuration">

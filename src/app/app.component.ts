@@ -150,7 +150,7 @@ export class AppComponent {
 
             if (this.store.getStore('tn')) {
               let profileUser = this.store.getStore('mt-profile');
-              if ((profileUser || {}).nivel == "INVENTARIO") {
+              if ((profileUser || {}).nivel == "INVENTARIO" || (profileUser || {}).nivel == "VSBA" || (profileUser || {}).nivel == "BBW") {
                 this.service.onViewPageAdmin.emit(false);
                 this.nav.navigateRoot('inventario');
               }
