@@ -96,16 +96,16 @@ export class MtArticulosComponent implements OnInit {
   ngOnInit() {
 
     let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).nivel == "VSBA" || (profileUser || {}).nivel == "BBW") {
+    if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
       this.isVendedor = true;
 
-      let undServicio = (profileUser || {}).nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+      let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
       this.selectedUS = undServicio;
       this.onProcessPetition(undServicio);
     }
 
     this.socket.on('sessionConnect', (listaSession) => {
-
+      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {
@@ -458,8 +458,12 @@ export class MtArticulosComponent implements OnInit {
       ];
 
       codeTiendas.filter((tienda) => {
-        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
-        if (index > -1) {
+        if (!this.isVendedor) {
+          let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
+          if (index > -1) {
+            this.compTiendaList.push(tienda.code);
+          }
+        }else{
           this.compTiendaList.push(tienda.code);
         }
       });
@@ -497,11 +501,14 @@ export class MtArticulosComponent implements OnInit {
         { code: '7A7' },
         { code: '7I' }
       ];
+
       codeTiendas.filter((tienda) => {
-
-        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
-
-        if (index > -1) {
+        if (!this.isVendedor) {
+          let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
+          if (index > -1) {
+            this.compTiendaList.push(tienda.code);
+          }
+        }else{
           this.compTiendaList.push(tienda.code);
         }
       });

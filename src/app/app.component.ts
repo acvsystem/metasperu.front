@@ -49,8 +49,8 @@ export class AppComponent {
       const self = this;
       this.profileUser = [];
       let newProfile = {
-        name_1: profile.name.split(' ')[0],
-        nivel: profile.name.split(' ')[0]
+        mt_name_1: profile.name.split(' ')[0],
+        mt_nivel: profile.name.split(' ')[0]
       };
 
       this.profileUser.push(newProfile);
@@ -150,12 +150,12 @@ export class AppComponent {
 
             if (this.store.getStore('tn')) {
               let profileUser = this.store.getStore('mt-profile');
-              if ((profileUser || {}).nivel == "INVENTARIO" || (profileUser || {}).nivel == "VSBA" || (profileUser || {}).nivel == "BBW") {
+              if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
                 this.service.onViewPageAdmin.emit(false);
                 this.nav.navigateRoot('inventario');
               }
 
-              if ((profileUser || {}).nivel == "SISTEMAS") {
+              if ((profileUser || {}).mt_nivel == "SISTEMAS") {
                 this.service.onViewPageAdmin.emit(true);
               }
 
