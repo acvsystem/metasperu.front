@@ -95,17 +95,8 @@ export class MtArticulosComponent implements OnInit {
 
   ngOnInit() {
 
-    let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
-      this.isVendedor = true;
-
-      let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
-      this.selectedUS = undServicio;
-      this.onProcessPetition(undServicio);
-    }
-
     this.socket.on('sessionConnect', (listaSession) => {
-      console.log(listaSession);
+      console.log(this.conxOnline);
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {
@@ -136,6 +127,17 @@ export class MtArticulosComponent implements OnInit {
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
     });
+
+    let profileUser = this.store.getStore('mt-profile');
+    if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
+      this.isVendedor = true;
+
+      let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+      this.selectedUS = undServicio;
+      this.onProcessPetition(undServicio);
+    }
+
+
 
 
     this.onReporteList = this.onReporteList;
@@ -184,7 +186,8 @@ export class MtArticulosComponent implements OnInit {
 
   onViewDataTable(pageAnt, pageAct) {
     const self = this;
-    //self.onDataView = [];
+    self.onDataView = [];
+
     if (this.onReporteList.length < 10) {
       self.onDataView = self.onReporteList;
     } else {
@@ -201,8 +204,8 @@ export class MtArticulosComponent implements OnInit {
       });
     }
 
-    self.vPageAnteriorTable = pageAnt;
-    self.vPageActualTable = pageAct;
+    // self.vPageAnteriorTable = pageAnt;
+    //self.vPageActualTable = pageAct;
     self.isProccess = false;
   }
 
@@ -333,15 +336,12 @@ export class MtArticulosComponent implements OnInit {
       let indexTienda = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
       self.onListTiendas[indexTienda]['procesar'] = dataInventario.length;
       let profileUser = this.store.getStore('mt-profile');
-      let undServicio = (profileUser || {}).nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+      let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
 
       (dataProcess || []).filter((data, i) => {
-
         let index = self.onReporteList.findIndex((res) => ((res || {}).cCodigoBarra == (data || {}).cCodigoBarra));
+        let codigoExist = (data || {}).cCodigoTienda;
         if (index != -1) {
-
-          let codigoExist = (data || {}).cCodigoTienda;
-
           let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
           let indexProductoExist = self.onReporteList.findIndex((articulo) => (articulo || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           self.onReporteList[indexProductoExist][(valueSock || {}).property_r] = (data || {})[(valueSock || {}).property];
@@ -374,18 +374,18 @@ export class MtArticulosComponent implements OnInit {
               "cTemporada": (data || {}).cTemporada || "",
               "cTalla": (data || {}).cTalla || "",
               "cColor": (data || {}).cColor || "",
-              "VS_AQP": (data || {}).vs_m_aventura || 0,
-              "VS_LRB": (data || {}).vs_rambla || 0,
-              "VS_PN": (data || {}).vs_p_norte || 0,
-              "VS_PSM": (data || {}).vs_s_miguel || 0,
-              "VS_RPS": (data || {}).vs_salaverry || 0,
-              "VS_MDS": (data || {}).vs_m_sur || 0,
-              "VS_PUR": (data || {}).vs_puruchuco || 0,
-              "VS_ECOM": (data || {}).vs_ecom || 0,
-              "VS_MEP": (data || {}).vs_m_plaza || 0,
-              "VS_MNK": (data || {}).vs_minka || 0,
-              "VSFA_JOC": (data || {}).vs_full || 0,
-              "VS_M_PLAZA": (data || {}).vs_mall_plaza || 0
+              "VS_AQP": this.onEvalDesconection('9N', (data || {}).vs_m_aventura || 0),
+              "VS_LRB": this.onEvalDesconection('9D', (data || {}).vs_rambla || 0),
+              "VS_PN": this.onEvalDesconection('9B', (data || {}).vs_p_norte || 0),
+              "VS_PSM": this.onEvalDesconection('9C', (data || {}).vs_s_miguel || 0),
+              "VS_RPS": this.onEvalDesconection('9I', (data || {}).vs_s_miguel || 0),
+              "VS_MDS": this.onEvalDesconection('9G', (data || {}).vs_m_sur || 0),
+              "VS_PUR": this.onEvalDesconection('9H', (data || {}).vs_puruchuco || 0),
+              "VS_ECOM": this.onEvalDesconection('9M', (data || {}).vs_ecom || 0),
+              "VS_MEP": this.onEvalDesconection('9K', (data || {}).vs_m_plaza || 0),
+              "VS_MNK": this.onEvalDesconection('9L', (data || {}).vs_minka || 0),
+              "VSFA_JOC": this.onEvalDesconection('9F', (data || {}).vs_full || 0),
+              "VS_M_PLAZA": this.onEvalDesconection('9P', (data || {}).vs_mall_plaza || 0)
             });
           }
           if (this.selectedUS == 'BATH AND BODY WORKS' || undServicio == 'BATH AND BODY WORKS') {
@@ -400,14 +400,14 @@ export class MtArticulosComponent implements OnInit {
               "cTemporada": (data || {}).cTemporada || "",
               "cTalla": (data || {}).cTalla || "",
               "cColor": (data || {}).cColor || "",
-              "BBW_JOC": (data || {}).bbw_jockey || 0,
-              "BBW_AQP": (data || {}).bbw_m_aventura || 0,
-              "BBW_LRB": (data || {}).bbw_rambla || 0,
-              "BBW_PSM": (data || {}).bbw_s_miguel || 0,
-              "BBW_RPS": (data || {}).bbw_salaverry || 0,
-              "BBW_ECOM": (data || {}).bbw_ecom || 0,
-              "BBW_ASIA": (data || {}).bbw_asia || 0,
-              "BBW_M_PLAZA": (data || {}).bbw_m_plaza || 0
+              "BBW_JOC": this.onEvalDesconection('7A', (data || {}).bbw_jockey || 0),
+              "BBW_AQP": this.onEvalDesconection('7J', (data || {}).bbw_m_aventura || 0),
+              "BBW_LRB": this.onEvalDesconection('7E', (data || {}).bbw_rambla || 0),
+              "BBW_PSM": this.onEvalDesconection('7C', (data || {}).bbw_s_miguel || 0),
+              "BBW_RPS": this.onEvalDesconection('7D', (data || {}).bbw_salaverry || 0),
+              "BBW_ECOM": this.onEvalDesconection('7F', (data || {}).bbw_ecom || 0),
+              "BBW_ASIA": this.onEvalDesconection('7A7', (data || {}).bbw_asia || 0),
+              "BBW_M_PLAZA": this.onEvalDesconection('7I', (data || {}).bbw_m_plaza || 0)
             });
           }
         }
@@ -420,6 +420,19 @@ export class MtArticulosComponent implements OnInit {
 
       resolve(true);
     });
+  }
+
+  onEvalDesconection(codigo, value) {
+
+    let storeConxOnline = this.store.getStore('conx_online');
+    let online = false;
+    let index = storeConxOnline.findIndex((codeCnx) => codeCnx == codigo);
+    if (index > -1) {
+      online = true;
+    }
+
+    return !online ? 'S/C' : value;
+
   }
 
   async onChangeSelect(data: any) {
@@ -458,30 +471,14 @@ export class MtArticulosComponent implements OnInit {
       ];
 
       codeTiendas.filter((tienda) => {
-        if (!this.isVendedor) {
-          let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
-          if (index > -1) {
-            this.compTiendaList.push(tienda.code);
-          }
-        }else{
-          this.compTiendaList.push(tienda.code);
+
+        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
+        if (index > -1) {
+          this.compTiendaList.push({ code: tienda.code });
         }
       });
 
-      this.tiendasPetition = [
-        { code: '9N' },
-        { code: '9D' },
-        { code: '9B' },
-        { code: '9C' },
-        { code: '9I' },
-        { code: '9G' },
-        { code: '9H' },
-        { code: '9M' },
-        { code: '9K' },
-        { code: '9L' },
-        { code: '9F' },
-        { code: '9P' }
-      ];
+      this.tiendasPetition = this.tiendasPetition = this.compTiendaList;
 
     }
 
@@ -503,26 +500,14 @@ export class MtArticulosComponent implements OnInit {
       ];
 
       codeTiendas.filter((tienda) => {
-        if (!this.isVendedor) {
-          let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
-          if (index > -1) {
-            this.compTiendaList.push(tienda.code);
-          }
-        }else{
-          this.compTiendaList.push(tienda.code);
+
+        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
+        if (index > -1) {
+          this.compTiendaList.push({ code: tienda.code });
         }
       });
 
-      this.tiendasPetition = [
-        { code: '7A' },
-        { code: '7J' },
-        { code: '7E' },
-        { code: '7C' },
-        { code: '7D' },
-        { code: '7F' },
-        { code: '7A7' },
-        { code: '7I' }
-      ];
+      this.tiendasPetition = this.compTiendaList;
     }
   };
 
@@ -537,10 +522,11 @@ export class MtArticulosComponent implements OnInit {
         this.onProcessPetition(this.selectedUS);
       } else {
         let profileUser = this.store.getStore('mt-profile');
-        let undServicio = (profileUser || {}).nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+        let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
         this.onProcessPetition(undServicio);
       }
-      if (this.isVendedor && (this.barcode || "").length) {
+
+      if ((this.barcode || "").length) {
         this.socket.emit('comunicationStockTable', this.tiendasPetition, this.barcode);
       } else {
         this.socket.emit('comunicationStockTable', this.tiendasPetition, "");

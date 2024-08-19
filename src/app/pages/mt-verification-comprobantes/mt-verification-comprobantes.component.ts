@@ -37,7 +37,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
 
-    if ((profileUser || {}).nivel == "SISTEMAS") {
+    if ((profileUser || {}).mt_nivel == "SISTEMAS") {
       this.isViewPage = true;
     }
 

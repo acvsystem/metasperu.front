@@ -45,9 +45,9 @@ export class MtLoginComponent implements OnInit {
 
   onRouteDefault() {
     let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).nivel == "INVENTARIO" || (profileUser || {}).nivel == "VSBA" || (profileUser || {}).nivel == "BBW") {
+    if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
       this.nav.navigateRoot('inventario');
-    } else if ((profileUser || {}).nivel == "SISTEMAS") {
+    } else if ((profileUser || {}).mt_nivel == "SISTEMAS") {
       this.nav.navigateRoot('comprobantes');
     }
 

@@ -40,7 +40,7 @@ export class AppComponent {
 
     let profileUser = this.store.getStore('mt-profile');
 
-    if ((profileUser || {}).nivel == "SISTEMAS") {
+    if ((profileUser || {}).mt_nivel == "SISTEMAS") {
       this.menuUser = this.store.getStore('mt-menu') || [];
 
     }
@@ -57,7 +57,7 @@ export class AppComponent {
       this.store.removeStore("mt-profile");
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
       let profileUser = this.store.getStore('mt-profile');
-      if ((profileUser || {}).nivel == "SISTEMAS") {
+      if ((profileUser || {}).mt_nivel == "SISTEMAS") {
         self.menuUser = [{
           ISVISIBLE: true,
           nombre_menu: "INVENTARIO",
@@ -202,6 +202,8 @@ export class AppComponent {
     this.store.removeStore('mt-menu');
     this.store.removeStore('mtStep');
     this.store.removeStore('inscription');
+    this.store.removeStore('conx_online');
+    
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;
