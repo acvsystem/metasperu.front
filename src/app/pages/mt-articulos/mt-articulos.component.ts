@@ -94,6 +94,20 @@ export class MtArticulosComponent implements OnInit {
   constructor(private http: ShareService, private store: StorageService) { }
 
   ngOnInit() {
+    let configuracion = {
+      socket :'',
+      centroCosto : 'VS',
+      fechInit : '2023-05-01',
+      fechEnd : '2023-05-10'
+    }
+
+    this.socket.on('consultAsistencia', (configuracion) => {
+      
+    });
+
+    this.socket.on('responseAsistencia', (configuracion) => {
+      console.log(configuracion);
+    }); 
 
     this.socket.on('sessionConnect', (listaSession) => {
       console.log(this.conxOnline);
@@ -146,7 +160,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-
+      console.log(data);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -347,7 +361,7 @@ export class MtArticulosComponent implements OnInit {
           self.onReporteList[indexProductoExist][(valueSock || {}).property_r] = (data || {})[(valueSock || {}).property];
           self.onReporteList[indexProductoExist]['cTemporada'] = (data || {})['cTemporada'] != "" || (data || {})['cTemporada'] != null || (data || {})['cTemporada'] != 'null' ? (data || {})['cTemporada'] : self.onReporteList[indexProductoExist]['cTemporada'];
 
-          if (this.isVendedor) {
+          //if (this.isVendedor) {
             self.onReporteList[indexProductoExist]["cReferencia"] = ((data || {})['cReferencia'] || "").length ? (data || {})['cReferencia'] : self.onReporteList[indexProductoExist]['cReferencia'];
             self.onReporteList[indexProductoExist]["cDescripcion"] = ((data || {})['cDescripcion'] || "").length ? (data || {})['cDescripcion'] : self.onReporteList[indexProductoExist]['cDescripcion'];
             self.onReporteList[indexProductoExist]["cDepartamento"] = ((data || {})['cDepartamento'] || "").length ? (data || {})['cDepartamento'] : self.onReporteList[indexProductoExist]['cDepartamento'];
@@ -358,7 +372,7 @@ export class MtArticulosComponent implements OnInit {
             self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
             self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
 
-          }
+         // }
 
         } else {
 
@@ -532,10 +546,13 @@ export class MtArticulosComponent implements OnInit {
         this.socket.emit('comunicationStockTable', this.tiendasPetition, "");
       }
 
+      
+
     }
   }
 
   onChangeInput(data: any) {
+    const self = this;
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
