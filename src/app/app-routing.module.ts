@@ -5,6 +5,7 @@ import { MtVerificationComprobantesComponent } from './pages/mt-verification-com
 import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { AuthGuardService as authGuard } from './services/authGuardServices';
+import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
 
 const routes: Routes = [
   {
@@ -29,7 +30,13 @@ const routes: Routes = [
     path: 'configuracion',
     component: MtConfiguracionComponent,
     canActivate: [authGuard]
+  },
+  {
+    path: 'asistencia',
+    component: MtRrhhAsistenciaComponent,
+    canActivate: [authGuard]
   }
+
 ];
 
 @NgModule({

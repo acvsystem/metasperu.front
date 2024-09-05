@@ -73,6 +73,12 @@ export class AppComponent {
           ISVISIBLE: true,
           nombre_menu: "CONFIGURACION",
           ruta: "configuracion"
+        }      
+        ,
+        {
+          ISVISIBLE: true,
+          nombre_menu: "ASISTENCIA",
+          ruta: "asistencia"
         }
       ];
 
