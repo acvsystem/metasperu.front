@@ -32,7 +32,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   ngOnInit() {
 
     this.socket.on('reporteHuellero', (configuracion) => {
-      let dataResponse = [];
+      console.log(configuracion);
 
       if (configuracion.id == "EJB") {
         let dataEJB = [];
@@ -105,7 +105,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           })
         })
 
-
+        this.onFiltrarFeriado();
       }
 
 
@@ -118,7 +118,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       isDefault: false,
       isFeriados: true,
       centroCosto: 'BBW',
-      dateList: ['2024','07']
+      dateList: ['2024', '07']
     };
 
     this.socket.emit('consultaMarcacion', configuracion);
@@ -149,6 +149,27 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     }
 
+  }
+
+  onFiltrarFeriado() {
+    let tmpFeriado = [];
+    let arrFecFeriado = ["2024-07-28", "2024-07-02", "2024-07-13"];
+    arrFecFeriado.filter((feriado) => {
+      this.onDataView.filter((data) => {
+        console.log(feriado, (data || {}).dia);
+        if (feriado == (data || {}).dia) {
+          tmpFeriado.push({
+            codigoEJB: (data || {}).codigoEJB,
+            nombre_completo: (data || {}).nombre_completo,
+            nro_documento: (data || {}).nro_documento,
+            dia: (data || {}).dia
+          });
+        }
+      });
+    });
+
+    this.onDataView = tmpFeriado;
+    console.log(tmpFeriado);
   }
 
 }
