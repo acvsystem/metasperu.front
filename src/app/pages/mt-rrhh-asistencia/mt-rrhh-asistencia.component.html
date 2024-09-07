@@ -29,7 +29,7 @@
           <div class="content-button postition-start">
             <div class="content-button-comp">
               <button id="searchProducto"  type="button" class="btn btn-primary btn-sm" (click)="onConsultarAsistencia()"><i class="fa fa-search" aria-hidden="true"></i></button> 
-              <button  type="button" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>  
+              <button  type="button" class="btn btn-success btn-sm"(click)="onExcelExport()" ><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>  
             </div>
           </div>
         </ion-col>
@@ -49,6 +49,7 @@
                     <td colspan="27">No hay datos para mostrar</td>
                   </tr>
                   <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
+                    <td class="columBody">{{columBody.tienda}}</td>
                     <td class="columBody">{{columBody.codigoEJB}}</td>
                     <td class="columBody">{{columBody.nro_documento}}</td>
                     <td class="columBody">{{columBody.nombre_completo}}</td>
@@ -76,7 +77,7 @@
                     <td class="columBody">{{columBody.codigoEJB}}</td>
                     <td class="columBody">{{columBody.nro_documento}}</td>
                     <td class="columBody">{{columBody.nombre_completo}}</td>
-                    <td class="columBody">{{columBody.dia}}</td>
+                    <td class="columBody">{{columBody.cantFeriado}}</td>
                   </tr>
                 </tbody>
               </table>
