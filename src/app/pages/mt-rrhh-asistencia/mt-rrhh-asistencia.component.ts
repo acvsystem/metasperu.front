@@ -18,6 +18,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   parseEJB: Array<any> = [];
   parseHuellero: Array<any> = [];
   onDataView: Array<any> = [];
+  onDataExport: Array<any> = [];
   onDataTemp: Array<any> = [];
   onDataParse: Array<any> = [];
   isViewDefault: boolean = true;
@@ -113,32 +114,35 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia));
           let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
 
+          if ((dataEJB || {}).codigoEJB != null) {
+            if (indexData == -1) {
+              this.onDataTemp.push({
+                tienda: (selectedLocal || {})["name"],
+                codigoEJB: (dataEJB || {}).codigoEJB,
+                nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
+                nro_documento: (huellero || {}).nro_documento,
+                telefono: (dataEJB || {}).telefono,
+                email: (dataEJB || {}).email,
+                fec_nacimiento: (dataEJB || {}).fec_nacimiento,
+                fec_ingreso: (dataEJB || {}).fec_ingreso,
+                status: (dataEJB || {}).status,
+                dia: (huellero || {}).dia,
+                hr_ingreso_1: (huellero || {}).hr_ingreso,
+                hr_salida_1: (huellero || {}).hr_salida,
+                hr_brake: "",
+                hr_ingreso_2: "",
+                hr_salida_2: "",
+                hr_trabajadas: (huellero || {}).hr_trabajadas,
+                caja: (huellero || {}).caja
+              });
 
-          if (indexData == -1) {
-            this.onDataTemp.push({
-              tienda: (selectedLocal || {})["name"],
-              codigoEJB: (dataEJB || {}).codigoEJB,
-              nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
-              nro_documento: (huellero || {}).nro_documento,
-              telefono: (dataEJB || {}).telefono,
-              email: (dataEJB || {}).email,
-              fec_nacimiento: (dataEJB || {}).fec_nacimiento,
-              fec_ingreso: (dataEJB || {}).fec_ingreso,
-              status: (dataEJB || {}).status,
-              dia: (huellero || {}).dia,
-              hr_ingreso_1: (huellero || {}).hr_ingreso,
-              hr_salida_1: (huellero || {}).hr_salida,
-              hr_brake: "",
-              hr_ingreso_2: "",
-              hr_salida_2: "",
-              hr_trabajadas: (huellero || {}).hr_trabajadas,
-              caja: (huellero || {}).caja
-            });
-          } else {
-            this.onDataTemp[indexData]['hr_brake'] = "";
-            this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
-            this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
+            } else {
+              this.onDataTemp[indexData]['hr_brake'] = "";
+              this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
+              this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
+            }
           }
+
         })
 
         if (this.isViewDefault) {
@@ -188,19 +192,20 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewFeriados = true;
       this.isViewDefault = false;
       this.headList = ['codigo EJB', 'Documento', 'Nombre Completo', 'Feriados Trabajados'];
-
     }
 
   }
 
   onFiltrarFeriado() {
     let tmpFeriado = [];
+    let tmpExport = [];
     let arrFecFeriado = ["2024-07-28", "2024-07-29", "2024-08-06"];
     arrFecFeriado.filter((feriado) => {
       this.onDataTemp.filter((data) => {
-        if ((data || {}).dia == feriado) {
+        if ((data || {}).dia == feriado && ((data || {}).codigoEJB != "" && (data || {}).codigoEJB != null)) {
 
           let indexTmp = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
+          let indexExport = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
 
           if (indexTmp == -1) {
             tmpFeriado.push({
@@ -210,21 +215,42 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               dia: (data || {}).dia,
               cantFeriado: 1
             });
+
+            tmpExport.push({
+              "PERIODO": '2024-08',
+              "CODIGO": (data || {}).codigoEJB,
+              "TRABAJADOR": (data || {}).nombre_completo,
+              "DIA-NOC": "",
+              "TAR-DIU": "",
+              "HED-25%": "",
+              "HED-35%": "",
+              "HED-50%": "",
+              "HED-100": "",
+              "HSI-MPL": "",
+              "DES-LAB": "",
+              "DIA-FER": 1,
+              "DIA-SUM": "",
+              "DIA-RES": "",
+              "PER-HOR": "",
+              "HE2-5DL": ""
+            });
           } else {
             tmpFeriado[indexTmp]['cantFeriado'] = tmpFeriado[indexTmp]['cantFeriado'] + 1;
+            tmpExport[indexExport]['DIA-FER'] = tmpExport[indexExport]['DIA-FER'] + 1;
           }
         }
       });
     });
 
     this.onDataView = tmpFeriado;
+    this.onDataExport = tmpExport;
 
   }
 
   onExcelExport() {
     const self = this;
     self.isLoading = true;
-    this.exportAsExcelFile(this.onDataView, "Reporte_Feriados");
+    this.exportAsExcelFile(this.onDataExport, "Reporte_Feriados");
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
