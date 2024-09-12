@@ -16,14 +16,7 @@
           ></mt-select>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-          <mt-input
-          id="fechaInicio"
-          label="Fecha Inicio"
-          placeholder="Fecha Inicio"
-          type="text"
-          value="{{ fechaInicio }}"
-          (afterChange)="onChangeInput($event)"
-        ></mt-input>
+        <mt-calendar></mt-calendar>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
           <div class="content-button postition-start">
