@@ -25,6 +25,7 @@ import { MtSelectComponent } from './components/mt-select/mt-select.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -51,5 +52,5 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     bootstrap: [AppComponent], imports: [BrowserModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        SocketIoModule.forRoot(confSocket)], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient(withInterceptorsFromDi())] })
+        SocketIoModule.forRoot(confSocket)], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync()] })
 export class AppModule { }
