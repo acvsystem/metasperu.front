@@ -15,9 +15,34 @@
           (changeSelected)="onChangeSelect($event)"
           ></mt-select>
         </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-        <mt-calendar></mt-calendar>
-        </ion-col>
+        @if(isViewFeriados){
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
+          <mt-calendar
+            [isPeriodo]="true"
+            [isMultiSelect]="false"
+            (afterChange)="onCaledar($event)"
+          ></mt-calendar>
+          </ion-col>
+        
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" >
+            <mt-calendar
+              [isPeriodo]="false"
+              [isMultiSelect]="true"
+              [maxSelect] = "4"
+              (afterChange)="onCaledar($event)"
+            ></mt-calendar>
+            </ion-col>
+        }
+        @if(isViewDefault){
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" >
+            <mt-calendar
+              [isPeriodo]="false"
+              [isMultiSelect]="false"
+              [isDefault]="true"
+              (afterChange)="onCaledar($event)"
+            ></mt-calendar>
+            </ion-col>
+        }
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
           <div class="content-button postition-start">
             <div class="content-button-comp">

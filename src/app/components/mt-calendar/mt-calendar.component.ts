@@ -1,59 +1,36 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
-
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'mt-calendar',
   templateUrl: './mt-calendar.component.html',
   styleUrls: ['./mt-calendar.component.scss'],
 })
 export class MtCalendarComponent implements OnInit {
-  public CLOSE_ON_SELECTED = false;
-  public init = new Date();
-  public resetModel = new Date(0);
-  public model = [
-    new Date('7/15/1966')
-  ];
-  @ViewChild('picker', { static: true }) _picker: MatDatepicker<Date>;
-
+  @Input() isPeriodo: boolean = false;
+  @Input() isMultiSelect: boolean = true;
+  @Input() isDefault: boolean = false;
+  @Input() maxSelect: boolean = false;
+  @Output() afterChange: EventEmitter<any> = new EventEmitter();
+  selected: string;
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
 
-  public dateClass = (date: Date) => {
-    if (this._findDate(date) !== -1) {
-      return [ 'selected' ];
+  }
+
+  onChangeInput(ev: any) {
+    let arrDate = ev;
+    let date = new Date(ev);
+    if (this.isPeriodo) {
+      this.afterChange.emit({ isPeriodo: true, value: [`${date.getFullYear()}`, `${date.getMonth() + 1}`, `${date.getMonth() + 2}`] });
     }
-    return [ ];
-  }
 
-  public dateChanged(event: MatDatepickerInputEvent<Date>): void {
-    if (event.value) {
-      const date = event.value;
-      const index = this._findDate(date);
-      if (index === -1) {
-        this.model.push(date);
-      } else {
-        this.model.splice(index, 1)
-      }
-      this.resetModel = new Date(0);
-      if (!this.CLOSE_ON_SELECTED) {
-        const closeFn = this._picker.close;
-        this._picker.close = () => { };
-        this._picker['_popupComponentRef'].instance._calendar.monthView._createWeekCells()
-        setTimeout(() => {
-          this._picker.close = closeFn;
-        });
-      }
+    if (this.isMultiSelect && arrDate.length >= 3 && arrDate.length <= 4) {
+      this.afterChange.emit({ isMultiSelect: true, value: arrDate });
     }
-  }
 
-  public remove(date: Date): void {
-    const index = this._findDate(date);
-    this.model.splice(index, 1)
-  }
-
-  private _findDate(date: Date): number {
-    return this.model.map((m) => +m).indexOf(+date);
+    if (this.isDefault) {
+      this.afterChange.emit({ isDefault: true, value: `${date}` });
+    }
   }
 
 }

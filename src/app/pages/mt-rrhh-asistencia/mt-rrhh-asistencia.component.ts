@@ -21,6 +21,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   onDataExport: Array<any> = [];
   onDataTemp: Array<any> = [];
   onDataParse: Array<any> = [];
+  vCalendar: Array<any> = [];
+  vMultiSelect: Array<any> = [];
+  vCalendarDefault: Array<any> = [];
   isViewDefault: boolean = true;
   isViewFeriados: boolean = false;
   onListReporte: Array<any> = [
@@ -61,6 +64,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       if (configuracion.id == "EJB") {
         console.log("EJB", true);
         let dataEJB = [];
+        this.parseEJB = [];
         dataEJB = (configuracion || {}).data || [];
 
         (dataEJB || []).filter((ejb) => {
@@ -80,6 +84,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       if (configuracion.id == "servGeneral") {
         console.log("servGeneral", true);
         let dataServGeneral = [];
+        this.parseHuellero = [];
         dataServGeneral = (configuracion || {}).data || [];
         (dataServGeneral || []).filter((huellero) => {
           this.parseHuellero.push({
@@ -147,10 +152,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         if (this.isViewDefault) {
           this.onDataView = this.onDataTemp;
+          this.isLoading = false;
         }
 
         if (this.isViewFeriados) {
-          this.onFiltrarFeriado();
+          this.onFiltrarFeriado(this.vMultiSelect);
         }
       }
 
@@ -160,13 +166,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   onConsultarAsistencia() {
-    var configuracion = {
-      isDefault: false,
-      isFeriados: true,
-      centroCosto: 'BBW',
-      dateList: ['2024', '07', '08']
-    };
 
+    var configuracion = {
+      isDefault: this.isViewDefault,
+      isFeriados: this.isViewFeriados,
+      centroCosto: 'BBW',
+      dateList: (this.isViewDefault) ? this.vCalendarDefault : this.vCalendar
+    };
+    this.isLoading = true;
     this.socket.emit('consultaMarcacion', configuracion);
   }
 
@@ -181,7 +188,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-
+    this.onDataView = [];
     if ((selectData || {}).key == "General") {
       this.isViewDefault = true;
       this.isViewFeriados = false;
@@ -196,12 +203,20 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   }
 
-  onFiltrarFeriado() {
+  async onFiltrarFeriado(dateList) {
+
     let tmpFeriado = [];
     let tmpExport = [];
-    let arrFecFeriado = ["2024-07-28", "2024-07-29", "2024-08-06"];
-    arrFecFeriado.filter((feriado) => {
-      this.onDataTemp.filter((data) => {
+    let arrFecFeriado = [];
+
+    (dateList || []).filter((dt) => {
+      let date = new Date(dt).toLocaleDateString().split('/');
+      (arrFecFeriado || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
+    });
+
+
+    await (arrFecFeriado || []).filter((feriado) => {
+      (this.onDataTemp || []).filter((data) => {
         if ((data || {}).dia == feriado && ((data || {}).codigoEJB != "" && (data || {}).codigoEJB != null)) {
 
           let indexTmp = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
@@ -243,14 +258,19 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
 
     this.onDataView = tmpFeriado;
-    this.onDataExport = tmpExport;
-
+    this.onDataExport = (this.isViewDefault) ? tmpFeriado : tmpExport;
+    this.isLoading = false;
   }
 
   onExcelExport() {
     const self = this;
     self.isLoading = true;
-    this.exportAsExcelFile(this.onDataExport, "Reporte_Feriados");
+    if (this.isViewDefault) {
+      this.exportAsExcelFile(this.onDataView, "Reporte_huellero");
+    } else {
+      this.exportAsExcelFile(this.onDataExport, "Reporte_Feriados");
+    }
+
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
@@ -267,6 +287,23 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       type: EXCEL_TYPE
     });
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+  }
+
+  onCaledar($event) {
+
+    if ($event.isPeriodo) {
+      this.vCalendar = $event.value;
+    }
+
+    if ($event.isMultiSelect) {
+      this.vMultiSelect = $event.value;
+    }
+
+    if ($event.isDefault) {
+      let date = new Date($event.value).toLocaleDateString().split('/');
+      this.vCalendarDefault = [`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`];
+    }
+
   }
 
 }

@@ -1,24 +1,44 @@
-<mat-form-field>
-  <mat-chip-list #chipList aria-label="Choose a date" (click)="picker.open()">
-    <mat-chip
-      *ngFor="let value of model"
-      [selectable]="false"
-      [removable]="true"
-      (removed)="remove(value)"
-    >
-      {{ value | date }}
-      <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
-    </mat-chip>
-    <input
-      [value]="resetModel"
-      matInput
-      [matDatepicker]="picker"
-      placeholder="Choose a date"
-      (dateChange)="dateChanged($event)"
-      [matChipInputFor]="chipList"
-      hidden
-    />
-  </mat-chip-list>  
-  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker #picker></mat-datepicker>
-</mat-form-field>
+<ion-row>
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+
+    @if(isPeriodo) {
+      <mbsc-datepicker 
+      [controls]="['calendar']"
+      dateFormat="MM/YYYY"
+      theme="windows"
+      themeVariant="dark"
+      [(ngModel)]="selected"
+      (change)="onChangeInput(selected)"
+      placeholder="Seleccione el periodo"
+      >
+    </mbsc-datepicker>
+    }
+
+    @if(isMultiSelect) {
+      <mbsc-datepicker
+      [controls]="['calendar']"
+      theme="windows"
+      themeVariant="dark"
+      [selectMultiple]="true"
+      [selectMax]="maxSelect"
+      [(ngModel)]="selected"
+      (change)="onChangeInput(selected)"
+      placeholder="Seleccione las fechas"
+      dateFormat="DD-MM-YYYY"
+      >
+    </mbsc-datepicker>
+    }
+
+    @if(isDefault) {
+      <mbsc-datepicker
+      [controls]="['calendar']"
+      [(ngModel)]="selected"
+      (change)="onChangeInput(selected)"
+      placeholder="Seleccione la fecha"
+      dateFormat="DD-MM-YYYY"
+      >
+      </mbsc-datepicker>
+    }
+
+  </ion-col>
+</ion-row>

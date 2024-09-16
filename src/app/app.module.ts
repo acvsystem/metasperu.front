@@ -1,3 +1,5 @@
+import { MbscModule } from '@mobiscroll/angular';
+import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -97,7 +99,9 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
-    imports: [BrowserModule,
+    imports: [
+    MbscModule,
+    FormsModule,BrowserModule,
         DragDropModule,
         PortalModule,
         ScrollingModule,

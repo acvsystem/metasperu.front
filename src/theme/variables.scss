@@ -1,4 +1,3 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
@@ -10,16 +9,12 @@
 @include mat.core();
 
 // Define the theme object.
-$app-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  ),
-  density: (
-    scale: 0,
-  )
-));
+$app-theme: mat.define-theme((color: (theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      density: (scale: 0,
+      )));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -404,5 +399,59 @@ ion-modal.mt-modal {
     }
   }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+mt-calendar mbsc-datepicker mbsc-input span input {
+  color: black !important;
+  --highlight-background: #ffffff !important;
+  border: 1px solid #d9d9d9 !important;
+  height: 39px !important;
+  border-radius: 4px !important;
+  background: white !important;
+}
+
+.mbsc-ltr.mbsc-textarea.mbsc-textfield.mbsc-textfield-box.mbsc-textfield-tags.mbsc-windows.mbsc-windows-dark{
+
+  color: black !important;
+  --highlight-background: #ffffff !important;
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 4px !important;
+  background: white !important;
+  min-height: 39px !important;
+}
+
+mt-calendar mbsc-datepicker mbsc-input span {
+  background: white !important;
+}
+
+mt-calendar mbsc-datepicker mbsc-input label {
+  display: none !important;
+}
+
+mt-calendar mbsc-datepicker mbsc-input {
+  margin: 0 !important;
+}
+
+.mbsc-textfield-tag-text.mbsc-windows.mbsc-windows-dark {
+  background: #6b6b6b !important;
+  color: white !important;
+}
+
+.mbsc-ltr.mbsc-textfield-tag.mbsc-windows.mbsc-windows-dark {
+  border: 1px #6b6b6b !important;
+  background: #6b6b6b !important;
+}
+
+.mbsc-textfield-tag-clear.mbsc-icon.mbsc-windows.mbsc-windows-dark {
+  color: white !important;
+}
