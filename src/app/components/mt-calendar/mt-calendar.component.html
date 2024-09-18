@@ -1,6 +1,21 @@
 <ion-row>
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
 
+
+    @if(isRange) {
+      <mbsc-datepicker
+      select="range"
+      rangeHighlight="true"
+      [showRangeLabels]="true"
+      rangeStartLabel="Outbound"
+      placeholder="{{placeholder}}"
+      dateFormat="DD-MM-YYYY"
+      [(ngModel)]="selected"
+      (change)="onChangeInput(selected)"
+      rangeEndLabel="Return">
+      </mbsc-datepicker>
+    }
+
     @if(isPeriodo) {
       <mbsc-datepicker 
       [controls]="['calendar']"
@@ -9,7 +24,8 @@
       themeVariant="dark"
       [(ngModel)]="selected"
       (change)="onChangeInput(selected)"
-      placeholder="Seleccione el periodo"
+      placeholder="{{placeholder}}"
+      [locale]="localeEs"
       >
     </mbsc-datepicker>
     }
@@ -23,8 +39,9 @@
       [selectMax]="maxSelect"
       [(ngModel)]="selected"
       (change)="onChangeInput(selected)"
-      placeholder="Seleccione las fechas"
+      placeholder="{{placeholder}}"
       dateFormat="DD-MM-YYYY"
+      [locale]="localeEs"
       >
     </mbsc-datepicker>
     }
@@ -34,8 +51,9 @@
       [controls]="['calendar']"
       [(ngModel)]="selected"
       (change)="onChangeInput(selected)"
-      placeholder="Seleccione la fecha"
+      placeholder="{{placeholder}}"
       dateFormat="DD-MM-YYYY"
+      [locale]="localeEs"
       >
       </mbsc-datepicker>
     }

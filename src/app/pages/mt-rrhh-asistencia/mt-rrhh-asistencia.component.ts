@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { MatPaginator, } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 
@@ -12,20 +15,24 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  headList = ['Tienda', 'codigo EJB', 'Documento', 'Nombre Completo', 'Fecha', 'Hr Entrada 1', 'Hr Salida 1', 'Hrs Brake', 'Hr Entrada 2', 'Hr Salida 2', 'Hrs Trabajadas'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_brake', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
   isLoading: boolean = false;
   fechaInicio: string = "";
   parseEJB: Array<any> = [];
   parseHuellero: Array<any> = [];
   onDataView: Array<any> = [];
+  dataSource = new MatTableDataSource<PeriodicElement>(this.onDataView);
   onDataExport: Array<any> = [];
   onDataTemp: Array<any> = [];
   onDataParse: Array<any> = [];
   vCalendar: Array<any> = [];
   vMultiSelect: Array<any> = [];
   vCalendarDefault: Array<any> = [];
+  vDetallado: Array<any> = [];
   isViewDefault: boolean = true;
   isViewFeriados: boolean = false;
+  isDetallado: boolean = false;
+  filterEmpleado: string = "";
   onListReporte: Array<any> = [
     { key: 'General', value: 'General' },
     { key: 'Feriados', value: 'Feriados' },
@@ -54,6 +61,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     { code: '9P', name: 'VS MALL PLAZA', procesar: 0, procesado: -1 },
     { code: '7I', name: 'BB MALL PLAZA', procesar: 0, procesado: -1 }
   ];
+
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor() { }
 
@@ -98,6 +109,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           });
         });
       }
+
       console.log(this.parseEJB.length, this.parseHuellero.length);
       if (this.parseEJB.length && this.parseHuellero.length) {
         this.onDataTemp = [];
@@ -113,8 +125,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           }
 
           selectedLocal = await this.onListTiendas.find((data) => data.code == codigo) || {};
-
-
 
           let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia));
           let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
@@ -137,14 +147,15 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 hr_brake: "",
                 hr_ingreso_2: "",
                 hr_salida_2: "",
-                hr_trabajadas: (huellero || {}).hr_trabajadas,
+                hr_trabajadas: Math.round((huellero || {}).hr_trabajadas),
                 caja: (huellero || {}).caja
               });
 
             } else {
-              this.onDataTemp[indexData]['hr_brake'] = "";
+              this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
               this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
               this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
+              this.onDataTemp[indexData]['hr_trabajadas'] = this.onDataTemp[indexData]['hr_trabajadas'] + Math.round((huellero || {}).hr_trabajadas);
             }
           }
 
@@ -152,6 +163,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         if (this.isViewDefault) {
           this.onDataView = this.onDataTemp;
+          this.dataSource = new MatTableDataSource(this.onDataView);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
           this.isLoading = false;
         }
 
@@ -189,16 +203,26 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
     this.onDataView = [];
+    this.dataSource = new MatTableDataSource(this.onDataView);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     if ((selectData || {}).key == "General") {
       this.isViewDefault = true;
       this.isViewFeriados = false;
-      this.headList = ['Tienda', 'codigo EJB', 'Documento', 'Nombre Completo', 'Fecha', 'Hr Entrada 1', 'Hr Salida 1', 'Hrs Brake', 'Hr Entrada 2', 'Hr Salida 2', 'Hrs Trabajadas'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_brake', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
     if ((selectData || {}).key == "Feriados") {
       this.isViewFeriados = true;
       this.isViewDefault = false;
-      this.headList = ['codigo EJB', 'Documento', 'Nombre Completo', 'Feriados Trabajados'];
+      this.displayedColumns = ['codigoEJB', 'nro_documento', 'nombre_completo', 'cantFeriado', 'hr_trabajadas'];
+    }
+
+    if ((selectData || {}).key == "Detallado") {
+      this.isViewFeriados = false;
+      this.isViewDefault = false;
+      this.isDetallado = true;
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_brake', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
   }
@@ -215,8 +239,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
 
 
-    await (arrFecFeriado || []).filter((feriado) => {
-      (this.onDataTemp || []).filter((data) => {
+    (arrFecFeriado || []).filter(async (feriado) => {
+      await (this.onDataTemp || []).filter((data) => {
         if ((data || {}).dia == feriado && ((data || {}).codigoEJB != "" && (data || {}).codigoEJB != null)) {
 
           let indexTmp = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
@@ -228,11 +252,13 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               nombre_completo: (data || {}).nombre_completo,
               nro_documento: (data || {}).nro_documento,
               dia: (data || {}).dia,
-              cantFeriado: 1
+              cantFeriado: 1,
+              hr_trabajadas: (data || {}).hr_trabajadas,
+              hr_establecido: 8
             });
 
             tmpExport.push({
-              "PERIODO": '2024-08',
+              "PERIODO": this.vCalendar,
               "CODIGO": (data || {}).codigoEJB,
               "TRABAJADOR": (data || {}).nombre_completo,
               "DIA-NOC": "",
@@ -251,13 +277,20 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             });
           } else {
             tmpFeriado[indexTmp]['cantFeriado'] = tmpFeriado[indexTmp]['cantFeriado'] + 1;
+            let hr_establecido = tmpFeriado[indexTmp]['cantFeriado'] * 8;
+            tmpFeriado[indexTmp]['hr_establecido'] = hr_establecido;
+            tmpFeriado[indexTmp]['hr_trabajadas'] = tmpFeriado[indexTmp]['hr_trabajadas'] + (data || {}).hr_trabajadas;
             tmpExport[indexExport]['DIA-FER'] = tmpExport[indexExport]['DIA-FER'] + 1;
           }
         }
       });
     });
 
+    console.log("onFiltrarFeriado", tmpFeriado);
     this.onDataView = tmpFeriado;
+    this.dataSource = new MatTableDataSource(this.onDataView);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.onDataExport = (this.isViewDefault) ? tmpFeriado : tmpExport;
     this.isLoading = false;
   }
@@ -290,7 +323,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   onCaledar($event) {
-
+    console.log($event);
     if ($event.isPeriodo) {
       this.vCalendar = $event.value;
     }
@@ -304,6 +337,60 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.vCalendarDefault = [`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`];
     }
 
+    if ($event.isRange) {
+      let range = [];
+      let dateList = $event.value;
+      (dateList || []).filter((dt) => {
+        let date = new Date(dt).toLocaleDateString().split('/');
+        (range || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
+      });
+
+      this.vDetallado = range;
+    }
   }
 
+  obtenerMinutos(hora) {
+    var spl = hora.split(":");
+    return parseInt(spl[0]) * 60 + parseInt(spl[1]);
+  }
+
+  obtenerDiferenciaHora(hr1, hr2) {
+    let diferencia = 0;
+    let hora_1 = this.obtenerMinutos(hr1);
+    let hora_2 = this.obtenerMinutos(hr2);
+
+    if (hora_1 > hora_2) {
+      diferencia = hora_1 - hora_2;
+    } else {
+      diferencia = hora_2 - hora_1;
+    }
+
+    return diferencia;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+}
+
+export interface PeriodicElement {
+  tienda: string,
+  codigoEJB: string,
+  nombre_completo: string,
+  nro_documento: string,
+  telefono: string,
+  email: string,
+  fec_nacimiento: string,
+  fec_ingreso: string,
+  status: string,
+  dia: string,
+  hr_ingreso_1: string,
+  hr_salida_1: string,
+  hr_brake: string,
+  hr_ingreso_2: string,
+  hr_salida_2: string,
+  hr_trabajadas: string,
+  caja: string
 }

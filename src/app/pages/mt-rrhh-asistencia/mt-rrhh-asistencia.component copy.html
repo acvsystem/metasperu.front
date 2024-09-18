@@ -1,0 +1,116 @@
+
+
+<ion-content>
+  <div id="content" class="full-center-page">
+    <div class="console-loading" *ngIf="isLoading">
+      <div class="loader"></div>
+    </div>
+   <div class="card-content">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-select
+          id="cboReporte"
+          placeHolder="Tipo Reporte"
+          [optionList]="onListReporte"
+          (changeSelected)="onChangeSelect($event)"
+          ></mt-select>
+        </ion-col>
+        @if(isViewFeriados){
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
+          <mt-calendar
+            [isPeriodo]="true"
+            [isMultiSelect]="false"
+            (afterChange)="onCaledar($event)"
+          ></mt-calendar>
+          </ion-col>
+        
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" >
+            <mt-calendar
+              [isPeriodo]="false"
+              [isMultiSelect]="true"
+              [maxSelect] = "4"
+              (afterChange)="onCaledar($event)"
+            ></mt-calendar>
+            </ion-col>
+        }
+        @if(isViewDefault){
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" >
+            <mt-calendar
+              [isPeriodo]="false"
+              [isMultiSelect]="false"
+              [isDefault]="true"
+              (afterChange)="onCaledar($event)"
+            ></mt-calendar>
+            </ion-col>
+        }
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <div class="content-button postition-start">
+            <div class="content-button-comp">
+              <button id="searchProducto"  type="button" class="btn btn-primary btn-sm" (click)="onConsultarAsistencia()"><i class="fa fa-search" aria-hidden="true"></i></button> 
+              <button  type="button" class="btn btn-success btn-sm"(click)="onExcelExport()" ><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>  
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <table class="table table-bordered table-hover" *ngIf="isViewDefault">
+                <thead>
+                  <tr>
+                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="!onDataView.length" style="text-align: center;">
+                    <td colspan="27">No hay datos para mostrar</td>
+                  </tr>
+                  <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
+                    <td class="columBody">{{columBody.tienda}}</td>
+                    <td class="columBody">{{columBody.codigoEJB}}</td>
+                    <td class="columBody">{{columBody.nro_documento}}</td>
+                    <td class="columBody">{{columBody.nombre_completo}}</td>
+                    <td class="columBody">{{columBody.dia}}</td>
+                    <td class="columBody">{{columBody.hr_ingreso_1}}</td>
+                    <td class="columBody">{{columBody.hr_salida_1}}</td>
+                    @if(columBody.hr_brake > 60) {
+                      <td class="columBody" style="color: red;">{{columBody.hr_brake}}</td>
+                    } @else {
+                      <td class="columBody">{{columBody.hr_brake}}</td>
+                    }
+                    
+                    <td class="columBody">{{columBody.hr_ingreso_2}}</td>
+                    <td class="columBody">{{columBody.hr_salida_2}}</td>
+                    <td class="columBody">{{columBody.hr_trabajadas}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered table-hover" *ngIf="isViewFeriados">
+                <thead>
+                  <tr>
+                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="!onDataView.length" style="text-align: center;">
+                    <td colspan="27">No hay datos para mostrar</td>
+                  </tr>
+                  <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
+                    <td class="columBody">{{columBody.codigoEJB}}</td>
+                    <td class="columBody">{{columBody.nro_documento}}</td>
+                    <td class="columBody">{{columBody.nombre_completo}}</td>
+                    <td class="columBody">{{columBody.cantFeriado}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+
+  </div>
+</ion-content>
+
+

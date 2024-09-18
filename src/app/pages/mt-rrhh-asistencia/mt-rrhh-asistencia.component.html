@@ -8,6 +8,16 @@
    <div class="card-content">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-input
+          id="filterEmpleado"
+          label="Filtro"
+          placeholder="Filtro"
+          type="text"
+          value="{{ filterEmpleado }}"
+          (keyup)="applyFilter($event)"
+          ></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
           <mt-select
           id="cboReporte"
           placeHolder="Tipo Reporte"
@@ -20,6 +30,7 @@
           <mt-calendar
             [isPeriodo]="true"
             [isMultiSelect]="false"
+            placeholder="Seleccione el mes"
             (afterChange)="onCaledar($event)"
           ></mt-calendar>
           </ion-col>
@@ -29,6 +40,7 @@
               [isPeriodo]="false"
               [isMultiSelect]="true"
               [maxSelect] = "4"
+              placeholder="Seleccione las fechas"
               (afterChange)="onCaledar($event)"
             ></mt-calendar>
             </ion-col>
@@ -39,6 +51,19 @@
               [isPeriodo]="false"
               [isMultiSelect]="false"
               [isDefault]="true"
+              placeholder="Seleccione la fecha"
+              (afterChange)="onCaledar($event)"
+            ></mt-calendar>
+            </ion-col>
+        }
+        @if(isDetallado){
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" >
+            <mt-calendar
+              [isPeriodo]="false"
+              [isMultiSelect]="false"
+              [isDefault]="false"
+              [isRange]="true"
+              placeholder="Seleccione rago de fecha"
               (afterChange)="onCaledar($event)"
             ></mt-calendar>
             </ion-col>
@@ -56,49 +81,133 @@
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <table class="table table-bordered table-hover" *ngIf="isViewDefault">
-                <thead>
-                  <tr>
-                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="!onDataView.length" style="text-align: center;">
-                    <td colspan="27">No hay datos para mostrar</td>
-                  </tr>
-                  <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
-                    <td class="columBody">{{columBody.tienda}}</td>
-                    <td class="columBody">{{columBody.codigoEJB}}</td>
-                    <td class="columBody">{{columBody.nro_documento}}</td>
-                    <td class="columBody">{{columBody.nombre_completo}}</td>
-                    <td class="columBody">{{columBody.dia}}</td>
-                    <td class="columBody">{{columBody.hr_ingreso_1}}</td>
-                    <td class="columBody">{{columBody.hr_salida_1}}</td>
-                    <td class="columBody">{{columBody.hr_brake}}</td>
-                    <td class="columBody">{{columBody.hr_ingreso_2}}</td>
-                    <td class="columBody">{{columBody.hr_salida_2}}</td>
-                    <td class="columBody">{{columBody.hr_trabajadas}}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <table class="table table-bordered table-hover" *ngIf="isViewFeriados">
-                <thead>
-                  <tr>
-                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="!onDataView.length" style="text-align: center;">
-                    <td colspan="27">No hay datos para mostrar</td>
-                  </tr>
-                  <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
-                    <td class="columBody">{{columBody.codigoEJB}}</td>
-                    <td class="columBody">{{columBody.nro_documento}}</td>
-                    <td class="columBody">{{columBody.nombre_completo}}</td>
-                    <td class="columBody">{{columBody.cantFeriado}}</td>
-                  </tr>
-                </tbody>
-              </table>
+             @if(isViewDefault || isDetallado) {
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="tienda">
+                      <th mat-header-cell *matHeaderCellDef> Tienda </th>
+                      <td mat-cell *matCellDef="let element"> {{element.tienda}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codigoEJB">
+                      <th mat-header-cell *matHeaderCellDef> EJB </th>
+                      <td mat-cell *matCellDef="let element"> {{element.codigoEJB}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nro_documento">
+                      <th mat-header-cell *matHeaderCellDef> N° Documento </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nro_documento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre_completo">
+                      <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nombre_completo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dia">
+                      <th mat-header-cell *matHeaderCellDef> Dia </th>
+                      <td mat-cell *matCellDef="let element"> {{element.dia}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_ingreso_1">
+                      <th mat-header-cell *matHeaderCellDef> 1er Ingreso </th>
+                      <td mat-cell *matCellDef="let element"> {{element.hr_ingreso_1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_salida_1">
+                      <th mat-header-cell *matHeaderCellDef> 1era Salida </th>
+                      <td mat-cell *matCellDef="let element"> {{element.hr_salida_1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_brake">
+                      <th mat-header-cell *matHeaderCellDef> Tiempo Brake </th>
+                     <td mat-cell *matCellDef="let element"> 
+                      @if(element.hr_brake > 60) {
+                        <label style="color: red;">{{element.hr_brake}}</label>
+                      } @else {
+                        <label>{{element.hr_brake}}</label>
+                      }
+                     </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_ingreso_2">
+                      <th mat-header-cell *matHeaderCellDef> 2do Ingreso </th>
+                      <td mat-cell *matCellDef="let element"> {{element.hr_ingreso_2}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_salida_2">
+                      <th mat-header-cell *matHeaderCellDef> 2da Salida </th>
+                      <td mat-cell *matCellDef="let element"> {{element.hr_salida_2}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_trabajadas">
+                      <th mat-header-cell *matHeaderCellDef> Hrs Trabajadas </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        @if(element.hr_trabajadas >= 8) {
+                          <label>{{element.hr_trabajadas}}</label>
+                        } @else {
+                          <label style="color: red;">{{element.hr_trabajadas}}</label>
+                        }
+                      </td>
+                    </ng-container>
+                  
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]"
+                showFirstLastButtons
+                aria-label="Select page of periodic elements">
+                </mat-paginator>
+              </div>
+             } @else {
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="codigoEJB">
+                      <th mat-header-cell *matHeaderCellDef> EJB </th>
+                      <td mat-cell *matCellDef="let element"> {{element.codigoEJB}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nro_documento">
+                      <th mat-header-cell *matHeaderCellDef> N° Documento </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nro_documento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre_completo">
+                      <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nombre_completo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cantFeriado">
+                      <th mat-header-cell *matHeaderCellDef> Feriados </th>
+                      <td mat-cell *matCellDef="let element"> {{element.cantFeriado}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hr_trabajadas">
+                      <th mat-header-cell *matHeaderCellDef> Horas Trabajadas </th>
+                      <td mat-cell *matCellDef="let element">
+                        @if(element.hr_trabajadas >= element.hr_establecido) {
+                          <label>{{element.hr_trabajadas}}</label>
+                        } @else {
+                          <label style="color: red;">{{element.hr_trabajadas}}</label>
+                        }
+                      </td>
+                    </ng-container>
+                  
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]"
+                showFirstLastButtons
+                aria-label="Select page of periodic elements">
+                </mat-paginator>
+              </div>
+             }
+
+              
             </ion-col>
           </ion-row>
         </ion-col>
