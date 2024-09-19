@@ -15,7 +15,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_brake', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
   isLoading: boolean = false;
   fechaInicio: string = "";
   parseEJB: Array<any> = [];
@@ -97,6 +97,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         let dataServGeneral = [];
         this.parseHuellero = [];
         dataServGeneral = (configuracion || {}).data || [];
+        console.log("servGeneral",dataServGeneral);
         (dataServGeneral || []).filter((huellero) => {
           this.parseHuellero.push({
             nro_documento: (huellero || {}).nroDocumento,
@@ -110,7 +111,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
       }
 
-      console.log(this.parseEJB.length, this.parseHuellero.length);
+      
       if (this.parseEJB.length && this.parseHuellero.length) {
         this.onDataTemp = [];
 
@@ -210,7 +211,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     if ((selectData || {}).key == "General") {
       this.isViewDefault = true;
       this.isViewFeriados = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_brake', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
     if ((selectData || {}).key == "Feriados") {
@@ -223,7 +224,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewFeriados = false;
       this.isViewDefault = false;
       this.isDetallado = true;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_brake', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
   }

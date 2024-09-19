@@ -121,8 +121,8 @@
                       <td mat-cell *matCellDef="let element"> {{element.hr_salida_1}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="hr_brake">
-                      <th mat-header-cell *matHeaderCellDef> Tiempo Brake </th>
+                    <ng-container matColumnDef="hr_break">
+                      <th mat-header-cell *matHeaderCellDef> Tiempo Break </th>
                      <td mat-cell *matCellDef="let element"> 
                       @if(element.hr_brake > 60) {
                         <label style="color: red;">{{element.hr_brake}}</label>
