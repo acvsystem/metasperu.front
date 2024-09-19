@@ -156,9 +156,15 @@ export class AppComponent {
 
             if (this.store.getStore('tn')) {
               let profileUser = this.store.getStore('mt-profile');
+              console.log(profileUser);
               if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
                 this.service.onViewPageAdmin.emit(false);
                 this.nav.navigateRoot('inventario');
+              }
+
+              if ((profileUser || {}).mt_nivel == "RRHH") {
+                this.service.onViewPageAdmin.emit(false);
+                this.nav.navigateRoot('asistencia');
               }
 
               if ((profileUser || {}).mt_nivel == "SISTEMAS") {

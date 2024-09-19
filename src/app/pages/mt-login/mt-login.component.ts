@@ -49,6 +49,8 @@ export class MtLoginComponent implements OnInit {
       this.nav.navigateRoot('inventario');
     } else if ((profileUser || {}).mt_nivel == "SISTEMAS") {
       this.nav.navigateRoot('comprobantes');
+    } else if ((profileUser || {}).mt_nivel == "RRHH") {
+      this.nav.navigateRoot('asistencia');
     }
 
   }

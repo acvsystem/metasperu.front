@@ -184,8 +184,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     var configuracion = {
       isDefault: this.isViewDefault,
       isFeriados: this.isViewFeriados,
-      centroCosto: 'BBW',
-      dateList: (this.isViewDefault) ? this.vCalendarDefault : this.vCalendar
+      isDetallado: this.isDetallado,
+      centroCosto: '',
+      dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
     };
     this.isLoading = true;
     this.socket.emit('consultaMarcacion', configuracion);
@@ -215,7 +216,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     if ((selectData || {}).key == "Feriados") {
       this.isViewFeriados = true;
       this.isViewDefault = false;
-      this.displayedColumns = ['codigoEJB', 'nro_documento', 'nombre_completo', 'cantFeriado', 'hr_trabajadas'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'cantFeriado', 'hr_trabajadas'];
     }
 
     if ((selectData || {}).key == "Detallado") {
@@ -228,7 +229,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onFiltrarFeriado(dateList) {
-
+    let dateNow = new Date();
+    let mesNow = (dateNow.getMonth() + 1).toString();
+    let periodo = `${(mesNow.length == 1) ? '0' + mesNow : mesNow}/${dateNow.getFullYear().toString()}`
     let tmpFeriado = [];
     let tmpExport = [];
     let arrFecFeriado = [];
@@ -248,6 +251,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
           if (indexTmp == -1) {
             tmpFeriado.push({
+              tienda: (data || {}).tienda,
               codigoEJB: (data || {}).codigoEJB,
               nombre_completo: (data || {}).nombre_completo,
               nro_documento: (data || {}).nro_documento,
@@ -258,7 +262,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             });
 
             tmpExport.push({
-              "PERIODO": this.vCalendar,
+              "PERIODO": periodo,
               "CODIGO": (data || {}).codigoEJB,
               "TRABAJADOR": (data || {}).nombre_completo,
               "DIA-NOC": "",
@@ -295,12 +299,12 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.isLoading = false;
   }
 
-  onExcelExport() {
+  onExcelExport(isFeriado?) {
     const self = this;
     self.isLoading = true;
-    if (this.isViewDefault) {
+    if (!isFeriado) {
       this.exportAsExcelFile(this.onDataView, "Reporte_huellero");
-    } else {
+    } else if (isFeriado) {
       this.exportAsExcelFile(this.onDataExport, "Reporte_Feriados");
     }
 

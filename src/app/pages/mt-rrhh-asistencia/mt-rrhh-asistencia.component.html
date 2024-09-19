@@ -72,7 +72,8 @@
           <div class="content-button postition-start">
             <div class="content-button-comp">
               <button id="searchProducto"  type="button" class="btn btn-primary btn-sm" (click)="onConsultarAsistencia()"><i class="fa fa-search" aria-hidden="true"></i></button> 
-              <button  type="button" class="btn btn-success btn-sm"(click)="onExcelExport()" ><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>  
+              <button  type="button" class="btn btn-success btn-sm"(click)="onExcelExport(true)" *ngIf="isViewFeriados"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Feriados</button>  
+              <button  type="button" class="btn btn-success btn-sm"(click)="onExcelExport()" ><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Datos</button>  
             </div>
           </div>
         </ion-col>
@@ -164,6 +165,11 @@
              } @else {
               <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="tienda">
+                      <th mat-header-cell *matHeaderCellDef> Tienda </th>
+                      <td mat-cell *matCellDef="let element"> {{element.tienda}} </td>
+                    </ng-container>
 
                     <ng-container matColumnDef="codigoEJB">
                       <th mat-header-cell *matHeaderCellDef> EJB </th>

@@ -13,11 +13,9 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <section *ngFor="let menu of menuUser" class="content-item">
-        <div (click)="onNavigatorRoute(menu.ruta)" *ngIf="menu.ISVISIBLE"  class="item-menu">
-          <span>{{menu.nombre_menu}}</span>
+        <div class="example-menu" *ngFor="let menu of menuUser" cdkMenu>
+          <button class="example-menu-item" (click)="onNavigatorRoute(menu.ruta)" *ngIf="menu.ISVISIBLE" cdkMenuItem>{{menu.nombre_menu}}</button>
         </div>
-      </section>
     </ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
