@@ -119,8 +119,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
           var codigo = (huellero || {}).caja.substr(0, 2);
           var selectedLocal = {};
+
+
+
           if ((huellero || {}).caja.substr(2, 2) == 7) {
-            codigo = codigo;
+            codigo = (huellero || {}).caja;
           } else {
             codigo.substr(0, 1)
           }
