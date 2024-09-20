@@ -33,6 +33,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isViewFeriados: boolean = false;
   isDetallado: boolean = false;
   filterEmpleado: string = "";
+  exportFeriado: Array<any> = [];
   onListReporte: Array<any> = [
     { key: 'General', value: 'General' },
     { key: 'Feriados', value: 'Feriados' },
@@ -73,22 +74,46 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.socket.on('reporteHuellero', async (configuracion) => {
 
       if (configuracion.id == "EJB") {
+        let dateNow = new Date();
+        let mesNow = (dateNow.getMonth() + 1).toString();
+        let periodo = `${(mesNow.length == 1) ? '0' + mesNow : mesNow}/${dateNow.getFullYear().toString()}`
         console.log("EJB", true);
         let dataEJB = [];
         this.parseEJB = [];
         dataEJB = (configuracion || {}).data || [];
 
         (dataEJB || []).filter((ejb) => {
-          this.parseEJB.push({
-            codigoEJB: ((ejb || {}).CODEJB).trim(),
-            nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
-            nro_documento: ((ejb || {}).NUMDOC).trim(),
-            telefono: ((ejb || {}).TELEFO).trim(),
-            email: ((ejb || {}).EMAIL).trim(),
-            fec_nacimiento: ((ejb || {}).FECNAC).trim(),
-            fec_ingreso: ((ejb || {}).FECING).trim(),
-            status: ((ejb || {}).STATUS).trim()
-          });
+          if (((ejb || {}).STATUS).trim() == "VIG") {
+            this.parseEJB.push({
+              codigoEJB: ((ejb || {}).CODEJB).trim(),
+              nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
+              nro_documento: ((ejb || {}).NUMDOC).trim(),
+              telefono: ((ejb || {}).TELEFO).trim(),
+              email: ((ejb || {}).EMAIL).trim(),
+              fec_nacimiento: ((ejb || {}).FECNAC).trim(),
+              fec_ingreso: ((ejb || {}).FECING).trim(),
+              status: ((ejb || {}).STATUS).trim()
+            });
+
+            this.exportFeriado.push({
+              "PERIODO": periodo,
+              "CODIGO": ((ejb || {}).CODEJB).trim(),
+              "TRABAJADOR": `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
+              "DIA-NOC": "",
+              "TAR-DIU": "",
+              "HED-25%": "",
+              "HED-35%": "",
+              "HED-50%": "",
+              "HED-100": "",
+              "HSI-MPL": "",
+              "DES-LAB": "",
+              "DIA-FER": 0,
+              "DIA-SUM": "",
+              "DIA-RES": "",
+              "PER-HOR": "",
+              "HE2-5DL": ""
+            });
+          }
         });
       }
 
@@ -97,7 +122,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         let dataServGeneral = [];
         this.parseHuellero = [];
         dataServGeneral = (configuracion || {}).data || [];
-        console.log("servGeneral",dataServGeneral);
+        console.log("servGeneral", dataServGeneral);
         (dataServGeneral || []).filter((huellero) => {
           this.parseHuellero.push({
             nro_documento: (huellero || {}).nroDocumento,
@@ -111,7 +136,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
       }
 
-      
+
       if (this.parseEJB.length && this.parseHuellero.length) {
         this.onDataTemp = [];
 
@@ -165,12 +190,16 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         })
 
-        if (this.isViewDefault) {
+        if (this.isViewDefault || this.isDetallado) {
           this.onDataView = this.onDataTemp;
           this.dataSource = new MatTableDataSource(this.onDataView);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
-          this.isLoading = false;
+
+          if (this.onDataView.length) {
+            this.isLoading = false;
+          }
+
         }
 
         if (this.isViewFeriados) {
@@ -233,11 +262,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onFiltrarFeriado(dateList) {
-    let dateNow = new Date();
-    let mesNow = (dateNow.getMonth() + 1).toString();
-    let periodo = `${(mesNow.length == 1) ? '0' + mesNow : mesNow}/${dateNow.getFullYear().toString()}`
     let tmpFeriado = [];
-    let tmpExport = [];
     let arrFecFeriado = [];
 
     (dateList || []).filter((dt) => {
@@ -251,7 +276,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         if ((data || {}).dia == feriado && ((data || {}).codigoEJB != "" && (data || {}).codigoEJB != null)) {
 
           let indexTmp = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
-          let indexExport = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
+          let indexExport = this.exportFeriado.findIndex((tmp) => tmp.CODIGO == (data || {}).codigoEJB);
 
           if (indexTmp == -1) {
             tmpFeriado.push({
@@ -265,42 +290,30 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               hr_establecido: 8
             });
 
-            tmpExport.push({
-              "PERIODO": periodo,
-              "CODIGO": (data || {}).codigoEJB,
-              "TRABAJADOR": (data || {}).nombre_completo,
-              "DIA-NOC": "",
-              "TAR-DIU": "",
-              "HED-25%": "",
-              "HED-35%": "",
-              "HED-50%": "",
-              "HED-100": "",
-              "HSI-MPL": "",
-              "DES-LAB": "",
-              "DIA-FER": 1,
-              "DIA-SUM": "",
-              "DIA-RES": "",
-              "PER-HOR": "",
-              "HE2-5DL": ""
-            });
+
+            this.exportFeriado[indexExport]['DIA-FER'] = this.exportFeriado[indexExport]['DIA-FER'] + 1;
+
           } else {
             tmpFeriado[indexTmp]['cantFeriado'] = tmpFeriado[indexTmp]['cantFeriado'] + 1;
             let hr_establecido = tmpFeriado[indexTmp]['cantFeriado'] * 8;
             tmpFeriado[indexTmp]['hr_establecido'] = hr_establecido;
             tmpFeriado[indexTmp]['hr_trabajadas'] = tmpFeriado[indexTmp]['hr_trabajadas'] + (data || {}).hr_trabajadas;
-            tmpExport[indexExport]['DIA-FER'] = tmpExport[indexExport]['DIA-FER'] + 1;
+            this.exportFeriado[indexExport]['DIA-FER'] = this.exportFeriado[indexExport]['DIA-FER'] + 1;
           }
+
         }
       });
     });
 
-    console.log("onFiltrarFeriado", tmpFeriado);
+
     this.onDataView = tmpFeriado;
     this.dataSource = new MatTableDataSource(this.onDataView);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.onDataExport = (this.isViewDefault) ? tmpFeriado : tmpExport;
-    this.isLoading = false;
+    this.onDataExport = (this.isViewDefault) ? tmpFeriado : this.exportFeriado;
+    if (this.onDataView.length) {
+      this.isLoading = false;
+    }
   }
 
   onExcelExport(isFeriado?) {
