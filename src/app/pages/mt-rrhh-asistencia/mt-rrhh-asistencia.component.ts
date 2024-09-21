@@ -243,12 +243,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     if ((selectData || {}).key == "General") {
       this.isViewDefault = true;
       this.isViewFeriados = false;
+      this.isDetallado = false;
       this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
     if ((selectData || {}).key == "Feriados") {
       this.isViewFeriados = true;
       this.isViewDefault = false;
+      this.isDetallado = false;
       this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'cantFeriado', 'hr_trabajadas'];
     }
 
@@ -264,7 +266,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   async onFiltrarFeriado(dateList) {
     let tmpFeriado = [];
     let arrFecFeriado = [];
-
+    console.log(dateList);
     (dateList || []).filter((dt) => {
       let date = new Date(dt).toLocaleDateString().split('/');
       (arrFecFeriado || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
@@ -272,6 +274,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
 
     (arrFecFeriado || []).filter(async (feriado) => {
+      
       await (this.onDataTemp || []).filter((data) => {
         if ((data || {}).dia == feriado && ((data || {}).codigoEJB != "" && (data || {}).codigoEJB != null)) {
 
@@ -305,7 +308,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       });
     });
 
-
+    console.log(tmpFeriado);
     this.onDataView = tmpFeriado;
     this.dataSource = new MatTableDataSource(this.onDataView);
     this.dataSource.paginator = this.paginator;

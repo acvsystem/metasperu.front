@@ -32,7 +32,7 @@ export class MtCalendarComponent implements OnInit {
       this.afterChange.emit({ isPeriodo: true, value: [`${date.getFullYear()}`, `${date.getMonth() + 1}`, `${date.getMonth() + 2}`] });
     }
 
-    if (this.isMultiSelect && arrDate.length >= 3 && arrDate.length <= 4) {
+    if (this.isMultiSelect && arrDate.length >= 1 && arrDate.length <= 3) {
       this.afterChange.emit({ isMultiSelect: true, value: arrDate });
     }
 
