@@ -32,6 +32,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isViewDefault: boolean = true;
   isViewFeriados: boolean = false;
   isDetallado: boolean = false;
+  isDataEJB: boolean = false;
+  isDataServer: boolean = false;
   filterEmpleado: string = "";
   exportFeriado: Array<any> = [];
   onListReporte: Array<any> = [
@@ -74,9 +76,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.socket.on('reporteHuellero', async (configuracion) => {
 
       if (configuracion.id == "EJB") {
+        this.isDataEJB = true;
         let dateNow = new Date();
         let mesNow = (dateNow.getMonth() + 1).toString();
-        let periodo = `${(mesNow.length == 1) ? '0' + mesNow : mesNow}/${dateNow.getFullYear().toString()}`
+        let periodo = `${(mesNow.length == 1) ? '0' + mesNow : mesNow}/${dateNow.getFullYear().toString()}`;
         console.log("EJB", true);
         let dataEJB = [];
         this.parseEJB = [];
@@ -115,14 +118,15 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             });
           }
         });
+
       }
 
       if (configuracion.id == "servGeneral") {
+        this.isDataServer = true;
         console.log("servGeneral", true);
         let dataServGeneral = [];
         this.parseHuellero = [];
         dataServGeneral = (configuracion || {}).data || [];
-        console.log("servGeneral", dataServGeneral);
         (dataServGeneral || []).filter((huellero) => {
           this.parseHuellero.push({
             nro_documento: (huellero || {}).nroDocumento,
@@ -137,7 +141,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       }
 
 
-      if (this.parseEJB.length && this.parseHuellero.length) {
+      if (this.isDataEJB && this.isDataServer) {
         this.onDataTemp = [];
 
         await (this.parseHuellero || []).filter(async (huellero) => {
@@ -273,8 +277,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
 
 
-    (arrFecFeriado || []).filter(async (feriado) => {
-      
+    await (arrFecFeriado || []).filter(async (feriado) => {
+
       await (this.onDataTemp || []).filter((data) => {
         if ((data || {}).dia == feriado && ((data || {}).codigoEJB != "" && (data || {}).codigoEJB != null)) {
 
@@ -308,7 +312,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       });
     });
 
-    console.log(tmpFeriado);
+
     this.onDataView = tmpFeriado;
     this.dataSource = new MatTableDataSource(this.onDataView);
     this.dataSource.paginator = this.paginator;
@@ -316,6 +320,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.onDataExport = (this.isViewDefault) ? tmpFeriado : this.exportFeriado;
     if (this.onDataView.length) {
       this.isLoading = false;
+      this.isDataEJB = false;
+      this.isDataServer = false;
     }
   }
 
