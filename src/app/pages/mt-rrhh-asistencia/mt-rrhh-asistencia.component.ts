@@ -1,10 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 
@@ -44,8 +50,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onListTiendas: Array<any> = [
     { code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { code: '9N', name: 'VS MALL AVENTURA', procesar: 0, procesado: -1 },
-    { code: '7J', name: 'BBW MALL AVENTURA', procesar: 0, procesado: -1 },
+    { code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
     { code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
     { code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
     { code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
@@ -61,17 +67,23 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     { code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
     { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { code: '9P', name: 'VS MALL PLAZA', procesar: 0, procesado: -1 },
-    { code: '7I', name: 'BB MALL PLAZA', procesar: 0, procesado: -1 }
+    { code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  private _snackBar = inject(MatSnackBar);
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
   constructor() { }
 
   ngOnInit() {
+
 
     this.socket.on('reporteHuellero', async (configuracion) => {
 
@@ -83,6 +95,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         console.log("EJB", true);
         let dataEJB = [];
         this.parseEJB = [];
+        this.exportFeriado = [];
         dataEJB = (configuracion || {}).data || [];
 
         (dataEJB || []).filter((ejb) => {
@@ -146,52 +159,61 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         await (this.parseHuellero || []).filter(async (huellero) => {
 
-          var codigo = (huellero || {}).caja.substr(0, 2);
-          var selectedLocal = {};
+          if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
+
+            var codigo = (huellero || {}).caja.substr(0, 2);
+            var selectedLocal = {};
 
 
 
-          if ((huellero || {}).caja.substr(2, 2) == 7) {
-            codigo = (huellero || {}).caja;
-          } else {
-            codigo.substr(0, 1)
-          }
-
-          selectedLocal = await this.onListTiendas.find((data) => data.code == codigo) || {};
-
-          let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia));
-          let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
-
-          if ((dataEJB || {}).codigoEJB != null) {
-            if (indexData == -1) {
-              this.onDataTemp.push({
-                tienda: (selectedLocal || {})["name"],
-                codigoEJB: (dataEJB || {}).codigoEJB,
-                nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
-                nro_documento: (huellero || {}).nro_documento,
-                telefono: (dataEJB || {}).telefono,
-                email: (dataEJB || {}).email,
-                fec_nacimiento: (dataEJB || {}).fec_nacimiento,
-                fec_ingreso: (dataEJB || {}).fec_ingreso,
-                status: (dataEJB || {}).status,
-                dia: (huellero || {}).dia,
-                hr_ingreso_1: (huellero || {}).hr_ingreso,
-                hr_salida_1: (huellero || {}).hr_salida,
-                hr_brake: "",
-                hr_ingreso_2: "",
-                hr_salida_2: "",
-                hr_trabajadas: Math.round((huellero || {}).hr_trabajadas),
-                caja: (huellero || {}).caja
-              });
-
+            if ((huellero || {}).caja.substr(2, 2) == 7) {
+              codigo = (huellero || {}).caja;
             } else {
-              this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
-              this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
-              this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
-              this.onDataTemp[indexData]['hr_trabajadas'] = this.onDataTemp[indexData]['hr_trabajadas'] + Math.round((huellero || {}).hr_trabajadas);
+              codigo.substr(0, 1)
+            }
+
+            selectedLocal = await this.onListTiendas.find((data) => data.code == codigo) || {};
+
+            let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia) && (data || {}).caja == (huellero || []).caja);
+            let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
+
+            if ((dataEJB || {}).codigoEJB != null) {
+              if (indexData == -1) {
+                this.onDataTemp.push({
+                  tienda: (selectedLocal || {})["name"],
+                  codigoEJB: (dataEJB || {}).codigoEJB,
+                  nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
+                  nro_documento: (huellero || {}).nro_documento,
+                  telefono: (dataEJB || {}).telefono,
+                  email: (dataEJB || {}).email,
+                  fec_nacimiento: (dataEJB || {}).fec_nacimiento,
+                  fec_ingreso: (dataEJB || {}).fec_ingreso,
+                  status: (dataEJB || {}).status,
+                  dia: (huellero || {}).dia,
+                  hr_ingreso_1: (huellero || {}).hr_ingreso,
+                  hr_salida_1: (huellero || {}).hr_salida,
+                  hr_brake: "",
+                  hr_ingreso_2: "",
+                  hr_salida_2: "",
+                  hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida),
+                  caja: (huellero || {}).caja,
+                  isJornadaCompleta: false,
+                  isBrakeComplete: false
+                });
+
+              } else {
+
+                this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
+                this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
+                this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
+                let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
+                let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+                this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
+                this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2));
+                this.onDataTemp[indexData]['isBrakeComplete'] = this.onVerficacionBrake(this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso));
+              }
             }
           }
-
         })
 
         if (this.isViewDefault || this.isDetallado) {
@@ -216,17 +238,34 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
   }
 
-  onConsultarAsistencia() {
+  async onConsultarAsistencia() {
 
-    var configuracion = {
-      isDefault: this.isViewDefault,
-      isFeriados: this.isViewFeriados,
-      isDetallado: this.isDetallado,
-      centroCosto: '',
-      dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
-    };
-    this.isLoading = true;
-    this.socket.emit('consultaMarcacion', configuracion);
+    let arVerif = [];
+
+    await (this.vMultiSelect || []).filter((dt) => {
+      let date = new Date(dt).toLocaleDateString().split('/');
+      if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
+        arVerif.push(true);
+      } else {
+        arVerif.push(false);
+      }
+    });
+
+    if (arVerif.includes(false) && this.isViewFeriados) {
+      this.openSnackBar("Fechas seleccionadas no son correcta..!!");
+      this.isLoading = false;
+    } else {
+      var configuracion = {
+        isDefault: this.isViewDefault,
+        isFeriados: this.isViewFeriados,
+        isDetallado: this.isDetallado,
+        centroCosto: '',
+        dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
+      };
+      this.isLoading = true;
+      this.socket.emit('consultaMarcacion', configuracion);
+    }
+
   }
 
   onChangeInput(data: any) {
@@ -270,6 +309,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   async onFiltrarFeriado(dateList) {
     let tmpFeriado = [];
     let arrFecFeriado = [];
+
     console.log(dateList);
     (dateList || []).filter((dt) => {
       let date = new Date(dt).toLocaleDateString().split('/');
@@ -379,15 +419,58 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     }
   }
 
-  obtenerMinutos(hora) {
-    var spl = hora.split(":");
-    return parseInt(spl[0]) * 60 + parseInt(spl[1]);
+  obtenerMinutos(hora_1, hora_2) {
+    let hora_1_pr = hora_1.split(":");
+    let hora_2_pr = hora_2.split(":");
+    let residuo_1 = 0;
+    let minutos = 0;
+    let hora = 0;
+    if (hora_1_pr[1] > 0) {
+
+      residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
+
+      if (residuo_1 > 59) {
+        minutos = residuo_1 - 60;
+        hora = 1;
+      } else {
+        minutos = residuo_1;
+      }
+    }
+
+    return [hora, minutos];
+  }
+
+  obtenerHorasTrabajadas(hrRs_1, hrRs_2) {
+    let hr_1 = hrRs_1.split(":");
+    let hr_2 = hrRs_2.split(":");
+
+    let dif_min = parseInt(hr_1[1]) + parseInt(hr_2[1]);
+    let dif_hora = parseInt(hr_1[0]) + parseInt(hr_2[0]);
+    let dif_res = 0;
+    let dif_hr = 0;
+
+    if (dif_min > 59) {
+      dif_res = dif_min - 60;
+      dif_hr = dif_hora + 1;
+    } else {
+      dif_hr = dif_hora;
+      dif_res = dif_min;
+    }
+
+    return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
+  }
+
+  obtenerHoras(hora) {
+    let hora_pr = hora.split(":");
+    return parseInt(hora_pr[0]) * 60;
   }
 
   obtenerDiferenciaHora(hr1, hr2) {
     let diferencia = 0;
-    let hora_1 = this.obtenerMinutos(hr1);
-    let hora_2 = this.obtenerMinutos(hr2);
+    let hora_1 = this.obtenerHoras(hr1);
+    let hora_2 = this.obtenerHoras(hr2);
+    let minutos = this.obtenerMinutos(hr1, hr2);
+    let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
 
     if (hora_1 > hora_2) {
       diferencia = hora_1 - hora_2;
@@ -395,12 +478,41 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       diferencia = hora_2 - hora_1;
     }
 
-    return diferencia;
+    let hora_1_pr = hr1.split(":");
+    let hora_2_pr = hr2.split(":");
+    let hr_resta: number = (hora_1_pr[1] > 0) ? parseInt(hora_1_pr[1]) : parseInt(hora_2_pr[1]);
+    let horaResult = ((diferencia - hr_resta) / 60).toString();
+    return `${parseInt(horaResult) + hrExtr}:${(minutos[1] < 10) ? '0' + minutos[1] : minutos[1]}`;
+  }
+
+  onVerificacionJornada(hr) {
+    let hora_pr = hr.split(":");
+    return hora_pr[0] >= 8;
+  }
+
+  onVerficacionBrake(hr) {
+    let hora_pr = hr.split(":");
+    let isCorrect = false;
+    if (hora_pr[0] <= 1 && hora_pr[1] <= 3) {
+      isCorrect = true;
+    } else if (hora_pr[0] == 0) {
+      isCorrect = true;
+    }
+
+    return isCorrect;
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  openSnackBar(msj) {
+    this._snackBar.open(msj, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5 * 1000
+    });
   }
 
 }

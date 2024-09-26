@@ -95,10 +95,10 @@
                   <ng-container matColumnDef="hr_break">
                     <th mat-header-cell *matHeaderCellDef> Tiempo Break </th>
                     <td mat-cell *matCellDef="let element">
-                      @if(element.hr_brake > 60) {
-                      <label style="color: red;">{{element.hr_brake}}</label>
-                      } @else {
+                      @if(element.isBrakeComplete) {
                       <label>{{element.hr_brake}}</label>
+                      } @else {
+                      <label style="color: red;">{{element.hr_brake}}</label>
                       }
                     </td>
                   </ng-container>
@@ -116,7 +116,7 @@
                   <ng-container matColumnDef="hr_trabajadas">
                     <th mat-header-cell *matHeaderCellDef> Hrs Trabajadas </th>
                     <td mat-cell *matCellDef="let element">
-                      @if(element.hr_trabajadas >= 8) {
+                      @if(element.isJornadaCompleta) {
                       <label>{{element.hr_trabajadas}}</label>
                       } @else {
                       <label style="color: red;">{{element.hr_trabajadas}}</label>
