@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ShareService } from '../../services/shareService';
 import { StorageService } from 'src/app/utils/storage';
+import { MatPaginator, } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -15,12 +18,13 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtArticulosComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-
+  displayedColumns: string[] = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color'];
   headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
   onReporteList: Array<any> = [];
-
   onDataView: Array<any> = [];
+  filterProducto: string = "";
+  dataSource = new MatTableDataSource<any>(this.onDataView);
   onListPagination: Array<any> = [];
   vPageActualTable: number = 1;
   vPageAnteriorTable: number = 0;
@@ -91,23 +95,26 @@ export class MtArticulosComponent implements OnInit {
   conxOnline: Array<any> = [];
   isVendedor: boolean = false;
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   constructor(private http: ShareService, private store: StorageService) { }
 
   ngOnInit() {
     let configuracion = {
-      socket :'',
-      centroCosto : 'VS',
-      fechInit : '2023-05-01',
-      fechEnd : '2023-05-10'
+      socket: '',
+      centroCosto: 'VS',
+      fechInit: '2023-05-01',
+      fechEnd: '2023-05-10'
     }
 
     this.socket.on('consultAsistencia', (configuracion) => {
-      
+
     });
 
     this.socket.on('responseAsistencia', (configuracion) => {
       console.log(configuracion);
-    }); 
+    });
 
     this.socket.on('sessionConnect', (listaSession) => {
       console.log(this.conxOnline);
@@ -202,21 +209,12 @@ export class MtArticulosComponent implements OnInit {
     const self = this;
     self.onDataView = [];
 
-    if (this.onReporteList.length < 10) {
-      self.onDataView = self.onReporteList;
-    } else {
-      (this.onReporteList || []).filter((data, i) => {
-        if (pageAct > 1) {
-          if (i > (pageAnt * 10 - 1) && i <= (pageAct * 10 - 1)) {
-            self.onDataView.push(data);
-          }
-        } else {
-          if (i <= (pageAct * 10 - 1)) {
-            self.onDataView.push(data);
-          }
-        }
-      });
-    }
+    self.onDataView = self.onReporteList;
+    console.log(self.onDataView);
+    this.dataSource = new MatTableDataSource(this.onDataView);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
 
     // self.vPageAnteriorTable = pageAnt;
     //self.vPageActualTable = pageAct;
@@ -311,6 +309,11 @@ export class MtArticulosComponent implements OnInit {
 
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   onProcessData(dataInventario) {
 
     return new Promise((resolve, reject) => {
@@ -362,17 +365,17 @@ export class MtArticulosComponent implements OnInit {
           self.onReporteList[indexProductoExist]['cTemporada'] = (data || {})['cTemporada'] != "" || (data || {})['cTemporada'] != null || (data || {})['cTemporada'] != 'null' ? (data || {})['cTemporada'] : self.onReporteList[indexProductoExist]['cTemporada'];
 
           //if (this.isVendedor) {
-            self.onReporteList[indexProductoExist]["cReferencia"] = ((data || {})['cReferencia'] || "").length ? (data || {})['cReferencia'] : self.onReporteList[indexProductoExist]['cReferencia'];
-            self.onReporteList[indexProductoExist]["cDescripcion"] = ((data || {})['cDescripcion'] || "").length ? (data || {})['cDescripcion'] : self.onReporteList[indexProductoExist]['cDescripcion'];
-            self.onReporteList[indexProductoExist]["cDepartamento"] = ((data || {})['cDepartamento'] || "").length ? (data || {})['cDepartamento'] : self.onReporteList[indexProductoExist]['cDepartamento'];
-            self.onReporteList[indexProductoExist]["cSeccion"] = ((data || {})['cSeccion'] || "").length ? (data || {})['cSeccion'] : self.onReporteList[indexProductoExist]['cSeccion'];
-            self.onReporteList[indexProductoExist]["cFamilia"] = ((data || {})['cFamilia'] || "").length ? (data || {})['cFamilia'] : self.onReporteList[indexProductoExist]['cFamilia'];
-            self.onReporteList[indexProductoExist]["cSubFamilia"] = ((data || {})['cSubFamilia'] || "").length ? (data || {})['cSubFamilia'] : self.onReporteList[indexProductoExist]['cSubFamilia'];
-            self.onReporteList[indexProductoExist]["cTalla"] = ((data || {})['cTalla'] || "").length ? (data || {})['cTalla'] : self.onReporteList[indexProductoExist]['cTalla'];
-            self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
-            self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
+          self.onReporteList[indexProductoExist]["cReferencia"] = ((data || {})['cReferencia'] || "").length ? (data || {})['cReferencia'] : self.onReporteList[indexProductoExist]['cReferencia'];
+          self.onReporteList[indexProductoExist]["cDescripcion"] = ((data || {})['cDescripcion'] || "").length ? (data || {})['cDescripcion'] : self.onReporteList[indexProductoExist]['cDescripcion'];
+          self.onReporteList[indexProductoExist]["cDepartamento"] = ((data || {})['cDepartamento'] || "").length ? (data || {})['cDepartamento'] : self.onReporteList[indexProductoExist]['cDepartamento'];
+          self.onReporteList[indexProductoExist]["cSeccion"] = ((data || {})['cSeccion'] || "").length ? (data || {})['cSeccion'] : self.onReporteList[indexProductoExist]['cSeccion'];
+          self.onReporteList[indexProductoExist]["cFamilia"] = ((data || {})['cFamilia'] || "").length ? (data || {})['cFamilia'] : self.onReporteList[indexProductoExist]['cFamilia'];
+          self.onReporteList[indexProductoExist]["cSubFamilia"] = ((data || {})['cSubFamilia'] || "").length ? (data || {})['cSubFamilia'] : self.onReporteList[indexProductoExist]['cSubFamilia'];
+          self.onReporteList[indexProductoExist]["cTalla"] = ((data || {})['cTalla'] || "").length ? (data || {})['cTalla'] : self.onReporteList[indexProductoExist]['cTalla'];
+          self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
+          self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
 
-         // }
+          // }
 
         } else {
 
@@ -468,7 +471,8 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU']
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU'];
+      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru'];
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
@@ -502,6 +506,8 @@ export class MtArticulosComponent implements OnInit {
       this.compTiendaList = [];
       this.nameExcel = "bbw";
       this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA', 'BBW-MPTRU']
+      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'bbw_joc', 'bbw_aqp', 'bbw_lrb', 'bbw_psm', 'bbw_rps', 'bbw_ecom', 'bbw_asia', 'bbw_mptru'];
+
       let codeTiendas = [
         { code: '7A' },
         { code: '7J' },
@@ -541,12 +547,13 @@ export class MtArticulosComponent implements OnInit {
       }
 
       if ((this.barcode || "").length) {
+        console.log(this.barcode);
         this.socket.emit('comunicationStockTable', this.tiendasPetition, this.barcode);
       } else {
         this.socket.emit('comunicationStockTable', this.tiendasPetition, "");
       }
 
-      
+
 
     }
   }
@@ -556,7 +563,7 @@ export class MtArticulosComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
-    if (index == 'barcode' && this[index].length == 12) {
+    if (index == 'barcode' && this[index].length > 11) {
       this.onStockTable();
     }
   }
@@ -564,5 +571,3 @@ export class MtArticulosComponent implements OnInit {
 
 
 }
-
-

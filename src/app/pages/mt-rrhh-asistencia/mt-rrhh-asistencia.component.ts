@@ -251,6 +251,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       }
     });
 
+
+
     if (arVerif.includes(false) && this.isViewFeriados) {
       this.openSnackBar("Fechas seleccionadas no son correcta..!!");
       this.isLoading = false;
@@ -420,21 +422,31 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   obtenerMinutos(hora_1, hora_2) {
+
     let hora_1_pr = hora_1.split(":");
     let hora_2_pr = hora_2.split(":");
     let residuo_1 = 0;
     let minutos = 0;
     let hora = 0;
-    if (hora_1_pr[1] > 0) {
-
-      residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
-
-      if (residuo_1 > 59) {
+    
+    if (hora_1_pr[1] > 0 || hora_1_pr[1] == 0) {
+      
+      if (hora_1_pr[0] == hora_2_pr[0]) {
+        residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
         minutos = residuo_1 - 60;
-        hora = 1;
+
       } else {
-        minutos = residuo_1;
+        residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
+
+        if (residuo_1 > 59) {
+          minutos = residuo_1 - 60;
+          hora = 1;
+
+        } else {
+          minutos = residuo_1;
+        }
       }
+
     }
 
     return [hora, minutos];
