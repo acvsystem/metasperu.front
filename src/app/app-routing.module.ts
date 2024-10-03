@@ -6,7 +6,7 @@ import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.componen
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { AuthGuardService as authGuard } from './services/authGuardServices';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
-
+import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-tienda.component';
 const routes: Routes = [
   {
     path: '',
@@ -34,6 +34,11 @@ const routes: Routes = [
   {
     path: 'asistencia',
     component: MtRrhhAsistenciaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'horario',
+    component: MtHorarioTiendaComponent,
     canActivate: [authGuard]
   }
 

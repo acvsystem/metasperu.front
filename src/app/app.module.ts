@@ -26,6 +26,7 @@ import { MtPopoverComponent } from './components/mt-popover/mt-popover.component
 import { MtSelectComponent } from './components/mt-select/mt-select.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
 import { MtCalendarComponent } from './components/mt-calendar/mt-calendar.component';
+import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-tienda.component';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
@@ -95,13 +96,14 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtSelectComponent,
         MtConfiguracionComponent,
         MtRrhhAsistenciaComponent,
-        MtCalendarComponent
+        MtCalendarComponent,
+        MtHorarioTiendaComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
     imports: [
-    MbscModule,
-    FormsModule,BrowserModule,
+        MbscModule,
+        FormsModule, BrowserModule,
         DragDropModule,
         PortalModule,
         ScrollingModule,

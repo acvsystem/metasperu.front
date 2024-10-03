@@ -10,6 +10,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import Chart from 'chart.js/auto'
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -40,8 +41,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isDetallado: boolean = false;
   isDataEJB: boolean = false;
   isDataServer: boolean = false;
+  isGrafica: boolean = false;
   filterEmpleado: string = "";
   exportFeriado: Array<any> = [];
+  arrDataGrafic: Array<any> = [];
+  backOption: string = "isViewDefault";
   onListReporte: Array<any> = [
     { key: 'General', value: 'General' },
     { key: 'Feriados', value: 'Feriados' },
@@ -83,7 +87,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
 
     this.socket.on('reporteHuellero', async (configuracion) => {
 
@@ -214,13 +217,29 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               }
             }
           }
-        })
+        });
 
         if (this.isViewDefault || this.isDetallado) {
           this.onDataView = this.onDataTemp;
           this.dataSource = new MatTableDataSource(this.onDataView);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+
+          this.onDataTemp.filter((dt) => {
+            let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
+            if (!dt.isJornadaCompleta) {
+              if (indexData == -1) {
+                this.arrDataGrafic.push({
+                  tienda: dt.tienda,
+                  cantidad: 1
+                });
+              } else {
+                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+              }
+            }
+          });
+
+          this.onViewGrafic();
 
           if (this.onDataView.length) {
             this.isLoading = false;
@@ -286,23 +305,29 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     if ((selectData || {}).key == "General") {
+      this.backOption = "isViewDefault";
       this.isViewDefault = true;
       this.isViewFeriados = false;
       this.isDetallado = false;
+      this.isGrafica = false;
       this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
     if ((selectData || {}).key == "Feriados") {
+      this.backOption = "isViewFeriados";
       this.isViewFeriados = true;
       this.isViewDefault = false;
       this.isDetallado = false;
+      this.isGrafica = false;
       this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'cantFeriado', 'hr_trabajadas'];
     }
 
     if ((selectData || {}).key == "Detallado") {
+      this.backOption = "isDetallado";
       this.isViewFeriados = false;
       this.isViewDefault = false;
       this.isDetallado = true;
+      this.isGrafica = false;
       this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
     }
 
@@ -428,9 +453,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     let residuo_1 = 0;
     let minutos = 0;
     let hora = 0;
-    
+
     if (hora_1_pr[1] > 0 || hora_1_pr[1] == 0) {
-      
+
       if (hora_1_pr[0] == hora_2_pr[0]) {
         residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
         minutos = residuo_1 - 60;
@@ -526,6 +551,85 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       duration: 5 * 1000
     });
   }
+
+  onViewGrafic() {
+
+    console.log(this.arrDataGrafic);
+    let arrLabels = [];
+    let data = [];
+
+    this.arrDataGrafic.filter((gr) => {
+      arrLabels.push(gr.tienda);
+      data.push(gr.cantidad);
+    });
+
+    const ctx = document.getElementById('myChart');
+
+    const myChart = new Chart("ctx", {
+      type: 'bar',
+      data: {
+        labels: arrLabels,
+        datasets: [{
+          label: '# Horas trabajadas incompletas',
+          data: data,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(224, 140, 55, 0.2)',
+            'rgba(177, 231, 51, 0.2)',
+            'rgba(38, 177, 219, 0.2)',
+            'rgba(255, 64, 191, 0.2)',
+            'rgba(184, 8, 190, 0.2)',
+            'rgba(24, 245, 72, 0.2)',
+            'rgba(64, 217, 255, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(224, 140, 55, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(224, 140, 55, 0.2)',
+            'rgba(24, 245, 72, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(54, 162, 235, 0.2)'
+          ],
+          borderColor: [
+            'rgba(161, 0, 35, 0.2)',
+            'rgba(0, 81, 134, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(0, 146, 146, 0.2)',
+            'rgba(66, 0, 199, 0.2)',
+            'rgba(179, 89, 0, 0.2)',
+            'rgba(163, 82, 0, 0.2)',
+            'rgba(114, 163, 0, 0.2)',
+            'rgba(0, 111, 145, 0.2)',
+            'rgba(163, 0, 109, 0.2)',
+            'rgba(150, 0, 155, 0.2)',
+            'rgba(0, 165, 36, 0.2)',
+            'rgba(0, 118, 148, 0.2)',
+            'rgba(0, 153, 153, 0.2)',
+            'rgba(182, 91, 0, 0.2)',
+            'rgba(0, 104, 173, 0.2)',
+            'rgba(170, 85, 0, 0.2)',
+            'rgba(0, 173, 38, 0.2)',
+            'rgba(62, 0, 185, 0.2)',
+            'rgba(0, 98, 163, 0.2)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+  }
+
 
 }
 

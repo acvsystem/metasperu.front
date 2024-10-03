@@ -1,0 +1,48 @@
+<div id="content" class="full-center-page">
+  <div class="card-content">
+    <div>
+      @for (data of dataHorario; track data.id) {
+        <table class="table table-bordered table-sm" style="width: 99%;background-color: white;margin: 0;border-color: black;">
+          <thead>
+            <tr>
+              <th scope="col" rowspan="2" style="width: 233px !important;text-align: center; background-color: #FF52C6;">
+                <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
+                  {{data.cargo}}
+                </div>
+              </th>
+              <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #00AFEF;width: calc(100% - 233px) !important;">
+                {{dia.fecha}}
+              </th>
+            </tr>
+            <tr style="text-align: center;">
+              <th scope="col" *ngFor="let dia of data.dias" style="background-color: #FF52C6;width: calc(429px - 233px) !important;">
+                {{dia.dia}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
+              @if(rango.rg != "DIAS LIBRE"){
+              <th scope="row" style="background-color: #B1FD97;">{{rango.rg}}</th>
+              }@else{
+              <th scope="row" style="background-color: #FFD865;">{{rango.rg}}</th>
+              }
+    
+              @for (trb of data.dias_trabajo; track trb.id) {
+              <th scope="row">
+                @if(rango.id == trb.rg && 1 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 2 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 3 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 4 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 5 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 6 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 7 == trb.id_dia){{{trb.nombre_completo}}}
+              </th>
+              }
+            </tr>
+          </tbody>
+        </table>
+        }
+    </div>
+  </div>
+</div>

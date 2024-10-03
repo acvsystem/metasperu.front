@@ -344,66 +344,6 @@
                   aria-label="Select page of periodic elements">
                 </mat-paginator>
               </div>
-
-
-             <!--  <table class="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="!onDataView.length" style="text-align: center;">
-                    <td colspan="27">No hay datos para mostrar</td>
-                  </tr>
-                  <tr *ngFor="let columBody of onDataView;let index = index" class="columData">
-                    <td class="columBody">{{columBody.cCodigoBarra}}</td>
-                    <td class="columBody">{{columBody.cReferencia}}</td>
-                    
-                    <td class="columBody">{{columBody.cDescripcion}}</td>
-                    <td class="columBody">{{columBody.cDepartamento}}</td>
-                    <td class="columBody">{{columBody.cSeccion}}</td>
-                    <td class="columBody">{{columBody.cFamilia}}</td>
-                    <td class="columBody">{{columBody.cSubFamilia}}</td>
-                    <td class="columBody">{{columBody.cTemporada}}</td>
-                    <td class="columBody">{{columBody.cTalla}}</td>
-                    <td class="columBody">{{columBody.cColor}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_JOC}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_AQP}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_AQP}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_LRB}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_LRB}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_PN}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_PSM}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_PSM}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_RPS}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_RPS}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_MDS}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_PUR}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_ECOM}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_ECOM}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_MEP}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_MNK}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VSFA_JOC}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_ASIA}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'VICTORIA SECRET'">{{columBody.VS_M_PLAZA}}</td>
-                    <td class="columBody" *ngIf="selectedUS == 'BATH AND BODY WORKS'">{{columBody.BBW_M_PLAZA}}</td>
-                  </tr>
-                </tbody>
-              </table>-->
-         <!--    
-              <nav aria-label="..." class="pagination">
-                <ul class="pagination">
-                  <li class="page-item">
-                    <a class="page-link" (click)="onViewPrevius()">Previous</a>
-                  </li>
-                  <li class="page-item" *ngFor="let pagina of onListPagination| slice:0:5"><a class="page-link" (click)="onViewDataTable(pagina.pAnterior,pagina.pActual)">{{pagina.pActual}}</a></li>
-                  <li class="page-item">
-                    <a class="page-link" (click)="onViewNext()">Next</a>
-                  </li>
-                </ul>
-              </nav>
-              -->
             </ion-col>
           </ion-row>
         </ion-col>

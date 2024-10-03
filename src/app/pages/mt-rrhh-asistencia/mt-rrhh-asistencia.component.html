@@ -41,6 +41,8 @@
             <div class="content-button-comp">
               <button id="searchProducto" type="button" class="btn btn-primary btn-sm"
                 (click)="onConsultarAsistencia()"><i class="fa fa-search" aria-hidden="true"></i></button>
+              <button id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i
+                  class="fa fa-pie-chart" aria-hidden="true"></i></button>
               <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport(true)"
                 *ngIf="isViewFeriados"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Feriados</button>
               <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i
@@ -183,12 +185,24 @@
                 </mat-paginator>
               </div>
               }
-
             </ion-col>
           </ion-row>
         </ion-col>
       </ion-row>
     </div>
+
+    <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Colored with scrolling</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="center-graffic">
+          <div style="width: 800px;"><canvas id="ctx"></canvas></div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 </ion-content>
