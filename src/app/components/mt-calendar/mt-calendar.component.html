@@ -58,5 +58,16 @@
       </mbsc-datepicker>
     }
 
+    @if(isTime){
+      <mbsc-datepicker
+      theme="windows"
+      [controls]="['time']"
+      placeholder="{{placeholder}}"
+      [(ngModel)]="selected"
+      (change)="onChangeInput(selected)"
+      >
+     </mbsc-datepicker>
+    }
+
   </ion-col>
 </ion-row>

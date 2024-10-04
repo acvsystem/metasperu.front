@@ -9,11 +9,13 @@ import { localeEs } from '@mobiscroll/angular';
 })
 export class MtCalendarComponent implements OnInit {
   @Input() isPeriodo: boolean = false;
-  @Input() isMultiSelect: boolean = true;
+  @Input() isMultiSelect: boolean = false;
   @Input() isDefault: boolean = false;
   @Input() isRange: boolean = false;
   @Input() maxSelect: boolean = false;
+  @Input() isTime: boolean = false;
   @Input() placeholder: string = "";
+  @Input() id: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   selected: string;
   public localeEs = localeEs;
@@ -38,6 +40,12 @@ export class MtCalendarComponent implements OnInit {
 
     if (this.isDefault) {
       this.afterChange.emit({ isDefault: true, value: `${date}` });
+    }
+
+    if (this.isTime) {
+      let minutos = date.getMinutes().toString().length < 2 ? '0' + date.getMinutes() : date.getMinutes();
+
+      this.afterChange.emit({ isTime: true, value: `${date.getHours()}:${minutos}`, id: this.id });
     }
 
     if (this.isRange && arrDate.length >= 2) {
