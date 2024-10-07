@@ -8,6 +8,9 @@
             id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
             Registrar Horario
           </button>
+          <button id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
+          Generar Calendario
+        </button>
           </div>
         </div>
       </ion-col>
@@ -17,7 +20,7 @@
         <table class="table table-bordered table-sm" style="width: 99%;background-color: white;margin: 0;border-color: black;">
           <thead>
             <tr>
-              <th scope="col" rowspan="2" style="width: 233px !important;text-align: center; background-color: #FF52C6;">
+              <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #FF52C6;">
                 <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
                   {{data.cargo}}
                 </div>
@@ -36,22 +39,25 @@
             <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
               @if(rango.rg != "DIAS LIBRE"){
               <th scope="row" style="background-color: #B1FD97;">
-                00:00 a 00:00
+                {{rango.rg}}
               </th>
 
               }@else{
               <th scope="row" style="background-color: #FFD865;">{{rango.rg}}</th>
               }
     
-              @for (trb of data.dias_trabajo; track trb.id) {
+              @for (dia of data.dias; track dia.id) {
               <th scope="row">
-                @if(rango.id == trb.rg && 1 == trb.id_dia){{{trb.nombre_completo}}}
+                @for (trb of data.dias_trabajo; track trb.id) {
+                  <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
+                }
+            <!--@if(rango.id == trb.rg && 1 == trb.id_dia){{{trb.nombre_completo}}}
                 @if(rango.id == trb.rg && 2 == trb.id_dia){{{trb.nombre_completo}}}
                 @if(rango.id == trb.rg && 3 == trb.id_dia){{{trb.nombre_completo}}}
                 @if(rango.id == trb.rg && 4 == trb.id_dia){{{trb.nombre_completo}}}
                 @if(rango.id == trb.rg && 5 == trb.id_dia){{{trb.nombre_completo}}}
                 @if(rango.id == trb.rg && 6 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 7 == trb.id_dia){{{trb.nombre_completo}}}
+                @if(rango.id == trb.rg && 7 == trb.id_dia){{{trb.nombre_completo}}}-->
               </th>
               }
             </tr>
@@ -113,7 +119,7 @@
             </div>
             <div class="example-list">
               @for (rg of data.rg_hora; track rg.id) {
-                <div class="example-box-pointer" (click)="onListDia()">{{rg.rg}}</div>
+                <div [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">{{rg.rg}}</div>
               }
             </div>
           </ion-col>
@@ -130,13 +136,12 @@
         </div>
         <div class="example-list">
           @for (dia of data.dias; track dia.id) {
-            <div class="example-box-pointer" (click)="onListDia()">{{dia.dia}}</div>
+            <div [ngClass]="[dia.id == vSelectDia ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id)">{{dia.dia}}</div>
           }
         </div>
         
       </ion-col>
-    }
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == 1">
         <div cdkDropListGroup>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
@@ -150,11 +155,11 @@
               </div>
               <div
               cdkDropList
-              [cdkDropListData]="arListTrabajador"
+              [cdkDropListData]="data.arListTrabajador"
               class="example-list"
               (cdkDropListDropped)="onDrop($event)">
-              @for (item of arListTrabajador; track item) {
-                <div class="example-box" cdkDrag>{{item}}</div>
+              @for (trb of data.arListTrabajador; track item) {
+                <div class="example-box" cdkDrag>{{trb.nombre_completo}}</div>
               }
             </div>
             </ion-col>
@@ -169,19 +174,18 @@
               </div>
               <div
               cdkDropList
-              [cdkDropListData]="arListaDiaTrab"
+              [cdkDropListData]="data.dias_trabajo"
               class="example-list"
               (cdkDropListDropped)="onDrop($event)">
-              @for (item of arListaDiaTrab; track item) {
-                <div class="example-box" cdkDrag>{{item}}</div>
+              @for (dtrb of data.dias_trabajo; track item) {
+                <div class="example-box" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg" cdkDrag>{{dtrb.nombre_completo}}</div>
               }
             </div>
             </ion-col>
           </ion-row>
       </div>
       </ion-col>
-
-
+    }
     </ion-row>
   </div>
 </div>
