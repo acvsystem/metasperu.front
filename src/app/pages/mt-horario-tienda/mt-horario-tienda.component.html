@@ -4,7 +4,7 @@
       <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
         <div class="content-button postition-start">
           <div class="content-button-comp">
-            <button id="searchProducto" type="button" class="btn btn-primary btn-sm"
+            <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
             id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
             Registrar Horario
           </button>
@@ -106,7 +106,7 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="cboCargo.length">
       @for(data of dataHorario; track data.id) {
           <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == 1">
             <div style="color: black;
@@ -114,7 +114,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0 0 10px;">
+            padding: 10px;
+            border: 1px solid;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+            border-color: #CCCCCC;">
               Rango Horario
             </div>
             <div class="example-list">
@@ -131,7 +136,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 0 0 10px;">
+        padding: 10px;
+        border: 1px solid;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-left: 5px;
+        border-color: #CCCCCC;">
           Dia
         </div>
         <div class="example-list">
@@ -141,27 +151,39 @@
         </div>
         
       </ion-col>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == 1">
-        <div cdkDropListGroup>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == 1" style="padding: 0;">
+        <div>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
               <div style="color: black;
-              width: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              padding: 0 0 10px;">
-                Trabajadores
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                border: 1px solid;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                margin-left: 5px;
+                border-color: #CCCCCC;">
+                  Trabajadores
+                </div>
+                <div
+                *ngIf="vSelectDia > 0 && vSelectHorario > 0"
+                class="example-list">
+                @for (trb of data.arListTrabajador; track trb.id) {
+                  <div class="example-box-no-pointer">
+                    {{trb.nombre_completo}}
+                    <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;
+                    font-size: 12px;
+                    padding-top: 1px;
+                    padding-left: 5px;
+                    padding-right: 5px;" (click)="onAddDTrabajo(trb)">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
               </div>
-              <div
-              cdkDropList
-              [cdkDropListData]="data.arListTrabajador"
-              class="example-list"
-              (cdkDropListDropped)="onDrop($event)">
-              @for (trb of data.arListTrabajador; track item) {
-                <div class="example-box" cdkDrag>{{trb.nombre_completo}}</div>
-              }
-            </div>
             </ion-col>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
               <div style="color: black;
@@ -169,16 +191,28 @@
               display: flex;
               justify-content: center;
               align-items: center;
-              padding: 0 0 10px;">
+              padding: 10px;
+              border: 1px solid;
+              border-radius: 5px;
+              margin-bottom: 10px;
+              margin-left: 5px;
+              border-color: #CCCCCC;">
                 Registro del dia
               </div>
               <div
-              cdkDropList
-              [cdkDropListData]="data.dias_trabajo"
-              class="example-list"
-              (cdkDropListDropped)="onDrop($event)">
-              @for (dtrb of data.dias_trabajo; track item) {
-                <div class="example-box" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg" cdkDrag>{{dtrb.nombre_completo}}</div>
+              *ngIf="vSelectDia > 0 && vSelectHorario > 0"
+              class="example-list">
+              @for (dtrb of data.dias_trabajo; track dtrb.id) {
+                <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg">
+                  {{dtrb.nombre_completo}}
+                  <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
+                  font-size: 12px;
+                  padding-top: 1px;
+                  padding-left: 5px;
+                  padding-right: 5px;" (click)="onDeleteDTrabajo(dtrb)">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </button>
+                </div>
               }
             </div>
             </ion-col>

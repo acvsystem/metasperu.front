@@ -44,6 +44,9 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     if (dataHr.length) {
       this.dataHorario = dataHr;
+      /* this.dataHorario[0]['arListTrabajador'] = [];
+        this.dataHorario[0]['dias_trabajo'] = [];
+        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));*/
     }
 
     this.arListDia = [
@@ -95,10 +98,8 @@ export class MtHorarioTiendaComponent implements OnInit {
   onDrop(event: CdkDragDrop<string[]>) {
 
     if (event.previousContainer === event.container) {
-      //console.log(event['container']['data']);
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      //let data =  {id:this.dataHorario.length + 1,rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: 1, nombre_completo: event['container']['data']['nombre_completo']}
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -114,28 +115,46 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     if (this.vSelectDia > 0 && this.vSelectHorario > 0) {
       let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
+      let dataTrabajadores = [];
+      let dataDTrabajo = [];
 
       if (index != -1) {
 
         this.dataHorario[index]['arListTrabajador'] = [];
-        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "ANDRE" });
-        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JORGE" });
-        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JOSE" });
+        dataDTrabajo = [...this.dataHorario[index]['dias_trabajo']];
 
-        if (this.dataHorario[index]['dias_trabajo'].length) {
-          this.dataHorario[index]['dias_trabajo'].filter((dr) => {
-            console.log(dr.nombre_completo);
-         
-
+        if (!this.dataHorario[index]['dias_trabajo'].length || !this.dataHorario[index]['arListTrabajador'].length) {
+          this.dataHorario[index]['arListTrabajador'] = [];
+          this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "ANDRE" });
+          this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JORGE" });
+          this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JOSE" });
+          dataTrabajadores = [...this.dataHorario[index]['arListTrabajador']];
+          this.dataHorario[index]['dias_trabajo'].filter((dt) => {
+            if (this.vSelectDia == dt.id_dia && this.vSelectHorario == dt.rg) {
+              console.log(dt);
+              this.dataHorario[index]['arListTrabajador'] = dataTrabajadores.filter((tr) => tr.nombre_completo != dt.nombre_completo && this.vSelectDia == dt.id_dia && this.vSelectHorario == dt.rg);
+            }
           });
-
         }
-
-
+        
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       }
     }
 
+  }
+
+  onAddDTrabajo(data) {
+    let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
+    this.dataHorario[index]['dias_trabajo'].push({ id: this.dataHorario[index]['dias_trabajo'].length + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo });
+    this.dataHorario[index]['arListTrabajador'] = this.dataHorario[index]['arListTrabajador'].filter((dt) => dt.id != data.id);
+    this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+  }
+
+  onDeleteDTrabajo(data) {
+    let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
+    this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo });
+    this.dataHorario[index]['dias_trabajo'] = this.dataHorario[index]['dias_trabajo'].filter((dt) => dt.id != data.id);
+    this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
   }
 
   onGenerarCalendario() {
