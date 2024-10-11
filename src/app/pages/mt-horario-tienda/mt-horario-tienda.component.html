@@ -1,3 +1,4 @@
+<ion-content>
 <div id="content" class="full-center-page">
   <div class="card-content">
     <ion-row>
@@ -5,40 +6,40 @@
         <div class="content-button postition-start">
           <div class="content-button-comp">
             <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
-            id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
             Registrar Horario
+          </button>          
+          <button matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
           </button>
-          <button id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
-          Generar Calendario
-        </button>
           </div>
         </div>
       </ion-col>
     </ion-row>
     <div>
       @for (data of dataHorario; track data.id) {
-        <table class="table table-bordered table-sm" style="width: 99%;background-color: white;margin: 0;border-color: black;">
+        <table [ngClass]="[isOpenModal ? 'table table-bordered table-sm table-hover reduceTable': 'table table-bordered table-sm table-hover']" style="width: 99%;background-color: white;margin: 0;border-color: black;">
           <thead>
             <tr>
-              <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #FF52C6;">
+              <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
                 <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
                   {{data.cargo}}
                 </div>
               </th>
-              <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #00AFEF;width: calc(100% - 233px) !important;">
+              <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #bbd6df;width: calc(100% - 233px) !important;">
                 {{dia.fecha}}
               </th>
             </tr>
             <tr style="text-align: center;">
-              <th scope="col" *ngFor="let dia of data.dias" style="background-color: #FF52C6;width: calc(429px - 233px) !important;">
+              <th scope="col" *ngFor="let dia of data.dias" style="background-color: #88c9ff;width: calc(429px - 233px) !important;">
                 {{dia.dia}}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
-              @if(rango.rg != "DIAS LIBRE"){
-              <th scope="row" style="background-color: #B1FD97;">
+              @if(rango.rg != "DIAS LIBRES"){
+              <th scope="row" style="background-color: #97b3fd;">
                 {{rango.rg}}
               </th>
 
@@ -51,13 +52,6 @@
                 @for (trb of data.dias_trabajo; track trb.id) {
                   <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
                 }
-            <!--@if(rango.id == trb.rg && 1 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 2 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 3 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 4 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 5 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 6 == trb.id_dia){{{trb.nombre_completo}}}
-                @if(rango.id == trb.rg && 7 == trb.id_dia){{{trb.nombre_completo}}}-->
               </th>
               }
             </tr>
@@ -69,10 +63,10 @@
 </div>
 
 
-<div class="offcanvas offcanvas-end" tabindex="-1" data-bs-backdrop="false" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 1000px;">
-  <div class="offcanvas-header">
+<div class="offcanvas offcanvas-end" tabindex="-1" data-bs-backdrop="false" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px;">
+  <div class="offcanvas-header" style="border-bottom: 1px solid #ccc;  margin-bottom: 10px;">
     <h5 id="offcanvasRightLabel" style="color: black;">Registro de Horario</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="onModal(false)"></button>
   </div>
   <div class="offcanvas-body" style="display: contents;">
     <ion-row>
@@ -108,7 +102,7 @@
     </ion-row>
     <ion-row *ngIf="cboCargo.length">
       @for(data of dataHorario; track data.id) {
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == 1">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
             <div style="color: black;
             width: 100%;
             display: flex;
@@ -130,7 +124,7 @@
           </ion-col>
       
 
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == 1">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
         <div style="color: black;
         width: 100%;
         display: flex;
@@ -151,7 +145,7 @@
         </div>
         
       </ion-col>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == 1" style="padding: 0;">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == idCargo" style="padding: 0;">
         <div>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
@@ -172,7 +166,7 @@
                 *ngIf="vSelectDia > 0 && vSelectHorario > 0"
                 class="example-list">
                 @for (trb of data.arListTrabajador; track trb.id) {
-                  <div class="example-box-no-pointer">
+                  <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
                     {{trb.nombre_completo}}
                     <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;
                     font-size: 12px;
@@ -203,7 +197,7 @@
               *ngIf="vSelectDia > 0 && vSelectHorario > 0"
               class="example-list">
               @for (dtrb of data.dias_trabajo; track dtrb.id) {
-                <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg">
+                <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
                   {{dtrb.nombre_completo}}
                   <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
                   font-size: 12px;
@@ -223,3 +217,5 @@
     </ion-row>
   </div>
 </div>
+
+</ion-content>

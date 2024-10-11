@@ -275,9 +275,6 @@ ion-item {
     height: 100% !important;
     justify-content: end;
 
-    i {
-        margin-right: 5px !important;
-    }
 }
 
 .show {
@@ -563,4 +560,8 @@ ion-item {
 
 .example-box-pointer:hover {
     background-color: #e7e7e7 !important;
+}
+
+.reduceTable {
+    width: calc(100% - 800px) !important;
 }

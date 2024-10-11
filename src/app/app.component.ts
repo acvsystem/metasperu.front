@@ -44,13 +44,14 @@ export class AppComponent {
       this.menuUser = this.store.getStore('mt-menu') || [];
 
     }
-    
+
     this.service.onProfileUser.subscribe((profile) => {
       const self = this;
       this.profileUser = [];
       let newProfile = {
-        mt_name_1: profile.name.split(' ')[0],
-        mt_nivel: profile.name.split(' ')[0]
+        mt_name_1: profile.codigo.length ? profile.nameTienda.toUpperCase() : profile.name.split(' ')[0],
+        mt_nivel: profile.name.split(' ')[0],
+        code: profile.codigo
       };
 
       this.profileUser.push(newProfile);
@@ -68,22 +69,43 @@ export class AppComponent {
           nombre_menu: "COMPROBANTES",
           ruta: "comprobantes"
         }
-        ,
+          ,
         {
           ISVISIBLE: true,
           nombre_menu: "CONFIGURACION",
           ruta: "configuracion"
-        }      
-        ,
+        }
+          ,
         {
           ISVISIBLE: true,
           nombre_menu: "ASISTENCIA",
           ruta: "asistencia"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "HORARIO",
+          ruta: "horario"
         }
-      ];
+        ];
 
         this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
       }
+
+      if ((profileUser || {}).code.length) {
+        self.menuUser = [{
+          ISVISIBLE: true,
+          nombre_menu: "INVENTARIO",
+          ruta: "inventario"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "HORARIO",
+          ruta: "horario"
+        }
+        ];
+      }
+
+      this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
 
 
 
@@ -103,6 +125,7 @@ export class AppComponent {
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
+    this.menuUser = menu;
     this.isMobil = window.innerWidth < 769;
     var myOwnListOfBrowsers = [
       [/(mybrowser)\/([\w\.]+)/i], [UAParser.BROWSER.NAME, UAParser.BROWSER.VERSION]
@@ -127,10 +150,10 @@ export class AppComponent {
       this.profileUser.push(profileUser);
     }
 
-   /* if (menu) {
-      this.menuUser = [];
-      this.menuUser = menu;
-    }*/
+    /* if (menu) {
+       this.menuUser = [];
+       this.menuUser = menu;
+     }*/
 
 
     if (this.store.getStore('tn')) {
@@ -156,10 +179,9 @@ export class AppComponent {
 
             if (this.store.getStore('tn')) {
               let profileUser = this.store.getStore('mt-profile');
-              console.log(profileUser);
-              if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
+
+              if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code) {
                 this.service.onViewPageAdmin.emit(false);
-                this.nav.navigateRoot('inventario');
               }
 
               if ((profileUser || {}).mt_nivel == "RRHH") {
@@ -215,7 +237,7 @@ export class AppComponent {
     this.store.removeStore('mtStep');
     this.store.removeStore('inscription');
     this.store.removeStore('conx_online');
-    
+
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;

@@ -150,7 +150,7 @@ export class MtArticulosComponent implements OnInit {
     });
 
     let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW") {
+    if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code.length) {
       this.isVendedor = true;
 
       let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
@@ -568,7 +568,7 @@ export class MtArticulosComponent implements OnInit {
     }
   }
 
-  
+
 
 
 
