@@ -186,7 +186,7 @@ export class AppComponent {
 
               if ((profileUser || {}).mt_nivel == "RRHH") {
                 this.service.onViewPageAdmin.emit(false);
-                this.nav.navigateRoot('asistencia');
+                //this.nav.navigateRoot('asistencia');
               }
 
               if ((profileUser || {}).mt_nivel == "SISTEMAS") {
@@ -213,7 +213,7 @@ export class AppComponent {
       console.log('error app ', e);
     }
 
-    document.body.addEventListener("click", function (evt) {
+  /*  document.body.addEventListener("click", function (evt) {
       let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
       let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
 
@@ -223,7 +223,7 @@ export class AppComponent {
         }
       }
 
-    });
+    });*/
   }
 
   onFunctionMenu(ev) {

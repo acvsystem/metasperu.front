@@ -14,6 +14,7 @@ export class MtCalendarComponent implements OnInit {
   @Input() isRange: boolean = false;
   @Input() maxSelect: boolean = false;
   @Input() isTime: boolean = false;
+  @Input() isPresentRange: boolean = false;
   @Input() placeholder: string = "";
   @Input() id: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
@@ -50,6 +51,10 @@ export class MtCalendarComponent implements OnInit {
 
     if (this.isRange && arrDate.length >= 2) {
       this.afterChange.emit({ isRange: true, value: arrDate });
+    }
+
+    if (this.isPresentRange) {
+      this.afterChange.emit({ isPresentRange: true, value: arrDate });
     }
   }
 

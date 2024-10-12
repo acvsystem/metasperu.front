@@ -1,16 +1,18 @@
-<ion-content>
+
 <div id="content" class="full-center-page">
   <div class="card-content">
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
         <div class="content-button postition-start">
-          <div class="content-button-comp">
+          <div class="content-button-comp" style="width: 100%;display: contents;">
             <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
             id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
             Registrar Horario
-          </button>          
-          <button matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
+          </button>   
+          <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
+          ></mt-calendar>
+          <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
           </button>
           </div>
         </div>
@@ -217,5 +219,3 @@
     </ion-row>
   </div>
 </div>
-
-</ion-content>

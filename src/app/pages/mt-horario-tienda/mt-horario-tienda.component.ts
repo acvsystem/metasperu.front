@@ -14,7 +14,16 @@ export class MtHorarioTiendaComponent implements OnInit {
   horaInit: string = "";
   isOpenModal: boolean = false;
   horaEnd: string = "";
-  arListDia: Array<any> = [];
+  arListDia: Array<any> = [
+    { id: 1, dia: "Lunes", fecha: "16-sep" },
+    { id: 2, dia: "Martes", fecha: "17-sep" },
+    { id: 3, dia: "Miercoles", fecha: "18-sep" },
+    { id: 4, dia: "Jueves", fecha: "19-sep" },
+    { id: 5, dia: "Viernes", fecha: "20-sep" },
+    { id: 6, dia: "Sabado", fecha: "21-sep" },
+    { id: 7, dia: "Domingo", fecha: "22-sep" }
+  ];;
+  arRangeFecha: Array<any> = [];
   vSelectDia: number = 0;
   vSelectHorario: number = 0;
   onListCargo: Array<any> = [
@@ -34,28 +43,18 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   arListaDiaTrab: Array<any> = [];
 
-
   constructor(private store: StorageService) { }
 
   ngOnInit() {
-    let dataHr = this.store.getStore("mt-horario");
+    let dataHr = this.store.getStore("mt-horario") || [];
 
-    if (dataHr.length) {
-      this.dataHorario = dataHr;
+    if ((dataHr || []).length) {
+      this.dataHorario = dataHr || [];
       /* this.dataHorario[0]['arListTrabajador'] = [];
         this.dataHorario[0]['dias_trabajo'] = [];
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));*/
     }
 
-    this.arListDia = [
-      { id: 1, dia: "Lunes", fecha: "16-sep" },
-      { id: 2, dia: "Martes", fecha: "17-sep" },
-      { id: 3, dia: "Miercoles", fecha: "18-sep" },
-      { id: 4, dia: "Jueves", fecha: "19-sep" },
-      { id: 5, dia: "Viernes", fecha: "20-sep" },
-      { id: 6, dia: "Sabado", fecha: "21-sep" },
-      { id: 7, dia: "Domingo", fecha: "22-sep" }
-    ]
   }
 
   async onChangeSelect(data: any) {
@@ -83,8 +82,6 @@ export class MtHorarioTiendaComponent implements OnInit {
       this[$event.id] = $event.value;
     }
   }
-
-  movies = [];
 
   onAddHorario() {
     let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
@@ -186,27 +183,11 @@ export class MtHorarioTiendaComponent implements OnInit {
         {
           id: this.dataHorario.length + 1,
           cargo: cargo.value,
-          rg_hora: [
-            // this.movies
-          ],
-          dias: [
-            { id: 1, dia: "Lunes", fecha: "16-sep" },
-            { id: 2, dia: "Martes", fecha: "17-sep" },
-            { id: 3, dia: "Miercoles", fecha: "18-sep" },
-            { id: 4, dia: "Jueves", fecha: "19-sep" },
-            { id: 5, dia: "Viernes", fecha: "20-sep" },
-            { id: 6, dia: "Sabado", fecha: "21-sep" },
-            { id: 7, dia: "Domingo", fecha: "22-sep" }
-          ],
-          dias_trabajo: [
-          ],
-          dias_libres: [
-            //{ id_dia: 1, id_cargo: 1, id_empleado: 1 }
-          ],
-          arListTrabajador: [
-            /* { id: 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: "ANDRE" },
-             { id: 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: "JORGE" },*/
-          ]
+          rg_hora: [],
+          dias: this.arListDia,
+          dias_trabajo: [],
+          dias_libres: [],
+          arListTrabajador: []
         }
       );
     });
@@ -217,10 +198,30 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.isOpenModal = value;
   }
 
+  onCaledarRange($event) {
+
+    let range = [];
+    let dateList = $event.value;
+    (dateList || []).filter((dt) => {
+      let date = new Date(dt).toLocaleDateString().split('/');
+      (range || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
+    });
+
+    let fechaInicio = new Date(range[0]);
+    let fechaFin = new Date(range[1]);
+    let count = 0;
+
+    while (fechaFin.getTime() >= fechaInicio.getTime()) {
+      count++;
+      let index = this.arListDia.findIndex((dia) => dia.id == count);
+      fechaInicio.setDate(fechaInicio.getDate() + 1);
+      this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
+
+    }
+
+  }
+
 }
-
-
-
 
 export interface HorarioElement {
   id: number,

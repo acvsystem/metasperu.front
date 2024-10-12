@@ -1,7 +1,24 @@
 <ion-row>
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
 
-
+    @if(isPresentRange) {
+      <mbsc-datepicker
+        [controls]="['calendar']"
+        select="preset-range"
+        rangeHighlight="true"
+        [showRangeLabels]="true"
+        rangeStartLabel="Outbound"
+        placeholder="Fecha Semana"
+        [selectSize]="7"
+        placeholder="{{placeholder}}"
+        [firstSelectDay]="1"
+        dateFormat="DD-MM-YYYY"
+        [(ngModel)]="selected"
+        [locale]="localeEs"
+        (change)="onChangeInput(selected)"
+        rangeEndLabel="Return">
+      </mbsc-datepicker>
+    }
     @if(isRange) {
       <mbsc-datepicker
       select="range"
@@ -12,6 +29,7 @@
       dateFormat="DD-MM-YYYY"
       [(ngModel)]="selected"
       (change)="onChangeInput(selected)"
+      [locale]="localeEs"
       rangeEndLabel="Return">
       </mbsc-datepicker>
     }
@@ -65,6 +83,7 @@
       placeholder="{{placeholder}}"
       [(ngModel)]="selected"
       (change)="onChangeInput(selected)"
+      [locale]="localeEs"
       >
      </mbsc-datepicker>
     }
