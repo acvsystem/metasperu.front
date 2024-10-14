@@ -1,0 +1,45 @@
+<ion-row>
+  <ion-col>
+    <ion-row sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <span style="color: black;">Observacion</span>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <mt-select id="cboEmpleado" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"
+        (changeSelected)="onChangeSelect($event)"></mt-select>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <textarea id="vListaClientes" class="form-control" rows="10" [value]="vObservacion"></textarea>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <button id="searchProducto" (click)="onAddObservacion()" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;">
+          Guardar
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+    <ion-row sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <span style="color: black;">Observaciones creadas</span>
+      </ion-col>
+    </ion-row>
+    <ion-row sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <div
+        class="example-list">
+          <div class="example-box-pointer" style="color: black;">
+            dtrb.nombre_completo
+    
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>

@@ -1,69 +1,68 @@
 
 <div id="content" class="full-center-page">
   <div class="card-content">
-    <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-        <div class="content-button postition-start">
-          <div class="content-button-comp" style="width: 100%;display: contents;">
-            <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
-            id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
-            Registrar Horario
-          </button>   
-          <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
-          ></mt-calendar>
-          <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
-            <i class="fa fa-calendar" aria-hidden="true"></i>
-          </button>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <div class="content-button postition-start">
+            <div class="content-button-comp" style="width: 100%;display: contents;">
+              <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
+              id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
+              Registrar Horario
+            </button>   
+            <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
+            ></mt-calendar>
+            <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+            </button>
+            </div>
           </div>
-        </div>
-      </ion-col>
-    </ion-row>
-    <div>
-      @for (data of dataHorario; track data.id) {
-        <table [ngClass]="[isOpenModal ? 'table table-bordered table-sm table-hover reduceTable': 'table table-bordered table-sm table-hover']" style="width: 99%;background-color: white;margin: 0;border-color: black;">
-          <thead>
-            <tr>
-              <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
-                <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
-                  {{data.cargo}}
-                </div>
-              </th>
-              <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #bbd6df;width: calc(100% - 233px) !important;">
-                {{dia.fecha}}
-              </th>
-            </tr>
-            <tr style="text-align: center;">
-              <th scope="col" *ngFor="let dia of data.dias" style="background-color: #88c9ff;width: calc(429px - 233px) !important;">
-                {{dia.dia}}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
-              @if(rango.rg != "DIAS LIBRES"){
-              <th scope="row" style="background-color: #97b3fd;">
-                {{rango.rg}}
-              </th>
-
-              }@else{
-              <th scope="row" style="background-color: #FFD865;">{{rango.rg}}</th>
-              }
-    
-              @for (dia of data.dias; track dia.id) {
-              <th scope="row">
-                @for (trb of data.dias_trabajo; track trb.id) {
-                  <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
+        </ion-col>
+      </ion-row>
+      <div>
+        @for (data of dataHorario; track data.id) {
+          <table [ngClass]="[isOpenModal ? 'table table-bordered table-sm table-hover reduceTable': 'table table-bordered table-sm table-hover']" style="width: 99%;background-color: white;margin: 0;border-color: black;">
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
+                  <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
+                    {{data.cargo}}
+                  </div>
+                </th>
+                <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #bbd6df;width: calc(100% - 233px) !important;">
+                  {{dia.fecha}}
+                </th>
+              </tr>
+              <tr style="text-align: center;">
+                <th scope="col" *ngFor="let dia of data.dias" style="background-color: #88c9ff;width: calc(429px - 233px) !important;">
+                  {{dia.dia}}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
+                @if(rango.rg != "DIAS LIBRES"){
+                <th scope="row" style="background-color: #97b3fd;">
+                  {{rango.rg}}
+                </th>
+  
+                }@else{
+                <th scope="row" style="background-color: #FFD865;">{{rango.rg}}</th>
                 }
-              </th>
-              }
-            </tr>
-          </tbody>
-        </table>
-        }
-    </div>
+      
+                @for (dia of data.dias; track dia.id) {
+                <th scope="row">
+                  @for (trb of data.dias_trabajo; track trb.id) {
+                    <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
+                  }
+                </th>
+                }
+              </tr>
+            </tbody>
+          </table>
+          }
+      </div>
   </div>
 </div>
-
 
 <div class="offcanvas offcanvas-end" tabindex="-1" data-bs-backdrop="false" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px;">
   <div class="offcanvas-header" style="border-bottom: 1px solid #ccc;  margin-bottom: 10px;">
@@ -71,117 +70,77 @@
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="onModal(false)"></button>
   </div>
   <div class="offcanvas-body" style="display: contents;">
-    <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-        <mt-select id="cboCargo" placeHolder="Cargo" [optionList]="onListCargo"
-        (changeSelected)="onChangeSelect($event)"></mt-select>
-      </ion-col>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-        <div style="display: flex;">
-          <div style="width: 100px;">
-            <mt-calendar 
-              id="horaInit"
+    @if(!isObservacion){
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <mt-select id="cboCargo" placeHolder="Cargo" [optionList]="onListCargo"
+          (changeSelected)="onChangeSelect($event)"></mt-select>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
+          <div style="display: flex;">
+            <div style="width: 100px;">
+              <mt-calendar 
+                id="horaInit"
+                [isTime]="true" 
+                placeholder="Hora"
+                (afterChange)="onCaledar($event)">
+              </mt-calendar>
+            </div>
+            <div style="width: 100px;">
+              <mt-calendar 
+              id="horaEnd"
               [isTime]="true" 
               placeholder="Hora"
               (afterChange)="onCaledar($event)">
             </mt-calendar>
-          </div>
-          <div style="width: 100px;">
-            <mt-calendar 
-            id="horaEnd"
-            [isTime]="true" 
-            placeholder="Hora"
-            (afterChange)="onCaledar($event)">
-          </mt-calendar>
-          </div>
-          <div style="display: flex;justify-content: center;align-items: center;">
-            <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onAddHorario()">
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row *ngIf="cboCargo.length">
-      @for(data of dataHorario; track data.id) {
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
-            <div style="color: black;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            margin-left: 5px;
-            border-color: #CCCCCC;">
-              Rango Horario
             </div>
-            <div class="example-list">
-              @for (rg of data.rg_hora; track rg.id) {
-                <div [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">{{rg.rg}}</div>
+            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
+              @if(vSelectDia > 0){
+                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onOpenObservacion()">
+                  Agregar Observacion
+                </button>
+              } @else {
+                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
+                  Agregar Observacion
+                </button>
               }
             </div>
-          </ion-col>
-      
-
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
-        <div style="color: black;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        border: 1px solid;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        margin-left: 5px;
-        border-color: #CCCCCC;">
-          Dia
-        </div>
-        <div class="example-list">
-          @for (dia of data.dias; track dia.id) {
-            <div [ngClass]="[dia.id == vSelectDia ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id)">{{dia.dia}}</div>
-          }
-        </div>
-        
-      </ion-col>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == idCargo" style="padding: 0;">
-        <div>
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="color: black;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                border: 1px solid;
-                border-radius: 5px;
-                margin-bottom: 10px;
-                margin-left: 5px;
-                border-color: #CCCCCC;">
-                  Trabajadores
-                </div>
-                <div
-                *ngIf="vSelectDia > 0 && vSelectHorario > 0"
-                class="example-list">
-                @for (trb of data.arListTrabajador; track trb.id) {
-                  <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
-                    {{trb.nombre_completo}}
-                    <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;
-                    font-size: 12px;
-                    padding-top: 1px;
-                    padding-left: 5px;
-                    padding-right: 5px;" (click)="onAddDTrabajo(trb)">
-                      <i class="fa fa-plus" aria-hidden="true"></i>
-                    </button>
-                  </div>
+            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
+              @if(!isRangoEdit){
+                <button matTooltip="Agregar Horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onAddHorario()">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+              } @else {
+                <button matTooltip="Agregar Horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+              }
+            </div>
+            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
+              @if(!isRangoEdit){
+                @if(vSelectHorario > 0){
+                  <button matTooltip="Editar Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onEditHorario()">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button>
+                } @else {
+                  <button matTooltip="Editar Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;"  disabled>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button>
                 }
-              </div>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+  
+              } @else {
+                <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;" (click)="onSaveRangoHorario()">
+                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                </button>
+              }
+  
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="cboCargo.length">
+        @for(data of dataHorario; track data.id) {
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
               <div style="color: black;
               width: 100%;
               display: flex;
@@ -193,29 +152,109 @@
               margin-bottom: 10px;
               margin-left: 5px;
               border-color: #CCCCCC;">
-                Registro del dia
+                Rango Horario
               </div>
-              <div
-              *ngIf="vSelectDia > 0 && vSelectHorario > 0"
-              class="example-list">
-              @for (dtrb of data.dias_trabajo; track dtrb.id) {
-                <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
-                  {{dtrb.nombre_completo}}
-                  <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
-                  font-size: 12px;
-                  padding-top: 1px;
-                  padding-left: 5px;
-                  padding-right: 5px;" (click)="onDeleteDTrabajo(dtrb)">
-                    <i class="fa fa-minus" aria-hidden="true"></i>
-                  </button>
-                </div>
-              }
-            </div>
+              <div class="example-list">
+                @for (rg of data.rg_hora; track rg.id) {
+                  <div [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">{{rg.rg}}</div>
+                }
+              </div>
             </ion-col>
-          </ion-row>
-      </div>
-      </ion-col>
+        
+  
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
+          <div style="color: black;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+          border: 1px solid;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          margin-left: 5px;
+          border-color: #CCCCCC;">
+            Dia
+          </div>
+          <div class="example-list">
+            @for (dia of data.dias; track dia.id) {
+              <div [ngClass]="[dia.id == vSelectDia ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id)">{{dia.dia}}</div>
+            }
+          </div>
+          
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == idCargo" style="padding: 0;">
+          <div>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <div style="color: black;
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 10px;
+                  border: 1px solid;
+                  border-radius: 5px;
+                  margin-bottom: 10px;
+                  margin-left: 5px;
+                  border-color: #CCCCCC;">
+                    Trabajadores
+                  </div>
+                  <div
+                  *ngIf="vSelectDia > 0 && vSelectHorario > 0"
+                  class="example-list">
+                  @for (trb of data.arListTrabajador; track trb.id) {
+                    <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
+                      {{trb.nombre_completo}}
+                      <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;
+                      font-size: 12px;
+                      padding-top: 1px;
+                      padding-left: 5px;
+                      padding-right: 5px;" (click)="onAddDTrabajo(trb)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <div style="color: black;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                border: 1px solid;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                margin-left: 5px;
+                border-color: #CCCCCC;">
+                  Registro del dia
+                </div>
+                <div
+                *ngIf="vSelectDia > 0 && vSelectHorario > 0"
+                class="example-list">
+                @for (dtrb of data.dias_trabajo; track dtrb.id) {
+                  <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
+                    {{dtrb.nombre_completo}}
+                    <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
+                    font-size: 12px;
+                    padding-top: 1px;
+                    padding-left: 5px;
+                    padding-right: 5px;" (click)="onDeleteDTrabajo(dtrb)">
+                      <i class="fa fa-minus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+              </ion-col>
+            </ion-row>
+        </div>
+        </ion-col>
+      }
+      </ion-row>
+    } @else {
+      <mt-observacion-horario></mt-observacion-horario>
     }
-    </ion-row>
   </div>
 </div>
