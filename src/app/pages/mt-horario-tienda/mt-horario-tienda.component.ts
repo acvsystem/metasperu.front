@@ -41,7 +41,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   ];
 
   dataHorario: Array<HorarioElement> = [];
-
+  titleObservacion: String = "";
   arListTrabajador: Array<any> = [
     { id: 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: 1, nombre_completo: "ANDRE" },
     { id: 2, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: 1, nombre_completo: "JORGE" },
@@ -65,9 +65,6 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     if ((dataHr || []).length) {
       this.dataHorario = dataHr || [];
-      /* this.dataHorario[0]['arListTrabajador'] = [];
-        this.dataHorario[0]['dias_trabajo'] = [];
-        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));*/
     }
 
   }
@@ -138,7 +135,8 @@ export class MtHorarioTiendaComponent implements OnInit {
       let dataTrabajadores = [];
 
       if (index != -1) {
-
+        let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
+        this.titleObservacion = objDia['dia'];
         this.dataHorario[index]['arListTrabajador'] = [];
         this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "ANDRE" });
         this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JORGE" });

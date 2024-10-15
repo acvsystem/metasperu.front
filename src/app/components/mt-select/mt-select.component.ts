@@ -13,6 +13,7 @@ export class MtSelectComponent implements OnInit {
   @Input() placeHolder: string = "Seleccione su opcion";
   @Input() isRequired: boolean = false;
   @Input() selectOption: boolean = false;
+  @Input() optionDefault: Array<any> = [];
   @Output() changeSelected: EventEmitter<any> = new EventEmitter();
 
   activeSelect: boolean = false;
@@ -45,6 +46,12 @@ export class MtSelectComponent implements OnInit {
       }
     }
 
+    if (changes && changes.hasOwnProperty('optionDefault')) {
+      if (Object.keys(this.optionDefault).length) {
+        this.onSelectedOption(this.optionDefault);
+      }
+    }
+
 
   }
 
@@ -61,6 +68,7 @@ export class MtSelectComponent implements OnInit {
       value: (ev || {}).value
     };
     this.activeSelect = false;
+    //this.optionDefault = this.optionSelected;
     this.changeSelected.emit(this.optionSelected);
   }
 

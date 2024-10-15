@@ -7,20 +7,30 @@
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <mt-select id="cboEmpleado" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"
+        <mt-select id="cboEmpleado" [enableSearchInput]="true" [optionDefault]="optionDefault"placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"
         (changeSelected)="onChangeSelect($event)"></mt-select>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <textarea id="vListaClientes" class="form-control" rows="10" [value]="vObservacion"></textarea>
+        <textarea id="vObservacion" class="form-control" rows="10" [value]="vObservacion" (keyup)="onChange($event)"></textarea>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
         <button id="searchProducto" (click)="onAddObservacion()" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;">
-          Guardar
+          @if(indexObservacion == -1){
+            Guardar
+          } @else {
+            Editar
+          }
         </button>
+        @if(indexObservacion > -1){
+          <button id="searchProducto" (click)="onDeleteObservacion()" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 1px;margin-left: 10px;">
+            Eliminar
+          </button>
+        } 
+
       </ion-col>
     </ion-row>
   </ion-col>
@@ -32,13 +42,19 @@
     </ion-row>
     <ion-row sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <div
-        class="example-list">
-          <div class="example-box-pointer" style="color: black;">
-            dtrb.nombre_completo
-    
+          <div class="list-group" id="list-tab" role="tablist">
+            @for (obs of arObservacion; track obs) {
+            <a class="list-group-item list-group-item-action" style="display: grid;cursor: pointer;" id="list-home-list" data-toggle="list"  role="tab" aria-controls="home" (click)="onObservacionSelected(obs)">
+              <span>
+                <label>{{obs.nombre_completo}}</label>
+              </span>
+              <span style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+                {{obs.observacion}}
+              </span>
+            </a>
+            }
           </div>
-        </div>
+       
       </ion-col>
     </ion-row>
   </ion-col>

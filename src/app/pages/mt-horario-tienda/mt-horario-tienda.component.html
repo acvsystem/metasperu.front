@@ -51,7 +51,7 @@
       
                 @for (dia of data.dias; track dia.id) {
                 <th scope="row">
-                  @for (trb of data.dias_trabajo; track trb.id) {
+                  @for (trb of data.dias_trabajo; track trb) {
                     <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
                   }
                 </th>
@@ -66,7 +66,20 @@
 
 <div class="offcanvas offcanvas-end" tabindex="-1" data-bs-backdrop="false" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px;">
   <div class="offcanvas-header" style="border-bottom: 1px solid #ccc;  margin-bottom: 10px;">
-    <h5 id="offcanvasRightLabel" style="color: black;">Registro de Horario</h5>
+    @if(isObservacion){
+      <button type="button" class="btn btn-light" (click)="isObservacion = false">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </button>
+    }
+    <h5 id="offcanvasRightLabel" style="color: black;display: grid;">
+      @if(!isObservacion){
+        Registro de Horario
+      } @else {
+        Registro de Observaciones
+        <span style="text-align: center;font-weight: 800;">{{titleObservacion}}</span>
+      }
+      
+    </h5>
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="onModal(false)"></button>
   </div>
   <div class="offcanvas-body" style="display: contents;">
@@ -93,17 +106,6 @@
               placeholder="Hora"
               (afterChange)="onCaledar($event)">
             </mt-calendar>
-            </div>
-            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
-              @if(vSelectDia > 0){
-                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onOpenObservacion()">
-                  Agregar Observacion
-                </button>
-              } @else {
-                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
-                  Agregar Observacion
-                </button>
-              }
             </div>
             <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
               @if(!isRangoEdit){
@@ -133,7 +135,17 @@
                   <i class="fa fa-check-square-o" aria-hidden="true"></i>
                 </button>
               }
-  
+            </div>
+            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
+              @if(vSelectDia > 0){
+                <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onOpenObservacion()">
+                  <i class="fa fa-list-alt" aria-hidden="true"></i>
+                </button>
+              } @else {
+                <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
+                  <i class="fa fa-list-alt" aria-hidden="true"></i>
+                </button>
+              }
             </div>
           </div>
         </ion-col>
@@ -203,7 +215,7 @@
                   <div
                   *ngIf="vSelectDia > 0 && vSelectHorario > 0"
                   class="example-list">
-                  @for (trb of data.arListTrabajador; track trb.id) {
+                  @for (trb of data.arListTrabajador; track trb) {
                     <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
                       {{trb.nombre_completo}}
                       <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;
@@ -234,7 +246,7 @@
                 <div
                 *ngIf="vSelectDia > 0 && vSelectHorario > 0"
                 class="example-list">
-                @for (dtrb of data.dias_trabajo; track dtrb.id) {
+                @for (dtrb of data.dias_trabajo; track dtrb) {
                   <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
                     {{dtrb.nombre_completo}}
                     <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
