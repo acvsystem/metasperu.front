@@ -19,7 +19,9 @@ export class MtHorarioTiendaComponent implements OnInit {
   idCargo: number = 1;
   horaInit: string = "";
   isOpenModal: boolean = false;
-  isObservacion: boolean = true;
+  isObservacion: boolean = false;
+  isPapeleta: boolean = false;
+  dataObservation: Array<any> = [];
   horaEnd: string = "";
   arListDia: Array<any> = [
     { id: 1, dia: "Lunes", fecha: "16-sep" },
@@ -317,7 +319,32 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onOpenObservacion() {
+    let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
+    if (index != -1) {
+      this.dataObservation = this.dataHorario[index]['observacion'].filter((obs) => obs.id_dia == this.vSelectDia);
+    }
     this.isObservacion = true;
+  }
+
+  onOpenPapeleta() {
+    this.isPapeleta = true;
+    this.isOpenModal = true;
+  }
+
+  opChangeObservation(ev) {
+    let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
+    let data = ev;
+    let oldDAta = [...this.dataHorario[index]['observacion']];
+
+    if (index != -1) {
+      this.dataHorario[index]['observacion'] = [];
+      this.dataHorario[index]['observacion'] = oldDAta.filter((dt) => dt.id_dia != this.vSelectDia);
+      (data || []).filter((data) => {
+        this.dataHorario[index]['observacion'].push(data);
+      });
+
+      this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+    }
   }
 
 }

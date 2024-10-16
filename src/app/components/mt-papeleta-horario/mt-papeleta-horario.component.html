@@ -1,0 +1,113 @@
+
+  <ion-row>
+    <ion-col>
+      <div style="display: flex;justify-content: center;align-items: center;color: black;">
+        <span style="font-weight: 500;">VSFA JOCKEY PLAZA</span>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;">
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <mt-select id="cboEmpleado" [enableSearchInput]="true" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"></mt-select>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <mt-select id="cboCasos" [enableSearchInput]="true" placeHolder="Tipo de caso" [optionList]="onListCasos" (changeSelected)="onChangeSelect($event)"></mt-select>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <mt-select id="cboCargo" [enableSearchInput]="true" placeHolder="Seleccione Cargo" [optionList]="onListCargo"></mt-select>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  
+  @if(cboCasos == 'Compensacion de horas trabajadas') {
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
+          <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <div style="display: flex;justify-content: center;align-items: center;">
+              <div style="width: 100px;">
+                <span style="color: black;">Desde</span>
+              </div>
+              <div style="width: 200px;">
+                <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
+                ></mt-calendar>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <div style="display: flex;justify-content: center;align-items: center;">
+              <div style="width: 100px;">
+                <span style="color: black;">Salida</span>
+              </div>
+              <div style="width: 200px;">
+                <mt-calendar 
+                id="horaSalida"
+                [isTime]="true" 
+                placeholder="Hora"
+                (afterChange)="onCaledar($event)">
+              </mt-calendar>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <div style="display: flex;justify-content: center;align-items: center;">
+              <div style="width: 100px;">
+                <span style="color: black;">Hasta</span>
+              </div>
+              <div style="width: 200px;">
+                <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
+                ></mt-calendar>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+            <div style="display: flex;justify-content: center;align-items: center;">
+              <div style="width: 100px;">
+                <span style="color: black;">Llegada</span>
+              </div>
+              <div style="width: 200px;">
+                <mt-calendar 
+                id="horaLlegada"
+                [isTime]="true" 
+                placeholder="Hora"
+                (afterChange)="onCaledar($event)">
+              </mt-calendar>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <div style="display: flex;justify-content: center;align-items: center;">
+          <textarea id="vRazon" class="form-control" rows="5" style="width: 90%;"></textarea>
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+  }
+
+
+ 
