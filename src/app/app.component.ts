@@ -214,8 +214,8 @@ export class AppComponent {
     }
 
    document.body.addEventListener("click", function (evt) {
-      let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
-      let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
+    let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
+    let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
 
       if (classListSelect.indexOf("isSelectComponent") == -1) {
         if (parentClassList.indexOf("isSelectComponent") == -1 && parentClassList.indexOf("has-focus") == -1) {

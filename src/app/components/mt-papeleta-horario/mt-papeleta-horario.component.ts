@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
 
 @Component({
   selector: 'mt-papeleta-horario',
@@ -13,8 +18,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
   horaSalida: string = "";
   horaLlegada: string = "";
   totalHoras: string = "";
+  hroAcumulada: string = "00:00";
+  hroTomada: string = "00:00";
+  vHtomada: string = "";
   onDataTemp: Array<any> = [];
   parseHuellero: Array<any> = [];
+  arHoraExtra: Array<any> = [];
+  arHoraTomada: Array<any> = [];
+  arHoraTomadaCalc: Array<any> = [];
+  bodyList: Array<any> = [];
+  arCopiHoraExtra: Array<any> = [];
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -59,7 +72,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
             hr_ingreso_2: "",
             hr_salida_2: "",
             hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
-            hr_extra: 0
+            hr_extra: 0,
+            hr_faltante: 0
           });
         } else {
 
@@ -69,11 +83,36 @@ export class MtPapeletaHorarioComponent implements OnInit {
           let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
           let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
           this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
-          this.onDataTemp[indexData]['hr_extra'] = this.obtenerHoraExtra(this.onDataTemp[indexData]['hr_trabajadas'], "8:00");
+          let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
+          let process = this.obtenerHoraExtra(this.onDataTemp[indexData]['hr_trabajadas'], "8:00");
+
+          if (hora_1_pr[0] >= 8) {
+            let hr = process.split(":");
+            if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
+              this.onDataTemp[indexData]['hr_extra'] = process;//23:59
+              let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
+              let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
+
+              this.bodyList.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
+              this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
+              if (estado == 'correcto') {
+                if (!this.arHoraExtra.length) {
+                  this.arHoraExtra = [process];
+                } else {
+                  this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
+                }
+              }
+            }
+          } else {
+            this.onDataTemp[indexData]['hr_faltante'] = process;
+          }
+
         }
 
       });
-      console.log(this.onDataTemp);
+
+      this.hroAcumulada = this.arHoraExtra[0];
+
     });
 
 
@@ -96,7 +135,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let configuracion = [{
         fechain: `${año}-${mes - 2}-${day[0]}`,
         fechaend: `${año}-${mes}-${day[0]}`,
-        nro_documento: '77506437'
+        nro_documento: '73273474'
       }]
       this.socket.emit('consultaHorasTrab', configuracion);
     }
@@ -138,28 +177,30 @@ export class MtPapeletaHorarioComponent implements OnInit {
     return parseInt(hora_pr[0]) * 60;
   }
 
-  obtenerHoraExtra(hrRs_1, hrRs_2) {
-    let hr_1 = hrRs_1.split(":");
-    let hr_2 = hrRs_2.split(":");
-    let resultado = "";
-    if (hr_1[0] == 8) {
-      let dif_min = parseInt(hr_1[1]) + parseInt(hr_2[1]);
-      let dif_hora = parseInt(hr_1[0]) + parseInt(hr_2[0]);
-      let dif_res = 0;
-      let dif_hr = 0;
+  obtenerHoraExtra(hr1, hr2) {
+    let diferencia = 0;
+    let hora_1_pr = hr1.split(":");
+    let hora_2_pr = hr2.split(":");
+    let response = "";
+    let hora_1 = this.obtenerHoras(hr1);
+    let hora_2 = this.obtenerHoras(hr2);
+    let minutos = this.obtenerMinutos(hr1, hr2);
 
-      if (dif_min > 59) {
-        dif_res = dif_min - 60;
-        dif_hr = dif_hora + 1;
-      } else {
-        dif_hr = dif_hora;
-        dif_res = dif_min;
-      }
-      resultado = `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
+    let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
 
+    if (hora_1 > hora_2) {
+      diferencia = hora_1 - hora_2;
+    } else {
+      diferencia = hora_2 - hora_1;
     }
-    
-    return resultado;
+
+    let hr_resta: number = (hora_1_pr[1] > 0) ? parseInt(hora_1_pr[1]) : parseInt(hora_2_pr[1]);
+    let horaResult = ((diferencia - hr_resta) / 60).toString();
+    let minutosParse = minutos[1] < 0 ? minutos[1] * -1 : minutos[1];
+    response = `${parseInt(horaResult) + hrExtr}:${(minutosParse < 10) ? '0' + minutosParse : minutosParse}`
+
+
+    return response;
   }
 
   obtenerDiferenciaHora(hr1, hr2) {
@@ -185,14 +226,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   onCaledar(ev) {
     if (ev.isTime) {
       this[ev.id] = ev.value;
-      if (this.horaSalida.length && this.horaLlegada.length) {
-        this.onVerificarHoras();
-      }
     }
-  }
-
-  onVerificarHoras() {
-
   }
 
   obtenerHorasTrabajadas(hrRs_1, hrRs_2) {
@@ -214,4 +248,104 @@ export class MtPapeletaHorarioComponent implements OnInit {
     return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
   }
 
+  onRecalcHoras(ev, fecha) {
+    this.arHoraExtra = [];
+    this.arHoraTomadaCalc = [];
+    if (ev.target.checked) {
+      let copyData = [...this.arCopiHoraExtra];
+      this.arCopiHoraExtra = [];
+      this.arCopiHoraExtra = copyData.filter((dt) => dt.fecha != fecha);
+
+      this.arHoraTomada.push(copyData.find((cdt) => cdt.fecha == fecha));
+
+      this.arHoraTomada.filter((ht) => {
+        if (!this.arHoraTomadaCalc.length) {
+          this.arHoraTomadaCalc = [ht.extra];
+        } else {
+          this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
+        }
+      });
+
+      this.arCopiHoraExtra.filter((dt) => {
+        if (!this.arHoraExtra.length) {
+          this.arHoraExtra = [dt.extra];
+        } else {
+          this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+        }
+      });
+    } else {
+
+      let copyData = [...this.arHoraTomada];
+      this.arHoraTomada = [];
+
+      this.arCopiHoraExtra.push(this.bodyList.find((bd) => bd.fecha == fecha));
+
+      this.arCopiHoraExtra.filter((dt) => {
+        if (!this.arHoraExtra.length) {
+          this.arHoraExtra = [dt.extra];
+        } else {
+          this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+        }
+      });
+
+      let data = copyData.find((cdt) => cdt.fecha != fecha);
+      if (typeof data != 'undefined') {
+        this.arHoraTomada.push(data);
+        console.log(this.arHoraTomada);
+        this.arHoraTomada.filter((ht) => {
+          if (!this.arHoraTomadaCalc.length) {
+            this.arHoraTomadaCalc = [ht.extra];
+          } else {
+            this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
+          }
+        });
+      }
+
+    }
+
+    this.hroAcumulada = this.arHoraExtra[0];
+    this.hroTomada = this.arHoraTomadaCalc[0] || '00:00';
+  }
+
+  onAprobarExtra(fecha) {
+    this.arHoraExtra = [];
+    let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
+    let indexH = this.arCopiHoraExtra.findIndex((ext) => ext.fecha == fecha);
+
+    this.bodyList[index]['estado'] = 'correcto';
+    this.arCopiHoraExtra[indexH]['estado'] = 'correcto';
+    console.log(this.arCopiHoraExtra);
+    this.arCopiHoraExtra.filter((dt) => {
+      if (dt.estado == 'correcto') {
+        if (!this.arHoraExtra.length) {
+          this.arHoraExtra = [dt.extra];
+        } else {
+          this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+        }
+      }
+    });
+
+    this.hroAcumulada = this.arHoraExtra[0];
+  }
+
+  onExcelExport() {
+    const self = this;
+    this.exportAsExcelFile(this.onDataTemp, "Reporte_registro_asistencia");
+
+  }
+
+  public exportAsExcelFile(json: any[], excelFileName: string): void {
+    const self = this;
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+    this.saveAsExcelFile(excelBuffer, excelFileName);
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
+    });
+    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+  }
 }

@@ -23,90 +23,174 @@
           <mt-select id="cboCargo" [enableSearchInput]="true" placeHolder="Seleccione Cargo" [optionList]="onListCargo"></mt-select>
         </ion-col>
       </ion-row>
+      @if(cboCasos == 'Compensacion de horas trabajadas'){
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div style="width: 100%;height: 48.98px;;display: flex;align-items: center;">
+              @if(onDataTemp.length){
+                <button matTooltip="Exportar Registro Horas" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;" (click)="onExcelExport()">
+                  <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                </button>
+              }@else{
+                <button matTooltip="Exportar Registro Horas" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;" disabled>
+                  <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                </button>
+              }
+
+            </div>
+          </ion-col>
+        </ion-row>
+      }
     </ion-col>
   </ion-row>
   
   @if(cboCasos == 'Compensacion de horas trabajadas') {
-    <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
-          <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div style="display: flex;justify-content: center;align-items: center;">
-              <div style="width: 100px;">
-                <span style="color: black;">Desde</span>
+    <div style="max-height: calc(100% - 280px);overflow: auto;">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
+            <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div style="display: flex;justify-content: center;align-items: center;">
+                <div style="width: 100px;">
+                  <span style="color: black;">Desde</span>
+                </div>
+                <div style="width: 200px;">
+                  <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
+                  ></mt-calendar>
+                </div>
               </div>
-              <div style="width: 200px;">
-                <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
-                ></mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div style="display: flex;justify-content: center;align-items: center;">
+                <div style="width: 100px;">
+                  <span style="color: black;">Salida</span>
+                </div>
+                <div style="width: 200px;">
+                  <mt-calendar 
+                  id="horaSalida"
+                  [isTime]="true" 
+                  placeholder="Hora"
+                  (afterChange)="onCaledar($event)">
+                </mt-calendar>
+                </div>
               </div>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div style="display: flex;justify-content: center;align-items: center;">
-              <div style="width: 100px;">
-                <span style="color: black;">Salida</span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div style="display: flex;justify-content: center;align-items: center;">
+                <div style="width: 100px;">
+                  <span style="color: black;">Hasta</span>
+                </div>
+                <div style="width: 200px;">
+                  <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
+                  ></mt-calendar>
+                </div>
               </div>
-              <div style="width: 200px;">
-                <mt-calendar 
-                id="horaSalida"
-                [isTime]="true" 
-                placeholder="Hora"
-                (afterChange)="onCaledar($event)">
-              </mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div style="display: flex;justify-content: center;align-items: center;">
+                <div style="width: 100px;">
+                  <span style="color: black;">Llegada</span>
+                </div>
+                <div style="width: 200px;">
+                  <mt-calendar 
+                  id="horaLlegada"
+                  [isTime]="true" 
+                  placeholder="Hora"
+                  (afterChange)="onCaledar($event)">
+                </mt-calendar>
+                </div>
               </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div style="display: flex;justify-content: center;align-items: center;">
-              <div style="width: 100px;">
-                <span style="color: black;">Hasta</span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div style="display: flex;justify-content: center;align-items: center;">
+                <div style="width: 100px;display: flex;align-items: center;">
+                  <span style="color: black;">Acumulado</span>
+                </div>
+                <div style="width: 200px;display: flex;align-items: center;">
+                  <span style="color: black;">{{hroAcumulada}} Horas</span>
+                </div>
               </div>
-              <div style="width: 200px;">
-                <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
-                ></mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div style="display: flex;justify-content: center;align-items: center;display: flex;align-items: center;">
+                <div style="width: 100px;">
+                  <span style="color: black;">Tomadas</span>
+                </div>
+                <div style="width: 200px;">
+                  <span style="color: black;">{{hroTomada}} Horas</span>
+                </div>
               </div>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <div style="display: flex;justify-content: center;align-items: center;">
-              <div style="width: 100px;">
-                <span style="color: black;">Llegada</span>
-              </div>
-              <div style="width: 200px;">
-                <mt-calendar 
-                id="horaLlegada"
-                [isTime]="true" 
-                placeholder="Hora"
-                (afterChange)="onCaledar($event)">
-              </mt-calendar>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <div style="display: flex;justify-content: center;align-items: center;">
-          <textarea id="vRazon" class="form-control" rows="5" style="width: 90%;"></textarea>
-        </div>
-      </ion-col>
-    </ion-row>
-
-
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <div style="max-height: 500px;overflow: auto;">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th class="columHead">Fecha</th>
+                  <th class="columHead">Hora Extra</th>
+                  <th class="columHead">Estado</th>
+                  <th class="columHead">Seleccionar</th>
+                  <th class="columHead">Aprobar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let columBody of bodyList;let index = index">
+                  <td class="columBody">{{columBody.fecha}}</td>
+                  <td class="columBody">{{columBody.extra}}</td>
+                  <td class="columBody">
+                    <h6 *ngIf="columBody.estado == 'correcto'" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+                    <h6 *ngIf="columBody.estado == 'aprobar'" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
+                  </td>
+                  <td class="columBody">
+                    <div>
+                      <div class="form-check form-switch">
+                        @if(columBody.estado == 'aprobar'){
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" disabled>
+                        } @else {
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
+                        }
+                      </div>
+                    </div>
+                  </td>
+                  <td class="columBody">
+                    @if(columBody.estado == 'aprobar'){
+                      <div>
+                        <button matTooltip="Aprobar Horas extras" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;" (click)="onAprobarExtra(columBody.fecha)">
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    }
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
   }
 
 

@@ -179,7 +179,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('status:serverSUNAT:send', (status) => {
-      this.statusServerList = [status] || [];
+      this.statusServerList = [status];
       let isConect = (status || {}).online || 'false';
       this.isConnectServer = isConect;
     });
