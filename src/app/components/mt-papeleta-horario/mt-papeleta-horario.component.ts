@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { StorageService } from 'src/app/utils/storage';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -18,6 +19,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   horaSalida: string = "";
   horaLlegada: string = "";
   totalHoras: string = "";
+  nameTienda: string = "";
   hroAcumulada: string = "00:00";
   hroTomada: string = "00:00";
   vHtomada: string = "";
@@ -28,6 +30,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
   arHoraTomadaCalc: Array<any> = [];
   bodyList: Array<any> = [];
   arCopiHoraExtra: Array<any> = [];
+  arSelectRegistro: Array<any> = [];
+  parseEJB: Array<any> = [];
+  isDataEJB:boolean = false;
+  isDataServer:boolean = false;
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -47,11 +53,55 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { key: "Capacitacion", value: "Capacitacion" },
     { key: "Otros", value: "Otros" }
   ];
-  constructor() { }
+  constructor(private store: StorageService) { }
 
   ngOnInit() {
     this.onListEmpleado = [];
-    this.onListEmpleado.push({ key: "ANDRE", value: "ANDRE" });
+
+    this.socket.emit('consultaListaEmpleado', 'angular');
+
+    this.socket.on('reporteEmpleadoTienda', async (response) => {
+      let dataSocket = (response || {}).data;
+
+      if ((dataSocket || {}).id == "EJB") {
+        this.isDataEJB = true;
+        let dataEJB = [];
+        this.parseEJB = [];
+        dataEJB = dataSocket;
+        (dataEJB || []).filter((ejb) => {
+          if (((ejb || {}).STATUS).trim() == "VIG") {
+            this.parseEJB.push({
+              codigoEJB: ((ejb || {}).CODEJB).trim(),
+              nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
+              nro_documento: ((ejb || {}).NUMDOC).trim(),
+              telefono: ((ejb || {}).TELEFO).trim(),
+              email: ((ejb || {}).EMAIL).trim(),
+              fec_nacimiento: ((ejb || {}).FECNAC).trim(),
+              fec_ingreso: ((ejb || {}).FECING).trim(),
+              status: ((ejb || {}).STATUS).trim()
+            });
+
+          }
+        });
+
+      }
+
+
+      if (this.isDataEJB && this.isDataServer) {
+        
+      }
+
+      
+
+      (this.parseEJB || []).filter((emp)=>{
+        (this.onListEmpleado || []).push({ key: (emp || {}).nombre_completo, value: (emp || {}).nombre_completo });
+      });
+      console.log(this.parseEJB);
+    });
+
+    let profileUser = this.store.getStore('mt-profile');
+    this.nameTienda = profileUser.mt_name_1.toUpperCase();
+
     this.onListEmpleado.push({ key: "JORGE", value: "JORGE" });
     this.onListEmpleado.push({ key: "JOSE", value: "JOSE" });
 
@@ -332,6 +382,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
     const self = this;
     this.exportAsExcelFile(this.onDataTemp, "Reporte_registro_asistencia");
 
+  }
+
+  onSearchRegistro(fecha) {
+    let dataSelect = this.onDataTemp.filter((dt) => dt.dia == fecha);
+    this.arSelectRegistro = dataSelect;
+    console.log(dataSelect);
+  }
+
+  onBack() {
+    this.arSelectRegistro = [];
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {

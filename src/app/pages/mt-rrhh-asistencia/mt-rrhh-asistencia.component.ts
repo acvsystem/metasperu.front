@@ -103,6 +103,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         (dataEJB || []).filter((ejb) => {
           if (((ejb || {}).STATUS).trim() == "VIG") {
+
             this.parseEJB.push({
               codigoEJB: ((ejb || {}).CODEJB).trim(),
               nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
@@ -136,7 +137,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
 
       }
-
+      console.log( this.parseEJB);
       if (configuracion.id == "servGeneral") {
         this.isDataServer = true;
         console.log("servGeneral", true);
