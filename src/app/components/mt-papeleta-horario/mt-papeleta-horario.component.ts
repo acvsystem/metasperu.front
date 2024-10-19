@@ -20,6 +20,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   horaLlegada: string = "";
   totalHoras: string = "";
   nameTienda: string = "";
+  cboEmpleado: string = "";
   hroAcumulada: string = "00:00";
   hroTomada: string = "00:00";
   vHtomada: string = "";
@@ -31,9 +32,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
   bodyList: Array<any> = [];
   arCopiHoraExtra: Array<any> = [];
   arSelectRegistro: Array<any> = [];
+  arDataEJB: Array<any> = [];
+  arDataServer: Array<any> = [];
   parseEJB: Array<any> = [];
-  isDataEJB:boolean = false;
-  isDataServer:boolean = false;
+  codeTienda: string = "";
+  isDataEJB: boolean = false;
+  isDataServer: boolean = false;
+  isEJB: boolean = false;
+  isServer: boolean = false;
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -53,57 +59,87 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { key: "Capacitacion", value: "Capacitacion" },
     { key: "Otros", value: "Otros" }
   ];
+
+  onListTiendas: Array<any> = [
+    { code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
+    { code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
+    { code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
+    { code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
+    { code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
+    { code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
+    { code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
+    { code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
+    { code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
+    { code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
+    { code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
+    { code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
+    { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
+    { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
+    { code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+  ];
+
   constructor(private store: StorageService) { }
 
   ngOnInit() {
-    this.onListEmpleado = [];
-
-    this.socket.emit('consultaListaEmpleado', 'angular');
-
-    this.socket.on('reporteEmpleadoTienda', async (response) => {
-      let dataSocket = (response || {}).data;
-
-      if ((dataSocket || {}).id == "EJB") {
-        this.isDataEJB = true;
-        let dataEJB = [];
-        this.parseEJB = [];
-        dataEJB = dataSocket;
-        (dataEJB || []).filter((ejb) => {
-          if (((ejb || {}).STATUS).trim() == "VIG") {
-            this.parseEJB.push({
-              codigoEJB: ((ejb || {}).CODEJB).trim(),
-              nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
-              nro_documento: ((ejb || {}).NUMDOC).trim(),
-              telefono: ((ejb || {}).TELEFO).trim(),
-              email: ((ejb || {}).EMAIL).trim(),
-              fec_nacimiento: ((ejb || {}).FECNAC).trim(),
-              fec_ingreso: ((ejb || {}).FECING).trim(),
-              status: ((ejb || {}).STATUS).trim()
-            });
-
-          }
-        });
-
-      }
-
-
-      if (this.isDataEJB && this.isDataServer) {
-        
-      }
-
-      
-
-      (this.parseEJB || []).filter((emp)=>{
-        (this.onListEmpleado || []).push({ key: (emp || {}).nombre_completo, value: (emp || {}).nombre_completo });
-      });
-      console.log(this.parseEJB);
-    });
 
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
+    this.codeTienda = profileUser.code.toUpperCase();
+    this.onListEmpleado = [];
 
-    this.onListEmpleado.push({ key: "JORGE", value: "JORGE" });
-    this.onListEmpleado.push({ key: "JOSE", value: "JOSE" });
+    this.socket.emit('consultaListaEmpleado', 'BBW');
+
+    this.socket.on('reporteEmpleadoTienda', async (response) => {
+      console.log(response);
+      if (response.id == "EJB") {
+        this.isEJB = true;
+        this.arDataEJB = (response || {}).data;
+      }
+
+      if (response.id == "server") {
+        this.isServer = true;
+        this.arDataServer = (response || {}).data;
+      }
+
+      if (this.arDataEJB.length && this.arDataServer.length) {
+
+
+        this.arDataServer.filter(async (ds) => {
+          let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
+          let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
+
+          if (index != -1) {
+            var codigo = (ds || {}).caja.substr(0, 2);
+
+            if ((ds || {}).caja.substr(2, 2) == 7) {
+              codigo = (ds || {}).caja;
+            } else {
+              codigo.substr(0, 1)
+            }
+
+            let exist = this.parseEJB.findIndex((pr) => pr.documento == registro.nro_documento);
+
+            if (codigo == this.codeTienda && exist == -1) {
+              this.onListEmpleado.push({ key: registro.nro_documento, value: registro.nombre_completo });
+              this.parseEJB.push({
+                nombre_completo: registro.nombre_completo,
+                documento: registro.nro_documento,
+                codigo_tienda: codigo
+              });
+            }
+          }
+        });
+
+        console.log(this.parseEJB);
+      }
+    });
+
+
 
     this.socket.on('reporteHorario', async (response) => {
       let data = (response || {}).data;
@@ -185,8 +221,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let configuracion = [{
         fechain: `${año}-${mes - 2}-${day[0]}`,
         fechaend: `${año}-${mes}-${day[0]}`,
-        nro_documento: '73273474'
+        nro_documento: this.cboEmpleado
       }]
+      console.log(this.cboEmpleado);
       this.socket.emit('consultaHorasTrab', configuracion);
     }
   }
