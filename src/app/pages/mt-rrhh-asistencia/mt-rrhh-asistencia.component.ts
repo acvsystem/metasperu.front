@@ -11,6 +11,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import Chart from 'chart.js/auto'
+import $ from 'jquery';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -43,13 +44,20 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isDataServer: boolean = false;
   isGrafica: boolean = false;
   filterEmpleado: string = "";
+  cboTipoGraffic: string = "Jornada incompleta";
   exportFeriado: Array<any> = [];
   arrDataGrafic: Array<any> = [];
+  myGraffic: any;
   backOption: string = "isViewDefault";
   onListReporte: Array<any> = [
     { key: 'General', value: 'General' },
     { key: 'Feriados', value: 'Feriados' },
     { key: 'Detallado', value: 'Detallado' }
+  ];
+
+  listTipoGraffic: Array<any> = [
+    { key: 'Jornada incompleta', value: 'Jornada incompleta' },
+    { key: 'Brake incompleta', value: 'Brake incompleta' }
   ];
 
   onListTiendas: Array<any> = [
@@ -229,7 +237,19 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           this.onDataTemp.filter((dt) => {
             if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '81433419' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
               let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
-              if (!dt.isJornadaCompleta) {
+
+              if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
+                if (indexData == -1) {
+                  this.arrDataGrafic.push({
+                    tienda: dt.tienda,
+                    cantidad: 1
+                  });
+                } else {
+                  this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+                }
+              }
+
+              if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
                 if (indexData == -1) {
                   this.arrDataGrafic.push({
                     tienda: dt.tienda,
@@ -258,6 +278,39 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
 
     });
+  }
+
+  onGenerarGraffic() {
+    this.arrDataGrafic = [];
+    this.onDataTemp.filter((dt) => {
+      if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '81433419' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
+        let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
+
+        if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
+          if (indexData == -1) {
+            this.arrDataGrafic.push({
+              tienda: dt.tienda,
+              cantidad: 1
+            });
+          } else {
+            this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+          }
+        }
+
+        if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
+          if (indexData == -1) {
+            this.arrDataGrafic.push({
+              tienda: dt.tienda,
+              cantidad: 1
+            });
+          } else {
+            this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+          }
+        }
+      }
+    });
+
+    this.onViewGrafic();
   }
 
   async onConsultarAsistencia() {
@@ -303,10 +356,17 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-    this.onDataView = [];
-    this.dataSource = new MatTableDataSource(this.onDataView);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
+
+    if (index == "cboTipoGraffic") {
+      this.onGenerarGraffic();
+    } else {
+      this.onDataView = [];
+      this.dataSource = new MatTableDataSource(this.onDataView);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+
     if ((selectData || {}).key == "General") {
       this.backOption = "isViewDefault";
       this.isViewDefault = true;
@@ -557,7 +617,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onViewGrafic() {
 
-    console.log(this.arrDataGrafic);
+    console.log("onViewGrafic");
     let arrLabels = [];
     let data = [];
 
@@ -566,14 +626,19 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       data.push(gr.cantidad);
     });
 
-    const ctx = document.getElementById('myChart');
 
-    const myChart = new Chart("ctx", {
+    const ctx = document.getElementById('ctx');
+
+    if (this.myGraffic != null) {
+      this.myGraffic.destroy();
+    }
+    
+    this.myGraffic = new Chart("ctx", {
       type: 'bar',
       data: {
         labels: arrLabels,
         datasets: [{
-          label: '# Horas trabajadas incompletas',
+          label: (this.cboTipoGraffic == 'Jornada incompleta') ? '# Horas trabajadas incompletas' : '# Tiempo Brake Sobre la hora',
           data: data,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
@@ -630,6 +695,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         }
       }
     });
+
+
+
 
   }
 

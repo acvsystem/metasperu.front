@@ -197,6 +197,12 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-select id="cboTipoGraffic" placeHolder="Tipo Reporte" [optionList]="listTipoGraffic"
+            (changeSelected)="onChangeSelect($event)"></mt-select>
+          </ion-col>
+        </ion-row>
         <div class="center-graffic">
           <div style="width: 800px;"><canvas id="ctx"></canvas></div>
         </div>
