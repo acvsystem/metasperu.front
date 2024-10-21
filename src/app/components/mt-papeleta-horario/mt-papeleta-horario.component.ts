@@ -40,6 +40,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   isDataServer: boolean = false;
   isEJB: boolean = false;
   isServer: boolean = false;
+  unidServicio: string = "";
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -61,26 +62,26 @@ export class MtPapeletaHorarioComponent implements OnInit {
   ];
 
   onListTiendas: Array<any> = [
-    { code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+    { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
   constructor(private store: StorageService) { }
@@ -90,9 +91,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
     this.codeTienda = profileUser.code.toUpperCase();
+    let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
+    this.unidServicio = unidServicio['uns'];
     this.onListEmpleado = [];
 
-    this.socket.emit('consultaListaEmpleado', 'BBW');
+    this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
       console.log(response);
@@ -108,34 +111,36 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       if (this.arDataEJB.length && this.arDataServer.length) {
 
-
         this.arDataServer.filter(async (ds) => {
-          let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
-          let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
+          if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
+            let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
+            let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
 
-          if (index != -1) {
-            var codigo = (ds || {}).caja.substr(0, 2);
+            if (index != -1) {
+              var codigo = (ds || {}).caja.substr(0, 2);
 
-            if ((ds || {}).caja.substr(2, 2) == 7) {
-              codigo = (ds || {}).caja;
-            } else {
-              codigo.substr(0, 1)
-            }
+              if ((ds || {}).caja.substr(2, 2) == 7) {
+                codigo = (ds || {}).caja;
+              } else {
+                codigo.substr(0, 1)
+              }
 
-            let exist = this.parseEJB.findIndex((pr) => pr.documento == registro.nro_documento);
+              let exist = this.parseEJB.findIndex((pr) => pr.documento == registro.nro_documento);
 
-            if (codigo == this.codeTienda && exist == -1) {
-              this.onListEmpleado.push({ key: registro.nro_documento, value: registro.nombre_completo });
-              this.parseEJB.push({
-                nombre_completo: registro.nombre_completo,
-                documento: registro.nro_documento,
-                codigo_tienda: codigo
-              });
+              if (codigo == this.codeTienda && exist == -1) {
+                console.log(this.codeTienda, codigo, registro.nombre_completo);
+                this.onListEmpleado.push({ key: registro.nro_documento, value: registro.nombre_completo });
+                this.parseEJB.push({
+                  nombre_completo: registro.nombre_completo,
+                  documento: registro.nro_documento,
+                  codigo_tienda: codigo
+                });
+              }
             }
           }
         });
 
-        console.log(this.parseEJB);
+        console.log("parseEJB ", this.parseEJB);
       }
     });
 
@@ -144,55 +149,67 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.socket.on('reporteHorario', async (response) => {
       let data = (response || {}).data;
       this.parseHuellero = data;
+      this.onDataTemp = [];
+      this.bodyList = [];
 
       await (this.parseHuellero || []).filter(async (huellero) => {
 
-        let indexData = this.onDataTemp.findIndex((data) => ((data || {}).dia == (huellero || []).dia));
+        var codigo = (huellero || {}).caja.substr(0, 2);
 
-        if (indexData == -1) {
-          this.onDataTemp.push({
-            dia: (huellero || {}).dia,
-            hr_ingreso_1: (huellero || {}).hrIn,
-            hr_salida_1: (huellero || {}).hrOut,
-            hr_brake: "",
-            hr_ingreso_2: "",
-            hr_salida_2: "",
-            hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
-            hr_extra: 0,
-            hr_faltante: 0
-          });
+        if ((huellero || {}).caja.substr(2, 2) == 7) {
+          codigo = (huellero || {}).caja;
         } else {
+          codigo.substr(0, 1)
+        }
 
-          this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
-          this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
-          this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
-          let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
-          let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
-          this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
-          let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
-          let process = this.obtenerHoraExtra(this.onDataTemp[indexData]['hr_trabajadas'], "8:00");
+        if (codigo == this.codeTienda) {
+          let indexData = this.onDataTemp.findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
-          if (hora_1_pr[0] >= 8) {
-            let hr = process.split(":");
-            if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
-              this.onDataTemp[indexData]['hr_extra'] = process;//23:59
-              let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
-              let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
+          if (indexData == -1) {
+            this.onDataTemp.push({
+              dia: (huellero || {}).dia,
+              hr_ingreso_1: (huellero || {}).hrIn,
+              hr_salida_1: (huellero || {}).hrOut,
+              hr_brake: "",
+              hr_ingreso_2: "",
+              hr_salida_2: "",
+              hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
+              hr_extra: 0,
+              hr_faltante: 0
+            });
+          } else {
 
-              this.bodyList.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
-              this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
-              if (estado == 'correcto') {
-                if (!this.arHoraExtra.length) {
-                  this.arHoraExtra = [process];
-                } else {
-                  this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
+            this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
+            this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
+            this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
+            let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
+            let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+            this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
+            let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
+            let process = this.obtenerHoraExtra(this.onDataTemp[indexData]['hr_trabajadas'], "8:00");
+
+            if (hora_1_pr[0] >= 8) {
+              let hr = process.split(":");
+              if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
+                this.onDataTemp[indexData]['hr_extra'] = process;//23:59
+                let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
+                let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
+
+                this.bodyList.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
+                this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
+                if (estado == 'correcto') {
+                  if (!this.arHoraExtra.length) {
+                    this.arHoraExtra = [process];
+                  } else {
+                    this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
+                  }
                 }
               }
+            } else {
+              this.onDataTemp[indexData]['hr_faltante'] = process;
             }
-          } else {
-            this.onDataTemp[indexData]['hr_faltante'] = process;
-          }
 
+          }
         }
 
       });
