@@ -137,7 +137,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
 
       }
-      console.log( this.parseEJB);
+      console.log(this.parseEJB);
       if (configuracion.id == "servGeneral") {
         this.isDataServer = true;
         console.log("servGeneral", true);
@@ -227,15 +227,17 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           this.dataSource.sort = this.sort;
 
           this.onDataTemp.filter((dt) => {
-            let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
-            if (!dt.isJornadaCompleta) {
-              if (indexData == -1) {
-                this.arrDataGrafic.push({
-                  tienda: dt.tienda,
-                  cantidad: 1
-                });
-              } else {
-                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+            if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '81433419' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
+              let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
+              if (!dt.isJornadaCompleta) {
+                if (indexData == -1) {
+                  this.arrDataGrafic.push({
+                    tienda: dt.tienda,
+                    cantidad: 1
+                  });
+                } else {
+                  this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+                }
               }
             }
           });
