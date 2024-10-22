@@ -5,15 +5,30 @@
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <div class="content-button postition-start">
             <div class="content-button-comp" style="width: 100%;display: contents;">
-              <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
-              id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
-              Registrar Horario
-            </button>   
+              @if(dataHorario.length){
+                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
+                id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
+                Registrar Horario
+              </button>  
+              }@else{
+                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
+                id="searchProducto" type="button" class="btn btn-primary btn-sm"  disabled>
+                Registrar Horario
+              </button>  
+              }
+ 
             <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
             ></mt-calendar>
-            <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
-            </button>
+            @if(dataHorario.length){
+              <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" disabled>
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            }@else{
+              <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            }
+
             <button style="margin-left: 8px;" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"  matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onOpenPapeleta()">
               <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
             </button>
@@ -43,14 +58,9 @@
             </thead>
             <tbody>
               <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
-                @if(rango.rg != "DIAS LIBRES"){
                 <th scope="row" style="background-color: #97b3fd;">
                   {{rango.rg}}
                 </th>
-  
-                }@else{
-                <th scope="row" style="background-color: #FFD865;">{{rango.rg}}</th>
-                }
       
                 @for (dia of data.dias; track dia.id) {
                 <th scope="row">
@@ -60,6 +70,18 @@
                 </th>
                 }
               </tr>
+              <tr style="text-align: center;">
+                <th scope="row" style="background-color: #FFD865;">DIAS LIBRES</th>
+                
+                @for (dia of data.dias; track dia.id) {
+                <th scope="row">
+                  @for (trb of data.dias_libres; track trb) {
+                    <span style="font-size: 14px;" *ngIf="dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
+                  }
+                </th>
+                }
+              </tr>
+              
             </tbody>
           </table>
           }
@@ -67,7 +89,7 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" data-bs-backdrop="false" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px;">
+<div class="offcanvas offcanvas-end" tabindex="-1"  id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px;">
   <div class="offcanvas-header" style="border-bottom: 1px solid #ccc;  margin-bottom: 10px;">
     @if(!isPapeleta){
       @if(isObservacion){
@@ -229,13 +251,23 @@
                   @for (trb of data.arListTrabajador; track trb) {
                     <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
                       {{trb.nombre_completo}}
-                      <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;
-                      font-size: 12px;
-                      padding-top: 1px;
-                      padding-left: 5px;
-                      padding-right: 5px;" (click)="onAddDTrabajo(trb)">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                      </button>
+                      <div>
+                        <button id="addDL" [name]="'addDL'+'-'+trb.id" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px; 
+                        font-size: 12px;
+                        padding-top: 1px;
+                        padding-left: 5px;
+                        margin-right: 5px;
+                        padding-right: 5px;" (click)="onAddDLTrabajo(trb,trb.id)" matTooltip="Asignar trabajor a dia libre">
+                          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                        </button>
+                        <button id="addHorario" [name]="'addHorario'+'-'+trb.id" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px; 
+                        font-size: 12px;
+                        padding-top: 1px;
+                        padding-left: 5px;
+                        padding-right: 5px;" (click)="onAddDTrabajo(trb)" matTooltip="Asignar trabajor a este horario">
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                      </div>
                     </div>
                   }
                 </div>

@@ -22,7 +22,10 @@ export class MtHorarioTiendaComponent implements OnInit {
   isObservacion: boolean = false;
   isPapeleta: boolean = false;
   dataObservation: Array<any> = [];
+  onListEmpleado: Array<any> = [];
   horaEnd: string = "";
+  codeTienda: string = "";
+  unidServicio: string = "";
   arListDia: Array<any> = [
     { id: 1, dia: "Lunes", fecha: "16-sep" },
     { id: 2, dia: "Martes", fecha: "17-sep" },
@@ -44,10 +47,33 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   dataHorario: Array<HorarioElement> = [];
   titleObservacion: String = "";
-  arListTrabajador: Array<any> = [
-    { id: 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: 1, nombre_completo: "ANDRE" },
-    { id: 2, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: 1, nombre_completo: "JORGE" },
-    { id: 3, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: 1, nombre_completo: "JOSE" }
+  nameTienda: string = "";
+  arListTrabajador: Array<any> = [];
+  parseEJB: Array<any> = [];
+  arDataEJB: Array<any> = [];
+  arDataServer: Array<any> = [];
+
+  onListTiendas: Array<any> = [
+    { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
+    { uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
   isRangoEdit: boolean = false;
@@ -63,12 +89,69 @@ export class MtHorarioTiendaComponent implements OnInit {
   constructor(private store: StorageService, public notify: Notifications) { }
 
   ngOnInit() {
+    console.log(this.arListDia);
+
     let dataHr = this.store.getStore("mt-horario") || [];
 
     if ((dataHr || []).length) {
       this.dataHorario = dataHr || [];
     }
 
+    let profileUser = this.store.getStore('mt-profile');
+    this.nameTienda = profileUser.mt_name_1.toUpperCase();
+    this.codeTienda = profileUser.code.toUpperCase();
+    let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
+    this.unidServicio = unidServicio['uns'];
+    this.onListEmpleado = [];
+
+    this.socket.emit('consultaListaEmpleado', this.unidServicio);
+
+    this.socket.on('reporteEmpleadoTienda', async (response) => {
+      let dataEmpleado = (response || {}).data;
+
+      dataEmpleado.filter((emp) => {
+        if (response.id == "EJB") {
+          this.arDataEJB = (response || {}).data;
+        }
+
+        if (response.id == "server") {
+          this.arDataServer = (response || {}).data;
+        }
+
+        if (this.arDataEJB.length && this.arDataServer.length) {
+
+          this.arDataServer.filter(async (ds) => {
+            if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
+              let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
+              let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
+
+              if (index != -1) {
+                var codigo = (ds || {}).caja.substr(0, 2);
+
+                if ((ds || {}).caja.substr(2, 2) == 7) {
+                  codigo = (ds || {}).caja;
+                } else {
+                  codigo.substr(0, 1)
+                }
+
+                let exist = this.arListTrabajador.findIndex((pr) => pr.documento == registro.nro_documento);
+
+                if (codigo == this.codeTienda && exist == -1) {
+
+                  let arNombre = registro.nombre_completo.split(' ');
+                  this.arListTrabajador.push(
+                    { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: arNombre[2] + ' ' + arNombre[0].substr(0, 1) + '.' + arNombre[1].substr(0, 1), documento: registro.nro_documento }
+                  );
+                }
+              }
+            }
+          });
+        }
+
+
+      });
+
+    });
   }
 
   async onChangeSelect(data: any) {
@@ -107,7 +190,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       if (exist == -1) {
         this.dataHorario[index]['rg_hora'].pop();
         this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, rg: `${this.horaInit} a ${this.horaEnd}` });
-        this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, rg: `DIAS LIBRES` });
+        //this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, rg: `DIAS LIBRES` });
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
         this.notify.snackbar({
@@ -140,9 +223,11 @@ export class MtHorarioTiendaComponent implements OnInit {
         let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
         this.titleObservacion = objDia['dia'];
         this.dataHorario[index]['arListTrabajador'] = [];
-        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "ANDRE" });
-        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JORGE" });
-        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: "JOSE" });
+
+        this.arListTrabajador.filter((emp) => {
+          this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo });
+        });
+
         dataTrabajadores = [...this.dataHorario[index]['arListTrabajador']];
         this.dataHorario[index]['arListTrabajador'] = [];
 
@@ -150,9 +235,44 @@ export class MtHorarioTiendaComponent implements OnInit {
           let isExist = this.dataHorario[index]['dias_trabajo'].findIndex((dt) => dt.nombre_completo == tr.nombre_completo && dt.id_dia == tr.id_dia && dt.rg == tr.rg && dt.id_cargo == tr.id_cargo);
           if (isExist != -1) {
           } else {
-            this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: tr.nombre_completo });
+            this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: tr.nombre_completo });
           }
         });
+
+        if (this.dataHorario[index]['arListTrabajador'].length) {
+          this.dataHorario[index]['dias_libres'].filter((dl) => {
+
+            let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
+
+            if (Object.keys(registro).length) {
+              setTimeout(() => {
+                let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
+                let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
+
+                let classList;
+                classList = elementButtonDL[0]['classList']['value'].split(' ');
+
+                let exist = classList.indexOf('agregado');
+
+                if (exist == -1) {
+                  elemntButtonAdd[0]['disabled'] = true
+                  elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
+                  elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
+                  elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
+                  elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
+                  elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
+                } else {
+                  elemntButtonAdd[0]['disabled'] = false;
+                  elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
+                  elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
+                }
+              }, 50);
+
+
+            }
+
+          });
+        }
 
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
@@ -176,6 +296,50 @@ export class MtHorarioTiendaComponent implements OnInit {
       this.dataHorario[index]['arListTrabajador'] = this.dataHorario[index]['arListTrabajador'].filter((dt) => dt.id != data.id);
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
     }
+
+  }
+
+  onAddDLTrabajo(data, id) {
+
+    let elemntButtonAdd = document.getElementsByName('addHorario-' + id);
+
+    let elementButtonDL = document.getElementsByName('addDL-' + id);
+
+    let classList;
+    classList = elementButtonDL[0]['classList']['value'].split(' ');
+
+    let exist = classList.indexOf('agregado');
+    let index = this.dataHorario.findIndex((dt) => dt.cargo.toUpperCase() == this.cboCargo.toUpperCase());
+
+    if (exist == -1) {
+      elemntButtonAdd[0]['disabled'] = true
+      elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
+      elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
+      elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
+      elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
+      elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
+
+      let isRegister = this.dataHorario[index]['dias_libres'].findIndex((dtr) => dtr.id_dia == data.id_dia && dtr.nombre_completo == data.nombre_completo);
+
+      if (isRegister != -1) {
+        this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != data.id);
+
+      } else {
+        this.dataHorario[index]['dias_libres'].push({ id: this.dataHorario[index]['dias_libres'].length + 1, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo });
+        //this.dataHorario[index]['arListTrabajador'] = this.dataHorario[index]['arListTrabajador'].filter((dt) => dt.id != data.id);
+        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+      }
+    } else {
+      elemntButtonAdd[0]['disabled'] = false;
+      elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
+      elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
+      console.log(data.id);
+      let dataDL = this.dataHorario[index]['dias_libres'].find((dt) => dt.id_dia == data.id_dia && dt.nombre_completo == data.nombre_completo);
+      this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != dataDL.id);
+      
+    }
+
+
 
   }
 
@@ -263,6 +427,8 @@ export class MtHorarioTiendaComponent implements OnInit {
       this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
 
     }
+
+    console.log(this.arListDia);
 
   }
 
