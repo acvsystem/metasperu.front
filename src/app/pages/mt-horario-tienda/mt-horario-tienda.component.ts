@@ -240,6 +240,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onModal(value) {
     this.isOpenModal = value;
+    this.isPapeleta = false;
   }
 
   onCaledarRange($event) {
