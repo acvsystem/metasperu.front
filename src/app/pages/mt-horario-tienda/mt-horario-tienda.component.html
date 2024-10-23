@@ -19,6 +19,9 @@
  
             <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
             ></mt-calendar>
+            <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSearchCalendario()">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
             @if(dataHorario.length){
               <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" disabled>
                 <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -183,7 +186,7 @@
           </div>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="cboCargo.length">
+      <ion-row *ngIf="cboCargo != undefined">
         @for(data of dataHorario; track data.id) {
             <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
               <div style="color: black;
