@@ -188,7 +188,7 @@
       </ion-row>
       <ion-row *ngIf="cboCargo != undefined">
         @for(data of dataHorario; track data.id) {
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
               <div style="color: black;
               width: 100%;
               display: flex;
@@ -207,10 +207,8 @@
                   <div [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">{{rg.rg}}</div>
                 }
               </div>
-            </ion-col>
-        
-  
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
+          </ion-col>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="data.id == idCargo">
           <div style="color: black;
           width: 100%;
           display: flex;
@@ -230,8 +228,8 @@
             }
           </div>
           
-        </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="data.id == idCargo" style="padding: 0;">
+          </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" *ngIf="data.id == idCargo" style="padding: 0;">
           <div>
             <ion-row>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
@@ -250,7 +248,7 @@
                   </div>
                   <div
                   *ngIf="vSelectDia > 0 && vSelectHorario > 0"
-                  class="example-list">
+                  class="example-list contenedor">
                   @for (trb of data.arListTrabajador; track trb) {
                     <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
                       {{trb.nombre_completo}}

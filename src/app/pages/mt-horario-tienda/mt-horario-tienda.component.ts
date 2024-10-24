@@ -286,7 +286,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onAddDTrabajo(data) {
-    console.log(data);
+
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let isRegister = this.dataHorario[index]['dias_trabajo'].findIndex((dtr) => dtr.id_dia == data.id_dia && dtr.nombre_completo == data.nombre_completo);
     if (isRegister != -1) {
@@ -297,7 +297,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       });
 
     } else {
-      this.dataHorario[index]['dias_trabajo'].push({ id: this.dataHorario[index]['dias_trabajo'].length + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento });
+      this.dataHorario[index]['dias_trabajo'].push({ id: this.dataHorario[index]['dias_trabajo'].length + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
       this.dataHorario[index]['arListTrabajador'] = this.dataHorario[index]['arListTrabajador'].filter((dt) => dt.id != data.id);
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
     }
@@ -332,7 +332,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != data.id);
 
       } else {
-        this.dataHorario[index]['dias_libres'].push({ id: this.dataHorario[index]['dias_libres'].length + 1, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento });
+        this.dataHorario[index]['dias_libres'].push({ id: this.dataHorario[index]['dias_libres'].length + 1, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
         //this.dataHorario[index]['arListTrabajador'] = this.dataHorario[index]['arListTrabajador'].filter((dt) => dt.id != data.id);
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       }
@@ -352,14 +352,14 @@ export class MtHorarioTiendaComponent implements OnInit {
   onDeleteDTrabajo(data) {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let idPop = this.dataHorario[index]['arListTrabajador'][this.dataHorario[index]['arListTrabajador'].length - 1];
-    this.dataHorario[index]['arListTrabajador'].push({ id: idPop.id + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento });
+    this.dataHorario[index]['arListTrabajador'].push({ id: idPop.id + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
     this.dataHorario[index]['dias_trabajo'] = this.dataHorario[index]['dias_trabajo'].filter((dt) => dt.id != data.id);
     this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
     this.socket.emit('actualizarHorario', this.dataHorario);
   }
 
-  onGenerarCalendario() {
+  async onGenerarCalendario() {
 
     this.dataHorario = [];
     this.store.removeStore("mt-horario");
@@ -392,7 +392,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     }
 
-    listCargo.filter((cargo) => {
+    await listCargo.filter((cargo) => {
       this.dataHorario.push(
         {
           id: this.dataHorario.length + 1,
@@ -409,10 +409,10 @@ export class MtHorarioTiendaComponent implements OnInit {
     });
 
     let listCargoTienda = [
-      { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` },
-      { cargo: 'Gerentes', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` },
-      { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` },
-      { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` }
+      { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch },
+      { cargo: 'Gerentes', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch },
+      { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch },
+      { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch }
     ];
 
     let parms = {
@@ -444,27 +444,29 @@ export class MtHorarioTiendaComponent implements OnInit {
     let day = new Date(dateNow).toLocaleDateString().split('/');
     var diasMes = new Date(año, mes, 0).getDate();
 
-
     let listCargoTienda = [
-      { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` },
-      { cargo: 'Gerentes', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` },
-      { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` },
-      { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}` }
+      { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch },
+      { cargo: 'Gerentes', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch },
+      { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch },
+      { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch }
     ];
 
     let parms = {
       url: '/calendario/generar',
       body: listCargoTienda
     };
+    console.log(parms);
 
     this.service.post(parms).then((response) => {
       let dataRes = response;
+      this.onListCargo = [];
       dataRes.filter((rs) => {
         let index = this.dataHorario.findIndex((dth) => dth.cargo == rs.CARGO);
         this.dataHorario[index]['id'] = rs.ID_HORARIO;
         this.onListCargo.push({ key: rs.ID_HORARIO, value: rs.CARGO });
       });
     });
+
   }
 
   onCaledarRange($event) {
@@ -581,15 +583,22 @@ export class MtHorarioTiendaComponent implements OnInit {
   onSearchCalendario() {
     let parms = {
       url: '/calendario/searchrHorario',
-      body: [{ rango_dias: this.vRangoDiasSearch }]
+      body: [{ rango_dias: this.vRangoDiasSearch, codigo_tienda: this.codeTienda }]
     };
 
     this.service.post(parms).then((response) => {
-      this.dataHorario = response;
-    
-      console.log(response);
-      //this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-      
+      if ((response || []).length) {
+        this.dataHorario = response;
+        console.log(response);
+        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+      } else {
+        this.notify.snackbar({
+          message: (response || {}).msj,
+          display: 'top',
+          color: 'danger'
+        });
+      }
+
     });
 
   }
