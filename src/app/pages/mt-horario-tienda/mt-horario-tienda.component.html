@@ -55,7 +55,12 @@
               </tr>
               <tr style="text-align: center;">
                 <th scope="col" *ngFor="let dia of data.dias" style="background-color: #88c9ff;width: calc(429px - 233px) !important;">
-                  {{dia.dia}}
+                  <div style="display: flex;align-items: center;justify-content: center;">
+                    <span style="margin-right: 20px;">{{dia.dia}}</span>
+                    @if(dia.isObservation) {
+                      <i class="fa fa-exclamation-circle" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onOpenObservacion(data,dia)" matTooltip="Observacion" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
+                    }
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -224,7 +229,12 @@
           </div>
           <div class="example-list">
             @for (dia of data.dias; track dia.id) {
-              <div [ngClass]="[dia.id == vSelectDia ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id)">{{dia.dia}}</div>
+              <div [ngClass]="[dia.id == vSelectDia ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id)">
+                {{dia.dia}}
+                  @if(dia.isObservation) {
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
+                  }
+              </div>
             }
           </div>
           
