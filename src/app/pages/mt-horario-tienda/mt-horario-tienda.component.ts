@@ -169,11 +169,21 @@ export class MtHorarioTiendaComponent implements OnInit {
 
       this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
 
+      let dateNow = new Date();
+
+      let day = new Date(dateNow).toLocaleDateString().split('/');
+
       this.dataHorario[index]['dias'].filter((ds, i) => {
+
+
+
         let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
         if (obsExist != -1) {
           this.dataHorario[index]['dias'][i]['isObservation'] = true;
         }
+
+        console.log(day, ds);
+
       });
 
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
@@ -228,11 +238,11 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
 
-  onSelectDataDia(id_horario?, id_dia?) {
+  onSelectDataDia(id_horario?, id_dia?, dataDia?) {
     this.vSelectDia = id_dia;
     this.vSelectHorario = id_horario;
-
-    if (this.vSelectDia > 0 && this.vSelectHorario > 0) {
+    console.log((dataDia || {})['isExpired']);
+    if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
       let dataTrabajadores = [];
 
@@ -420,8 +430,8 @@ export class MtHorarioTiendaComponent implements OnInit {
           var indice = new Date(año, mes - 1, dia).getDay();
 
           if (indice == parseInt(day[0]) && diasSemana[indice] == "Lunes") {
-            dias.push({ id: dias.length + 1, dia: diasSemana[indice], fecha: `${diasSemana[indice]}-${arMes[mes]}` });
-
+            console.log(day[0]);
+            dias.push({ id: dias.length + 1, dia: diasSemana[indice], fecha: `${diasSemana[indice]}-${arMes[mes]}`, fecha_calendar: '' });
           }
 
         }
@@ -484,11 +494,14 @@ export class MtHorarioTiendaComponent implements OnInit {
     let count = 0;
 
     while (fechaFin.getTime() >= fechaInicio.getTime()) {
+
       count++;
       let index = this.arListDia.findIndex((dia) => dia.id == count);
       fechaInicio.setDate(fechaInicio.getDate() + 1);
+      let date = new Date(fechaInicio).toLocaleDateString().split('/');
+      console.log(date);
+      this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
       this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
-
     }
 
     let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
@@ -605,6 +618,9 @@ export class MtHorarioTiendaComponent implements OnInit {
       if ((response || []).length) {
         this.onListCargo = [];
         this.dataHorario = response;
+        let dateNow = new Date();
+        let day = new Date(dateNow).toLocaleDateString().split('/');
+        let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
         await this.dataHorario.filter((dt, index) => {
           if (!this.dataHorario[index]['dias'].length) {
             this.dataHorario[index]['dias'] = this.arListDia
@@ -612,6 +628,17 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
           this.dataHorario[index]['dias'].filter((ds, i) => {
+            let parseDate = ds.fecha_number.split('-');
+            let fechaInicio = new Date(fechaActual);
+            let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
+
+            console.log(fechaFin.getTime(), fechaInicio.getTime());
+            if (fechaFin.getTime() < fechaInicio.getTime()) {
+              this.dataHorario[index]['dias'][i]['isExpired'] = true;
+            } else {
+              this.dataHorario[index]['dias'][i]['isExpired'] = false;
+            }
+
             let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
             if (obsExist != -1) {
               this.dataHorario[index]['dias'][i]['isObservation'] = true;
@@ -625,7 +652,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
 
-        
+
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
         this.dataHorario = [];

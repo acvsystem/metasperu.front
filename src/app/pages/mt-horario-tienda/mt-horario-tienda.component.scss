@@ -570,7 +570,7 @@ ion-item {
 
 .contenedor {
 
-    overflow:auto;
+    overflow: auto;
 }
 
 /* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
@@ -580,12 +580,13 @@ ion-item {
 }
 
 .contenedor::-webkit-scrollbar:vertical {
-    width:10px;
+    width: 10px;
 }
 
-.contenedor::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+.contenedor::-webkit-scrollbar-button:increment,
+.contenedor::-webkit-scrollbar-button {
     display: none;
-} 
+}
 
 .contenedor::-webkit-scrollbar:horizontal {
     height: 10px;
@@ -598,5 +599,9 @@ ion-item {
 }
 
 .contenedor::-webkit-scrollbar-track {
-    border-radius: 10px;  
+    border-radius: 10px;
+}
+
+.disabled-Pointer {
+    cursor: no-drop !important;
 }
