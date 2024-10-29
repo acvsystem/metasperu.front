@@ -22,6 +22,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   isOpenModal: boolean = false;
   isObservacion: boolean = false;
   isPapeleta: boolean = false;
+  isExpiredDay: boolean = false;
   dataObservation: Array<any> = [];
   onListEmpleado: Array<any> = [];
   horaEnd: string = "";
@@ -241,6 +242,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   onSelectDataDia(id_horario?, id_dia?, dataDia?) {
     this.vSelectDia = id_dia;
     this.vSelectHorario = id_horario;
+    this.isExpiredDay = (dataDia || {})['isExpired'];
     console.log((dataDia || {})['isExpired']);
     if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);

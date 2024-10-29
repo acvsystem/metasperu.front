@@ -229,7 +229,7 @@
           </div>
           <div class="example-list">
             @for (dia of data.dias; track dia.id) {
-              <div [ngClass]="[dia.id == vSelectDia ? 'example-box-pointer select': dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia)">
+              <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia)">
                 {{dia.dia}}
                   @if(dia.isObservation) {
                     <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
@@ -257,7 +257,7 @@
                     Trabajadores
                   </div>
                   <div
-                  *ngIf="vSelectDia > 0 && vSelectHorario > 0"
+                  *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
                   class="example-list contenedor">
                   @for (trb of data.arListTrabajador; track trb) {
                     <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
@@ -298,7 +298,7 @@
                   Registro del dia
                 </div>
                 <div
-                *ngIf="vSelectDia > 0 && vSelectHorario > 0"
+                *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
                 class="example-list">
                 @for (dtrb of data.dias_trabajo; track dtrb) {
                   <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
