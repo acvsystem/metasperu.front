@@ -187,6 +187,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
       });
 
+      this.socket.emit('actualizarHorario', this.dataHorario);
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
     }
@@ -243,7 +244,10 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.vSelectDia = id_dia;
     this.vSelectHorario = id_horario;
     this.isExpiredDay = (dataDia || {})['isExpired'];
-    console.log((dataDia || {})['isExpired']);
+    let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
+    let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
+
+    this.titleObservacion = objDia['dia'];
     if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
       let dataTrabajadores = [];
@@ -305,7 +309,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           });
         }
 
-
+        this.socket.emit('actualizarHorario', this.dataHorario);
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
       }
@@ -520,13 +524,12 @@ export class MtHorarioTiendaComponent implements OnInit {
 
       if (index != -1) {
         let horarioSelect = this.dataHorario[index]['rg_hora'].filter((rg) => rg.id == this.vSelectHorario);
-        this.socket.emit('actualizarHorario', this.dataHorario);
         if (horarioSelect.length > 0) {
           this.isRangoEdit = true;
         }
       }
 
-
+      this.socket.emit('actualizarHorario', this.dataHorario);
     }
 
   }
@@ -558,6 +561,8 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
 
       }
+
+      this.socket.emit('actualizarHorario', this.dataHorario);
     }
   }
 
@@ -606,6 +611,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
       });
 
+      this.socket.emit('actualizarHorario', this.dataHorario);
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
     }
   }
