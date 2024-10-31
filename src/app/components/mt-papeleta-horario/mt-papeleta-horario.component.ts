@@ -290,8 +290,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
     if ((selectData || {}).value == 'Compensacion de horas trabajadas' || (index == "cboEmpleado" && this.idCboTipoPap)) {
       if (index != "cboEmpleado") {
         this[index] = (selectData || {}).value;
+        this.idCboTipoPap = (selectData || {}).key;
       }
-      this.idCboTipoPap = (selectData || {}).key;
 
       let dateNow = new Date();
 
