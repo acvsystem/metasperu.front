@@ -150,6 +150,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.parseHuellero = data;
       this.onDataTemp = [];
       this.bodyList = [];
+      this.dataVerify = [];
 
       await (this.parseHuellero || []).filter(async (huellero) => {
 
@@ -217,7 +218,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       });
 
-      this.onVerificarHrExtra(this.dataVerify);
+      if ((this.dataVerify || []).length) {
+        this.onVerificarHrExtra(this.dataVerify);
+      }
+
 
       this.hroAcumulada = this.arHoraExtra[0];
       this.hroAcumuladaTotal = this.arHoraExtra[0];
@@ -238,7 +242,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.service.post(parms).then(async (response) => {
       this.bodyList = response;
-      
+
       this.bodyList.filter((dt) => {
         this.arHoraExtra = [dt.extra];
         this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
@@ -282,9 +286,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-
-    if ((selectData || {}).value == 'Compensacion de horas trabajadas') {
-      this[index] = (selectData || {}).value;
+    console.log(selectData);
+    if ((selectData || {}).value == 'Compensacion de horas trabajadas' || (index == "cboEmpleado" && this.idCboTipoPap)) {
+      if (index != "cboEmpleado") {
+        this[index] = (selectData || {}).value;
+      }
       this.idCboTipoPap = (selectData || {}).key;
 
       let dateNow = new Date();
@@ -299,7 +305,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }]
-
+      console.log(configuracion);
       this.socket.emit('consultaHorasTrab', configuracion);
     }
   }
