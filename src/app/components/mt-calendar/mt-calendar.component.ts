@@ -40,7 +40,7 @@ export class MtCalendarComponent implements OnInit {
     }
 
     if (this.isDefault) {
-      this.afterChange.emit({ isDefault: true, value: `${date}` });
+      this.afterChange.emit({ id: this.id, isDefault: true, value: `${date}` });
     }
 
     if (this.isTime) {

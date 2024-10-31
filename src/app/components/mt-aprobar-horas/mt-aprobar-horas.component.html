@@ -1,0 +1,15 @@
+<mat-dialog-content>
+  <p>Ingrese constraseña de autorizacion</p>
+  <mt-input
+    id="inputPassword"
+    label="constraseña"
+    placeholder="constraseña"
+    value="{{ inputPassword }}"
+    (afterChange)="onChangeInput($event)"
+    type="text"
+></mt-input>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Canelar</button>
+  <button mat-button cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

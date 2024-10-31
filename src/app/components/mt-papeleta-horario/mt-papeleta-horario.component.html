@@ -1,205 +1,260 @@
-
-  <ion-row>
-    <ion-col>
-      <div style="display: flex;justify-content: center;align-items: center;color: black;">
-        <span style="font-weight: 500;">{{nameTienda}}</span>
-      </div>
-    </ion-col>
-  </ion-row>
-  <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;">
-    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Generar Papeleta" >
+    <div class="example-small-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <mt-select id="cboEmpleado" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"></mt-select>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" >
+          <div>
+            <span style="color: black;margin-left: 12px;">Codigo Papeleta: <label style="font-weight: 700;">{{codigoPapeleta}}</label></span>
+          </div>
         </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <mt-select id="cboCasos" placeHolder="Tipo de caso" [optionList]="onListCasos" (changeSelected)="onChangeSelect($event)"></mt-select>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <mt-select id="cboCargo" placeHolder="Seleccione Cargo" [optionList]="onListCargo"></mt-select>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-  
-  @if(cboCasos == 'Compensacion de horas trabajadas') {
-    <div style="max-height: calc(100% - 280px);overflow: auto;">
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
-            <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" >
+          <div style="display: flex;justify-content: end;align-items: center;">
+            <button style="margin-left: 8px;" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSavePapeleta()"> 
+              Registrar papeleta
+            </button>
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <ion-col>
+          <div style="display: flex;justify-content: center;align-items: center;color: black;">
+            <span style="font-weight: 500;">{{nameTienda}}</span>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="display: flex;justify-content: center;align-items: center;">
-                <div style="width: 100px;">
-                  <span style="color: black;">Desde</span>
-                </div>
-                <div style="width: 200px;">
-                  <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
-                  ></mt-calendar>
-                </div>
-              </div>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-select id="cboEmpleado" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"></mt-select>
             </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="display: flex;justify-content: center;align-items: center;">
-                <div style="width: 100px;">
-                  <span style="color: black;">Salida</span>
-                </div>
-                <div style="width: 200px;">
-                  <mt-calendar 
-                  id="horaSalida"
-                  [isTime]="true" 
-                  placeholder="Hora"
-                  (afterChange)="onCaledar($event)">
-                </mt-calendar>
-                </div>
-              </div>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-select id="cboCasos" placeHolder="Tipo de caso" [optionList]="onListCasos" (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-select id="cboCargo" placeHolder="Seleccione Cargo" [optionList]="onListCargo" (changeSelected)="onChangeSelect($event)"></mt-select>
             </ion-col>
           </ion-row>
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+      
+      @if(cboCasos == 'Compensacion de horas trabajadas') {
+        <div style="max-height: calc(100% - 280px);overflow: auto;">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="display: flex;justify-content: center;align-items: center;">
-                <div style="width: 100px;">
-                  <span style="color: black;">Hasta</span>
-                </div>
-                <div style="width: 200px;">
-                  <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha"
-                  ></mt-calendar>
-                </div>
-              </div>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="display: flex;justify-content: center;align-items: center;">
-                <div style="width: 100px;">
-                  <span style="color: black;">Llegada</span>
-                </div>
-                <div style="width: 200px;">
-                  <mt-calendar 
-                  id="horaLlegada"
-                  [isTime]="true" 
-                  placeholder="Hora"
-                  (afterChange)="onCaledar($event)">
-                </mt-calendar>
-                </div>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
+                <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
               </div>
             </ion-col>
           </ion-row>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="display: flex;justify-content: center;align-items: center;">
-                <div style="width: 100px;display: flex;align-items: center;">
-                  <span style="color: black;">Acumulado</span>
-                </div>
-                <div style="width: 200px;display: flex;align-items: center;">
-                  <span style="color: black;">{{hroAcumulada}} Horas</span>
-                </div>
-              </div>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="display: flex;justify-content: center;align-items: center;">
+                    <div style="width: 100px;">
+                      <span style="color: black;">Desde</span>
+                    </div>
+                    <div style="width: 200px;">
+                      <mt-calendar id="vFechaDesde" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
+                      ></mt-calendar>
+                    </div>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="display: flex;justify-content: center;align-items: center;">
+                    <div style="width: 100px;">
+                      <span style="color: black;">Salida</span>
+                    </div>
+                    <div style="width: 200px;">
+                      <mt-calendar 
+                      id="horaSalida"
+                      [isTime]="true" 
+                      placeholder="Hora"
+                      (afterChange)="onCaledar($event)">
+                    </mt-calendar>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
             </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <div style="display: flex;justify-content: center;align-items: center;display: flex;align-items: center;">
-                <div style="width: 100px;">
-                  <span style="color: black;">Tomadas</span>
-                </div>
-                <div style="width: 200px;">
-                  <span style="color: black;">{{hroTomada}} Horas</span>
-                </div>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="display: flex;justify-content: center;align-items: center;">
+                    <div style="width: 100px;">
+                      <span style="color: black;">Hasta</span>
+                    </div>
+                    <div style="width: 200px;">
+                      <mt-calendar id="vFechaHasta" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
+                      ></mt-calendar>
+                    </div>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="display: flex;justify-content: center;align-items: center;">
+                    <div style="width: 100px;">
+                      <span style="color: black;">Llegada</span>
+                    </div>
+                    <div style="width: 200px;">
+                      <mt-calendar 
+                      id="horaLlegada"
+                      [isTime]="true" 
+                      placeholder="Hora"
+                      (afterChange)="onCaledar($event)">
+                    </mt-calendar>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="display: flex;justify-content: center;align-items: center;">
+                    <div style="width: 100px;display: flex;align-items: center;">
+                      <span style="color: black;">Acumulado</span>
+                    </div>
+                    <div style="width: 200px;display: flex;align-items: center;">
+                      <span style="color: black;">{{hroAcumulada}} Horas</span>
+                    </div>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="display: flex;justify-content: center;align-items: center;display: flex;align-items: center;">
+                    <div style="width: 100px;">
+                      <span style="color: black;">Tomadas</span>
+                    </div>
+                    <div style="width: 200px;">
+                      <span style="color: black;">{{hroTomada}} Horas</span>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          @if(arSelectRegistro.length) {
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <table class="table table-bordered table-hover table-fixed">
+                  <thead>
+                    <tr>
+                      <th class="columHead">Fecha</th>
+                      <th class="columHead">Ingreso 1</th>
+                      <th class="columHead">Salida 1</th>
+                      <th class="columHead">Brake</th>
+                      <th class="columHead">Ingreso 2</th>
+                      <th class="columHead">Salida 2</th>
+                      <th class="columHead">h.Trabajadas</th>
+                      <th class="columHead">h.Extra</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let columBody of arSelectRegistro;let index = index">
+                      <td class="columBody">{{columBody.dia}}</td>
+                      <td class="columBody">{{columBody.hr_ingreso_1}}</td>
+                      <td class="columBody">{{columBody.hr_salida_1}}</td>
+                      <td class="columBody">{{columBody.hr_brake}}</td>
+                      <td class="columBody">{{columBody.hr_ingreso_2}}</td>
+                      <td class="columBody">{{columBody.hr_salida_2}}</td>
+                      <td class="columBody">{{columBody.hr_trabajadas}}</td>
+                      <td class="columBody">{{columBody.hr_extra}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </ion-col>
+            </ion-row>
+          }
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div style="max-height: 500px;overflow: auto;">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th class="columHead">Fecha</th>
+                        <th class="columHead">Hora Extra</th>
+                        <th class="columHead">Estado</th>
+                        <th class="columHead">Seleccionar</th>
+                        <th class="columHead">Aprobar</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let columBody of bodyList;let index = index">
+                        <td class="columBody">{{columBody.fecha}}</td>
+                        <td class="columBody">{{columBody.extra}}</td>
+                        <td class="columBody">
+                          <h6 *ngIf="columBody.estado == 'correcto' && !columBody.seleccionado" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+                          <h6 *ngIf="columBody.estado == 'aprobar' && !columBody.seleccionado" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
+                          <h6 *ngIf="columBody.seleccionado" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
+                        </td>
+                        <td class="columBody">
+                          <div>
+                            <div class="form-check form-switch">
+                              @if(columBody.estado == 'aprobar'){
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" disabled>
+                              } @else {
+                                <input *ngIf="columBody.seleccionado && columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked disabled>
+                                <input *ngIf="!columBody.seleccionado && columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
+                                <input *ngIf="!columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
+                              }
+                            </div>
+                          </div>
+                        </td>
+                        <td class="columBody">
+                            <div>
+                              @if(columBody.estado == 'aprobar'){
+                                <button matTooltip="Aprobar Horas extras" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion()">
+                                  <i class="fa fa-check" aria-hidden="true"></i>
+                                </button>
+                                <button matTooltip="Revisar Registro del dia" id="searchProducto" type="button" class="btn btn-warning btn-sm" style="color: #fff; padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onSearchRegistro(columBody.fecha)">
+                                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                </button>
+                              } 
+                            </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
               </div>
             </ion-col>
           </ion-row>
-        </ion-col>
-      </ion-row>
-      @if(arSelectRegistro.length) {
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-            <table class="table table-bordered table-hover table-fixed">
-              <thead>
-                <tr>
-                  <th class="columHead">Fecha</th>
-                  <th class="columHead">Ingreso 1</th>
-                  <th class="columHead">Salida 1</th>
-                  <th class="columHead">Brake</th>
-                  <th class="columHead">Ingreso 2</th>
-                  <th class="columHead">Salida 2</th>
-                  <th class="columHead">h.Trabajadas</th>
-                  <th class="columHead">h.Extra</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let columBody of arSelectRegistro;let index = index">
-                  <td class="columBody">{{columBody.dia}}</td>
-                  <td class="columBody">{{columBody.hr_ingreso_1}}</td>
-                  <td class="columBody">{{columBody.hr_salida_1}}</td>
-                  <td class="columBody">{{columBody.hr_brake}}</td>
-                  <td class="columBody">{{columBody.hr_ingreso_2}}</td>
-                  <td class="columBody">{{columBody.hr_salida_2}}</td>
-                  <td class="columBody">{{columBody.hr_trabajadas}}</td>
-                  <td class="columBody">{{columBody.hr_extra}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </ion-col>
-        </ion-row>
+        </div>
       }
+    </div>
+  </mat-tab>
+  <mat-tab label="Papeletas Creadas" style="min-height: 1000px">
+    <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <div style="max-height: 500px;overflow: auto;">
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
+                    <th class="columHead">Codigo Papeleta</th>
                     <th class="columHead">Fecha</th>
-                    <th class="columHead">Hora Extra</th>
-                    <th class="columHead">Estado</th>
-                    <th class="columHead">Seleccionar</th>
-                    <th class="columHead">Aprobar</th>
+                    <th class="columHead">Tipo papeleta</th>
+                    <th class="columHead">Nombre Completo</th>
+                    <th class="columHead">Accion</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let columBody of bodyList;let index = index">
-                    <td class="columBody">{{columBody.fecha}}</td>
-                    <td class="columBody">{{columBody.extra}}</td>
+                  <tr *ngFor="let columBody of listaPapeletas;let index = index">
+                    <td class="columBody">{{columBody.codigo_papeleta}}</td>
+                    <td class="columBody">{{columBody.fecha_creacion}}</td>
+                    <td class="columBody">{{columBody.tipo}}</td>
+                    <td class="columBody">{{columBody.nombre_completo}}</td>
                     <td class="columBody">
-                      <h6 *ngIf="columBody.estado == 'correcto'" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
-                      <h6 *ngIf="columBody.estado == 'aprobar'" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
-                    </td>
-                    <td class="columBody">
-                      <div>
-                        <div class="form-check form-switch">
-                          @if(columBody.estado == 'aprobar'){
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" disabled>
-                          } @else {
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
-                          }
-                        </div>
-                      </div>
-                    </td>
-                    <td class="columBody">
-                        <div>
-                          @if(columBody.estado == 'aprobar'){
-                            <button matTooltip="Aprobar Horas extras" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAprobarExtra(columBody.fecha)">
-                              <i class="fa fa-check" aria-hidden="true"></i>
-                            </button>
-                            <button matTooltip="Revisar Registro del dia" id="searchProducto" type="button" class="btn btn-warning btn-sm" style="color: #fff; padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onSearchRegistro(columBody.fecha)">
-                              <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                            </button>
-                          } 
-                        </div>
+                      <button matTooltip="Cargar papeleta" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                        <i class="fa fa-reply" aria-hidden="true"></i>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -208,7 +263,8 @@
         </ion-col>
       </ion-row>
     </div>
-  }
+  </mat-tab>
+</mat-tab-group>
 
 
- 
+  
