@@ -1,6 +1,6 @@
 <mat-tab-group dynamicHeight>
   <mat-tab label="Generar Papeleta" >
-    <div class="example-small-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
+    <div class="example-small-box mat-elevation-z4 boy-tap" [ngStyle]="{'min-height.px': screenHeight,'max-height.px': screenHeight}">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" >
           <div>
@@ -43,7 +43,7 @@
       </ion-row>
       
       @if(cboCasos == 'Compensacion de horas trabajadas') {
-        <div style="max-height: calc(100% - 280px);overflow: auto;">
+        <div>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
@@ -191,9 +191,9 @@
                         <td class="columBody">{{columBody.fecha}}</td>
                         <td class="columBody">{{columBody.extra}}</td>
                         <td class="columBody">
-                          <h6 *ngIf="columBody.estado == 'correcto' && !columBody.seleccionado" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
-                          <h6 *ngIf="columBody.estado == 'aprobar' && !columBody.seleccionado" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
-                          <h6 *ngIf="columBody.seleccionado" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
+                          <h6 *ngIf="columBody.estado == 'correcto' && !columBody.verify" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+                          <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
+                          <h6 *ngIf="columBody.seleccionado && columBody.verify" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
                         </td>
                         <td class="columBody">
                           <div>
@@ -202,7 +202,6 @@
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" disabled>
                               } @else {
                                 <input *ngIf="columBody.seleccionado && columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked disabled>
-                                <input *ngIf="!columBody.seleccionado && columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
                                 <input *ngIf="!columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
                               }
                             </div>

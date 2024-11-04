@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -50,6 +50,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   unidServicio: string = "";
   cboCargo: string = "";
   idCboTipoPap: number = 0;
+  screenHeight: number = 0;
   listaPapeletas: Array<any> = [];
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
@@ -83,7 +84,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
-  constructor(public notify: Notifications, private store: StorageService, private service: ShareService) { }
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight - 200;
+  }
+
+  constructor(public notify: Notifications, private store: StorageService, private service: ShareService) {
+    this.getScreenSize();
+  }
 
   ngOnInit() {
 
@@ -196,7 +204,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
                 let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
                 let aprobado = estado == "correcto" ? true : false;
-                this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
+                /*this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
 
                 this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
                 if (estado == 'correcto') {
@@ -205,7 +213,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   } else {
                     this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
                   }
-                }
+                }*/
               }
 
 
@@ -242,15 +250,26 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.service.post(parms).then(async (response) => {
       this.bodyList = response;
+      this.hroAcumulada = "";
+      this.hroAcumuladaTotal = "";
+      this.arHoraExtra = [];
+      this.bodyList.filter((dt, i) => {
+        if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
-      this.bodyList.filter((dt) => {
-        this.arHoraExtra = [dt.extra];
-        this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+          if (!this.arHoraExtra.length) {
+            this.arHoraExtra = [dt.extra];
+          } else {
+            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+          }
+        }
+
+        if (this.bodyList.length - 1 == i) {
+          this.hroAcumulada = this.arHoraExtra[0];
+          this.hroAcumuladaTotal = this.arHoraExtra[0];
+        }
       });
 
-      this.hroAcumulada = this.arHoraExtra[0];
-      this.hroAcumuladaTotal = this.arHoraExtra[0];
-      console.log(this.arHoraExtra[0]);
+
     });
   }
 
@@ -428,6 +447,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.arHoraTomadaCalc = [];
     if (ev.target.checked) {
       let copyData = [...this.arCopiHoraExtra];
+      console.log(copyData);
       this.arCopiHoraExtra = [];
       this.arCopiHoraExtra = copyData.filter((dt) => dt.fecha != fecha);
 
@@ -442,6 +462,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       this.arCopiHoraExtra.filter((dt) => {
+        console.log(dt);
         if (!this.arHoraExtra.length) {
           this.arHoraExtra = [dt.extra];
         } else {
@@ -452,6 +473,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
 
       this.bodyList[index]['seleccionado'] = true;
+      this.bodyList[index]['verify'] = false;
     } else {
 
       let copyData = [...this.arHoraTomada];
@@ -470,7 +492,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let data = copyData.find((cdt) => cdt.fecha != fecha);
       if (typeof data != 'undefined') {
         this.arHoraTomada.push(data);
-        console.log(this.arHoraTomada);
         this.arHoraTomada.filter((ht) => {
           if (!this.arHoraTomadaCalc.length) {
             this.arHoraTomadaCalc = [ht.extra];
@@ -483,7 +504,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
 
       this.bodyList[index]['seleccionado'] = true;
-
+      this.bodyList[index]['verify'] = false;
     }
 
     this.hroAcumulada = this.arHoraExtra[0];
