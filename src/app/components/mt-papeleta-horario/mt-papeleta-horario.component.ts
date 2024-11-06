@@ -204,7 +204,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
                 let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
                 let aprobado = estado == "correcto" ? true : false;
-                /*this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
+                this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
 
                 this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
                 if (estado == 'correcto') {
@@ -213,7 +213,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   } else {
                     this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
                   }
-                }*/
+                }
               }
 
 
