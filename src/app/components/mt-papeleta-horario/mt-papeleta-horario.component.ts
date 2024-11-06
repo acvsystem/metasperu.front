@@ -107,6 +107,22 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
+    this.socket.on('respuesta_autorizacion', async (response) => {
+      console.log(response);
+      //this.bodyList = response;
+      /*this.hroAcumulada = "";
+      this.hroAcumuladaTotal = "";
+      this.arHoraExtra = [];*/
+
+      let index = (this.bodyList || []).findIndex((bd)=>bd.fecha == response[0]['FECHA']);
+ 
+      let estado = !response[0]['APROBADO'] ? 'aprobar' : 'correcto';
+      let aprobado = estado == "correcto" ? true : false;
+
+      this.bodyList[index]['estado'] = estado;
+      this.bodyList[index]['aprobado'] = aprobado;
+    });
+
     this.socket.on('reporteEmpleadoTienda', async (response) => {
       console.log(response);
       if (response.id == "EJB") {
@@ -218,21 +234,17 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   }
                 }
               }
-
-
             } else {
               this.onDataTemp[indexData]['hr_faltante'] = process;
             }
 
           }
         }
-
       });
 
       if ((this.dataVerify || []).length) {
         this.onVerificarHrExtra(this.dataVerify);
       }
-
 
       this.hroAcumulada = this.arHoraExtra[0];
       this.hroAcumuladaTotal = this.arHoraExtra[0];
@@ -246,6 +258,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onVerificarHrExtra(dataVerificar) {
+    console.log(dataVerificar);
     let parms = {
       url: '/papeleta/verificar/horas_extras',
       body: dataVerificar
@@ -274,6 +287,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     });
+
   }
 
   onListPapeleta() {
@@ -515,7 +529,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.hroAcumulada = this.arHoraExtra[0];
     this.hroTomada = this.arHoraTomadaCalc[0] || '00:00';
 
-    if (this.diffHoraPap != this.hroTomada) {
+    if ((this.diffHoraPap != this.hroTomada) && (this.diffHoraPap.length && this.hroTomada.length)) {
       this.notify.snackbar({
         message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
         display: 'top',
@@ -576,9 +590,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
-  onAutorizacion() {
-
-    //this.socket.emit('authHoraExtra', this.unidServicio);
+  onAutorizacion(ev) {
+    let parse = {
+      hora_extra: ev.extra,
+      nro_documento: ev.documento,
+      aprobado: ev.aprobado,
+      fecha: ev.fecha,
+      codigo_tienda: this.codeTienda
+    }
+    this.socket.emit('solicitar_aprobacion_hrx', parse);
   }
 
 

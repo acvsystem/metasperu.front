@@ -85,6 +85,11 @@ export class AppComponent {
           ISVISIBLE: true,
           nombre_menu: "HORARIO",
           ruta: "horario"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "AUTORIZACION HORA EXTRA",
+          ruta: "auth-hora-extra"
         }
         ];
 

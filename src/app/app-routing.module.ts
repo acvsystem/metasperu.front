@@ -7,6 +7,8 @@ import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configurac
 import { AuthGuardService as authGuard } from './services/authGuardServices';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
 import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-tienda.component';
+import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-extra/mt-autorizacion-hora-extra.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -39,6 +41,11 @@ const routes: Routes = [
   {
     path: 'horario',
     component: MtHorarioTiendaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'auth-hora-extra',
+    component: MtAutorizacionHoraExtraComponent,
     canActivate: [authGuard]
   }
 

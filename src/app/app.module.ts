@@ -76,6 +76,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MtObservacionHorarioComponent } from './components/mt-observacion-horario/mt-observacion-horario.component';
 import { MtPapeletaHorarioComponent } from './components/mt-papeleta-horario/mt-papeleta-horario.component';
 import { MtAprobarHorasComponent } from './components/mt-aprobar-horas/mt-aprobar-horas.component';
+import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-extra/mt-autorizacion-hora-extra.component';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -103,7 +104,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtHorarioTiendaComponent,
         MtObservacionHorarioComponent,
         MtPapeletaHorarioComponent,
-        MtAprobarHorasComponent
+        MtAprobarHorasComponent,
+        MtAutorizacionHoraExtraComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
