@@ -121,6 +121,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       this.bodyList[index]['estado'] = estado;
       this.bodyList[index]['aprobado'] = aprobado;
+
+      this.notify.snackbar({
+        message: "Recibio aprobacion de una hora extra.",
+        display: 'top',
+        color: 'success'
+      });
+
     });
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
