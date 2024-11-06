@@ -51,7 +51,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
   cboCargo: string = "";
   idCboTipoPap: number = 0;
   screenHeight: number = 0;
+  hroSelectedPap: string = "";
   listaPapeletas: Array<any> = [];
+  arCalHoraPap: Array<any> = [];
+  diffHoraPap: string = "";
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -396,7 +399,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let hora_1 = this.obtenerHoras(hr1);
     let hora_2 = this.obtenerHoras(hr2);
     let minutos = this.obtenerMinutos(hr1, hr2);
-    let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
+    let hrExtr = 0;
+    if (minutos[1] > 0) {
+      hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
+    }
 
     if (hora_1 > hora_2) {
       diferencia = hora_1 - hora_2;
@@ -412,9 +418,19 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onCaledar(ev) {
-    console.log(ev);
     if (ev.isTime) {
       this[ev.id] = ev.value;
+
+      if (this.horaSalida.length && this.horaLlegada.length) {
+        this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
+        if (this.diffHoraPap != this.hroTomada) {
+          this.notify.snackbar({
+            message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
+            display: 'top',
+            color: 'danger'
+          });
+        }
+      }
     }
 
     if (ev.isDefault) {
@@ -496,79 +512,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
     }
 
-    /*
-        if (ev.target.checked) {
-        let copyData = [...this.arCopiHoraExtra];
-       
-        this.arCopiHoraExtra = [];
-        this.arCopiHoraExtra = copyData.filter((dt) => dt.fecha != fecha);
-  
-        this.arHoraTomada.push(copyData.find((cdt) => cdt.fecha == fecha));
-  
-        this.arHoraTomada.filter((ht) => {
-          if (ht.estado == 'correcto') {
-            if (!this.arHoraTomadaCalc.length) {
-              this.arHoraTomadaCalc = [ht.extra];
-            } else {
-              this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
-            }
-          }
-        });
-  
-        this.arCopiHoraExtra.filter((dt) => {
-          if (dt.estado == 'correcto') {
-            if (!this.arHoraExtra.length) {
-              this.arHoraExtra = [dt.extra];
-            } else {
-              this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
-            }
-          }
-        });
-  
-        let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
-  
-        this.bodyList[index]['seleccionado'] = true;
-        this.bodyList[index]['verify'] = false;
-        console.log(copyData);
-      } else {
-  
-        let copyData = [...this.arHoraTomada];
-        this.arHoraTomada = [];
-  
-        this.arCopiHoraExtra.push(this.bodyList.find((bd) => bd.fecha == fecha));
-  
-        this.arCopiHoraExtra.filter((dt) => {
-          if (dt.estado == 'correcto') {
-            if (!this.arHoraExtra.length) {
-              this.arHoraExtra = [dt.extra];
-            } else {
-              this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
-            }
-          }
-        });
-  
-        let data = copyData.find((cdt) => cdt.fecha != fecha);
-        if (typeof data != 'undefined') {
-          this.arHoraTomada.push(data);
-          this.arHoraTomada.filter((ht) => {
-            if (ht.estado == 'correcto') {
-              if (!this.arHoraTomadaCalc.length) {
-                this.arHoraTomadaCalc = [ht.extra];
-              } else {
-                this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
-              }
-            }
-          });
-        }
-  
-        let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
-  
-        this.bodyList[index]['seleccionado'] = true;
-        this.bodyList[index]['verify'] = false;
-      }
-  */
     this.hroAcumulada = this.arHoraExtra[0];
     this.hroTomada = this.arHoraTomadaCalc[0] || '00:00';
+
+    if (this.diffHoraPap != this.hroTomada) {
+      this.notify.snackbar({
+        message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
+        display: 'top',
+        color: 'danger'
+      });
+    }
   }
 
   onAprobarExtra(fecha) {

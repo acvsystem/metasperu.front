@@ -81,8 +81,7 @@
       theme="windows"
       [controls]="['time']"
       placeholder="{{placeholder}}"
-      [(ngModel)]="selected"
-      (change)="onChangeInput(selected)"
+      (onClose)="onChangeInput($event)"
       [locale]="localeEs"
       >
      </mbsc-datepicker>

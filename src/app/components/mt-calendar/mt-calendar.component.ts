@@ -28,6 +28,7 @@ export class MtCalendarComponent implements OnInit {
   }
 
   onChangeInput(ev: any) {
+    console.log(ev);
     let arrDate = ev;
     let date = new Date(ev);
 
@@ -44,9 +45,10 @@ export class MtCalendarComponent implements OnInit {
     }
 
     if (this.isTime) {
-      let minutos = date.getMinutes().toString().length < 2 ? '0' + date.getMinutes() : date.getMinutes();
+      let dt = new Date(ev.value);
+      let minutos = dt.getMinutes().toString().length < 2 ? '0' + dt.getMinutes() : dt.getMinutes();
 
-      this.afterChange.emit({ isTime: true, value: `${date.getHours()}:${minutos}`, id: this.id });
+      this.afterChange.emit({ isTime: true, value: `${dt.getHours()}:${minutos}`, id: this.id });
     }
 
     if (this.isRange && arrDate.length >= 2) {
