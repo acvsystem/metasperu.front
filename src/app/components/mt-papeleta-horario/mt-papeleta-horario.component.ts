@@ -445,68 +445,128 @@ export class MtPapeletaHorarioComponent implements OnInit {
   onRecalcHoras(ev, fecha) {
     this.arHoraExtra = [];
     this.arHoraTomadaCalc = [];
+
     if (ev.target.checked) {
-      let copyData = [...this.arCopiHoraExtra];
-      console.log(copyData);
-      this.arCopiHoraExtra = [];
-      this.arCopiHoraExtra = copyData.filter((dt) => dt.fecha != fecha);
-
-      this.arHoraTomada.push(copyData.find((cdt) => cdt.fecha == fecha));
-
-      this.arHoraTomada.filter((ht) => {
-        if (!this.arHoraTomadaCalc.length) {
-          this.arHoraTomadaCalc = [ht.extra];
-        } else {
-          this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
-        }
-      });
-
-      this.arCopiHoraExtra.filter((dt) => {
-        console.log(dt);
-        if (!this.arHoraExtra.length) {
-          this.arHoraExtra = [dt.extra];
-        } else {
-          this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
-        }
-      });
-
       let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
 
       this.bodyList[index]['seleccionado'] = true;
       this.bodyList[index]['verify'] = false;
+
+      this.bodyList.filter((ext, i) => {
+        //CALCULO PARA LAS HORAS TOMADAS
+        if (ext.seleccionado && !ext.verify) {
+          if (!this.arHoraTomadaCalc.length) {
+            this.arHoraTomadaCalc = [ext.extra];
+          } else {
+            this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraTomadaCalc[0]);
+          }
+        }
+        //CALCULO PARA LAS HORAS RESIDUALES
+        if (!ext.seleccionado && ext.aprobado) {
+          if (!this.arHoraExtra.length) {
+            this.arHoraExtra = [ext.extra];
+          } else {
+            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraExtra[0]);
+          }
+        }
+      });
     } else {
 
-      let copyData = [...this.arHoraTomada];
-      this.arHoraTomada = [];
-
-      this.arCopiHoraExtra.push(this.bodyList.find((bd) => bd.fecha == fecha));
-
-      this.arCopiHoraExtra.filter((dt) => {
-        if (!this.arHoraExtra.length) {
-          this.arHoraExtra = [dt.extra];
-        } else {
-          this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
-        }
-      });
-
-      let data = copyData.find((cdt) => cdt.fecha != fecha);
-      if (typeof data != 'undefined') {
-        this.arHoraTomada.push(data);
-        this.arHoraTomada.filter((ht) => {
-          if (!this.arHoraTomadaCalc.length) {
-            this.arHoraTomadaCalc = [ht.extra];
-          } else {
-            this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
-          }
-        });
-      }
-
       let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
 
-      this.bodyList[index]['seleccionado'] = true;
+      this.bodyList[index]['seleccionado'] = false;
       this.bodyList[index]['verify'] = false;
+
+      this.bodyList.filter((ext, i) => {
+        if (ext.seleccionado && !ext.verify) {
+          if (!this.arHoraTomadaCalc.length) {
+            this.arHoraTomadaCalc = [ext.extra];
+          } else {
+            this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraTomadaCalc[0]);
+          }
+        }
+
+        if (!ext.seleccionado && ext.aprobado) {
+          if (!this.arHoraExtra.length) {
+            this.arHoraExtra = [ext.extra];
+          } else {
+            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraExtra[0]);
+          }
+        }
+      });
     }
 
+    /*
+        if (ev.target.checked) {
+        let copyData = [...this.arCopiHoraExtra];
+       
+        this.arCopiHoraExtra = [];
+        this.arCopiHoraExtra = copyData.filter((dt) => dt.fecha != fecha);
+  
+        this.arHoraTomada.push(copyData.find((cdt) => cdt.fecha == fecha));
+  
+        this.arHoraTomada.filter((ht) => {
+          if (ht.estado == 'correcto') {
+            if (!this.arHoraTomadaCalc.length) {
+              this.arHoraTomadaCalc = [ht.extra];
+            } else {
+              this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
+            }
+          }
+        });
+  
+        this.arCopiHoraExtra.filter((dt) => {
+          if (dt.estado == 'correcto') {
+            if (!this.arHoraExtra.length) {
+              this.arHoraExtra = [dt.extra];
+            } else {
+              this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+            }
+          }
+        });
+  
+        let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
+  
+        this.bodyList[index]['seleccionado'] = true;
+        this.bodyList[index]['verify'] = false;
+        console.log(copyData);
+      } else {
+  
+        let copyData = [...this.arHoraTomada];
+        this.arHoraTomada = [];
+  
+        this.arCopiHoraExtra.push(this.bodyList.find((bd) => bd.fecha == fecha));
+  
+        this.arCopiHoraExtra.filter((dt) => {
+          if (dt.estado == 'correcto') {
+            if (!this.arHoraExtra.length) {
+              this.arHoraExtra = [dt.extra];
+            } else {
+              this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+            }
+          }
+        });
+  
+        let data = copyData.find((cdt) => cdt.fecha != fecha);
+        if (typeof data != 'undefined') {
+          this.arHoraTomada.push(data);
+          this.arHoraTomada.filter((ht) => {
+            if (ht.estado == 'correcto') {
+              if (!this.arHoraTomadaCalc.length) {
+                this.arHoraTomadaCalc = [ht.extra];
+              } else {
+                this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ht.extra, this.arHoraTomadaCalc[0]);
+              }
+            }
+          });
+        }
+  
+        let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
+  
+        this.bodyList[index]['seleccionado'] = true;
+        this.bodyList[index]['verify'] = false;
+      }
+  */
     this.hroAcumulada = this.arHoraExtra[0];
     this.hroTomada = this.arHoraTomadaCalc[0] || '00:00';
   }
