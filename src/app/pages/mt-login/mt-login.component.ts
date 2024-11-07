@@ -49,7 +49,7 @@ export class MtLoginComponent implements OnInit {
       this.nav.navigateRoot('inventario');
     } else if ((profileUser || {}).mt_nivel == "SISTEMAS") {
       let path = this.store.getStore("pathResolve");
-      if (path == "auth-hora-extra") {
+      if (path.value == "auth-hora-extra") {
         this.nav.navigateRoot('auth-hora-extra');
       } else {
         this.nav.navigateRoot('comprobantes');
