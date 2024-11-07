@@ -160,6 +160,10 @@ export class AppComponent {
        this.menuUser = menu;
      }*/
 
+    if(location.pathname.split('/')[1] == "auth-hora-extra" && location.pathname.split('/')[1].length > 0){
+      this.store.setStore("pathResolve","auth-hora-extra");
+      this.nav.navigateRoot('login');
+    }
 
     if (this.store.getStore('tn')) {
       if (location.pathname.split('/')[1] != "postulante" && location.pathname.split('/')[1].length > 0) {

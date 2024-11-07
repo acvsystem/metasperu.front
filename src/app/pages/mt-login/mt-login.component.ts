@@ -48,7 +48,13 @@ export class MtLoginComponent implements OnInit {
     if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code) {
       this.nav.navigateRoot('inventario');
     } else if ((profileUser || {}).mt_nivel == "SISTEMAS") {
-      this.nav.navigateRoot('comprobantes');
+      let path = this.store.getStore("pathResolve");
+      if (path == "auth-hora-extra") {
+        this.nav.navigateRoot('auth-hora-extra');
+      } else {
+        this.nav.navigateRoot('comprobantes');
+      }
+
     } else if ((profileUser || {}).mt_nivel == "RRHH") {
       this.nav.navigateRoot('asistencia');
     }
