@@ -122,13 +122,23 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.bodyList[index]['estado'] = estado;
       this.bodyList[index]['aprobado'] = aprobado;
       this.bodyList[index]['rechazado'] = response[0]['RECHAZADO'] ? true : false;
-      console.log(this.bodyList[index]);
 
-      this.notify.snackbar({
-        message: "Recibio aprobacion de una hora extra.",
-        display: 'top',
-        color: 'success'
-      });
+      if (response[0]['RECHAZADO']) {
+        this.notify.snackbar({
+          message: "Hora extra rechazada.",
+          display: 'top',
+          color: 'danger'
+        });
+      }
+
+      if (!response[0]['RECHAZADO']) {
+        this.notify.snackbar({
+          message: "Hora extra aprobada.",
+          display: 'top',
+          color: 'success'
+        });
+      }
+
 
     });
 

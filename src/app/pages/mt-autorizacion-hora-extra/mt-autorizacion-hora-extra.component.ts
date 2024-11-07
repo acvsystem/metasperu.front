@@ -55,9 +55,10 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
         let selectedLocal = await this.onListTiendas.find((data) => data.code == rs['CODIGO_TIENDA']) || {};
         dataResponse[i]['TIENDA'] = (selectedLocal || {}).name;
+        dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
       this.onDataView = dataResponse;
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
@@ -73,12 +74,13 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     };
     this.service.get(parms).then(async (response) => {
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
       let dataResponse = response;
 
       await dataResponse.filter(async (rs, i) => {
         let selectedLocal = await this.onListTiendas.find((data) => data.code == rs['CODIGO_TIENDA']) || {};
         dataResponse[i]['TIENDA'] = (selectedLocal || {}).name;
+        dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
       this.onDataView = dataResponse;
@@ -97,7 +99,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       aprobado: true,
       rechazado: false,
       fecha: ev.FECHA,
-      codigo_tienda: this.codeTienda
+      codigo_tienda: ev.CODIGO_TIENDA
     }
     this.socket.emit('autorizar_hrx', parse);
   }
@@ -110,7 +112,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       aprobado: false,
       rechazado: true,
       fecha: ev.FECHA,
-      codigo_tienda: this.codeTienda
+      codigo_tienda: ev.CODIGO_TIENDA
     }
     this.socket.emit('autorizar_hrx', parse);
   }
