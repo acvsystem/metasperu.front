@@ -191,14 +191,15 @@
                         <td class="columBody">{{columBody.fecha}}</td>
                         <td class="columBody">{{columBody.extra}}</td>
                         <td class="columBody">
-                          <h6 *ngIf="columBody.estado == 'correcto' && !columBody.verify" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
-                          <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
-                          <h6 *ngIf="columBody.seleccionado && columBody.verify" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
+                          <h6 *ngIf="!columBody.seleccionado && !columBody.verify && columBody.estado == 'correcto' || columBody.estado == 'aprobado' && !columBody.verify" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+                          <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify && !columBody.rechazado" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
+                          <h6 *ngIf="columBody.seleccionado && columBody.verify && !columBody.rechazado" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
+                          <h6 *ngIf="columBody.rechazado || columBody.estado == 'rechazado'" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
                         </td>
                         <td class="columBody">
                           <div>
                             <div class="form-check form-switch">
-                              @if(columBody.estado == 'aprobar'){
+                              @if(columBody.estado == 'aprobar' || columBody.estado == 'rechazado'){
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" disabled>
                               } @else {
                                 <input *ngIf="columBody.seleccionado && columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked disabled>

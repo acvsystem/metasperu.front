@@ -57,8 +57,6 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-
-      console.log(response);
     });
 
     this.onListHorasAutorizar();
@@ -74,21 +72,32 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-
-      console.log(response);
-    })
+    });
   }
 
   onAutorizar(ev) {
-   
+
     let parse = {
       hora_extra: ev.HR_EXTRA_ACOMULADO,
       nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
       aprobado: true,
+      rechazado: false,
       fecha: ev.FECHA,
       codigo_tienda: this.codeTienda
     }
-    console.log(parse);
+    this.socket.emit('autorizar_hrx', parse);
+  }
+
+  onRechazar(ev) {
+
+    let parse = {
+      hora_extra: ev.HR_EXTRA_ACOMULADO,
+      nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
+      aprobado: false,
+      rechazado: true,
+      fecha: ev.FECHA,
+      codigo_tienda: this.codeTienda
+    }
     this.socket.emit('autorizar_hrx', parse);
   }
 

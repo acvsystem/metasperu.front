@@ -114,13 +114,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];*/
 
-      let index = (this.bodyList || []).findIndex((bd)=>bd.fecha == response[0]['FECHA']);
- 
-      let estado = !response[0]['APROBADO'] ? 'aprobar' : 'correcto';
+      let index = (this.bodyList || []).findIndex((bd) => bd.fecha == response[0]['FECHA']);
+
+      let estado = response[0]['APROBADO'] ? 'correcto' : response[0]['RECHAZADO'] ? 'rechazado' : 'aprobar';
       let aprobado = estado == "correcto" ? true : false;
 
       this.bodyList[index]['estado'] = estado;
       this.bodyList[index]['aprobado'] = aprobado;
+      this.bodyList[index]['rechazado'] = response[0]['RECHAZADO'] ? true : false;
+      console.log(this.bodyList[index]);
 
       this.notify.snackbar({
         message: "Recibio aprobacion de una hora extra.",
@@ -265,7 +267,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onVerificarHrExtra(dataVerificar) {
-    console.log(dataVerificar);
+
     let parms = {
       url: '/papeleta/verificar/horas_extras',
       body: dataVerificar
@@ -291,7 +293,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           this.hroAcumuladaTotal = this.arHoraExtra[0];
         }
       });
-
+      console.log(this.bodyList);
 
     });
 
