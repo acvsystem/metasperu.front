@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ShareService } from '../../services/shareService'
 import { NavController } from '@ionic/angular';
 import { StorageService } from '../../utils/storage';
+import { UAParser } from 'ua-parser-js';
 
 @Component({
   selector: 'app-mt-login',
@@ -12,6 +13,8 @@ export class MtLoginComponent implements OnInit {
 
   userName: string = "";
   password: string = "";
+  codigo_auth: string = "";
+  isCodigo: boolean = false;
 
   constructor(
     private shrService: ShareService,
@@ -30,10 +33,34 @@ export class MtLoginComponent implements OnInit {
 
 
   onLogin() {
-    this.shrService.createToken(this.userName, this.password).then((token) => {
-      if (token) {
-        this.onRouteDefault();
+
+
+    const { browser, cpu, device, os } = UAParser();
+    let parms = {
+      url: '/session_login',
+      body:
+      {
+        usuario: this.userName,
+        password: this.password,
+        divice: `${browser.name} ${browser.version}`,
+        ip: '192.168.1.1'
       }
+
+    };
+
+    this.shrService.post(parms).then(async (response) => {
+      if ((response || {}).success) {
+        this.shrService.createToken(this.userName, this.password).then((token) => {
+          if (token) {
+            this.onRouteDefault();
+          }
+        });
+      }
+
+      if (!(response || {}).success) {
+        this.isCodigo = true;
+      }
+
     });
   }
 
@@ -44,6 +71,7 @@ export class MtLoginComponent implements OnInit {
   }
 
   onRouteDefault() {
+
     let profileUser = this.store.getStore('mt-profile');
     if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code) {
       this.nav.navigateRoot('inventario');
@@ -59,6 +87,30 @@ export class MtLoginComponent implements OnInit {
       this.nav.navigateRoot('asistencia');
     }
 
+  }
+
+  onValid() {
+    let parms = {
+      url: '/auth_session',
+      body: 
+        {
+          usuario: this.userName,
+          password: this.password,
+          codigo: this.codigo_auth
+        }
+      
+    };
+
+    this.shrService.post(parms).then(async (response) => {
+      if ((response || {}).success) {
+        this.isCodigo = false;
+        this.shrService.createToken(this.userName, this.password).then((token) => {
+          if (token) {
+            this.onRouteDefault();
+          }
+        });
+      }
+    });
   }
 
 }
