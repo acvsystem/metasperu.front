@@ -600,13 +600,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onAutorizacion(ev) {
+    let ejb = this.parseEJB.find((ejb) => ejb.documento == this.cboEmpleado);
     let parse = {
       hora_extra: ev.extra,
       nro_documento: ev.documento,
+      nombre_completo: ejb.nombre_completo,
       aprobado: ev.aprobado,
       fecha: ev.fecha,
       codigo_tienda: this.codeTienda
-    }
+    };
     this.socket.emit('solicitar_aprobacion_hrx', parse);
   }
 

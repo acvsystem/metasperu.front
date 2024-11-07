@@ -160,18 +160,18 @@ export class AppComponent {
        this.menuUser = menu;
      }*/
 
-    if(location.pathname.split('/')[1] == "auth-hora-extra" && location.pathname.split('/')[1].length > 0){
-      this.store.setStore("pathResolve","auth-hora-extra");
-      this.nav.navigateRoot('login');
-    }
-
     if (this.store.getStore('tn')) {
       if (location.pathname.split('/')[1] != "postulante" && location.pathname.split('/')[1].length > 0) {
         this.renderNavBar = true;
       }
 
     } else {
+
       this.renderNavBar = false;
+      if (location.pathname.split('/')[1] == "auth-hora-extra" && location.pathname.split('/')[1].length > 0) {
+        this.store.setStore("pathResolve", "auth-hora-extra");
+        this.nav.navigateRoot('login');
+      }
     }
 
     try {
@@ -222,9 +222,9 @@ export class AppComponent {
       console.log('error app ', e);
     }
 
-   document.body.addEventListener("click", function (evt) {
-    let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
-    let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
+    document.body.addEventListener("click", function (evt) {
+      let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
+      let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
 
       if (classListSelect.indexOf("isSelectComponent") == -1) {
         if (parentClassList.indexOf("isSelectComponent") == -1 && parentClassList.indexOf("has-focus") == -1) {
