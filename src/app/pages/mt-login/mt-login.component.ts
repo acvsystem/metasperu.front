@@ -76,7 +76,7 @@ export class MtLoginComponent implements OnInit {
     let profileUser = this.store.getStore('mt-profile');
     if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code) {
       this.nav.navigateRoot('inventario');
-    } else if ((profileUser || {}).mt_nivel == "SISTEMAS") {
+    } else if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
       let path = this.store.getStore("pathResolve");
       if ((path || {}).value == "auth-hora-extra") {
         this.nav.navigateRoot('auth-hora-extra');
