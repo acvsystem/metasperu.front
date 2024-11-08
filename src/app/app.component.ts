@@ -246,7 +246,8 @@ export class AppComponent {
     this.store.removeStore('mtStep');
     this.store.removeStore('inscription');
     this.store.removeStore('conx_online');
-
+    this.store.removeStore('pathResolve');
+    
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;

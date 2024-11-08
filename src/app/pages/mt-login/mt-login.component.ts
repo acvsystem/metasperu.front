@@ -15,6 +15,9 @@ export class MtLoginComponent implements OnInit {
   password: string = "";
   codigo_auth: string = "";
   isCodigo: boolean = false;
+  isCodeExpired: boolean = false;
+  isCodeFail: boolean = false;
+  msjError: string = "";
 
   constructor(
     private shrService: ShareService,
@@ -33,8 +36,6 @@ export class MtLoginComponent implements OnInit {
 
 
   onLogin() {
-
-
     const { browser, cpu, device, os } = UAParser();
     let parms = {
       url: '/session_login',
@@ -77,7 +78,7 @@ export class MtLoginComponent implements OnInit {
       this.nav.navigateRoot('inventario');
     } else if ((profileUser || {}).mt_nivel == "SISTEMAS") {
       let path = this.store.getStore("pathResolve");
-      if (path.value == "auth-hora-extra") {
+      if ((path || {}).value == "auth-hora-extra") {
         this.nav.navigateRoot('auth-hora-extra');
       } else {
         this.nav.navigateRoot('comprobantes');
@@ -90,25 +91,41 @@ export class MtLoginComponent implements OnInit {
   }
 
   onValid() {
+    const { browser, cpu, device, os } = UAParser();
     let parms = {
       url: '/auth_session',
-      body: 
-        {
-          usuario: this.userName,
-          password: this.password,
-          codigo: this.codigo_auth
-        }
-      
+      body:
+      {
+        usuario: this.userName,
+        password: this.password,
+        codigo: this.codigo_auth,
+        divice: `${browser.name} ${browser.version}`,
+        ip: '192.168.1.1'
+      }
+
     };
 
     this.shrService.post(parms).then(async (response) => {
       if ((response || {}).success) {
+        this.onRouteDefault();
         this.isCodigo = false;
+        
         this.shrService.createToken(this.userName, this.password).then((token) => {
           if (token) {
             this.onRouteDefault();
           }
         });
+      } else {
+        if ((response || {}).codExpired) {
+          this.isCodeExpired = (response || {}).codExpired;
+        }
+
+        if ((response || {}).codeFail) {
+          this.isCodeFail = (response || {}).codeFail;
+        }
+
+        this.msjError = (response || {}).msj;
+
       }
     });
   }

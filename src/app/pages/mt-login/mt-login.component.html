@@ -64,18 +64,24 @@
           <div class="body-login full-center">
             <ion-row>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <span class="subtitle full-center">Validacion Accesso</span>
+                <span class="full-center" style="color: black;text-align: center;">Verificacion</span>
               </ion-col>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                 <mt-input
                   id="codigo_auth"
-                  label="Usuario"
+                  label="Codigo"
                   placeholder="Ingrese el codigo verificacion"
                   type="text"
                   value="{{ codigo_auth }}"
                   (afterChange)="onChangeInput($event)"
                 ></mt-input>
               </ion-col>
+            <div style="width: 100%;text-align: center;color: red;font-size: 12px;" *ngIf="isCodeExpired || isCodeFail">
+              <p style="margin: 0px;">{{msjError}}</p>
+            </div>
+            <div style="width: 100%;text-align: center;color: black;font-size: 12px;">
+              <p style="margin: 0px;"> Su codigo a vencido? <span style="cursor: pointer;text-decoration: underline;margin: 0px;font-weight: 500;" (click)="onLogin()">Reenviar</span></p>
+            </div>
             </ion-row>
           </div>
         </ion-col>
@@ -83,7 +89,7 @@
       <ion-row>
         <ion-col>
           <div class="footer-button full-center">
-            <button (click)="onValid()" type="button" class="btn btn-primary">Validar codigo</button>
+            <button (click)="onValid()" type="button" class="btn btn-primary">Verificar</button>
           </div>
         </ion-col>
       </ion-row>
