@@ -3,7 +3,7 @@
   <div class="card-content">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <div class="content-button postition-start">
+          <div class="content-button postition-start" *ngIf="!data.length">
             <div class="content-button-comp" style="width: 100%;display: contents;">
               @if(dataHorario.length){
                 <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 

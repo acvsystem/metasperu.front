@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/utils/storage';
 import { io } from "socket.io-client";
 import {
@@ -15,6 +15,7 @@ import { ShareService } from '../../services/shareService';
   styleUrls: ['./mt-horario-tienda.component.scss']
 })
 export class MtHorarioTiendaComponent implements OnInit {
+  @Input() data: Array<any> = [];
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   cboCargo: number = 0;
   idCargo: number = 1;
@@ -85,7 +86,14 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   constructor(private store: StorageService, public notify: Notifications, private service: ShareService) { }
 
+
+
   async ngOnInit() {
+
+    if ((this.data || []).length) {
+      console.log(this.data);
+      this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);
+    }
 
     let dataHr = this.store.getStore("mt-horario") || [];
 
@@ -616,10 +624,11 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
   }
 
-  onSearchCalendario() {
+  onSearchCalendario(rango?, codigo?) {
+
     let parms = {
       url: '/calendario/searchrHorario',
-      body: [{ rango_dias: this.vRangoDiasSearch, codigo_tienda: this.codeTienda }]
+      body: [{ rango_dias: rango || this.vRangoDiasSearch, codigo_tienda: codigo || this.codeTienda }]
     };
 
     this.service.post(parms).then(async (response) => {
