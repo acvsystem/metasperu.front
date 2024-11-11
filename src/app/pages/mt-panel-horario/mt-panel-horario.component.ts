@@ -12,11 +12,16 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./mt-panel-horario.component.scss'],
 })
 export class MtPanelHorarioComponent implements OnInit {
-  displayedColumns: string[] = ['Tienda', 'Semana', 'Accion'];
+  displayedColumns: string[] = ['Tienda', 'Inicio_semana', 'Termino_semana', 'Accion'];
+  displayedColumnsPap: string[] = ['tienda', 'nro_papeleta', 'nombres', 'cargo', 'tipo_papeleta', 'fecha', 'Accion'];
   dataView: Array<any> = [];
+  dataViewPap: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.dataView);
+  dataSourcePap = new MatTableDataSource<any>(this.dataViewPap);
   filterEmpleado: string = "";
+  codigoPap: string = "";
   isHorario: boolean = false;
+  isViewPap: boolean = false;
   onSelectedHorario: Array<any> = [];
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -51,8 +56,33 @@ export class MtPanelHorarioComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.onListHorario();
+    this.onListPapeleta();
+  }
+
+
+  onListPapeleta() {
+    let parms = {
+      url: '/papeleta/listarPapeleta'
+    };
+
+    this.service.get(parms).then(async (response) => {
+      let dataResponse = response;
+      this.dataViewPap = [];
+      (dataResponse || []).filter(async (dt, i) => {
+        let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
+
+        this.dataViewPap.push({
+          tienda: tienda[0].name, nombre: dt.NOMBRE_COMPLETO, cargo: dt.CARGO_EMPLEADO, tipo: dt.ID_PAP_TIPO_PAPELETA, fecha: dt.FECHA_CREACION, nro_papeleta: dt.CODIGO_PAPELETA
+        });
+
+        if (dataResponse.length - 1 == i) {
+          this.dataSourcePap = new MatTableDataSource(this.dataViewPap);
+          this.dataSourcePap.paginator = this.paginator;
+          this.dataSourcePap.sort = this.sort;
+        }
+      });
+    });
   }
 
   onListHorario() {
@@ -81,9 +111,6 @@ export class MtPanelHorarioComponent implements OnInit {
           this.dataSource.sort = this.sort;
         }
       });
-
-
-
     });
   }
 
@@ -97,9 +124,22 @@ export class MtPanelHorarioComponent implements OnInit {
     this.onSelectedHorario = [ev];
   }
 
-  onBack(){
+  onBack() {
     this.isHorario = false
     this.onListHorario();
+  }
+
+  onBackPap() {
+    this.isHorario = false
+    this.isViewPap = false
+    this.onListHorario();
+  }
+
+  onViewPapeleta(ev) {
+    this.codigoPap = "";
+    console.log(ev);
+    this.codigoPap = ev.nro_papeleta;
+    this.isViewPap = true;
   }
 
 }

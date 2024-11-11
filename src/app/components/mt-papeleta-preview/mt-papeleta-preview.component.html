@@ -1,0 +1,113 @@
+<ion-row style="color: black;">
+  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <div style="display: flex;justify-content: right;align-items: center;margin-bottom: 10px;">
+            <button type="button" class="btn btn-danger" (click)="onPdf()">
+              <span style="margin-right: 5px;">Descargar PDF</span> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    <div style="display: flex;justify-content: center;align-items: center;" id="content-pdf">
+      <div style="border: 1px solid black;width: 800px;padding: 10px;" *ngFor="let pap of dataPap">
+        <div style="width: 778px;display: flex;">
+          <div style="width: 129.66px;">
+            <div style="display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;">
+              <img src="../../../assets/LOGO-METAS-GROUP.png">
+            </div>
+          </div>
+          <div style="width: 518.66px;">
+            <div style="display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-weight: 500;">
+              <span>PAPELETA PERMISO DE SALIDA</span>
+            </div>
+          </div>
+          <div style="width: 129.66px;">
+            <div style="display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-weight: 500;">
+              <span>{{pap.codigo_papeleta}}</span>
+            </div>
+          </div>
+        </div>
+        <hr style="border: 1px solid black;height: 0px;">
+        <div style="width: 778px;">
+          <div style="width: 583.5px;">
+            <span style="font-weight: 500;margin-right: 10px;">APELLIDOS Y NOMBRE:</span> <span>{{pap.nombre_completo}}</span>
+          </div>
+          <div style="width: 194.5px;">
+            <span style="font-weight: 500;margin-right: 10px;">FECHA:</span> <span>{{pap.fecha_creacion}}</span>
+          </div>
+        </div>
+
+        <div style="width: 778px;">
+          <div style="width: 778px;">
+            <span style="font-weight: 500;margin-right: 10px;">CARGO:</span> <span>{{pap.cargo_empleado}}</span>
+          </div>
+        </div>
+
+        <div style="width: 778px;">
+          <div style="width: 778px;">
+            <span style="font-weight: 500;margin-right: 10px;">UNIDAD DE SERVICIO:</span> <span>{{pap.uns}}</span>
+          </div>
+        </div>
+
+        <div style="width: 778px;">
+          <div style="width: 778px;">
+            <span style="font-weight: 500;margin-right: 10px;">TIPO PAPELETA:</span> <span>{{pap.tipo_papeleta}}</span>
+          </div>
+        </div>
+
+        <hr style="border: 1px solid black;height: 0px;">
+
+        <div style="width: 778px;display: flex;">
+          <div style="width: 389px;">
+            <span style="font-weight: 500;margin-right: 10px;">DESDE:</span> <span>{{pap.fecha_desde}}</span>
+          </div>
+          <div style="width: 389px;">
+            <span style="font-weight: 500;margin-right: 10px;">SALIDA:</span> <span>{{pap.salida_hora}}</span>
+          </div>
+        </div>
+
+        <div style="width: 778px;display: flex;">
+          <div style="width: 389px;">
+            <span style="font-weight: 500;margin-right: 10px;">HASTA:</span> <span>{{pap.fecha_hasta}}</span>
+          </div>
+          <div style="width: 389px;">
+            <span style="font-weight: 500;margin-right: 10px;">LLEGADA:</span> <span>{{pap.llegada_hora}}</span>
+          </div>
+        </div>
+
+        <hr style="border: 1px solid black;height: 0px;">
+        <div style="width: 778px;">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th class="columHead">Fecha</th>
+                  <th class="columHead">Hora Extra</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let columBody of bodyList;let index = index">
+                  @if(columBody.seleccionado){
+                    <td class="columBody">{{columBody.fecha}}</td>
+                    <td class="columBody">{{columBody.hrx_acumulado}}</td>
+                  }
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </ion-col>
+</ion-row>
