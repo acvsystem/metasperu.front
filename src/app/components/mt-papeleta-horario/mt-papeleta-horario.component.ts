@@ -19,6 +19,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   onListEmpleado: Array<any> = [];
   cboCasos: string = "";
   horaSalida: string = "";
+  vObservacion: string = "";
   horaLlegada: string = "";
   totalHoras: string = "";
   nameTienda: string = "";
@@ -678,5 +679,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     });
 
+  }
+
+  onChange(data: any) {
+    console.log(data);
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
   }
 }

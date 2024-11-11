@@ -42,7 +42,7 @@
         </ion-col>
       </ion-row>
       
-      @if(cboCasos == 'Compensacion de horas trabajadas') {
+
         <div>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
@@ -115,6 +115,7 @@
               </ion-row>
             </ion-col>
           </ion-row>
+      @if(cboCasos == 'Compensacion de horas trabajadas') {
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <ion-row>
@@ -226,8 +227,22 @@
               </div>
             </ion-col>
           </ion-row>
-        </div>
       }
+
+      @if(cboCasos != 'Compensacion de horas trabajadas'){
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div style="width: 100%;color: black;padding: 10px;">
+              <span>Razon del permiso:</span>
+            </div>
+            <div style="padding: 10px;">
+              <textarea id="vObservacion" class="form-control" rows="5" [value]="vObservacion" (keyup)="onChange($event)"></textarea>
+            </div>
+          </ion-col>
+        </ion-row>
+      }
+        </div>
+      
     </div>
   </mat-tab>
   <mat-tab label="Papeletas Creadas" style="min-height: 1000px">
