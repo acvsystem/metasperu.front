@@ -39,6 +39,7 @@
         "ionicons": "^6.0.3",
         "ip-address": "^10.0.1",
         "jquery": "^3.7.1",
+        "json-to-plain-text": "^1.1.4",
         "jspdf": "^2.5.2",
         "ngx-socket-io": "^4.7.0",
         "rxjs": "~7.5.0",

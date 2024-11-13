@@ -36,7 +36,7 @@
             placeholder="Seleccione rango de fecha" (afterChange)="onCaledar($event)"></mt-calendar>
         </ion-col>
         }
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
           <div class="content-button postition-start">
             <div class="content-button-comp">
               <button id="searchProducto" type="button" class="btn btn-primary btn-sm"
@@ -47,6 +47,8 @@
                 *ngIf="isViewFeriados"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Feriados</button>
               <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i
                   class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Datos</button>
+              <button type="button" class="btn btn-success btn-sm" (click)="onGenTxt()"><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar txt Quincena</button>
             </div>
           </div>
         </ion-col>

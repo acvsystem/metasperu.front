@@ -455,7 +455,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     if (ev.isTime) {
       this[ev.id] = ev.value;
 
-      if (this.horaSalida.length && this.horaLlegada.length) {
+      if (this.horaSalida.length && this.horaLlegada.length && this.cboCasos == 'Compensacion de horas trabajadas') {
         this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
         if (this.diffHoraPap != this.hroTomada) {
           this.notify.snackbar({
