@@ -9,6 +9,7 @@ import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-as
 import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-tienda.component';
 import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-extra/mt-autorizacion-hora-extra.component';
 import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horario.component';
+import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 
 const routes: Routes = [
   {
@@ -53,8 +54,12 @@ const routes: Routes = [
     path: 'panel-horario',
     component: MtPanelHorarioComponent,
     canActivate: [authGuard]
+  },
+  {
+    path: 'planilla',
+    component: MtPlanillaComponent,
+    canActivate: [authGuard]
   }
-
 ];
 
 @NgModule({

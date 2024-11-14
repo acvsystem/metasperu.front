@@ -1,0 +1,122 @@
+<ion-content>
+  <div id="content" class="full-center-page">
+    <div class="console-loading" *ngIf="isLoading">
+      <div class="loader"></div>
+    </div>
+    <div class="card-content">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-input id="filterEmpleado" label="Filtro" placeholder="Filtro" type="text" value="{{ filterEmpleado }}"
+            (keyup)="applyFilter($event)"></mt-input>
+        </ion-col>
+
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-select id="cboReporte" placeHolder="Tipo Reporte" [optionList]="onListReporte"
+            (changeSelected)="onChangeSelect($event)"></mt-select>
+        </ion-col>
+
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
+          <mt-calendar [isPeriodo]="true" [isMultiSelect]="false" [isDefault]="false" placeholder="Periodo"
+            (afterChange)="onCaledar($event)"></mt-calendar>
+        </ion-col>
+        <div style="    background: #a1a1a1;
+        width: 1px;
+        height: 47px;
+        margin-top: 6px;"></div>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-select id="cboBanco" placeHolder="Pagar" [optionList]="onListBanco"
+            (changeSelected)="onChangeSelect($event)"></mt-select>
+        </ion-col>
+
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <div class="content-button postition-start">
+            <div class="content-button-comp">
+              @if(cboBanco > 0){
+                <button type="button" class="btn btn-success btn-sm" (click)="onGenTxt()"><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar TXT</button>
+              }@else{
+                <button type="button" class="btn btn-success btn-sm" disabled><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar TXT</button>
+              }
+
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource">
+
+                  <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.CODIGO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="unidad_servicio">
+                    <th mat-header-cell *matHeaderCellDef> Unidad de Servicio </th>
+                    <td mat-cell *matCellDef="let element"> {{element.UNIDAD_SERVICIO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nombres">
+                    <th mat-header-cell *matHeaderCellDef> Nombres </th>
+                    <td mat-cell *matCellDef="let element"> {{element.NOMBRE_COMPLETO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="apellido_paterno">
+                    <th mat-header-cell *matHeaderCellDef> Apellido Paterno </th>
+                    <td mat-cell *matCellDef="let element"> {{element.APELLIDO_PATERNO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="apellido_materno">
+                    <th mat-header-cell *matHeaderCellDef> Apellido Materno </th>
+                    <td mat-cell *matCellDef="let element"> {{element.APELLIDO_MATERNO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nro_documento">
+                    <th mat-header-cell *matHeaderCellDef> Nro Documento </th>
+                    <td mat-cell *matCellDef="let element"> {{element.NRO_DOCUMENTO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cta_banco_haberes">
+                    <th mat-header-cell *matHeaderCellDef> Cuenta Banco Haberes </th>
+                    <td mat-cell *matCellDef="let element"> {{element.CUENTA_BANCO_HABERES}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cta_banco_cts">
+                    <th mat-header-cell *matHeaderCellDef> Cta Banco Cts </th>
+                    <td mat-cell *matCellDef="let element"> {{element.CUENTA_BANCO_CTS}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cta_interbancario">
+                    <th mat-header-cell *matHeaderCellDef> Cuenta Interbancario </th>
+                    <td mat-cell *matCellDef="let element"> {{element.CUENTA_INTERBANCARIO}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cta_interbancario_cts">
+                    <th mat-header-cell *matHeaderCellDef> Cuenta Interbancario Cts </th>
+                    <td mat-cell *matCellDef="let element"> {{element.CUENTA_INTERBANCARIO_CTS}} </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="adelanto_quincena">
+                    <th mat-header-cell *matHeaderCellDef> Adelanto Quincena </th>
+                    <td mat-cell *matCellDef="let element"> {{element.ADELANTO_QUINCENA}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                  aria-label="Select page of periodic elements">
+                </mat-paginator>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

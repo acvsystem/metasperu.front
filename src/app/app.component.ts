@@ -95,6 +95,11 @@ export class AppComponent {
           ISVISIBLE: true,
           nombre_menu: "PANEL HORARIOS",
           ruta: "panel-horario"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "PLANILLA RRHH",
+          ruta: "planilla"
         }
 
         ];

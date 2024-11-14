@@ -46,6 +46,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isDataServer: boolean = false;
   isGrafica: boolean = false;
   filterEmpleado: string = "";
+  fileName: string = "";
+  text: string = "";
   cboTipoGraffic: string = "Jornada incompleta";
   exportFeriado: Array<any> = [];
   arrDataGrafic: Array<any> = [];
@@ -102,73 +104,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-
-    this.socket.on('reporteQuincena', async (response) => {
-      console.log(response);
-      let dataExport = "";
-      let data = response.data || [];
-      data.filter((dt) => {
-        let sueldo = dt['ADELANTO_QUINCENA'].split('.');
-        let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
-        let sueldoLength = 15 - parseSueldo.length;
-        let concatSueldo = "01";
-        for (let i = 1; i <= sueldoLength; i++) {
-          concatSueldo += '0';
-        }
-        concatSueldo += `${parseSueldo} `;
-
-        let col1Length = 50 - `0201${dt.NRO_DOCUMENTO}`.length;
-        let col1 = `0201${dt.NRO_DOCUMENTO}`;
-        for (let i = 0; i <= col1Length; i++) {
-          col1 += ' ';
-        }
-
-        let cuentaBanco = dt.BANCO == 4 /*INTERBANK*/ ? dt.CUENTA_BANCO_HABERES : !dt.CUENTA_INTERBANCARIO.length ? 0 : dt.CUENTA_INTERBANCARIO;
-
-        let tipoCuenta = dt.BANCO == 4 ? '09' : '99';
-        let space = tipoCuenta == '99' ? `${tipoCuenta}00201   ` : `${tipoCuenta}00201`;
-        let col3Length = 29 - `${space}${cuentaBanco}`.length;
-        let col3 = `${space}${cuentaBanco}`;
-        for (let i = 0; i <= col3Length; i++) {
-          col3 += ' ';
-        }
-
-        let tipoDocumento = (dt.NRO_DOCUMENTO).trim().length == 8 ? '01' : '03';
-
-        let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO}`.length;
-        let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO}`;
-        for (let i = 0; i <= col4Length; i++) {
-          col4 += ' ';
-        }
-
-        let col5Length = 20 - `${dt.APELLIDO_PATERNO}`.length;
-        let col5 = `${this.sinDiacriticos(dt.APELLIDO_PATERNO)}`;
-        for (let i = 0; i <= col5Length; i++) {
-          col5 += ' ';
-        }
-
-        let col6Length = 20 - `${dt.APELLIDO_MATERNO}`.length;
-        let col6 = `${this.sinDiacriticos(dt.APELLIDO_MATERNO)}`;
-        for (let i = 0; i <= col6Length; i++) {
-          col6 += ' ';
-        }
-
-        let col7Length = 27 - `${dt.NOMBRE_COMPLETO}`.length;
-        let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
-        let col7 = `${nombre_completo}`;
-        for (let i = 0; i <= col7Length - 7; i++) {
-          col7 += ' ';
-        }
-
-        dataExport += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}000000000000000 \n`;
-      });
-
-      this.dyanmicDownloadByHtmlTag({
-        fileName: 'My Report.txt',
-        text: dataExport
-      });
-
-    });
 
     this.socket.on('reporteHuellero', async (configuracion) => {
 
@@ -354,17 +289,17 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
   }
 
-   sinDiacriticos = (function(){
+  sinDiacriticos = (function () {
     let de = 'ÁÃÀÄÂÉËÈÊÍÏÌÎÓÖÒÔÚÜÙÛÑÇáãàäâéëèêíïìîóöòôúüùûñç',
-         a = 'AAAAAEEEEIIIIOOOOUUUUNCaaaaaeeeeiiiioooouuuunc',
-        re = new RegExp('['+de+']' , 'ug');
+      a = 'AAAAAEEEEIIIIOOOOUUUUNCaaaaaeeeeiiiioooouuuunc',
+      re = new RegExp('[' + de + ']', 'ug');
 
     return texto =>
-        texto.replace(
-            re, 
-            match => a.charAt(de.indexOf(match))
-        );
-})();
+      texto.replace(
+        re,
+        match => a.charAt(de.indexOf(match))
+      );
+  })();
 
   onGenerarGraffic() {
     this.arrDataGrafic = [];
@@ -787,17 +722,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.socket.emit('consultaPlanilla', "");
   }
 
-  dyanmicDownloadByHtmlTag(arg: {
-    fileName: string,
-    text: string
-  }) {
+  dyanmicDownloadByHtmlTag() {
     if (!this.setting.element.dynamicDownload) {
       this.setting.element.dynamicDownload = document.createElement('a');
     }
     const element = this.setting.element.dynamicDownload;
-    const fileType = arg.fileName.indexOf('.json') > -1 ? 'text/json' : 'text/plain';
-    element.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(arg.text)}`);
-    element.setAttribute('download', arg.fileName);
+    const fileType = this.fileName.indexOf('.json') > -1 ? 'text/json' : 'text/plain';
+    element.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(this.text)}`);
+    element.setAttribute('download', this.fileName);
 
     var event = new MouseEvent("click");
     element.dispatchEvent(event);
