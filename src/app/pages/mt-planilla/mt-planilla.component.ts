@@ -2,7 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 import { io } from "socket.io-client";
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
 
 @Component({
   selector: 'app-mt-planilla',
@@ -11,6 +15,7 @@ import { io } from "socket.io-client";
 })
 export class MtPlanillaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+
   onDataView: Array<any> = [];
   vCalendar: string = "202411";
   fileName: string = "";
@@ -30,7 +35,8 @@ export class MtPlanillaComponent implements OnInit {
   onListReporte: Array<any> = [
     { key: 'Adel.Quincena', value: 'Adel.Quincena' },
     { key: 'Comisiones', value: 'Comisiones' },
-    { key: 'FinDM', value: 'FinDM' }
+    { key: 'FDM', value: 'FDM' },
+    { key: 'CTS', value: 'CTS' }
   ];
 
   onListBanco: Array<any> = [
@@ -344,6 +350,138 @@ export class MtPlanillaComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  async onExcelExport() {
+    const self = this;
+    self.isLoading = true;
+    let codigoList = [];
+    let dataTemp = [];
+    let dataExport = [];
+    await this.onDataView.filter(async (dt, i) => {
+      if (!codigoList.includes(dt['CODIGO_UNID_SERVICIO'].trim())) {
+        codigoList.push(dt['CODIGO_UNID_SERVICIO'].trim());
+      }
+    });
+
+    if (codigoList.length) {
+      console.log(codigoList);
+      await codigoList.filter(async (codigo, i) => {
+        if (i <= 9) {
+          let dataTemp = [];
+          let dataExport = [];
+          dataTemp = await this.onDataView.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+          dataTemp.filter(async (dw, i) => {
+
+            let cuentaBanco = (dw || {}).BANCO == 2 ? ((dw || {}).CUENTA_BANCO_HABERES || "") : !((dw || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dw || {}).CUENTA_INTERBANCARIO || "");
+            this.fileName = dw['UNIDAD_SERVICIO'];
+            console.log(dw.NOMBRE_COMPLETO, cuentaBanco || 0);
+            dataExport.push({
+              DOI_Tipo: dw.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E',
+              DOI_Numero: ((dw || {}).NRO_DOCUMENTO || 0).trim(),
+              Tipo_Abono: dw.BANCO == 2 ? 'P' : 'I',
+              N_Cuentas_abonar: cuentaBanco || '0',
+              Nombre_Beneficiario: `${dw.APELLIDO_PATERNO} ${dw.APELLIDO_MATERNO} ${dw.NOMBRE_COMPLETO}`,
+              Importe_Abonar: parseInt(dw.ADELANTO_QUINCENA)
+            });
+
+            if (dataTemp.length - 1 == i) {
+              console.log(this.fileName, dataExport);
+              this.exportAsExcelFile(dataExport, this.fileName);
+              dataTemp = [];
+              this.text = "";
+              this.fileName = "";
+            }
+
+
+          });
+        }
+      });
+
+      setTimeout(async () => {
+        await codigoList.filter(async (codigo, i) => {
+          if (i > 9 && i < 19) {
+            let dataTemp = [];
+            let dataExport = [];
+            dataTemp = await this.onDataView.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+            dataTemp.filter(async (dw, i) => {
+
+              let cuentaBanco = (dw || {}).BANCO == 2 ? ((dw || {}).CUENTA_BANCO_HABERES || "") : !((dw || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dw || {}).CUENTA_INTERBANCARIO || "");
+              this.fileName = dw['UNIDAD_SERVICIO'];
+              console.log(dw.NOMBRE_COMPLETO, cuentaBanco || 0);
+              dataExport.push({
+                DOI_Tipo: dw.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E',
+                DOI_Numero: ((dw || {}).NRO_DOCUMENTO || 0).trim(),
+                Tipo_Abono: dw.BANCO == 2 ? 'P' : 'I',
+                N_Cuentas_abonar: cuentaBanco || '0',
+                Nombre_Beneficiario: `${dw.APELLIDO_PATERNO} ${dw.APELLIDO_MATERNO} ${dw.NOMBRE_COMPLETO}`,
+                Importe_Abonar: parseInt(dw.ADELANTO_QUINCENA)
+              });
+
+              if (dataTemp.length - 1 == i) {
+                console.log(this.fileName, dataExport);
+                this.exportAsExcelFile(dataExport, this.fileName);
+                dataTemp = [];
+                this.text = "";
+                this.fileName = "";
+              }
+
+
+            });
+          }
+        });
+      }, 3000);
+
+      setTimeout(async () => {
+        await codigoList.filter(async (codigo, i) => {
+          if (i >= 19) {
+            let dataTemp = [];
+            let dataExport = [];
+            dataTemp = await this.onDataView.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+            dataTemp.filter(async (dw, i) => {
+
+              let cuentaBanco = (dw || {}).BANCO == 2 ? ((dw || {}).CUENTA_BANCO_HABERES || "") : !((dw || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dw || {}).CUENTA_INTERBANCARIO || "");
+              this.fileName = dw['UNIDAD_SERVICIO'];
+              dataExport.push({
+                DOI_Tipo: dw.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E',
+                DOI_Numero: ((dw || {}).NRO_DOCUMENTO || 0).trim(),
+                Tipo_Abono: dw.BANCO == 2 ? 'P' : 'I',
+                N_Cuentas_abonar: cuentaBanco || '0',
+                Nombre_Beneficiario: `${dw.APELLIDO_PATERNO} ${dw.APELLIDO_MATERNO} ${dw.NOMBRE_COMPLETO}`,
+                Importe_Abonar: parseInt(dw.ADELANTO_QUINCENA)
+              });
+
+              if (dataTemp.length - 1 == i) {
+                console.log(this.fileName, dataExport);
+                this.exportAsExcelFile(dataExport, this.fileName);
+                dataTemp = [];
+                this.text = "";
+                this.fileName = "";
+              }
+
+
+            });
+          }
+        });
+      }, 9000);
+    }
+
+  }
+
+  public exportAsExcelFile(json: any[], excelFileName: string): void {
+    const self = this;
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+    this.saveAsExcelFile(excelBuffer, excelFileName);
+    self.isLoading = false;
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
+    });
+    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
 }

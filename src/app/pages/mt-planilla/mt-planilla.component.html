@@ -31,13 +31,23 @@
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
           <div class="content-button postition-start">
             <div class="content-button-comp">
-              @if(cboBanco > 0){
+         
+              @if(cboBanco == 4){
                 <button type="button" class="btn btn-success btn-sm" (click)="onGenTxt()"><i
                   class="fa fa-file-excel-o" aria-hidden="true"></i> Generar TXT</button>
               }@else{
                 <button type="button" class="btn btn-success btn-sm" disabled><i
                   class="fa fa-file-excel-o" aria-hidden="true"></i> Generar TXT</button>
               }
+             
+              @if(cboBanco == 2){
+                <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar Excel</button>
+              }@else{
+                <button type="button" class="btn btn-success btn-sm" disabled><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar Excel</button>
+              }
+
 
             </div>
           </div>
