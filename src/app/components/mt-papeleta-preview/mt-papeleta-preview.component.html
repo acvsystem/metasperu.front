@@ -90,7 +90,7 @@
 
         <hr style="border: 1px solid black;height: 0px;">
         <div style="width: 778px;">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" *ngIf="bodyList.length">
               <thead>
                 <tr>
                   <th class="columHead">Fecha</th>
@@ -106,6 +106,9 @@
                 </tr>
               </tbody>
             </table>
+
+            <span style="color: black;font-weight: 500;" *ngIf="!bodyList.length">Observacion:</span><br>
+            <span style="color: black;" *ngIf="!bodyList.length">{{observacion}}</span>
         </div>
       </div>
     </div>

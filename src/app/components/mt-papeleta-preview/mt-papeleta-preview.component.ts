@@ -13,6 +13,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
   bodyList: Array<any> = [];
   dataPap: Array<any> = [];
   listTipoPap: Array<any> = [];
+  observacion: string = "";
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -43,6 +44,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   async ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.hasOwnProperty('codigoPap')) {
+      console.log(this.codigoPap);
       await this.onListTipoPapeleta();
       this.onSearchPap(this.codigoPap);
     }
@@ -64,6 +66,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
           this.dataPap[i]['uns'] = tienda.name;
           this.dataPap[i]['tipo_papeleta'] = tipo[0].DESCRIPCION;
           this.bodyList = dt.horas_extras;
+          this.observacion = dt.observacion;
         });
 
 
@@ -72,7 +75,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
   }
 
   async onPdf() {
-    var element:any;
+    var element: any;
     element = $('#content-pdf').clone();
     var opt = {
       filename: `PAPELETA.pdf`,

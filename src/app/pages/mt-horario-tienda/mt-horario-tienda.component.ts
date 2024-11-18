@@ -118,6 +118,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
+      console.log(response);
       let dataEmpleado = (response || {}).data;
 
       dataEmpleado.filter((emp) => {
@@ -249,9 +250,10 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
   onSelectDataDia(id_horario?, id_dia?, dataDia?) {
+    console.log(id_horario, id_dia, dataDia);
     this.vSelectDia = id_dia;
     this.vSelectHorario = id_horario;
-    this.isExpiredDay = (dataDia || {})['isExpired'];
+    this.isExpiredDay = (dataDia || {})['isExpired'] || false;
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 

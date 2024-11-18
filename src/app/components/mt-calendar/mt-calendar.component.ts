@@ -18,7 +18,7 @@ export class MtCalendarComponent implements OnInit {
   @Input() placeholder: string = "";
   @Input() id: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
-  selected: string;
+  @Input() selected: string = "";
   public localeEs = localeEs;
 
   constructor() { }

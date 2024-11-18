@@ -605,3 +605,18 @@ ion-item {
 .disabled-Pointer {
     cursor: no-drop !important;
 }
+
+.console-loading {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: fixed !important;
+    background: #080808a8 !important;
+    z-index: 999999 !important;
+
+    .loader {
+        --base-color: #080808a8 !important;
+    }
+}

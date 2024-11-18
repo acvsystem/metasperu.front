@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx';
 import { StorageService } from 'src/app/utils/storage';
 import { ShareService } from 'src/app/services/shareService';
 import { Notifications, setOptions } from '@mobiscroll/angular';
+import * as $ from 'jquery';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -18,6 +19,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   onListEmpleado: Array<any> = [];
   cboCasos: string = "";
+  codigoPap: number = 0;
   horaSalida: string = "";
   vObservacion: string = "";
   horaLlegada: string = "";
@@ -26,6 +28,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   cboEmpleado: string = "";
   vFechaHasta: string = "";
   vFechaDesde: string = "";
+  isViewPapeleta: boolean = false;
   hroAcumulada: string = "00:00";
   hroAcumuladaTotal: string = "00:00";
   hroTomada: string = "00:00";
@@ -644,7 +647,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     (dataPapeleta || []).push({
       nombre_completo: ejb[0]['nombre_completo'] || "",
       documento: ejb[0]['documento'],
-      id_tipo_papeleta: this.idCboTipoPap,
+      id_tipo_papeleta: this.cboCasos,
       cargo_empleado: this.cboCargo,
       fecha_desde: this.vFechaDesde,
       fecha_hasta: this.vFechaHasta,
@@ -656,7 +659,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
       codigo_tienda: this.codeTienda,
       fecha_creacion: fechaActual,
       codigo_papeleta: this.codigoPapeleta,
-      horas_extras: this.bodyList
+      horas_extras: this.bodyList || [],
+      observacion: this.vObservacion
     });
 
     console.log(dataPapeleta);
@@ -675,6 +679,26 @@ export class MtPapeletaHorarioComponent implements OnInit {
         });
       } else {
         this.onListPapeleta();
+
+        this.cboCasos = "";
+        this.cboCargo = "";
+        this.vFechaDesde = "";
+        this.vFechaHasta = "";
+        this.horaSalida = "";
+        this.horaLlegada = "";
+        this.hroAcumuladaTotal = "";
+        this.hroTomada = "";
+        this.hroAcumulada = "";
+        this.bodyList = [];
+        this.vObservacion = "";
+
+        this.onGenerarCodigoPapeleta();
+
+        this.notify.snackbar({
+          message: "PAPELETA REGISTRADA CON EXISTO..!!!",
+          display: 'top',
+          color: 'success'
+        });
       }
 
     });
@@ -687,4 +711,22 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
   }
+
+  onChangeTextArea(data: any) {
+    console.log(data);
+    let id = data.target.id;
+    let inputData = $(`#${id}`).val();
+    this[id] = inputData || "";
+  }
+
+  onViewPapeleta(ev) {
+    this.isViewPapeleta = true;
+    this.codigoPap = ev.codigo_papeleta;
+  }
+
+  onBackPap() {
+    this.isViewPapeleta = false;
+    this.codigoPap = 0;
+  }
+
 }

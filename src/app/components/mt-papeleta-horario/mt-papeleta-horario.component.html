@@ -9,7 +9,7 @@
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" >
           <div style="display: flex;justify-content: end;align-items: center;">
-            <button style="margin-left: 8px;" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSavePapeleta()"> 
+            <button data-bs-dismiss="offcanvas" aria-label="Close" style="margin-left: 8px;" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSavePapeleta()"> 
               Registrar papeleta
             </button>
           </div>
@@ -104,6 +104,7 @@
                     </div>
                     <div style="width: 200px;">
                       <mt-calendar 
+                      [selected] = horaLlegada
                       id="horaLlegada"
                       [isTime]="true" 
                       placeholder="Hora"
@@ -236,7 +237,7 @@
               <span>Razon del permiso:</span>
             </div>
             <div style="padding: 10px;">
-              <textarea id="vObservacion" class="form-control" rows="5" [value]="vObservacion" (keyup)="onChange($event)"></textarea>
+              <textarea id="vObservacion" class="form-control" rows="5" [value]="vObservacion" (keyup)="onChangeTextArea($event)"></textarea>
             </div>
           </ion-col>
         </ion-row>
@@ -248,7 +249,7 @@
     <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <div style="max-height: 500px;overflow: auto;">
+          <div style="max-height: 500px;overflow: auto;" *ngIf="!isViewPapeleta">
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
@@ -266,13 +267,19 @@
                     <td class="columBody">{{columBody.tipo}}</td>
                     <td class="columBody">{{columBody.nombre_completo}}</td>
                     <td class="columBody">
-                      <button matTooltip="Cargar papeleta" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                      <button matTooltip="ver papeleta" (click)="onViewPapeleta(columBody)" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
                         <i class="fa fa-reply" aria-hidden="true"></i>
                       </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
+          </div>
+          <button type="button" class="btn btn-light" (click)="onBackPap()" *ngIf="isViewPapeleta">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+          </button>
+          <div style="padding-right: 5px;padding-left: 5px;">
+            <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap > 0"></mt-papeleta-preview>
           </div>
         </ion-col>
       </ion-row>
