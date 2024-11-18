@@ -58,6 +58,25 @@ export class AppComponent {
       this.store.removeStore("mt-profile");
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
       let profileUser = this.store.getStore('mt-profile');
+
+      if((profileUser || {}).mt_nivel == "RRHH"){
+        self.menuUser = [
+        {
+          ISVISIBLE: true,
+          nombre_menu: "ASISTENCIA",
+          ruta: "asistencia"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "PLANILLA RRHH",
+          ruta: "planilla"
+        }
+
+        ];
+
+        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      }
+
       if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
         self.menuUser = [{
           ISVISIBLE: true,
@@ -206,6 +225,7 @@ export class AppComponent {
 
               if ((profileUser || {}).mt_nivel == "RRHH") {
                 this.service.onViewPageAdmin.emit(false);
+                
                 //this.nav.navigateRoot('asistencia');
               }
 
