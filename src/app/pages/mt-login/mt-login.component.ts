@@ -3,6 +3,7 @@ import { ShareService } from '../../services/shareService'
 import { NavController } from '@ionic/angular';
 import { StorageService } from '../../utils/storage';
 import { UAParser } from 'ua-parser-js';
+import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
 
 @Component({
   selector: 'app-mt-login',
@@ -25,7 +26,8 @@ export class MtLoginComponent implements OnInit {
     private store: StorageService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    console.log(await publicIpv4());
     /* document.addEventListener('keydown', (event) => {
        var keyValue = event.key;
        if (keyValue == "Enter") {
@@ -35,8 +37,9 @@ export class MtLoginComponent implements OnInit {
   }
 
 
-  onLogin() {
+  async onLogin() {
     const { browser, cpu, device, os } = UAParser();
+    let publicIP = await publicIpv4();
     let parms = {
       url: '/session_login',
       body:
@@ -44,7 +47,7 @@ export class MtLoginComponent implements OnInit {
         usuario: this.userName,
         password: this.password,
         divice: `${browser.name} ${browser.version}`,
-        ip: '192.168.1.1'
+        ip: publicIP
       }
 
     };
@@ -109,7 +112,7 @@ export class MtLoginComponent implements OnInit {
       if ((response || {}).success) {
         this.onRouteDefault();
         this.isCodigo = false;
-        
+
         this.shrService.createToken(this.userName, this.password).then((token) => {
           if (token) {
             this.onRouteDefault();

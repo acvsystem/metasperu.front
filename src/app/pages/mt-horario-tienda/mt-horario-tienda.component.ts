@@ -242,8 +242,6 @@ export class MtHorarioTiendaComponent implements OnInit {
       });
     }
 
-
-
     this.socket.emit('actualizarHorario', this.dataHorario);
 
   }
@@ -259,6 +257,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.titleObservacion = objDia['dia'];
     if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
+
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
       let dataTrabajadores = [];
 
@@ -447,7 +446,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
           if (indice == parseInt(day[0]) && diasSemana[indice] == "Lunes") {
             console.log(day[0]);
-            dias.push({ id: dias.length + 1, dia: diasSemana[indice], fecha: `${diasSemana[indice]}-${arMes[mes]}`, fecha_calendar: '' });
+            dias.push({ id: dias.length + 1, dia: diasSemana[indice], fecha: `${diasSemana[indice]}-${arMes[mes]}`, fecha_calendar: '', isExpired: false });
           }
 
         }
