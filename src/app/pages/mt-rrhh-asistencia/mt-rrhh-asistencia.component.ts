@@ -14,6 +14,13 @@ import Chart from 'chart.js/auto'
 import { jsonToPlainText, Options } from "json-to-plain-text";
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, of } from "rxjs";
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
+import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-registro.component';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -52,6 +59,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   exportFeriado: Array<any> = [];
   arrDataGrafic: Array<any> = [];
   myGraffic: any;
+  dialog = inject(MatDialog);
   private setting = {
     element: {
       dynamicDownload: null as HTMLElement
@@ -154,7 +162,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
 
       }
-      console.log(this.parseEJB);
+
       if (configuracion.id == "servGeneral") {
         this.isDataServer = true;
         console.log("servGeneral", true);
@@ -199,6 +207,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
 
             if ((dataEJB || {}).codigoEJB != null) {
+
               if (indexData == -1) {
                 this.onDataTemp.push({
                   tienda: (selectedLocal || {})["name"],
@@ -219,7 +228,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida),
                   caja: (huellero || {}).caja,
                   isJornadaCompleta: false,
-                  isBrakeComplete: false
+                  isBrakeComplete: false,
+                  isRegistroMax: false,
+                  dataRegistro: [huellero]
                 });
 
               } else {
@@ -232,6 +243,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
                 this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2));
                 this.onDataTemp[indexData]['isBrakeComplete'] = this.onVerficacionBrake(this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso));
+                this.onDataTemp[indexData]['dataRegistro'].push(huellero);
+                this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 ? true : false;
               }
             }
           }
@@ -272,7 +285,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           });
 
           this.onViewGrafic();
-
+          console.log(this.onDataTemp);
           if (this.onDataView.length) {
             this.isLoading = false;
           }
@@ -394,7 +407,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewFeriados = false;
       this.isDetallado = false;
       this.isGrafica = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre'];
     }
 
     if ((selectData || {}).key == "Feriados") {
@@ -412,7 +425,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewDefault = false;
       this.isDetallado = true;
       this.isGrafica = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre'];
     }
 
   }
@@ -733,6 +746,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     var event = new MouseEvent("click");
     element.dispatchEvent(event);
+  }
+
+
+  openDialog(ev) {
+    this.dialog.open(MtViewRegistroComponent, {
+      data: ev,
+      panelClass: 'full-screen-modal'
+    });
   }
 
 }

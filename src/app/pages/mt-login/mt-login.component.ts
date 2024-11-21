@@ -93,8 +93,9 @@ export class MtLoginComponent implements OnInit {
 
   }
 
-  onValid() {
+  async onValid() {
     const { browser, cpu, device, os } = UAParser();
+    let publicIP = await publicIpv4();
     let parms = {
       url: '/auth_session',
       body:
@@ -103,7 +104,7 @@ export class MtLoginComponent implements OnInit {
         password: this.password,
         codigo: this.codigo_auth,
         divice: `${browser.name} ${browser.version}`,
-        ip: '192.168.1.1'
+        ip: publicIP
       }
 
     };

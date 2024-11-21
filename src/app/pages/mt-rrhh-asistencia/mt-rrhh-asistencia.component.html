@@ -126,6 +126,26 @@
                     </td>
                   </ng-container>
 
+                  <ng-container matColumnDef="maximo_registro">
+                    <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                    <td mat-cell *matCellDef="let element">
+                      @if(element.isRegistroMax) {
+                        <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: rgb(253 159 13) !important;">revisar</span></h6>
+                      } @else {
+                        <h6 style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+                      }
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="view_registre">
+                    <th mat-header-cell *matHeaderCellDef> Accion </th>
+                    <td mat-cell *matCellDef="let element">
+                      <button matTooltip="Ver registro" id="searchProducto"  (click)="openDialog(element.dataRegistro)" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                      </button>
+                    </td>
+                  </ng-container>
+
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>

@@ -80,6 +80,7 @@ import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-e
 import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horario.component';
 import { MtPapeletaPreviewComponent } from './components/mt-papeleta-preview/mt-papeleta-preview.component';
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
+import { MtViewRegistroComponent } from './pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -111,7 +112,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtAutorizacionHoraExtraComponent,
         MtPanelHorarioComponent,
         MtPapeletaPreviewComponent,
-        MtPlanillaComponent
+        MtPlanillaComponent,
+        MtViewRegistroComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],

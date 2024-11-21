@@ -194,7 +194,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
 
-
     this.socket.on('reporteHorario', async (response) => {
       let data = (response || {}).data;
       this.parseHuellero = data;

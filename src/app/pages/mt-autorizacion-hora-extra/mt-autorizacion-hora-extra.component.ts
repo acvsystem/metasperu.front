@@ -15,10 +15,23 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   onDataView: Array<any> = [];
   arDataEJB: Array<any> = [];
+  onDataTemp: Array<any> = [];
+  parseHuellero: Array<any> = [];
+  bodyList: Array<any> = [];
+  dataVerify: Array<any> = [];
+  parseEJB: Array<any> = [];
+  headListSunat: Array<any> = ["NOMBRE COMPLETO", "DOCUMENTO", "CAJA", "DIA", "HORA ENTRADA", "HORA SALIDA", "HORAS TRABAJADAS"];
+  arHoraExtra: Array<any> = [];
+  arCopiHoraExtra: Array<any> = [];
+  arSelectRegistro: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.onDataView);
   displayedColumns: string[] = [];
   codeTienda: string = "";
+  hroAcumulada: string = "";
+  hroAcumuladaTotal: string = "";
   unidServicio: string = "";
+  isDetalle: boolean = false;
+  isLoading: boolean = false;
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -65,7 +78,228 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       this.dataSource.sort = this.sort;
     });
 
+
+    this.socket.on('reporteHorario', async (response) => {
+
+      let data = (response || {}).data;
+      this.parseHuellero = data;
+      console.log(this.parseHuellero);
+      this.onDataTemp = [];
+      this.bodyList = [];
+      this.dataVerify = [];
+
+      await (this.parseHuellero || []).filter(async (huellero) => {
+
+        var codigo = (huellero || {}).caja.substr(0, 2);
+
+        if ((huellero || {}).caja.substr(2, 2) == 7) {
+          codigo = (huellero || {}).caja;
+        } else {
+          codigo.substr(0, 1)
+        }
+
+
+        let indexData = this.onDataTemp.findIndex((data) => ((data || {}).dia == (huellero || []).dia));
+
+        if (indexData == -1) {
+          this.onDataTemp.push({
+            dia: (huellero || {}).dia,
+            hr_ingreso_1: (huellero || {}).hrIn,
+            hr_salida_1: (huellero || {}).hrOut,
+            hr_brake: "",
+            hr_ingreso_2: "",
+            hr_salida_2: "",
+            hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
+            hr_extra: 0,
+            hr_faltante: 0
+          });
+        } else {
+
+          this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
+          this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
+          this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
+          let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
+          let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+          this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
+          let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
+          let process = this.obtenerHoraExtra(this.onDataTemp[indexData]['hr_trabajadas'], "8:00");
+
+          if (hora_1_pr[0] >= 8) {
+            let hr = process.split(":");
+            if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
+              this.onDataTemp[indexData]['hr_extra'] = process;//23:59
+              let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
+              let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
+              // let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
+              let aprobado = estado == "correcto" ? true : false;
+
+              this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
+              if (estado == 'correcto') {
+                if (!this.arHoraExtra.length) {
+                  this.arHoraExtra = [process];
+                } else {
+                  this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
+                }
+              }
+            }
+          } else {
+            this.onDataTemp[indexData]['hr_faltante'] = process;
+          }
+
+        }
+
+
+
+      });
+      this.isLoading = false;
+      this.isDetalle = true;
+      console.log("reporteHorario", this.onDataTemp);
+      if ((this.dataVerify || []).length) {
+        this.onVerificarHrExtra(this.dataVerify);
+      }
+
+      this.hroAcumulada = this.arHoraExtra[0];
+      this.hroAcumuladaTotal = this.arHoraExtra[0];
+    });
+
     this.onListHorasAutorizar();
+  }
+
+  onVerificarHrExtra(dataVerificar) {
+
+    let parms = {
+      url: '/papeleta/verificar/horas_extras',
+      body: dataVerificar
+    };
+
+    this.service.post(parms).then(async (response) => {
+      this.bodyList = response;
+      this.hroAcumulada = "";
+      this.hroAcumuladaTotal = "";
+      this.arHoraExtra = [];
+      this.bodyList.filter((dt, i) => {
+        if (!dt.seleccionado && dt.aprobado && !dt.verify) {
+
+          if (!this.arHoraExtra.length) {
+            this.arHoraExtra = [dt.extra];
+          } else {
+            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+          }
+        }
+
+        if (this.bodyList.length - 1 == i) {
+          this.hroAcumulada = this.arHoraExtra[0];
+          this.hroAcumuladaTotal = this.arHoraExtra[0];
+        }
+      });
+      console.log(this.bodyList);
+
+    });
+
+  }
+  obtenerMinutos(hora_1, hora_2) {
+
+    let hora_1_pr = hora_1.split(":");
+    let hora_2_pr = hora_2.split(":");
+    let residuo_1 = 0;
+    let minutos = 0;
+    let hora = 0;
+
+    if (hora_1_pr[1] > 0 || hora_1_pr[1] == 0) {
+
+      if (hora_1_pr[0] == hora_2_pr[0]) {
+        residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
+        minutos = residuo_1 - 60;
+
+      } else {
+        residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
+
+        if (residuo_1 > 59) {
+          minutos = residuo_1 - 60;
+          hora = 1;
+
+        } else {
+          minutos = residuo_1;
+        }
+      }
+
+    }
+
+    return [hora, minutos];
+  }
+
+
+  obtenerHoraExtra(hr1, hr2) {
+    let diferencia = 0;
+    let hora_1_pr = hr1.split(":");
+    let hora_2_pr = hr2.split(":");
+    let response = "";
+    let hora_1 = this.obtenerHoras(hr1);
+    let hora_2 = this.obtenerHoras(hr2);
+    let minutos = this.obtenerMinutos(hr1, hr2);
+
+    let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
+
+    if (hora_1 > hora_2) {
+      diferencia = hora_1 - hora_2;
+    } else {
+      diferencia = hora_2 - hora_1;
+    }
+
+    let hr_resta: number = (hora_1_pr[1] > 0) ? parseInt(hora_1_pr[1]) : parseInt(hora_2_pr[1]);
+    let horaResult = ((diferencia - hr_resta) / 60).toString();
+    let minutosParse = minutos[1] < 0 ? minutos[1] * -1 : minutos[1];
+    response = `${parseInt(horaResult) + hrExtr}:${(minutosParse < 10) ? '0' + minutosParse : minutosParse}`
+
+
+    return response;
+  }
+
+  obtenerHoras(hora) {
+    let hora_pr = hora.split(":");
+    return parseInt(hora_pr[0]) * 60;
+  }
+
+  obtenerHorasTrabajadas(hrRs_1, hrRs_2) {
+    let hr_1 = hrRs_1.split(":");
+    let hr_2 = hrRs_2.split(":");
+    let dif_min = parseInt(hr_1[1]) + parseInt(hr_2[1]);
+    let dif_hora = parseInt(hr_1[0]) + parseInt(hr_2[0]);
+    let dif_res = 0;
+    let dif_hr = 0;
+
+    if (dif_min > 59) {
+      dif_res = dif_min - 60;
+      dif_hr = dif_hora + 1;
+    } else {
+      dif_hr = dif_hora;
+      dif_res = dif_min;
+    }
+
+    return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
+  }
+
+  obtenerDiferenciaHora(hr1, hr2) {
+    let diferencia = 0;
+    let hora_1 = this.obtenerHoras(hr1);
+    let hora_2 = this.obtenerHoras(hr2);
+    let minutos = this.obtenerMinutos(hr1, hr2);
+    let hrExtr = 0;
+    if (minutos[1] > 0) {
+      hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
+    }
+
+    if (hora_1 > hora_2) {
+      diferencia = hora_1 - hora_2;
+    } else {
+      diferencia = hora_2 - hora_1;
+    }
+
+    let hora_1_pr = hr1.split(":");
+    let hora_2_pr = hr2.split(":");
+    let hr_resta: number = (hora_1_pr[1] > 0) ? parseInt(hora_1_pr[1]) : parseInt(hora_2_pr[1]);
+    let horaResult = ((diferencia - hr_resta) / 60).toString();
+    return `${parseInt(horaResult) + hrExtr}:${(minutos[1] < 10) ? '0' + minutos[1] : minutos[1]}`;
   }
 
   onListHorasAutorizar() {
@@ -115,6 +349,25 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       codigo_tienda: ev.CODIGO_TIENDA
     }
     this.socket.emit('autorizar_hrx', parse);
+  }
+
+  onViewRegistro(ev) {
+    this.isLoading = true;
+    let configuracion = [{
+      fechain: `${ev['FECHA']}`,
+      fechaend: `${ev['FECHA']}`,
+      nro_documento: ev['NRO_DOCUMENTO_EMPLEADO']
+    }]
+
+
+    this.socket.emit('consultaHorasTrab', configuracion);
+
+
+  }
+
+  onBackPap() {
+    this.parseHuellero = [];
+    this.isDetalle = false;
   }
 
 }
