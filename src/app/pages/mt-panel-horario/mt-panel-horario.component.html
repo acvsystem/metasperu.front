@@ -60,7 +60,7 @@
               <button type="button" class="btn btn-light" (click)="onBack()">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
               </button>
-              <mt-horario-tienda [data]="onSelectedHorario"></mt-horario-tienda>
+              <mt-horario-tienda [data]="onSelectedHorario" *ngIf="onSelectedHorario.length"></mt-horario-tienda>
             }
 
           </div>
@@ -138,7 +138,7 @@
               <button type="button" class="btn btn-light" (click)="onBackPap()">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
               </button>
-              <mt-papeleta-preview [codigoPap]="codigoPap"></mt-papeleta-preview>
+              <mt-papeleta-preview [codigoPap]="codigoPap" *ngIF="codigoPap.length"></mt-papeleta-preview>
             }
           </div>
         </mat-tab>

@@ -366,6 +366,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.openSnackBar("Fechas seleccionadas no son correcta..!!");
       this.isLoading = false;
     } else {
+
+      console.log("onConsultarAsistencia", this.vDetallado);
       var configuracion = {
         isDefault: this.isViewDefault,
         isFeriados: this.isViewFeriados,
@@ -373,6 +375,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         centroCosto: '',
         dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
       };
+
       this.isLoading = true;
       this.socket.emit('consultaMarcacion', configuracion);
     }
@@ -534,9 +537,15 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     if ($event.isRange) {
       let range = [];
       let dateList = $event.value;
-      (dateList || []).filter((dt) => {
+      console.log("onCaledar", dateList[1] == null);
+      (dateList || []).filter((dt, i) => {
         let date = new Date(dt).toLocaleDateString().split('/');
-        (range || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
+        if (dateList[1] == null && i == 1) {
+          (range || []).push(range[0]);
+        } else {
+          (range || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
+        }
+
       });
 
       this.vDetallado = range;

@@ -56,8 +56,8 @@ export class MtPanelHorarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onListHorario();
-    this.onListPapeleta();
+    //this.onListHorario();
+   // this.onListPapeleta();
   }
 
 
@@ -69,19 +69,21 @@ export class MtPanelHorarioComponent implements OnInit {
     this.service.get(parms).then(async (response) => {
       let dataResponse = response;
       this.dataViewPap = [];
-      (dataResponse || []).filter(async (dt, i) => {
-        let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
+      if ((dataResponse || {}).success != false) {
+        (dataResponse || []).filter(async (dt, i) => {
+          let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
 
-        this.dataViewPap.push({
-          tienda: tienda[0].name, nombre: dt.NOMBRE_COMPLETO, cargo: dt.CARGO_EMPLEADO, tipo: dt.ID_PAP_TIPO_PAPELETA, fecha: dt.FECHA_CREACION, nro_papeleta: dt.CODIGO_PAPELETA
+          this.dataViewPap.push({
+            tienda: tienda[0].name, nombre: dt.NOMBRE_COMPLETO, cargo: dt.CARGO_EMPLEADO, tipo: dt.ID_PAP_TIPO_PAPELETA, fecha: dt.FECHA_CREACION, nro_papeleta: dt.CODIGO_PAPELETA
+          });
+
+          if (dataResponse.length - 1 == i) {
+            this.dataSourcePap = new MatTableDataSource(this.dataViewPap);
+            this.dataSourcePap.paginator = this.paginator;
+            this.dataSourcePap.sort = this.sort;
+          }
         });
-
-        if (dataResponse.length - 1 == i) {
-          this.dataSourcePap = new MatTableDataSource(this.dataViewPap);
-          this.dataSourcePap.paginator = this.paginator;
-          this.dataSourcePap.sort = this.sort;
-        }
-      });
+      }
     });
   }
 
@@ -93,24 +95,26 @@ export class MtPanelHorarioComponent implements OnInit {
     this.service.get(parms).then(async (response) => {
       let dataResponse = response;
       this.dataView = [];
-      (dataResponse || []).filter(async (dt, i) => {
-        let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
+      if ((dataResponse || []).length) {
+        (dataResponse || []).filter(async (dt, i) => {
+          let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
 
-        let horario = ((dt || {}).RANGO_DIAS || "").split(" ");
+          let horario = ((dt || {}).RANGO_DIAS || "").split(" ");
 
-        if ((tienda || []).length && (dt || {}).RANGO_DIAS != "") {
-          this.dataView.push({
-            code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
-          });
-        }
+          if ((tienda || []).length && (dt || {}).RANGO_DIAS != "") {
+            this.dataView.push({
+              code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
+            });
+          }
 
-        if (dataResponse.length - 1 == i) {
-          console.log(this.dataView);
-          this.dataSource = new MatTableDataSource(this.dataView);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        }
-      });
+          if (dataResponse.length - 1 == i) {
+            console.log(this.dataView);
+            this.dataSource = new MatTableDataSource(this.dataView);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }
+        });
+      }
     });
   }
 

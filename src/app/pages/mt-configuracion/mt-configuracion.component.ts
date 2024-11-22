@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ShareService } from '../../services/shareService';
 import { io } from "socket.io-client";
 import { ModalController } from '@ionic/angular';
@@ -6,6 +6,9 @@ import { MtModalContentComponent } from '../../components/mt-modal-content/mt-mo
 
 import { StorageService } from 'src/app/utils/storage';
 import { ChangeDetectorRef } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'mt-configuracion',
@@ -13,6 +16,16 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./mt-configuracion.component.scss'],
 })
 export class MtConfiguracionComponent implements OnInit {
+
+  displayedColumnsSession: string[] = ['id_session', 'email', 'ip', 'divice'];
+  displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo','accion'];
+  displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel'];
+  dataViewSession: Array<any> = [];
+  dataViewAuthSession: Array<any> = [];
+  dataViewUser: Array<any> = [];
+  dataSourceSession = new MatTableDataSource<any>(this.dataViewSession);
+  dataSourceAuthSession = new MatTableDataSource<any>(this.dataViewAuthSession);
+  dataSourceUser = new MatTableDataSource<any>(this.dataViewUser);
 
   menuAllList: Array<any> = [];
   menuUserList: Array<any> = [];
@@ -35,13 +48,21 @@ export class MtConfiguracionComponent implements OnInit {
   isEmailDelete: boolean = false;
   userEmailService: string = "";
   passEmailService: string = "";
+  vEmail: string = "";
+  tipoCuenta: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
+  onListPageDefault: Array<any> = [];
+  onListTipoCuenta: Array<any> = [];
   selectOption: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
   nombreMenu: string = "";
   routeMenu: string = "";
+  vUsuario: string = "";
+  vPassword: string = "";
+  isSession: boolean = false;
+  isUsers: boolean = false;
   token: any = localStorage.getItem('tn');
   optionNivelList: Array<any> = [];
   selectOptionNivel = {};
@@ -74,13 +95,19 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '9L', value: 'VS MINKA', progress: -1 },
     { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1 },
     { key: '7A7', value: 'BBW ASIA', progress: -1 },
-    { key: '9P', value: 'VS MALL PLAZA', progress: -1},
-    { key: '7I', value: 'BBW MALL PLAZA', progress: -1}
+    { key: '9P', value: 'VS MALL PLAZA', progress: -1 },
+    { key: '7I', value: 'BBW MALL PLAZA', progress: -1 }
   ];
 
   optionListRol: Array<any> = [];
   vListaClientes: String = "";
   socket = io('http://38.187.8.22:3200', { query: { code: 'app', token: this.token } });
+  @ViewChild(MatPaginator) paginator_user: MatPaginator;
+  @ViewChild(MatSort) sort_user: MatSort;
+
+  @ViewChild(MatPaginator) paginator_session: MatPaginator;
+  @ViewChild(MatSort) sort_session: MatSort;
+
 
   constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService, private cdr: ChangeDetectorRef) { }
 
@@ -95,6 +122,55 @@ export class MtConfiguracionComponent implements OnInit {
     });
 
     this.onListClient();
+
+
+    this.socket.on('refreshSessionView', (status) => {
+      this.onListSession();
+      this.onListAuthSession();
+    });
+
+    this.onListPageDefault = [
+      { key: 'comprobantes', value: 'comprobantes' },
+      { key: 'inventario', value: 'inventario' },
+      { key: 'configuracion', value: 'configuracion' },
+      { key: 'asistencia', value: 'asistencia' },
+      { key: 'horario', value: 'horario' },
+      { key: 'auth-hora-extra', value: 'auth-hora-extra' },
+      { key: 'panel-horario', value: 'panel-horario' },
+      { key: 'planilla', value: 'planilla' }
+    ];
+
+    this.onListTipoCuenta = [
+      { key: 'SISTEMAS', value: 'SISTEMAS' },
+      { key: 'INVENTARIO', value: 'INVENTARIO' },
+      { key: 'RRHH', value: 'RRHH' },
+      { key: 'TIENDA', value: 'TIENDA' },
+      { key: 'GERENCIA', value: 'GERENCIA' },
+    ];
+  }
+
+  onListSession() {
+    let parms = {
+      url: '/session_login/view'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.dataViewSession = (response || [])['data'];
+      this.dataSourceSession = new MatTableDataSource(this.dataViewSession);
+      this.dataSourceSession.paginator = this.paginator_session;
+      this.dataSourceSession.sort = this.sort_session;
+    });
+  }
+
+  onListAuthSession() {
+    let parms = {
+      url: '/auth_session/view'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.dataViewAuthSession = (response || [])['data'];
+      this.dataSourceAuthSession = new MatTableDataSource(this.dataViewAuthSession);
+    });
   }
 
   onSaveClientes() {
@@ -106,6 +182,44 @@ export class MtConfiguracionComponent implements OnInit {
     this.service.post(parms).then((response) => {
       console.log(response);
     });
+  }
+
+  onUserList() {
+    let parms = {
+      url: '/login/users'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.dataViewUser = (response || [])['data'];
+      this.dataSourceUser = new MatTableDataSource(this.dataViewUser);
+      this.dataSourceUser.paginator = this.paginator_user;
+      this.dataSourceUser.sort = this.sort_user;
+    });
+  }
+
+  onCall(ev) {
+    if (ev.tab.textLabel == "Usuario Sistema") {
+      this.isSession = false;
+      this.isUsers = true;
+      this.onUserList();
+      
+      this.dataSourceSession = new MatTableDataSource<any>([]);
+      this.dataSourceSession.paginator = this.paginator_session;
+      this.dataSourceSession.sort = this.sort_session;
+      this.dataSourceAuthSession = new MatTableDataSource<any>([]);
+    }
+
+    if (ev.tab.textLabel == "Session") {
+      this.isSession = true;
+      this.isUsers = false;
+      this.onListSession();
+      this.onListAuthSession();
+
+      this.dataSourceUser = new MatTableDataSource<any>([]);
+      this.dataSourceUser.paginator = this.paginator_user;
+      this.dataSourceUser.sort = this.sort_user;
+    }
+
   }
 
   onListClient() {
@@ -369,6 +483,11 @@ export class MtConfiguracionComponent implements OnInit {
         this.hashAgente = (response || {}).hash;
       }
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceUser.filter = filterValue.trim().toLowerCase();
   }
 
   onSaveMenuUser() {
