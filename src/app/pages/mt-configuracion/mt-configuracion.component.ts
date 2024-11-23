@@ -18,7 +18,7 @@ import { MatSort } from '@angular/material/sort';
 export class MtConfiguracionComponent implements OnInit {
 
   displayedColumnsSession: string[] = ['id_session', 'email', 'ip', 'divice'];
-  displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo','accion'];
+  displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo', 'accion'];
   displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel'];
   dataViewSession: Array<any> = [];
   dataViewAuthSession: Array<any> = [];
@@ -202,7 +202,7 @@ export class MtConfiguracionComponent implements OnInit {
       this.isSession = false;
       this.isUsers = true;
       this.onUserList();
-      
+
       this.dataSourceSession = new MatTableDataSource<any>([]);
       this.dataSourceSession.paginator = this.paginator_session;
       this.dataSourceSession.sort = this.sort_session;
@@ -532,6 +532,19 @@ export class MtConfiguracionComponent implements OnInit {
     });
 
     modal.present();
+  }
+
+  onDeleteAuth(id_session) {
+    let parms = {
+      url: '/auth_session/delete',
+      body: {
+        id: id_session
+      }
+    };
+
+    this.service.post(parms).then((response) => {
+      this.onListAuthSession();
+    });
   }
 
 }
