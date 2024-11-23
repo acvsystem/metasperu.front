@@ -230,7 +230,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   isJornadaCompleta: false,
                   isBrakeComplete: false,
                   isRegistroMax: false,
-                  statusRegistro: 'correcto',
+                  statusRegistro: 'CORRECTO',
                   dataRegistro: [huellero]
                 });
 
@@ -245,7 +245,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['isBrakeComplete'] = this.onVerficacionBrake(this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso));
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1  ? true : false;
-                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1  ? "revisar" : "correcto";
+                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1  ? "REVISAR" : "CORRECTO";
               }
             }
           }
