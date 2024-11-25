@@ -244,8 +244,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
                 this.onDataTemp[indexData]['isBrakeComplete'] = this.onVerficacionBrake(this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso));
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
-                this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1  ? true : false;
-                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1  ? "REVISAR" : "CORRECTO";
+                this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
+                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : "CORRECTO";
               }
             }
           }
@@ -453,33 +453,36 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           let indexTmp = tmpFeriado.findIndex((tmp) => tmp.nro_documento == (data || {}).nro_documento);
           let indexExport = this.exportFeriado.findIndex((tmp) => tmp.CODIGO == (data || {}).codigoEJB);
 
-          if (indexTmp == -1) {
-            tmpFeriado.push({
-              tienda: (data || {}).tienda,
-              codigoEJB: (data || {}).codigoEJB,
-              nombre_completo: (data || {}).nombre_completo,
-              nro_documento: (data || {}).nro_documento,
-              dia: (data || {}).dia,
-              cantFeriado: 1,
-              hr_trabajadas: (data || {}).hr_trabajadas,
-              hr_establecido: 8
-            });
+          let ext = tmpFeriado.findIndex((tmp) => (tmp.nro_documento == (data || {}).nro_documento) && (tmp.dia == (data || {}).dia));
+          if (ext == -1 && (data || {}).nro_documento != "001763881") {
+            if (indexTmp == -1) {
+              tmpFeriado.push({
+                tienda: (data || {}).tienda,
+                codigoEJB: (data || {}).codigoEJB,
+                nombre_completo: (data || {}).nombre_completo,
+                nro_documento: (data || {}).nro_documento,
+                dia: (data || {}).dia,
+                cantFeriado: 1,
+                hr_trabajadas: (data || {}).hr_trabajadas,
+                hr_establecido: 8
+              });
 
 
-            this.exportFeriado[indexExport]['DIA-FER'] = this.exportFeriado[indexExport]['DIA-FER'] + 1;
+              this.exportFeriado[indexExport]['DIA-FER'] = this.exportFeriado[indexExport]['DIA-FER'] + 1;
 
-          } else {
-            tmpFeriado[indexTmp]['cantFeriado'] = tmpFeriado[indexTmp]['cantFeriado'] + 1;
-            let hr_establecido = tmpFeriado[indexTmp]['cantFeriado'] * 8;
-            tmpFeriado[indexTmp]['hr_establecido'] = hr_establecido;
-            tmpFeriado[indexTmp]['hr_trabajadas'] = tmpFeriado[indexTmp]['hr_trabajadas'] + (data || {}).hr_trabajadas;
-            this.exportFeriado[indexExport]['DIA-FER'] = this.exportFeriado[indexExport]['DIA-FER'] + 1;
+            } else {
+              tmpFeriado[indexTmp]['cantFeriado'] = tmpFeriado[indexTmp]['cantFeriado'] + 1;
+              let hr_establecido = tmpFeriado[indexTmp]['cantFeriado'] * 8;
+              tmpFeriado[indexTmp]['hr_establecido'] = hr_establecido;
+              tmpFeriado[indexTmp]['hr_trabajadas'] = this.obtenerHorasTrabajadas(tmpFeriado[indexTmp]['hr_trabajadas'], (data || {}).hr_trabajadas);
+              this.exportFeriado[indexExport]['DIA-FER'] = this.exportFeriado[indexExport]['DIA-FER'] + 1;
+            }
           }
+
 
         }
       });
     });
-
 
     this.onDataView = tmpFeriado;
     this.dataSource = new MatTableDataSource(this.onDataView);

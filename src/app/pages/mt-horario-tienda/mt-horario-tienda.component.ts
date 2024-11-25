@@ -255,7 +255,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
-    this.titleObservacion = objDia['dia'];
+    //this.titleObservacion = objDia['dia'];
     if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
 
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
@@ -264,7 +264,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       if (index != -1) {
         let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
-        this.titleObservacion = objDia['dia'];
+       // this.titleObservacion = objDia['dia'];
         this.dataHorario[index]['arListTrabajador'] = [];
 
         this.arListTrabajador.filter((emp) => {
@@ -684,6 +684,25 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     });
 
+  }
+
+  obtenerHorasTrabajadas(hrRs_1, hrRs_2) {
+    let hr_1 = hrRs_1.split(":");
+    let hr_2 = hrRs_2.split(":");
+    let dif_min = parseInt(hr_1[1]) + parseInt(hr_2[1]);
+    let dif_hora = parseInt(hr_1[0]) + parseInt(hr_2[0]);
+    let dif_res = 0;
+    let dif_hr = 0;
+
+    if (dif_min > 59) {
+      dif_res = dif_min - 60;
+      dif_hr = dif_hora + 1;
+    } else {
+      dif_hr = dif_hora;
+      dif_res = dif_min;
+    }
+
+    return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
   }
 
 }
