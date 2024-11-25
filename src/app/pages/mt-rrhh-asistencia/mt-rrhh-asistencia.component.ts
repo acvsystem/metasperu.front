@@ -454,7 +454,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           let indexExport = this.exportFeriado.findIndex((tmp) => tmp.CODIGO == (data || {}).codigoEJB);
 
           let ext = tmpFeriado.findIndex((tmp) => (tmp.nro_documento == (data || {}).nro_documento) && (tmp.dia == (data || {}).dia));
-          if (ext == -1 && (data || {}).nro_documento != "001763881") {
+          if (ext == -1 && (data || {}).nro_documento != "001763881" && (data || {}).nro_documento != "002217530") {
             if (indexTmp == -1) {
               tmpFeriado.push({
                 tienda: (data || {}).tienda,
