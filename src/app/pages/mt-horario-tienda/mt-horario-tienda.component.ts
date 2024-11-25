@@ -274,10 +274,11 @@ export class MtHorarioTiendaComponent implements OnInit {
         dataTrabajadores = [...this.dataHorario[index]['arListTrabajador']];
 
         this.dataHorario[index]['arListTrabajador'] = [];
-
         dataTrabajadores.filter((tr) => {
-          let isExist = this.dataHorario[index]['dias_trabajo'].findIndex((dt) => dt.nombre_completo == tr.nombre_completo && dt.id_dia == tr.id_dia && dt.rg == tr.rg && dt.id_cargo == tr.id_cargo);
+          
+          let isExist = this.dataHorario[index]['dias_trabajo'].findIndex((dt) => dt.nombre_completo == tr.nombre_completo && dt.id_dia == tr.id_dia && dt.id_cargo == tr.id_cargo);
           if (isExist != -1) {
+           
           } else {
             this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: tr.nombre_completo, numero_documento: tr.numero_documento });
           }

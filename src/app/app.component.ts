@@ -283,7 +283,8 @@ export class AppComponent {
     this.store.removeStore('inscription');
     this.store.removeStore('conx_online');
     this.store.removeStore('pathResolve');
-    
+    this.store.removeStore('mt-horario');
+
     this.renderNavBar = false;
     this.nav.navigateRoot('login');
     this.isVisiblePopover = false;
