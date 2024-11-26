@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, HostListener, inject, Input, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/utils/storage';
 import { io } from "socket.io-client";
 import {
@@ -50,7 +50,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   parseEJB: Array<any> = [];
   arDataEJB: Array<any> = [];
   arDataServer: Array<any> = [];
-
+  screenHeight: number = 0;
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -84,11 +84,19 @@ export class MtHorarioTiendaComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
+  @HostListener('window:resize', ['$event'])
+
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    console.log(this.screenHeight);
+  }
+
   constructor(private store: StorageService, public notify: Notifications, private service: ShareService) { }
 
 
 
   async ngOnInit() {
+    this.getScreenSize();
 
     if ((this.data || []).length) {
       console.log(this.data);
@@ -264,7 +272,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       if (index != -1) {
         let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
-       // this.titleObservacion = objDia['dia'];
+        // this.titleObservacion = objDia['dia'];
         this.dataHorario[index]['arListTrabajador'] = [];
 
         this.arListTrabajador.filter((emp) => {
@@ -275,10 +283,10 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         this.dataHorario[index]['arListTrabajador'] = [];
         dataTrabajadores.filter((tr) => {
-          
+
           let isExist = this.dataHorario[index]['dias_trabajo'].findIndex((dt) => dt.nombre_completo == tr.nombre_completo && dt.id_dia == tr.id_dia && dt.id_cargo == tr.id_cargo);
           if (isExist != -1) {
-           
+
           } else {
             this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: tr.nombre_completo, numero_documento: tr.numero_documento });
           }

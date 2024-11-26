@@ -191,44 +191,86 @@
             </div>
           </div>
         </ion-col>
+        <div style="width: 100%;display: contents;">
+          <ion-col  sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="padding-right: 0;">
+            <div style="color: black;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+            border-color: #CCCCCC;">
+              Rango Horario
+            </div>
+          </ion-col>
+          <ion-col  sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="padding-right: 0;">
+            <div style="color: black;
+           
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+            border-color: #CCCCCC;">
+              Dia
+            </div>
+          </ion-col>
+          <ion-col  sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7"  style="padding: 0;">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="padding-right: 0;">
+                  <div style="color: black;
+                    
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 10px;
+                    border: 1px solid;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    margin-left: 5px;
+                    border-color: #CCCCCC;">
+                      Trabajadores 
+                    </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div style="color: black;
+                  
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 10px;
+                  border: 1px solid;
+                  border-radius: 5px;
+                  margin-bottom: 10px;
+                  margin-left: 5px;
+                  border-color: #CCCCCC;">
+                    Registro del dia
+                  </div>
+                </ion-col>
+              </ion-row>
+          </ion-col>
+        </div>
       </ion-row>
-      <ion-row *ngIf="cboCargo != undefined">
+      <ion-row *ngIf="cboCargo != undefined" style="overflow: auto;
+      padding-bottom: 250px;
+      height: 100%;">
         @for(data of dataHorario; track data.id) {
           <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
-              <div style="color: black;
-              width: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              padding: 10px;
-              border: 1px solid;
-              border-radius: 5px;
-              margin-bottom: 10px;
-              margin-left: 5px;
-              border-color: #CCCCCC;">
-                Rango Horario
-              </div>
-              <div class="example-list">
+              <div class="example-list contenedor">
                 @for (rg of data.rg_hora; track rg.id) {
                   <div [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">{{rg.rg}}</div>
                 }
               </div>
           </ion-col>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="data.id == idCargo">
-          <div style="color: black;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 10px;
-          border: 1px solid;
-          border-radius: 5px;
-          margin-bottom: 10px;
-          margin-left: 5px;
-          border-color: #CCCCCC;">
-            Dia
-          </div>
-          <div class="example-list">
+          <div class="example-list contenedor">
             @for (dia of data.dias; track dia.id) {
               <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia)">
                 {{dia.dia}}
@@ -240,23 +282,10 @@
           </div>
           
           </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" *ngIf="data.id == idCargo" style="padding: 0;">
+          <ion-col style="    padding-right: 12px;" sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" *ngIf="data.id == idCargo" style="padding: 0;">
           <div>
             <ion-row>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <div style="color: black;
-                  width: 100%;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  padding: 10px;
-                  border: 1px solid;
-                  border-radius: 5px;
-                  margin-bottom: 10px;
-                  margin-left: 5px;
-                  border-color: #CCCCCC;">
-                    Trabajadores 
-                  </div>
                   <div
                   *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
                   class="example-list contenedor">
@@ -284,23 +313,10 @@
                   }
                 </div>
               </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <div style="color: black;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                border: 1px solid;
-                border-radius: 5px;
-                margin-bottom: 10px;
-                margin-left: 5px;
-                border-color: #CCCCCC;">
-                  Registro del dia
-                </div>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="padding-right: 10px;">
                 <div
                 *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
-                class="example-list">
+                class="example-list contenedor">
                 @for (dtrb of data.dias_trabajo; track dtrb) {
                   <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
                     {{dtrb.nombre_completo}}
@@ -317,7 +333,8 @@
               </ion-col>
             </ion-row>
         </div>
-        </ion-col>
+          </ion-col>
+          
       }
       </ion-row>
     } 
