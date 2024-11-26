@@ -231,7 +231,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       let exist = this.dataHorario[index]['rg_hora'].findIndex((rgh) => rgh.rg == `${this.horaInit} a ${this.horaEnd}`);
       if (exist == -1) {
         //this.dataHorario[index]['rg_hora'].pop();
-        this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, rg: `${this.horaInit} a ${this.horaEnd}` });
+        this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
         //this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, rg: `DIAS LIBRES` });
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
@@ -251,7 +251,9 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
 
     this.socket.emit('actualizarHorario', this.dataHorario);
-
+    setTimeout(() => {
+      this.onUpdateRango();
+    }, 1000);
   }
 
 
@@ -581,6 +583,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       }
 
       this.socket.emit('actualizarHorario', this.dataHorario);
+      this.onSearchCalendario();
     }
   }
 
@@ -634,6 +637,36 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
   }
 
+
+  onUpdateRango() {
+
+    let parms = {
+      url: '/calendario/searchrHorario',
+      body: [{ rango_dias: this.vRangoDiasSearch, codigo_tienda: this.codeTienda }]
+    };
+
+    this.service.post(parms).then(async (response) => {
+      if ((response || []).length) {
+
+        await response.filter((dt, index) => {
+          let indexHorario = this.dataHorario.findIndex((dth) => dth.id == dt.id);
+          this.dataHorario[indexHorario]['rg_hora'] = dt.rg_hora;
+        });
+        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+      } else {
+        this.dataHorario = [];
+        this.notify.snackbar({
+          message: (response || {}).msj,
+          display: 'top',
+          color: 'danger'
+        });
+      }
+
+    });
+
+  }
+
+
   onSearchCalendario(rango?, codigo?) {
 
     let parms = {
@@ -673,7 +706,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           });
 
 
-          console.log({ key: dt.id, value: dt.cargo });
+          console.log(this.dataHorario);
           this.onListCargo.push({ key: dt.id, value: dt.cargo });
         });
 
