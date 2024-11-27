@@ -265,7 +265,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
-    //this.titleObservacion = objDia['dia'];
+    this.titleObservacion = objDia['dia'];
     if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
 
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
@@ -274,7 +274,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       if (index != -1) {
         let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
-        // this.titleObservacion = objDia['dia'];
+        this.titleObservacion = objDia['dia'];
         this.dataHorario[index]['arListTrabajador'] = [];
 
         this.arListTrabajador.filter((emp) => {
@@ -456,7 +456,6 @@ export class MtHorarioTiendaComponent implements OnInit {
           var indice = new Date(año, mes - 1, dia).getDay();
 
           if (indice == parseInt(day[0]) && diasSemana[indice] == "Lunes") {
-            console.log(day[0]);
             dias.push({ id: dias.length + 1, dia: diasSemana[indice], fecha: `${diasSemana[indice]}-${arMes[mes]}`, fecha_calendar: '', isExpired: false });
           }
 
@@ -678,6 +677,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       if ((response || []).length) {
         this.onListCargo = [];
         this.dataHorario = response;
+        console.log(response);
         let dateNow = new Date();
         let day = new Date(dateNow).toLocaleDateString().split('/');
         let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
@@ -692,17 +692,17 @@ export class MtHorarioTiendaComponent implements OnInit {
             let fechaInicio = new Date(fechaActual);
             let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
 
-            console.log(fechaFin.getTime(), fechaInicio.getTime());
             if (fechaFin.getTime() < fechaInicio.getTime()) {
               this.dataHorario[index]['dias'][i]['isExpired'] = true;
             } else {
               this.dataHorario[index]['dias'][i]['isExpired'] = false;
             }
-
+        
             let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+           
             if (obsExist != -1) {
               this.dataHorario[index]['dias'][i]['isObservation'] = true;
-            }
+            } 
           });
 
 
