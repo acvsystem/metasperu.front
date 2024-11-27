@@ -15,7 +15,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtPlanillaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-
+  
   onDataView: Array<any> = [];
   vCalendar: string = "202411";
   fileName: string = "";
@@ -52,12 +52,12 @@ export class MtPlanillaComponent implements OnInit {
   ngOnInit() {
     this.onDataPlanilla();
     this.socket.on('reporteQuincena', async (response) => {
-      console.log(response);
       this.onDataView = [];
       this.onDataView = response.data || [];
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.isLoading = false;
     });
 
   }
@@ -71,7 +71,7 @@ export class MtPlanillaComponent implements OnInit {
     let oldName = "";
     let codigoList = [];
     this.onDataView = data;
-    console.log(this.cboBanco);
+
     await data.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO_UNID_SERVICIO'].trim())) {
         codigoList.push(dt['CODIGO_UNID_SERVICIO'].trim());
@@ -296,6 +296,7 @@ export class MtPlanillaComponent implements OnInit {
   }
 
   onDataPlanilla() {
+    this.isLoading = true;
     let option = {
       tipo_planilla: this.cboReporte,
       date: this.vCalendar
