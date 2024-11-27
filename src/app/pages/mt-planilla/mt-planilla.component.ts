@@ -159,7 +159,7 @@ export class MtPlanillaComponent implements OnInit {
         if (i <= 9) {
           dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
           dataTemp.filter(async (dt, i) => {
-
+            let colUlt = "";
             let sueldo = dt['ADELANTO_QUINCENA'].split('.');
             let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
             let sueldoLength = 15 - parseSueldo.length;
@@ -212,7 +212,13 @@ export class MtPlanillaComponent implements OnInit {
               col7 += ' ';
             }
 
-            let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
+            if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
+              for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+                colUlt += '0';
+              }
+            } else {
+              colUlt += '000000000000000';
+            }
 
             this.fileName = dt['UNIDAD_SERVICIO'];
             this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
@@ -232,7 +238,7 @@ export class MtPlanillaComponent implements OnInit {
           if (i > 9 && i < 19) {
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
             dataTemp.filter(async (dt, i) => {
-
+              let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
               let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
               let sueldoLength = 15 - parseSueldo.length;
@@ -286,7 +292,13 @@ export class MtPlanillaComponent implements OnInit {
               }
               this.fileName = dt['UNIDAD_SERVICIO'];
 
-              let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
+              if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
+                for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+                  colUlt += '0';
+                }
+              } else {
+                colUlt += '000000000000000';
+              }
 
               this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
@@ -306,7 +318,7 @@ export class MtPlanillaComponent implements OnInit {
           if (i >= 19) {
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
             dataTemp.filter(async (dt, i) => {
-
+              let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
               let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
               let sueldoLength = 15 - parseSueldo.length;
@@ -360,7 +372,13 @@ export class MtPlanillaComponent implements OnInit {
               }
               this.fileName = dt['UNIDAD_SERVICIO'];
 
-              let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
+              if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
+                for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+                  colUlt += '0';
+                }
+              } else {
+                colUlt += '000000000000000';
+              }
 
               this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
