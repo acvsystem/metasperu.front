@@ -119,11 +119,11 @@ export class MtPlanillaComponent implements OnInit {
       }
 
       if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
-        for (let i = 0; i <= 36 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+        for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
           colUlt += '0';
         }
       } else {
-        colUlt += '0000000000000000';
+        colUlt += '000000000000000';
       }
 
       this.fileName = "GENERAL";
