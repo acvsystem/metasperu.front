@@ -63,7 +63,78 @@ export class MtPlanillaComponent implements OnInit {
   }
 
   async onGenTxtTotal() {
-    
+    this.onDataView.filter(async (dt, i) => {
+
+      let sueldo = dt['ADELANTO_QUINCENA'].split('.');
+      let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
+      let sueldoLength = 15 - parseSueldo.length;
+      let concatSueldo = "01";
+      let colUlt = '';
+      for (let i = 1; i <= sueldoLength; i++) {
+        concatSueldo += '0';
+      }
+      concatSueldo += `${parseSueldo} `;
+
+      let col1Length = 50 - `0201${dt.NRO_DOCUMENTO}`.length;
+      let col1 = `0201${dt.NRO_DOCUMENTO}`;
+      for (let i = 0; i <= col1Length; i++) {
+        col1 += ' ';
+      }
+
+      let cuentaBanco = dt.BANCO == this.cboBanco ? dt.CUENTA_BANCO_HABERES : !dt.CUENTA_INTERBANCARIO.length ? 0 : dt.CUENTA_INTERBANCARIO;
+
+      let tipoCuenta = dt.BANCO == this.cboBanco ? '09' : '99';
+      let space = tipoCuenta == '99' ? `${tipoCuenta}00201   ` : `${tipoCuenta}00201`;
+      let col3Length = 29 - `${space}${cuentaBanco}`.length;
+      let col3 = `${space}${cuentaBanco}`;
+      for (let i = 0; i <= col3Length; i++) {
+        col3 += ' ';
+      }
+
+      let tipoDocumento = (dt.NRO_DOCUMENTO).trim().length == 8 ? '01' : '03';
+
+      let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO}`.length;
+      let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO}`;
+      for (let i = 0; i <= col4Length; i++) {
+        col4 += ' ';
+      }
+
+      let col5Length = 20 - `${dt.APELLIDO_PATERNO}`.length;
+      let col5 = `${this.sinDiacriticos(dt.APELLIDO_PATERNO)}`;
+      for (let i = 0; i <= col5Length; i++) {
+        col5 += ' ';
+      }
+
+      let col6Length = 20 - `${dt.APELLIDO_MATERNO}`.length;
+      let col6 = `${this.sinDiacriticos(dt.APELLIDO_MATERNO)}`;
+      for (let i = 0; i <= col6Length; i++) {
+        col6 += ' ';
+      }
+
+      let col7Length = 27 - `${dt.NOMBRE_COMPLETO}`.length;
+      let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
+      let col7 = `${nombre_completo}`;
+      for (let i = 0; i <= col7Length - 7; i++) {
+        col7 += ' ';
+      }
+
+      if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
+        for (let i = 0; i <= 36 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+          colUlt += '0';
+        }
+      } else {
+        colUlt += '0000000000000000';
+      }
+
+      this.fileName = "GENERAL";
+      this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
+
+      if (this.onDataView.length - 1 == i) {
+        this.dyanmicDownloadByHtmlTag();
+        this.text = "";
+        this.fileName = "";
+      }
+    });
   }
 
   async onGenTxt() {
@@ -140,7 +211,7 @@ export class MtPlanillaComponent implements OnInit {
             for (let i = 0; i <= col7Length - 7; i++) {
               col7 += ' ';
             }
-      
+
             let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
 
             this.fileName = dt['UNIDAD_SERVICIO'];
@@ -214,7 +285,7 @@ export class MtPlanillaComponent implements OnInit {
                 col7 += ' ';
               }
               this.fileName = dt['UNIDAD_SERVICIO'];
-  
+
               let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
 
               this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;

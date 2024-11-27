@@ -39,6 +39,14 @@
                 <button type="button" class="btn btn-success btn-sm" disabled><i
                   class="fa fa-file-excel-o" aria-hidden="true"></i> Generar TXT</button>
               }
+
+              @if(cboBanco == 4){
+                <button type="button" class="btn btn-success btn-sm" (click)="onGenTxtTotal()"><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar Total TXT</button>
+              }@else{
+                <button type="button" class="btn btn-success btn-sm" disabled><i
+                  class="fa fa-file-excel-o" aria-hidden="true"></i> Generar Total TXT</button>
+              }
              
               @if(cboBanco == 2){
                 <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i
