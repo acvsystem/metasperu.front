@@ -15,7 +15,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtPlanillaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  
+
   onDataView: Array<any> = [];
   vCalendar: string = "202411";
   fileName: string = "";
@@ -60,6 +60,10 @@ export class MtPlanillaComponent implements OnInit {
       this.isLoading = false;
     });
 
+  }
+
+  async onGenTxtTotal() {
+    
   }
 
   async onGenTxt() {
@@ -136,8 +140,11 @@ export class MtPlanillaComponent implements OnInit {
             for (let i = 0; i <= col7Length - 7; i++) {
               col7 += ' ';
             }
+      
+            let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
+
             this.fileName = dt['UNIDAD_SERVICIO'];
-            this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}000000000000000 \n`;
+            this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
             if (dataTemp.length - 1 == i) {
               this.dyanmicDownloadByHtmlTag();
@@ -207,7 +214,10 @@ export class MtPlanillaComponent implements OnInit {
                 col7 += ' ';
               }
               this.fileName = dt['UNIDAD_SERVICIO'];
-              this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}000000000000000 \n`;
+  
+              let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
+
+              this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
               if (dataTemp.length - 1 == i) {
                 this.dyanmicDownloadByHtmlTag();
@@ -271,14 +281,17 @@ export class MtPlanillaComponent implements OnInit {
                 col6 += ' ';
               }
 
-              let col7Length = 27 - `${dt.NOMBRE_COMPLETO}`.length;
+              let col7Length = 21 - `${dt.NOMBRE_COMPLETO}`.length;
               let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
               let col7 = `${nombre_completo}`;
               for (let i = 0; i <= col7Length - 7; i++) {
                 col7 += ' ';
               }
               this.fileName = dt['UNIDAD_SERVICIO'];
-              this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}000000000000000 \n`;
+
+              let colUlt = col7Length < 0 ? '0000000' : '000000000000000';
+
+              this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
               if (dataTemp.length - 1 == i) {
                 await this.dyanmicDownloadByHtmlTag();
