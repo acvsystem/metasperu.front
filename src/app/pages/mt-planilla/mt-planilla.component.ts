@@ -19,6 +19,7 @@ export class MtPlanillaComponent implements OnInit {
   onDataView: Array<any> = [];
   vCalendar: string = "202411";
   fileName: string = "";
+  fileName_2: string = "";
   text: string = "";
   isLoading: boolean = false;
   filterEmpleado: string = "";
@@ -63,6 +64,7 @@ export class MtPlanillaComponent implements OnInit {
   }
 
   async onGenTxtTotal() {
+
     this.onDataView.filter(async (dt, i) => {
 
       let sueldo = dt['ADELANTO_QUINCENA'].split('.');
@@ -119,7 +121,7 @@ export class MtPlanillaComponent implements OnInit {
       }
 
       if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
-        for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+        for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
           colUlt += '0';
         }
       } else {
@@ -156,8 +158,10 @@ export class MtPlanillaComponent implements OnInit {
     if (codigoList.length) {
 
       await codigoList.filter(async (codigo, i) => {
+        console.log(codigo);
         if (i <= 9) {
           dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+
           dataTemp.filter(async (dt, i) => {
             let colUlt = "";
             let sueldo = dt['ADELANTO_QUINCENA'].split('.');
@@ -213,7 +217,7 @@ export class MtPlanillaComponent implements OnInit {
             }
 
             if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
-              for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+              for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
                 colUlt += '0';
               }
             } else {
@@ -237,6 +241,7 @@ export class MtPlanillaComponent implements OnInit {
         codigoList.filter(async (codigo, i) => {
           if (i > 9 && i < 19) {
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+
             dataTemp.filter(async (dt, i) => {
               let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
@@ -293,7 +298,7 @@ export class MtPlanillaComponent implements OnInit {
               this.fileName = dt['UNIDAD_SERVICIO'];
 
               if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
-                for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+                for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
                   colUlt += '0';
                 }
               } else {
@@ -313,10 +318,15 @@ export class MtPlanillaComponent implements OnInit {
         });
       }, 3000);
 
+
       setTimeout(() => {
         codigoList.filter(async (codigo, i) => {
           if (i >= 19) {
+            this.text = "";
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+            if (codigo == "0011") {
+              console.log(2, this.text);
+            }
             dataTemp.filter(async (dt, i) => {
               let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
@@ -373,7 +383,7 @@ export class MtPlanillaComponent implements OnInit {
               this.fileName = dt['UNIDAD_SERVICIO'];
 
               if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
-                for (let i = 0; i <= 35 -`${dt.NOMBRE_COMPLETO}`.length; i++) {
+                for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
                   colUlt += '0';
                 }
               } else {
@@ -418,6 +428,7 @@ export class MtPlanillaComponent implements OnInit {
 
     var event = new MouseEvent("click");
     element.dispatchEvent(event);
+    this.isLoading = false;
   }
 
   sinDiacriticos = (function () {
@@ -455,12 +466,233 @@ export class MtPlanillaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+
+  async onGeneralNotInterbancario() {
+    let dataTemp = [];
+    let data = this.onDataView || [];
+    this.onDataView = data;
+
+    this.onDataView.filter(async (dt, i) => {
+
+      let tipoDoc = dt.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E';
+      let col1Length = 17 - `${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`.length;
+      let col1 = `${dt.NRO_DOCUMENTO.trim()}`;
+      for (let i = 0; i <= col1Length; i++) {
+        col1 += ' ';
+      }
+
+      let tipoBanco = dt.BANCO == 2 ? 'P' : 'I';
+      let cuentaBanco = (dt || {}).BANCO == 2 ? ((dt || {}).CUENTA_BANCO_HABERES || "") : !((dt || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dt || {}).CUENTA_INTERBANCARIO || "");
+      let col2Length = `${tipoBanco}${cuentaBanco.trim()}`.length;
+      let col2 = `${tipoBanco}${cuentaBanco.trim()}`;
+      for (let i = 0; i <= 21 - col2Length; i++) {
+        col2 += ' ';
+      }
+
+      let Nombre_Beneficiario = `${dt.APELLIDO_PATERNO} ${dt.APELLIDO_MATERNO} ${dt.NOMBRE_COMPLETO}`;
+      let col3Length = `${Nombre_Beneficiario}`.length;
+      let col3 = `${Nombre_Beneficiario}`;
+      for (let i = 0; i <= 41 - col3Length; i++) {
+        col3 += ' ';
+      }
+
+      this.fileName = "FALTA_CUENTA_INTERBANCARIO";
+
+      if (cuentaBanco < 3) {
+        this.text += `${col1},${col3} \n`;
+      }
+
+      if (this.onDataView.length - 1 == i) {
+        this.dyanmicDownloadByHtmlTag();
+        dataTemp = [];
+        this.text = "";
+        this.fileName = "";
+      }
+    });
+
+  }
+
+  async onBBWAExportTXT() {
+    //this.isLoading = true;
+    let dataExport = "";
+    let dataTemp = [];
+    let data = this.onDataView || [];
+    let nameTemplate = "";
+    let oldName = "";
+    let codigoList = [];
+    this.onDataView = data;
+
+    await data.filter(async (dt, i) => {
+      if (!codigoList.includes(dt['CODIGO_UNID_SERVICIO'].trim())) {
+        codigoList.push(dt['CODIGO_UNID_SERVICIO'].trim());
+      }
+    });
+
+    if (codigoList.length) {
+
+      await codigoList.filter(async (codigo, i) => {
+        if (i <= 9) {
+          dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+          dataTemp.filter(async (dt, i) => {
+
+            let tipoDoc = dt.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E';
+            let col1Length = 17 - `002${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`.length;
+            let col1 = `002${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`;
+            for (let i = 0; i <= col1Length; i++) {
+              col1 += ' ';
+            }
+
+            let tipoBanco = dt.BANCO == 2 ? 'P' : 'I';
+            let cuentaBanco = (dt || {}).BANCO == 2 ? ((dt || {}).CUENTA_BANCO_HABERES || "") : !((dt || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dt || {}).CUENTA_INTERBANCARIO || "");
+            let col2Length = `${tipoBanco}${cuentaBanco.trim()}`.length;
+            let col2 = `${tipoBanco}${cuentaBanco.trim()}`;
+            for (let i = 0; i <= 21 - col2Length; i++) {
+              col2 += ' ';
+            }
+
+            let Nombre_Beneficiario = `${dt.APELLIDO_PATERNO} ${dt.APELLIDO_MATERNO} ${dt.NOMBRE_COMPLETO}`;
+            let col3Length = `${Nombre_Beneficiario}`.length;
+            let col3 = `${Nombre_Beneficiario}`;
+            for (let i = 0; i <= 41 - col3Length; i++) {
+              col3 += ' ';
+            }
+
+            let sueldo = parseInt(dt.ADELANTO_QUINCENA);
+            let parseSueldo = `${sueldo}00`;
+            let sueldoLength = parseSueldo.length;
+            let concatSueldo = "";
+            for (let i = 1; i <= 16 - sueldoLength; i++) {
+              concatSueldo += '0';
+            }
+            concatSueldo += `${parseSueldo} `;
+
+            this.fileName = dt['UNIDAD_SERVICIO'];
+            this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
+
+            if (dataTemp.length - 1 == i) {
+              console.log(this.text);
+              this.dyanmicDownloadByHtmlTag();
+              dataTemp = [];
+              this.text = "";
+              this.fileName = "";
+            }
+          });
+        }
+      });
+
+      setTimeout(async () => {
+        await codigoList.filter(async (codigo, i) => {
+          if (i > 9 && i < 19) {
+            dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+            dataTemp.filter(async (dt, i) => {
+
+              let tipoDoc = dt.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E';
+              let col1Length = 17 - `002${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`.length;
+              let col1 = `002${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`;
+              for (let i = 0; i <= col1Length; i++) {
+                col1 += ' ';
+              }
+
+              let tipoBanco = dt.BANCO == 2 ? 'P' : 'I';
+              let cuentaBanco = (dt || {}).BANCO == 2 ? ((dt || {}).CUENTA_BANCO_HABERES || "") : !((dt || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dt || {}).CUENTA_INTERBANCARIO || "");
+              let col2Length = `${tipoBanco}${cuentaBanco.trim()}`.length;
+              let col2 = `${tipoBanco}${cuentaBanco.trim()}`;
+              for (let i = 0; i <= 21 - col2Length; i++) {
+                col2 += ' ';
+              }
+
+              let Nombre_Beneficiario = `${dt.APELLIDO_PATERNO} ${dt.APELLIDO_MATERNO} ${dt.NOMBRE_COMPLETO}`;
+              let col3Length = `${Nombre_Beneficiario}`.length;
+              let col3 = `${Nombre_Beneficiario}`;
+              for (let i = 0; i <= 41 - col3Length; i++) {
+                col3 += ' ';
+              }
+
+              let sueldo = parseInt(dt.ADELANTO_QUINCENA);
+              let parseSueldo = `${sueldo}00`;
+              let sueldoLength = parseSueldo.length;
+              let concatSueldo = "";
+              for (let i = 1; i <= 16 - sueldoLength; i++) {
+                concatSueldo += '0';
+              }
+              concatSueldo += `${parseSueldo} `;
+
+              this.fileName = dt['UNIDAD_SERVICIO'];
+              this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
+
+              if (dataTemp.length - 1 == i) {
+                console.log(this.text);
+                this.dyanmicDownloadByHtmlTag();
+                dataTemp = [];
+                this.text = "";
+                this.fileName = "";
+              }
+            });
+          }
+        });
+      }, 3000);
+
+      setTimeout(async () => {
+        await codigoList.filter(async (codigo, i) => {
+          if (i >= 19) {
+            dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
+            dataTemp.filter(async (dt, i) => {
+
+              let tipoDoc = dt.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E';
+              let col1Length = 17 - `002${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`.length;
+              let col1 = `002${tipoDoc}${dt.NRO_DOCUMENTO.trim()}`;
+              for (let i = 0; i <= col1Length; i++) {
+                col1 += ' ';
+              }
+
+              let tipoBanco = dt.BANCO == 2 ? 'P' : 'I';
+              let cuentaBanco = (dt || {}).BANCO == 2 ? ((dt || {}).CUENTA_BANCO_HABERES || "") : !((dt || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dt || {}).CUENTA_INTERBANCARIO || "");
+              let col2Length = `${tipoBanco}${cuentaBanco.trim()}`.length;
+              let col2 = `${tipoBanco}${cuentaBanco.trim()}`;
+              for (let i = 0; i <= 21 - col2Length; i++) {
+                col2 += ' ';
+              }
+
+              let Nombre_Beneficiario = `${dt.APELLIDO_PATERNO} ${dt.APELLIDO_MATERNO} ${dt.NOMBRE_COMPLETO}`;
+              let col3Length = `${Nombre_Beneficiario}`.length;
+              let col3 = `${Nombre_Beneficiario}`;
+              for (let i = 0; i <= 41 - col3Length; i++) {
+                col3 += ' ';
+              }
+
+              let sueldo = parseInt(dt.ADELANTO_QUINCENA);
+              let parseSueldo = `${sueldo}00`;
+              let sueldoLength = parseSueldo.length;
+              let concatSueldo = "";
+              for (let i = 1; i <= 16 - sueldoLength; i++) {
+                concatSueldo += '0';
+              }
+              concatSueldo += `${parseSueldo} `;
+
+              this.fileName = dt['UNIDAD_SERVICIO'];
+              this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
+
+              if (dataTemp.length - 1 == i) {
+                console.log(this.text);
+                this.dyanmicDownloadByHtmlTag();
+                dataTemp = [];
+                this.text = "";
+                this.fileName = "";
+              }
+            });
+          }
+        });
+      }, 9000);
+
+
+
+    }
+  }
+
   async onExcelExport() {
     const self = this;
     self.isLoading = true;
     let codigoList = [];
-    let dataTemp = [];
-    let dataExport = [];
     await this.onDataView.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO_UNID_SERVICIO'].trim())) {
         codigoList.push(dt['CODIGO_UNID_SERVICIO'].trim());
@@ -478,7 +710,7 @@ export class MtPlanillaComponent implements OnInit {
 
             let cuentaBanco = (dw || {}).BANCO == 2 ? ((dw || {}).CUENTA_BANCO_HABERES || "") : !((dw || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dw || {}).CUENTA_INTERBANCARIO || "");
             this.fileName = dw['UNIDAD_SERVICIO'];
-            console.log(dw.NOMBRE_COMPLETO, cuentaBanco || 0);
+
             dataExport.push({
               DOI_Tipo: dw.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E',
               DOI_Numero: ((dw || {}).NRO_DOCUMENTO || 0).trim(),
@@ -567,8 +799,11 @@ export class MtPlanillaComponent implements OnInit {
           }
         });
       }, 9000);
-    }
 
+      setTimeout(() => {
+        this.onBBWAExportTXT();
+      }, 11000);
+    }
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
