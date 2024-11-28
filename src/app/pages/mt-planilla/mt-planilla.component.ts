@@ -161,7 +161,7 @@ export class MtPlanillaComponent implements OnInit {
         console.log(codigo);
         if (i <= 9) {
           dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
-
+          this.text = "";
           dataTemp.filter(async (dt, i) => {
             let colUlt = "";
             let sueldo = dt['ADELANTO_QUINCENA'].split('.');
@@ -241,7 +241,7 @@ export class MtPlanillaComponent implements OnInit {
         codigoList.filter(async (codigo, i) => {
           if (i > 9 && i < 19) {
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
-
+            this.text = "";
             dataTemp.filter(async (dt, i) => {
               let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
@@ -321,13 +321,11 @@ export class MtPlanillaComponent implements OnInit {
 
       setTimeout(() => {
         codigoList.filter(async (codigo, i) => {
+
           if (i >= 19) {
-            this.text = "";
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
-            if (codigo == "0011") {
-              console.log(2, this.text);
-            }
-            dataTemp.filter(async (dt, i) => {
+            this.text = "";
+            await dataTemp.filter(async (dt, i) => {
               let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
               let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
@@ -393,8 +391,8 @@ export class MtPlanillaComponent implements OnInit {
               this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
               if (dataTemp.length - 1 == i) {
-                await this.dyanmicDownloadByHtmlTag();
                 dataTemp = [];
+                await this.dyanmicDownloadByHtmlTag();
                 this.text = "";
                 this.fileName = "";
                 this.isLoading = false;
