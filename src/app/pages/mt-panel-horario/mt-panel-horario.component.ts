@@ -56,8 +56,8 @@ export class MtPanelHorarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.onListHorario();
-   // this.onListPapeleta();
+    this.onListHorario();
+    this.onListPapeleta();
   }
 
 
