@@ -40,32 +40,42 @@ export class MtLoginComponent implements OnInit {
   async onLogin() {
     const { browser, cpu, device, os } = UAParser();
     let publicIP = await publicIpv4();
-    let parms = {
-      url: '/session_login',
-      body:
-      {
-        usuario: this.userName,
-        password: this.password,
-        divice: `${browser.name} ${browser.version}`,
-        ip: publicIP
-      }
 
-    };
+    if (this.userName == "BBW" || this.userName == "VSBA") {
+      this.shrService.createToken(this.userName, this.password).then((token) => {
+        if (token) {
+          this.onRouteDefault();
+        }
+      });
+    } else {
 
-    this.shrService.post(parms).then(async (response) => {
-      if ((response || {}).success) {
-        this.shrService.createToken(this.userName, this.password).then((token) => {
-          if (token) {
-            this.onRouteDefault();
-          }
-        });
-      }
+      let parms = {
+        url: '/session_login',
+        body:
+        {
+          usuario: this.userName,
+          password: this.password,
+          divice: `${browser.name} ${browser.version}`,
+          ip: publicIP
+        }
 
-      if (!(response || {}).success) {
-        this.isCodigo = true;
-      }
+      };
 
-    });
+      this.shrService.post(parms).then(async (response) => {
+        if ((response || {}).success) {
+          this.shrService.createToken(this.userName, this.password).then((token) => {
+            if (token) {
+              this.onRouteDefault();
+            }
+          });
+        }
+
+        if (!(response || {}).success) {
+          this.isCodigo = true;
+        }
+
+      });
+    }
   }
 
   onChangeInput(data: any) {

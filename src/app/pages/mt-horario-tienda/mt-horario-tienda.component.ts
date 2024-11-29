@@ -16,7 +16,7 @@ import { ShareService } from '../../services/shareService';
 })
 export class MtHorarioTiendaComponent implements OnInit {
   @Input() data: Array<any> = [];
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3200', { reconnectionDelayMax: 10000, query: { code: 'app' } });
   cboCargo: number = 0;
   idCargo: number = 1;
   horaInit: string = "";
@@ -30,13 +30,13 @@ export class MtHorarioTiendaComponent implements OnInit {
   codeTienda: string = "";
   unidServicio: string = "";
   arListDia: Array<any> = [
-    { id: 1, dia: "Lunes", fecha: "16-sep", isObservacion: false },
-    { id: 2, dia: "Martes", fecha: "17-sep", isObservacion: false },
-    { id: 3, dia: "Miercoles", fecha: "18-sep", isObservacion: false },
-    { id: 4, dia: "Jueves", fecha: "19-sep", isObservacion: false },
-    { id: 5, dia: "Viernes", fecha: "20-sep", isObservacion: false },
-    { id: 6, dia: "Sabado", fecha: "21-sep", isObservacion: false },
-    { id: 7, dia: "Domingo", fecha: "22-sep", isObservacion: false }
+    { id: 1, dia: "Lunes", fecha: "16-sep", isObservacion: false, isExpired: false },
+    { id: 2, dia: "Martes", fecha: "17-sep", isObservacion: false, isExpired: false },
+    { id: 3, dia: "Miercoles", fecha: "18-sep", isObservacion: false, isExpired: false },
+    { id: 4, dia: "Jueves", fecha: "19-sep", isObservacion: false, isExpired: false },
+    { id: 5, dia: "Viernes", fecha: "20-sep", isObservacion: false, isExpired: false },
+    { id: 6, dia: "Sabado", fecha: "21-sep", isObservacion: false, isExpired: false },
+    { id: 7, dia: "Domingo", fecha: "22-sep", isObservacion: false, isExpired: false }
   ];;
   arRangeFecha: Array<any> = [];
   vSelectDia: number = 0;
@@ -52,26 +52,26 @@ export class MtHorarioTiendaComponent implements OnInit {
   arDataServer: Array<any> = [];
   screenHeight: number = 0;
   onListTiendas: Array<any> = [
-    { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+    { code_uns: '0003', uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
+    { code_uns: '0023', uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code_uns: '0024', uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code_uns: '0010', uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
+    { code_uns: '0009', uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
+    { code_uns: '0004', uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
+    { code_uns: '0006', uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code_uns: '0005', uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code_uns: '0007', uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
+    { code_uns: '0012', uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
+    { code_uns: '0011', uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
+    { code_uns: '0013', uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
+    { code_uns: '0019', uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
+    { code_uns: '0016', uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
+    { code_uns: '0014', uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
+    { code_uns: '0015', uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
+    { code_uns: '0008', uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
+    { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
+    { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
   isRangoEdit: boolean = false;
@@ -123,49 +123,64 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.unidServicio = unidServicio['uns'];
     this.onListEmpleado = [];
 
-    this.socket.emit('consultaListaEmpleado', this.unidServicio);
+    this.socket.on("connect_error", () => {
+      // revert to classic upgrade
+      this.socket.io.opts.transports = ["polling", "websocket"];
+    });
+
+    this.socket.emit('horario/empleadoEJB', this.unidServicio);
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
-      console.log(response);
+      console.log("reporteEmpleadoTienda", response);
       let dataEmpleado = (response || {}).data;
+      let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
+      console.log(codigo_uns);
 
       dataEmpleado.filter((emp) => {
         if (response.id == "EJB") {
           this.arDataEJB = (response || {}).data;
         }
 
-        if (response.id == "server") {
-          this.arDataServer = (response || {}).data;
-        }
+        if (this.arDataEJB.length) {
 
-        if (this.arDataEJB.length && this.arDataServer.length) {
+          this.arDataEJB.filter(async (ejb) => {
 
-          this.arDataServer.filter(async (ds) => {
-            if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
-              let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
-              let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
-
-              if (index != -1) {
-                var codigo = (ds || {}).caja.substr(0, 2);
-
-                if ((ds || {}).caja.substr(2, 2) == 7) {
-                  codigo = (ds || {}).caja;
-                } else {
-                  codigo.substr(0, 1)
-                }
-
-                let exist = this.arListTrabajador.findIndex((pr) => pr.documento == registro.nro_documento);
-
-                if (codigo == this.codeTienda && exist == -1) {
-
-                  let arNombre = registro.nombre_completo.split(' ');
-                  this.arListTrabajador.push(
-                    { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: arNombre[2] + ' ' + arNombre[0].substr(0, 1) + '.' + arNombre[1].substr(0, 1), documento: registro.nro_documento }
-                  );
-                }
+            if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+              let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
+              if (exist == -1) {
+                this.arListTrabajador.push(
+                  { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: (ejb || {}).nombre_completo, documento: ((ejb || {}).nro_documento).trim() }
+                );
               }
             }
           });
+          /*
+                    this.arDataServer.filter(async (ds) => {
+                      if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
+                        let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
+                        let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
+          
+                        if (index != -1) {
+                          var codigo = (ds || {}).caja.substr(0, 2);
+          
+                          if ((ds || {}).caja.substr(2, 2) == 7) {
+                            codigo = (ds || {}).caja;
+                          } else {
+                            codigo.substr(0, 1)
+                          }
+          
+                          let exist = this.arListTrabajador.findIndex((pr) => pr.documento == registro.nro_documento);
+          
+                          if (codigo == this.codeTienda && exist == -1) {
+          
+                            let arNombre = registro.nombre_completo.split(' ');
+                            this.arListTrabajador.push(
+                              { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: arNombre[2] + ' ' + arNombre[0].substr(0, 1) + '.' + arNombre[1].substr(0, 1), documento: registro.nro_documento }
+                            );
+                          }
+                        }
+                      }
+                    });*/
         }
 
 
@@ -266,6 +281,29 @@ export class MtHorarioTiendaComponent implements OnInit {
     let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
     this.titleObservacion = objDia['dia'];
+
+    let dateNow = new Date();
+    let day = new Date(dateNow).toLocaleDateString().split('/');
+    let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
+    
+    this.dataHorario[index]['dias'].filter((ds, i) => {
+      let parseDate = ds.fecha_number.split('-');
+      let fechaInicio = new Date(fechaActual);
+      let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
+
+      if (fechaFin.getTime() < fechaInicio.getTime()) {
+        this.dataHorario[index]['dias'][i]['isExpired'] = true;
+      } else {
+        this.dataHorario[index]['dias'][i]['isExpired'] = false;
+      }
+
+      let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+
+      if (obsExist != -1) {
+        this.dataHorario[index]['dias'][i]['isObservation'] = true;
+      }
+    });
+
     if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
 
       let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
@@ -476,7 +514,11 @@ export class MtHorarioTiendaComponent implements OnInit {
               observacion: []
             }
           );
+
+          console.log("onGenerarCalendario", this.dataHorario);
         });
+
+
 
         dataRes.filter((rs) => {
           let index = this.dataHorario.findIndex((dh) => dh.cargo == rs.cargo);
@@ -697,12 +739,12 @@ export class MtHorarioTiendaComponent implements OnInit {
             } else {
               this.dataHorario[index]['dias'][i]['isExpired'] = false;
             }
-        
+
             let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
-           
+
             if (obsExist != -1) {
               this.dataHorario[index]['dias'][i]['isObservation'] = true;
-            } 
+            }
           });
 
 

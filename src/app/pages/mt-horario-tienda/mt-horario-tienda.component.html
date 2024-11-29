@@ -291,7 +291,9 @@
                   class="example-list contenedor">
                   @for (trb of data.arListTrabajador; track trb) {
                     <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
-                      {{trb.nombre_completo}}
+                      <div style="max-width: 115px;">
+                        {{trb.nombre_completo}}
+                      </div>
                       <div>
                         <button id="addDL" [name]="'addDL'+'-'+trb.id" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px; 
                         font-size: 12px;
