@@ -24,8 +24,10 @@ export class MtHorarioTiendaComponent implements OnInit {
   isObservacion: boolean = false;
   isPapeleta: boolean = false;
   isExpiredDay: boolean = false;
+  isStartEditRg: boolean = false;
   dataObservation: Array<any> = [];
   onListEmpleado: Array<any> = [];
+  selectedIdRango: number = 0;
   horaEnd: string = "";
   codeTienda: string = "";
   unidServicio: string = "";
@@ -87,7 +89,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
 
   getScreenSize(event?) {
-    this.screenHeight = window.innerHeight;
+    this.screenHeight = window.innerHeight - 100;
     console.log(this.screenHeight);
   }
 
@@ -285,7 +287,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     let dateNow = new Date();
     let day = new Date(dateNow).toLocaleDateString().split('/');
     let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
-    
+
     this.dataHorario[index]['dias'].filter((ds, i) => {
       let parseDate = ds.fecha_number.split('-');
       let fechaInicio = new Date(fechaActual);
@@ -578,30 +580,38 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   }
 
-  onEditHorario() {
+  onEditHorario(id) {
 
-    if (this.vSelectHorario > 0) {
-      let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
+    this.isStartEditRg = true;
+    this.selectedIdRango = id;
+    let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
+    let horarioSelect = this.dataHorario[index]['rg_hora'].filter((rg) => rg.id == id);
+    console.log(this.cboCargo, id, horarioSelect);
 
-      if (index != -1) {
-        let horarioSelect = this.dataHorario[index]['rg_hora'].filter((rg) => rg.id == this.vSelectHorario);
-        if (horarioSelect.length > 0) {
-          this.isRangoEdit = true;
+    /*
+        if (this.vSelectHorario > 0) {
+          let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
+    
+          if (index != -1) {
+            let horarioSelect = this.dataHorario[index]['rg_hora'].filter((rg) => rg.id == this.vSelectHorario);
+            if (horarioSelect.length > 0) {
+              this.isRangoEdit = true;
+              this.isStartEditRg = false;
+            }
+          }
+    
+          this.socket.emit('actualizarHorario', this.dataHorario);
         }
-      }
-
-      this.socket.emit('actualizarHorario', this.dataHorario);
-    }
-
+    */
   }
 
-  onSaveRangoHorario() {
+  onSaveRangoHorario(id) {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
 
     if (index != -1) {
 
       let exist = this.dataHorario[index]['rg_hora'].findIndex((rgh) => rgh.rg == `${this.horaInit} a ${this.horaEnd}`);
-      let indexHorario = this.dataHorario[index]['rg_hora'].findIndex((rg) => rg.id == this.vSelectHorario);
+      let indexHorario = this.dataHorario[index]['rg_hora'].findIndex((rg) => rg.id == id);
 
       if (exist == -1) {
 
@@ -623,6 +633,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
       }
 
+      this.isStartEditRg = false;
       this.socket.emit('actualizarHorario', this.dataHorario);
       this.onSearchCalendario();
     }

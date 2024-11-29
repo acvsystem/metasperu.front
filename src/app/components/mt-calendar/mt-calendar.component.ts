@@ -24,7 +24,6 @@ export class MtCalendarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
   }
 
   onChangeInput(ev: any) {

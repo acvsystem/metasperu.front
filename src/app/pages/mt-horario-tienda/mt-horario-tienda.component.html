@@ -1,7 +1,7 @@
 
 
-<div id="content" class="full-center-page">
-  <div class="card-content">
+<div id="content" class="full-center-page" style="height: 100%;">
+  <div class="card-content" [ngStyle]="{'max-height.px':screenHeight}">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <div class="content-button postition-start" *ngIf="!data.length">
@@ -161,24 +161,6 @@
               }
             </div>
             <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
-              @if(!isRangoEdit){
-                @if(vSelectHorario > 0){
-                  <button matTooltip="Editar Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onEditHorario()">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                  </button>
-                } @else {
-                  <button matTooltip="Editar Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;"  disabled>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                  </button>
-                }
-  
-              } @else {
-                <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;" (click)="onSaveRangoHorario()">
-                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                </button>
-              }
-            </div>
-            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
               @if(vSelectDia > 0){
                 <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onOpenObservacion()">
                   <i class="fa fa-list-alt" aria-hidden="true"></i>
@@ -265,7 +247,52 @@
           <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
               <div class="example-list contenedor">
                 @for (rg of data.rg_hora; track rg.id) {
-                  <div [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">{{rg.rg}}</div>
+                  <div style="display: inline-flex;justify-content: center;align-items: center;border-bottom: 0;">
+                    @if(isStartEditRg && selectedIdRango == rg.id){
+                    <div style="width: 149px;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
+                        <div style="width: 100px;">
+                          <mt-calendar 
+                            id="horaInit"
+                            [isTime]="true" 
+                            placeholder="Hora"
+                            (afterChange)="onCaledar($event)">
+                          </mt-calendar>
+                          </div>
+                          <div style="width: 100px;">
+                            <mt-calendar 
+                            id="horaEnd"
+                            [isTime]="true" 
+                            placeholder="Hora"
+                            (afterChange)="onCaledar($event)">
+                          </mt-calendar>
+                          </div>
+                        </div>
+                    }@else{
+                      <div style="width: 142px;justify-content: center;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
+                        <span>{{rg.rg}}</span>
+                      </div>
+                    }
+
+                    <div [ngClass]="[isStartEditRg && selectedIdRango == rg.id ? 'editRango': 'notEditRango']" style="border-bottom: solid 1px #ccc;justify-content: center;align-items: center;display: flex;">
+                      @if(!isStartEditRg){
+                        <button matTooltip="Editar Rango Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onEditHorario(rg.id)">
+                          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                      }@else{
+                        @if(selectedIdRango == rg.id){
+                          <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onSaveRangoHorario(rg.id)">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                          </button>
+                        }@else{
+                          <button matTooltip="Editar Rango Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onEditHorario(rg.id)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </button>
+                        }
+                      }
+
+                    </div>
+                  </div>
+
                 }
               </div>
           </ion-col>
