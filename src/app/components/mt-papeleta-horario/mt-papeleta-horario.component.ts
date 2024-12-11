@@ -69,26 +69,26 @@ export class MtPapeletaHorarioComponent implements OnInit {
   onListCasos: Array<any> = [];
 
   onListTiendas: Array<any> = [
-    { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+    { code_uns: '0003', uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
+    { code_uns: '0023', uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code_uns: '0024', uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
+    { code_uns: '0010', uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
+    { code_uns: '0009', uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
+    { code_uns: '0004', uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
+    { code_uns: '0006', uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code_uns: '0005', uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
+    { code_uns: '0007', uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
+    { code_uns: '0012', uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
+    { code_uns: '0011', uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
+    { code_uns: '0013', uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
+    { code_uns: '0019', uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
+    { code_uns: '0016', uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
+    { code_uns: '0014', uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
+    { code_uns: '0015', uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
+    { code_uns: '0008', uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
+    { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
+    { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
   @HostListener('window:resize', ['$event'])
@@ -147,50 +147,34 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
-      
-      if (response.id == "EJB") {
-        this.isEJB = true;
-        this.arDataEJB = (response || {}).data;
-      }
 
-      if (response.id == "server") {
-        this.isServer = true;
-        this.arDataServer = (response || {}).data;
-      }
-      console.log("reporteEmpleadoTienda",this.arDataEJB.length && this.arDataServer.length);
-      if (this.arDataEJB.length && this.arDataServer.length) {
+      let dataEmpleado = (response || {}).data;
+      let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
-        this.arDataServer.filter(async (ds) => {
-          if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
-            let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
-            let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
 
-            if (index != -1) {
-              var codigo = (ds || {}).caja.substr(0, 2);
+      dataEmpleado.filter((emp) => {
+        if (response.id == "EJB") {
+          this.arDataEJB = (response || {}).data;
+        }
 
-              if ((ds || {}).caja.substr(2, 2) == 7) {
-                codigo = (ds || {}).caja;
-              } else {
-                codigo.substr(0, 1)
-              }
+        if (this.arDataEJB.length) {
+          this.arDataEJB.filter(async (ejb) => {
+            if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns) {
 
-              let exist = this.parseEJB.findIndex((pr) => pr.documento == registro.nro_documento);
-
-              if (codigo == this.codeTienda && exist == -1) {
-                console.log(this.codeTienda, codigo, registro.nombre_completo);
-                this.onListEmpleado.push({ key: registro.nro_documento, value: registro.nombre_completo });
+              let exist = this.onListEmpleado.findIndex((pr) => pr.key == ((ejb || {}).nro_documento).trim());
+              if (exist == -1) {
+                this.onListEmpleado.push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
                 this.parseEJB.push({
-                  nombre_completo: registro.nombre_completo,
-                  documento: registro.nro_documento,
-                  codigo_tienda: codigo
+                  nombre_completo: ejb.nombre_completo,
+                  documento: ejb.nro_documento,
+                  codigo_tienda: this.codeTienda
                 });
               }
             }
-          }
-        });
+          });
+        }
+      });
 
-        console.log("parseEJB ", this.parseEJB);
-      }
     });
 
 
