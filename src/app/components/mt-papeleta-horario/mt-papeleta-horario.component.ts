@@ -443,13 +443,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       if (this.horaSalida.length && this.horaLlegada.length && this.cboCasos == 'Compensacion de horas trabajadas') {
         this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
-        if (this.diffHoraPap != this.hroTomada) {
-          this.notify.snackbar({
-            message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
-            display: 'top',
-            color: 'danger'
-          });
-        }
+        console.log(this.diffHoraPap);
+        /*   if (this.diffHoraPap != this.hroTomada) {
+             this.notify.snackbar({
+               message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
+               display: 'top',
+               color: 'danger'
+             });
+           }*/
       }
     }
 
@@ -485,8 +486,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
     if (ev.target.checked) {
       let index = this.bodyList.findIndex((bd) => bd.fecha == fecha);
 
-      this.bodyList[index]['seleccionado'] = true;
+      this.bodyList[index]['seleccionado'] = false;
       this.bodyList[index]['verify'] = false;
+      this.bodyList[index]['old_extra'] = this.bodyList[index]['hrx_acumulado'];
+
 
       this.bodyList.filter((ext, i) => {
         //CALCULO PARA LAS HORAS TOMADAS
@@ -494,17 +497,22 @@ export class MtPapeletaHorarioComponent implements OnInit {
           if (!this.arHoraTomadaCalc.length) {
             this.arHoraTomadaCalc = [ext.extra];
           } else {
-            this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraTomadaCalc[0]);
+            this.arHoraTomadaCalc[0] = this.obtenerDiferenciaHora(ext.extra, this.diffHoraPap);
+            console.log(this.arHoraTomadaCalc);
           }
         }
         //CALCULO PARA LAS HORAS RESIDUALES
         if (!ext.seleccionado && ext.aprobado) {
           if (!this.arHoraExtra.length) {
-            this.arHoraExtra = [ext.extra];
+            this.arHoraExtra = [ext.old_extra];
           } else {
-            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraExtra[0]);
+            this.bodyList[index]['extra'] = this.obtenerDiferenciaHora(this.bodyList[index]['hrx_acumulado'], this.diffHoraPap);
+            this.arHoraExtra[0] = this.obtenerDiferenciaHora(ext.hrx_acumulado, this.diffHoraPap);
+            console.log(this.bodyList[index]);
           }
         }
+
+
       });
     } else {
 
@@ -512,36 +520,38 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       this.bodyList[index]['seleccionado'] = false;
       this.bodyList[index]['verify'] = false;
+      this.bodyList[index]['old_extra'] = this.bodyList[index]['hrx_acumulado'];
+      this.bodyList[index]['extra'] = this.bodyList[index]['hrx_acumulado'];
 
-      this.bodyList.filter((ext, i) => {
-        if (ext.seleccionado && !ext.verify) {
-          if (!this.arHoraTomadaCalc.length) {
-            this.arHoraTomadaCalc = [ext.extra];
-          } else {
-            this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraTomadaCalc[0]);
-          }
-        }
-
-        if (!ext.seleccionado && ext.aprobado) {
-          if (!this.arHoraExtra.length) {
-            this.arHoraExtra = [ext.extra];
-          } else {
-            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraExtra[0]);
-          }
-        }
-      });
+      /* this.bodyList.filter((ext, i) => {
+         if (ext.seleccionado && !ext.verify) {
+           if (!this.arHoraTomadaCalc.length) {
+             this.arHoraTomadaCalc = [ext.extra];
+           } else {
+             this.arHoraTomadaCalc[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraTomadaCalc[0]);
+           }
+         }
+ 
+         if (!ext.seleccionado && ext.aprobado) {
+           if (!this.arHoraExtra.length) {
+             this.arHoraExtra = [ext.extra];
+           } else {
+             this.arHoraExtra[0] = this.obtenerHorasTrabajadas(ext.extra, this.arHoraExtra[0]);
+           }
+         }
+       });*/
     }
 
     this.hroAcumulada = this.arHoraExtra[0];
     this.hroTomada = this.arHoraTomadaCalc[0] || '00:00';
 
-    if ((this.diffHoraPap != this.hroTomada) && (this.diffHoraPap.length && this.hroTomada.length)) {
-      this.notify.snackbar({
-        message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
-        display: 'top',
-        color: 'danger'
-      });
-    }
+    /* if ((this.diffHoraPap != this.hroTomada) && (this.diffHoraPap.length && this.hroTomada.length)) {
+       this.notify.snackbar({
+         message: "La cantidad de hora, es menor o mayor a la cantidad de hora seleccionada.",
+         display: 'top',
+         color: 'danger'
+       });
+     }*/
   }
 
   onAprobarExtra(fecha) {
