@@ -147,7 +147,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
-      console.log(response);
+      
       if (response.id == "EJB") {
         this.isEJB = true;
         this.arDataEJB = (response || {}).data;
@@ -157,7 +157,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         this.isServer = true;
         this.arDataServer = (response || {}).data;
       }
-
+      console.log("reporteEmpleadoTienda",this.arDataEJB.length && this.arDataServer.length);
       if (this.arDataEJB.length && this.arDataServer.length) {
 
         this.arDataServer.filter(async (ds) => {

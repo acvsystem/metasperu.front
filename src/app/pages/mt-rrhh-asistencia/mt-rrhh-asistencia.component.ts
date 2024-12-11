@@ -21,6 +21,7 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-registro.component';
+import { Notifications } from '@mobiscroll/angular';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -52,6 +53,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isDataEJB: boolean = false;
   isDataServer: boolean = false;
   isGrafica: boolean = false;
+  isErrorFecha: boolean = false;
   filterEmpleado: string = "";
   fileName: string = "";
   text: string = "";
@@ -109,7 +111,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private sanitizer: DomSanitizer) { }
+  constructor(public notify: Notifications, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
 
@@ -180,12 +182,13 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             caja: (huellero || {}).caja
           });
         });
+
       }
 
 
       if (this.isDataEJB && this.isDataServer) {
         this.onDataTemp = [];
-
+        console.log(this.parseHuellero);
         await (this.parseHuellero || []).filter(async (huellero) => {
 
           if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
@@ -350,35 +353,49 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   async onConsultarAsistencia() {
 
-    let arVerif = [];
+    if (!this.isErrorFecha) {
+      let arVerif = [];
 
-    await (this.vMultiSelect || []).filter((dt) => {
-      let date = new Date(dt).toLocaleDateString().split('/');
-      if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
-        arVerif.push(true);
+      await (this.vMultiSelect || []).filter((dt) => {
+        let date = new Date(dt).toLocaleDateString().split('/');
+        if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
+          arVerif.push(true);
+        } else {
+          arVerif.push(false);
+        }
+      });
+
+      if (arVerif.includes(false) && this.isViewFeriados) {
+        this.openSnackBar("Fechas seleccionadas no son correcta..!!");
+        this.isLoading = false;
       } else {
-        arVerif.push(false);
+        if (this.vCalendarDefault.length || (this.vCalendar.length && this.vMultiSelect.length) || this.vDetallado.length) {
+
+          var configuracion = {
+            isDefault: this.isViewDefault,
+            isFeriados: this.isViewFeriados,
+            isDetallado: this.isDetallado,
+            centroCosto: '',
+            dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
+          };
+
+          this.isLoading = true;
+          this.socket.emit('consultaMarcacion', configuracion);
+        } else {
+          this.notify.snackbar({
+            message: "Seleccione una fecha.",
+            display: 'top',
+            color: 'danger'
+          });
+        }
+
       }
-    });
-
-
-
-    if (arVerif.includes(false) && this.isViewFeriados) {
-      this.openSnackBar("Fechas seleccionadas no son correcta..!!");
-      this.isLoading = false;
     } else {
-
-      console.log("onConsultarAsistencia", this.vDetallado);
-      var configuracion = {
-        isDefault: this.isViewDefault,
-        isFeriados: this.isViewFeriados,
-        isDetallado: this.isDetallado,
-        centroCosto: '',
-        dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
-      };
-
-      this.isLoading = true;
-      this.socket.emit('consultaMarcacion', configuracion);
+      this.notify.snackbar({
+        message: "La fecha seleccionada no puede ser posterior a la fecha actual.",
+        display: 'top',
+        color: 'danger'
+      });
     }
 
   }
@@ -391,6 +408,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onChangeSelect(data: any) {
+    this.vCalendar = [];
+    this.vMultiSelect = [];
+    this.vCalendarDefault = [];
+    this.vDetallado = [];
+
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
@@ -524,7 +546,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   onCaledar($event) {
-    console.log($event);
+    this.isErrorFecha = false;
     if ($event.isPeriodo) {
       this.vCalendar = $event.value;
     }
@@ -534,14 +556,34 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     }
 
     if ($event.isDefault) {
+      let dateNow = new Date();
+
+      let day = new Date(dateNow).toLocaleDateString().split('/');
+
       let date = new Date($event.value).toLocaleDateString().split('/');
+      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
+      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
+
+      if (f1.getTime() > f2.getTime()) {
+        this.isErrorFecha = true;
+        this.notify.snackbar({
+          message: "La fecha seleccionada no puede ser posterior a la actual.",
+          display: 'top',
+          color: 'danger'
+        });
+      }
+
       this.vCalendarDefault = [`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`];
     }
 
     if ($event.isRange) {
+      this.vCalendar = [];
+      this.vMultiSelect = [];
+      this.vCalendarDefault = [];
+      this.vDetallado = [];
+
       let range = [];
       let dateList = $event.value;
-      console.log("onCaledar", dateList[1] == null);
       (dateList || []).filter((dt, i) => {
         let date = new Date(dt).toLocaleDateString().split('/');
         if (dateList[1] == null && i == 1) {
