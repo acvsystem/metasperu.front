@@ -4,6 +4,7 @@ import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Notifications } from '@mobiscroll/angular';
 
 @Component({
   selector: 'app-mt-verification-comprobantes',
@@ -47,7 +48,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   expandedElement: Array<PeriodicElement> = [];
   dataSource = new MatTableDataSource<PeriodicElement>(this.bodyList);
 
-  constructor(private service: ShareService, private store: StorageService) { }
+  constructor(public notify: Notifications, private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
     this.service.onViewPageAdmin.subscribe((view) => {
@@ -343,7 +344,13 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.socket.emit('emitTranferenciaCajas', this.vDataTransferencia);
       setTimeout(() => {
         this.socket.emit('comunicationFront', 'angular');
-      },1000);
+      }, 1000);
+    } else {
+      this.notify.snackbar({
+        message: 'Seleccione el Origen y Destino.',
+        display: 'top',
+        color: 'danger'
+      });
     }
   }
 
