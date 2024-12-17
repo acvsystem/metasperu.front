@@ -10,6 +10,7 @@ import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-t
 import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-extra/mt-autorizacion-hora-extra.component';
 import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horario.component';
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
+import { MtDetailCajaComponent } from './pages/mt-verification-comprobantes/mt-detail-caja/mt-detail-caja.component';
 
 const routes: Routes = [
   {
@@ -58,6 +59,11 @@ const routes: Routes = [
   {
     path: 'planilla',
     component: MtPlanillaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'frontRetail',
+    component: MtDetailCajaComponent,
     canActivate: [authGuard]
   }
 ];

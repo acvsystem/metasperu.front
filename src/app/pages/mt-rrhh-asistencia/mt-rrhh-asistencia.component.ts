@@ -369,6 +369,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         this.openSnackBar("Fechas seleccionadas no son correcta..!!");
         this.isLoading = false;
       } else {
+        console.log(this.vCalendarDefault.length , this.vCalendar.length , this.vMultiSelect.length , this.vDetallado.length);
         if (this.vCalendarDefault.length || (this.vCalendar.length && this.vMultiSelect.length) || this.vDetallado.length) {
 
           var configuracion = {
@@ -408,11 +409,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onChangeSelect(data: any) {
-    this.vCalendar = [];
-    this.vMultiSelect = [];
-    this.vCalendarDefault = [];
-    this.vDetallado = [];
-
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
@@ -547,6 +543,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onCaledar($event) {
     this.isErrorFecha = false;
+    this.vCalendar = [];
+    this.vMultiSelect = [];
+    this.vCalendarDefault = [];
+    this.vDetallado = [];
     if ($event.isPeriodo) {
       this.vCalendar = $event.value;
     }
@@ -577,11 +577,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     }
 
     if ($event.isRange) {
-      this.vCalendar = [];
-      this.vMultiSelect = [];
-      this.vCalendarDefault = [];
-      this.vDetallado = [];
-
       let range = [];
       let dateList = $event.value;
       (dateList || []).filter((dt, i) => {

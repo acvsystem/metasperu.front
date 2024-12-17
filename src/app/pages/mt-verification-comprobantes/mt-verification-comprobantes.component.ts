@@ -1,13 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { io } from "socket.io-client";
-import { Socket } from 'ngx-socket-io';
-import { map } from 'rxjs/operators';
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
+import { MatTableDataSource } from '@angular/material/table';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+
 @Component({
   selector: 'app-mt-verification-comprobantes',
   templateUrl: './mt-verification-comprobantes.component.html',
   styleUrls: ['./mt-verification-comprobantes.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class MtVerificationComprobantesComponent implements OnInit {
 
@@ -27,6 +35,17 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isViewPage: boolean = false;
   conxOnline: Array<any> = [];
   vListaClientes: string = '';
+  vDataTienda: Array<any> = [];
+  vDataTransferencia: Array<any> = [
+    {
+      dataOne: [],
+      dataTwo: []
+    }
+  ];
+  columnsToDisplay: Array<any> = [];
+  columnsToDisplayWithExpand: Array<any> = [];
+  expandedElement: Array<PeriodicElement> = [];
+  dataSource = new MatTableDataSource<PeriodicElement>(this.bodyList);
 
   constructor(private service: ShareService, private store: StorageService) { }
 
@@ -42,8 +61,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
     }
 
     const self = this;
-    this.headList = ['#', 'Codigo', 'Tienda', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes Blanco', 'Conexion Comprobantes', 'Conexion ICG']
+    this.headList = []
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
+    this.columnsToDisplay = ['codigo', 'Tienda', 'isVerification', 'cant_comprobantes', 'transacciones', 'clientes_null', 'online', 'conexICG'];
     this.onTransacciones();
     this.onListClient();
     this.socket.on('sendNotificationSunat', (sunat) => {
@@ -76,8 +96,34 @@ export class MtVerificationComprobantesComponent implements OnInit {
       });
     });
 
+    this.socket.on('toClientTerminales', (terminales) => {
+      let indexData = this.bodyList.findIndex((data) => (data.codigo == (terminales || [])[0].CODIGO_TIENDA));
+      if (indexData != -1) {
+        (this.bodyList || [])[indexData].terminales = terminales;
+      }
+    });
+
+    this.socket.on('toClientDataTerminales', (dataTerminal) => {
+      this.isShowLoading = false;
+      let indexData = this.bodyList.findIndex((data) => (data.codigo == (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")));
+      if (indexData != -1) {
+        (this.bodyList || [])[indexData].dataTerminales = [];
+        (this.bodyList || [])[indexData].terminales.filter((trm) => {
+          let elm = (dataTerminal || []).find((dt) => (dt || {}).NOM_TERMINAL == (trm || {}).NOM_TERMINAL);
+
+          (this.bodyList || [])[indexData].dataTerminales.push({
+            'NOM_TERMINAL': (trm || {}).NOM_TERMINAL,
+            'CANTIDAD': (elm || {}).CANTIDAD || 0,
+            'CODIGO': (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")
+          });
+        })
+
+      }
+    });
+
+
     this.socket.on('sessionConnect', (listaSession) => {
-      console.log(listaSession);
+
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {
@@ -97,7 +143,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
             transacciones: 0,
             clientes_null: 0,
             online: (dataSocket || {}).ISONLINE,
-            conexICG: 0
+            conexICG: 0,
+            terminales: [],
+            dataTerminales: []
           });
         });
 
@@ -134,11 +182,12 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.bodyList || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
           }
         });
-        this.isShowLoading = false;
       }
-      console.log(this.conxOnline);
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
+      this.socket.emit('emitTerminalesFront', 'angular');
+      this.socket.emit('emitDataTerminalesFront', 'angular');
+      this.dataSource = new MatTableDataSource(this.bodyList);
     });
 
     this.socket.on('dataTransaction', (dataSocket) => {
@@ -215,7 +264,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
     });
 
+
+    this.columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+
   }
+
 
   onVerify() {
     this.isShowLoading = true;
@@ -255,6 +308,59 @@ export class MtVerificationComprobantesComponent implements OnInit {
     //console.log(lista);
   }
 
+  toolCaja(data) {
+    this.vDataTienda = data;
+    console.log(this.vDataTienda);
+  }
+
+  onSelectedTranferencia(ev, dataOne, dataTwo?) {
+    this.vDataTransferencia[0]['dataOne'] = dataOne || this.vDataTransferencia[0]['dataOne'];
+    this.vDataTransferencia[0]['dataTwo'] = dataTwo || this.vDataTransferencia[0]['dataTwo'];
+
+    if (Object.keys(dataOne).length) {
+      let element = document.getElementsByClassName("origen");
+      for (var i = 0; i < element.length; i++) {
+        element[i].classList.remove("active");
+      }
+
+      document.getElementById(ev.target.id).classList.add('active');
+    }
+
+    if (Object.keys(dataTwo).length) {
+      let element = document.getElementsByClassName("destino");
+      for (var i = 0; i < element.length; i++) {
+        element[i].classList.remove("active");
+      }
+
+      document.getElementById(ev.target.id).classList.add('active');
+    }
+
+  }
+
+  onTranferirCola() {
+    if (Object.keys(this.vDataTransferencia[0]['dataOne']).length && Object.keys(this.vDataTransferencia[0]['dataTwo']).length) {
+      console.log(this.vDataTransferencia);
+      this.socket.emit('emitTranferenciaCajas', this.vDataTransferencia);
+      setTimeout(() => {
+        this.socket.emit('comunicationFront', 'angular');
+      },1000);
+    }
+  }
+
+
+}
+
+export interface PeriodicElement {
+  codigo: string,
+  Tienda: string,
+  isVerification: boolean,
+  cant_comprobantes: number,
+  transacciones: number,
+  clientes_null: number,
+  online: number,
+  conexICG: number,
+  terminales: Array<any>,
+  dataTerminales: Array<any>
 }
 
 
