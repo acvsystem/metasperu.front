@@ -2,6 +2,18 @@
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
 
     @if(isPresentRange) {
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{placeholder}}</mat-label>
+        <mat-date-range-input [formGroup]="range" [rangePicker]="pickerSemana">
+          <input matStartDate formControlName="start" placeholder="Start date"  (dateChange)="onChangeInput($event)">
+          <input matEndDate formControlName="end" placeholder="End date"  (dateChange)="onChangeInput($event)">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerSemana"></mat-datepicker-toggle>
+        <mat-date-range-picker #pickerSemana></mat-date-range-picker>
+      </mat-form-field>
+
+      <!--
       <mbsc-datepicker
         [controls]="['calendar']"
         select="preset-range"
@@ -18,8 +30,20 @@
         (change)="onChangeInput(selected)"
         rangeEndLabel="Return">
       </mbsc-datepicker>
+      -->
     }
     @if(isRange) {
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{placeholder}}</mat-label>
+        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+          <input matStartDate formControlName="start" placeholder="Start date"  (dateChange)="onChangeInput($event,'')">
+          <input matEndDate formControlName="end" placeholder="End date"  (dateChange)="onChangeInput('',$event)">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <!--
       <mbsc-datepicker
       select="range"
       rangeHighlight="true"
@@ -32,23 +56,65 @@
       [locale]="localeEs"
       rangeEndLabel="Return">
       </mbsc-datepicker>
+      -->
     }
 
     @if(isPeriodo) {
- 
-      <mat-form-field  appearance="outline">
+
+      <mat-form-field appearance="outline">
         <mat-label>Periodo</mat-label>
-        <input matInput [matDatepicker]="dp" [formControl]="date">
+        <input matInput [matDatepicker]="dp" [formControl]="date"  >
         <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
         <mat-datepicker #dp
                         startView="multi-year"
-                        (monthSelected)="setMonthAndYear($event, dp)"
+                        (yearSelected)="chosenYearHandler($event)"
+                        (monthSelected)="chosenMonthHandler($event, dp)"
                         panelClass="example-month-picker">
         </mat-datepicker>
       </mat-form-field>
+
+      
+ <!--
+      <mat-form-field appearance="outline">
+        <mat-label>Periodo</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="date" (dateChange)="onChangeInput($event)">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker ></mat-datepicker>
+      </mat-form-field>
+      -->
     }
 
     @if(isMultiSelect) {
+      <mat-form-field appearance="outline" class="mtChip">
+        <mat-chip-list #chipList aria-label="Choose a date" (click)="picker.open()">
+          <mat-chip
+            *ngFor="let value of model"
+            [selectable]="false"
+            [removable]="true"
+            (removed)="remove(value)"
+          >
+            {{ value | date: 'yyyy/MM/dd' }}
+            <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+          </mat-chip>
+          <input
+            [value]="resetModel"
+            matInput
+            [matDatepicker]="picker"
+            placeholder="Choose a date"
+            (dateChange)="dateChanged($event)"
+            [matChipInputFor]="chipList"
+            hidden
+          />
+        </mat-chip-list>
+        <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker
+          #picker
+          [startAt]="init"
+          [dateClass]="dateClass"
+        ></mat-datepicker>
+      </mat-form-field>
+
+      <!--
       <mbsc-datepicker
       [controls]="['calendar']"
       theme="windows"
@@ -61,10 +127,18 @@
       dateFormat="DD-MM-YYYY"
       [locale]="localeEs"
       >
-    </mbsc-datepicker>
+    </mbsc-datepicker>-->
     }
 
     @if(isDefault) {
+      <mat-form-field appearance="outline">
+        <mat-label>{{placeholder}}</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="date" (dateChange)="onChangeInput($event)">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker ></mat-datepicker>
+      </mat-form-field>
+      
+<!--
       <mbsc-datepicker
       [controls]="['calendar']"
       [(ngModel)]="selected"
@@ -73,10 +147,18 @@
       dateFormat="DD-MM-YYYY"
       [locale]="localeEs"
       >
-      </mbsc-datepicker>
+      </mbsc-datepicker>-->
     }
 
     @if(isTime){
+      <mat-form-field>
+        <mat-label>Pick a time</mat-label>
+        <input matInput [matTimepicker]="picker">
+        <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+        <mat-timepicker #picker/>
+      </mat-form-field>
+
+      <!--
       <mbsc-datepicker
       theme="windows"
       [controls]="['time']"
@@ -85,6 +167,7 @@
       [locale]="localeEs"
       >
      </mbsc-datepicker>
+     -->
     }
 
   </ion-col>

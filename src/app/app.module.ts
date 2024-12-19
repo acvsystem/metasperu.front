@@ -47,7 +47,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatStepperModule } from '@angular/material/stepper';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -80,6 +80,9 @@ import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horar
 import { MtPapeletaPreviewComponent } from './components/mt-papeleta-preview/mt-papeleta-preview.component';
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtViewRegistroComponent } from './pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTimepickerModule} from '@angular/material/timepicker'; 
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -112,8 +115,7 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtPanelHorarioComponent,
         MtPapeletaPreviewComponent,
         MtPlanillaComponent,
-        MtViewRegistroComponent,
-        MtDetailCajaComponent
+        MtViewRegistroComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],

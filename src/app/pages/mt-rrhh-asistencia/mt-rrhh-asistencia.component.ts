@@ -357,7 +357,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       let arVerif = [];
 
       await (this.vMultiSelect || []).filter((dt) => {
-        let date = new Date(dt).toLocaleDateString().split('/');
+        
+        let date = dt.split('/');
+        console.log(date,this.vCalendar[1]);
         if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
           arVerif.push(true);
         } else {
@@ -369,8 +371,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         this.openSnackBar("Fechas seleccionadas no son correcta..!!");
         this.isLoading = false;
       } else {
-        console.log(this.vCalendarDefault.length , this.vCalendar.length , this.vMultiSelect.length , this.vDetallado.length);
-        if (this.vCalendarDefault.length || (this.vCalendar.length && this.vMultiSelect.length) || this.vDetallado.length) {
+        console.log(this.vCalendarDefault.length, this.vCalendar.length, this.vMultiSelect.length, this.vDetallado.length);
+        if (this.vCalendarDefault.length || (this.vCalendar.length && this.vMultiSelect.length) || this.vDetallado.length >= 2) {
 
           var configuracion = {
             isDefault: this.isViewDefault,
@@ -542,20 +544,21 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   onCaledar($event) {
+    console.log("onCaledar", $event);
     this.isErrorFecha = false;
-    this.vCalendar = [];
-    this.vMultiSelect = [];
-    this.vCalendarDefault = [];
-    this.vDetallado = [];
     if ($event.isPeriodo) {
+      this.vCalendar = [];
       this.vCalendar = $event.value;
+      console.log(this.vCalendar);
     }
 
     if ($event.isMultiSelect) {
+      this.vMultiSelect = [];
       this.vMultiSelect = $event.value;
     }
 
     if ($event.isDefault) {
+      this.vCalendarDefault = [];
       let dateNow = new Date();
 
       let day = new Date(dateNow).toLocaleDateString().split('/');
@@ -573,23 +576,16 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
       }
 
-      this.vCalendarDefault = [`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`];
+      this.vCalendarDefault = [`${$event.value}`];
     }
 
     if ($event.isRange) {
-      let range = [];
-      let dateList = $event.value;
-      (dateList || []).filter((dt, i) => {
-        let date = new Date(dt).toLocaleDateString().split('/');
-        if (dateList[1] == null && i == 1) {
-          (range || []).push(range[0]);
-        } else {
-          (range || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
-        }
-
-      });
-
-      this.vDetallado = range;
+      this.vDetallado = [];
+      let range = $event.value;
+      console.log(range);
+      if (range.length >= 2) {
+        this.vDetallado = range;
+      }
     }
   }
 

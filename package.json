@@ -15,11 +15,11 @@
     "private": true,
     "dependencies": {
         "@angular/animations": "^18.2.4",
-        "@angular/cdk": "^18.2.4",
+        "@angular/cdk": "^18.2.14",
         "@angular/common": "^18.2.4",
         "@angular/core": "^18.2.4",
         "@angular/forms": "^18.2.4",
-        "@angular/material": "^18.2.4",
+        "@angular/material": "^18.2.14",
         "@angular/material-moment-adapter": "^18.0.0",
         "@angular/platform-browser": "^18.2.4",
         "@angular/platform-browser-dynamic": "^18.2.4",
@@ -81,7 +81,7 @@
         "karma-jasmine": "~5.1.0",
         "karma-jasmine-html-reporter": "~2.0.0",
         "ts-node": "~8.3.0",
-        "typescript": "~5.5.4"
+        "typescript": "^5.7.2"
     },
     "description": "An Ionic project"
 }
