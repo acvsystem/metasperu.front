@@ -35,17 +35,17 @@
     }
 
     @if(isPeriodo) {
-      <mbsc-datepicker 
-      [controls]="['calendar']"
-      dateFormat="MM/YYYY"
-      theme="windows"
-      themeVariant="dark"
-      [(ngModel)]="selected"
-      (change)="onChangeInput(selected)"
-      placeholder="{{placeholder}}"
-      [locale]="localeEs"
-      >
-    </mbsc-datepicker>
+ 
+      <mat-form-field  appearance="outline">
+        <mat-label>Periodo</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="date">
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp
+                        startView="multi-year"
+                        (monthSelected)="setMonthAndYear($event, dp)"
+                        panelClass="example-month-picker">
+        </mat-datepicker>
+      </mat-form-field>
     }
 
     @if(isMultiSelect) {

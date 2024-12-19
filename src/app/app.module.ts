@@ -1,5 +1,4 @@
 import { MbscModule } from '@mobiscroll/angular';
-import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -81,7 +80,7 @@ import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horar
 import { MtPapeletaPreviewComponent } from './components/mt-papeleta-preview/mt-papeleta-preview.component';
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtViewRegistroComponent } from './pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
-import { MtDetailCajaComponent } from './pages/mt-verification-comprobantes/mt-detail-caja/mt-detail-caja.component';
+
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
@@ -137,6 +136,7 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MatChipsModule,
         MatStepperModule,
         MatDatepickerModule,
+        MatDatepicker,
         MatDialogModule,
         MatDividerModule,
         MatExpansionModule,
@@ -161,6 +161,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MatToolbarModule,
         MatTooltipModule,
         MatTreeModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
         IonicModule.forRoot(),
         AppRoutingModule,
         SocketIoModule.forRoot(confSocket)], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync()]

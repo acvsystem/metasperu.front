@@ -455,3 +455,31 @@ mt-calendar mbsc-datepicker mbsc-input {
 .mbsc-textfield-tag-clear.mbsc-icon.mbsc-windows.mbsc-windows-dark {
   color: white !important;
 }
+
+
+div.mat-mdc-text-field-wrapper {
+  background: #ffffff !important;
+  border: 1px solid #d9d9d9 !important;
+  height: 39px !important;
+  border-radius: 4px !important;
+}
+
+div.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.item-has-focus {
+  border: 1px solid #40a9ff !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 2px #1890ff33 !important;
+  border-radius: 4px !important;
+}
+
+.no-line .mat-form-field-underline {
+  display: none;
+}
+
+
+.mat-mdc-form-field-flex {
+  height: 37px !important;
+}

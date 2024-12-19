@@ -411,7 +411,7 @@ export class MtPlanillaComponent implements OnInit {
       tipo_planilla: this.cboReporte,
       date: this.vCalendar
     };
-
+    console.log(option);
     this.socket.emit('consultaPlanilla', option);
   }
 
