@@ -21,7 +21,6 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-registro.component';
-import { Notifications } from '@mobiscroll/angular';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';

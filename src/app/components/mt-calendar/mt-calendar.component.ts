@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, inject, signal, model } from '@angular/core';
-import { localeEs, Notifications } from '@mobiscroll/angular';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';

@@ -30,7 +30,6 @@
         "@capacitor/keyboard": "4.1.1",
         "@capacitor/status-bar": "4.1.1",
         "@ionic/angular": "^6.1.9",
-        "@mobiscroll/angular": "npm:@mobiscroll/angular-ivy-trial@^5.32.0",
         "@types/ip-address": "^6.0.0",
         "@types/ua-parser-js": "^0.7.39",
         "chart.js": "^4.4.4",

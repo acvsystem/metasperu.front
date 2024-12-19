@@ -4,7 +4,6 @@ import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Notifications } from '@mobiscroll/angular';
 
 @Component({
   selector: 'app-mt-verification-comprobantes',
