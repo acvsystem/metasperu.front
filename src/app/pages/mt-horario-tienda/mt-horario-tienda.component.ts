@@ -6,7 +6,6 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { Notifications, setOptions } from '@mobiscroll/angular';
 import { ShareService } from '../../services/shareService';
 
 @Component({
@@ -93,7 +92,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     console.log(this.screenHeight);
   }
 
-  constructor(private store: StorageService, public notify: Notifications, private service: ShareService) { }
+  constructor(private store: StorageService, private service: ShareService) { }
 
 
 
@@ -252,19 +251,11 @@ export class MtHorarioTiendaComponent implements OnInit {
         //this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, rg: `DIAS LIBRES` });
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
-        this.notify.snackbar({
-          message: 'Rango de hora ya existe..!!',
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar('Rango de hora ya existe..!!');
       }
 
     } else {
-      this.notify.snackbar({
-        message: 'Seleccione rango horario..!!',
-        display: 'top',
-        color: 'danger'
-      });
+      this.openSnackBar('Seleccione rango horario..!!');
     }
 
     this.socket.emit('actualizarHorario', this.dataHorario);
@@ -382,12 +373,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let isRegister = this.dataHorario[index]['dias_trabajo'].findIndex((dtr) => dtr.id_dia == data.id_dia && dtr.nombre_completo == data.nombre_completo);
     if (isRegister != -1) {
-      this.notify.snackbar({
-        message: 'No se puede asignar a otro horario...!!',
-        display: 'top',
-        color: 'danger'
-      });
-
+      this.openSnackBar('No se puede asignar a otro horario...!!');
     } else {
       this.dataHorario[index]['dias_trabajo'].push({ id: this.dataHorario[index]['dias_trabajo'].length + 1, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
       this.dataHorario[index]['arListTrabajador'] = this.dataHorario[index]['arListTrabajador'].filter((dt) => dt.id != data.id);
@@ -531,11 +517,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         });
       } else {
-        this.notify.snackbar({
-          message: (dataRes || {}).msj,
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar((dataRes || {}).msj);
       }
 
     });
@@ -624,11 +606,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.isRangoEdit = false;
           this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
         } else {
-          this.notify.snackbar({
-            message: 'Rango de hora ya existe..!!',
-            display: 'top',
-            color: 'danger'
-          });
+          this.openSnackBar('Rango de hora ya existe..!!');
         }
 
       }
@@ -707,11 +685,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
         this.dataHorario = [];
-        this.notify.snackbar({
-          message: (response || {}).msj,
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar((response || {}).msj);
       }
 
     });
@@ -769,11 +743,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
         this.dataHorario = [];
-        this.notify.snackbar({
-          message: (response || {}).msj,
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar((response || {}).msj);
       }
 
     });

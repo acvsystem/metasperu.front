@@ -15,6 +15,11 @@ import {
 } from '@angular/material-moment-adapter';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 const moment = _rollupMoment || _moment;
 
@@ -56,7 +61,6 @@ export class MtCalendarComponent implements OnInit {
   @Input() id: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Input() selected: string = "";
-  public localeEs = localeEs;
   date = new FormControl(moment());
   public model = [];
   @ViewChild('picker', { static: true }) _picker: MatDatepicker<Date>;
@@ -74,7 +78,13 @@ export class MtCalendarComponent implements OnInit {
     return [];
   }
 
-  constructor(public notify: Notifications) { }
+  private _snackBar = inject(MatSnackBar);
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
+
+  constructor() { }
 
 
   ngOnInit() {
@@ -94,9 +104,9 @@ export class MtCalendarComponent implements OnInit {
       this.afterChange.emit({ isPeriodo: true, value: [`${moment(this.date.value).format('YYYY')}`, `${moment(this.date.value).format('MM')}`, `${moment(futureMonth).format('MM')}`] });
     }
 
-    if (this.isMultiSelect && arrDate.length >= 1 && arrDate.length <= 3) {
-      console.log("isMultiSelect", arrDate);
-      this.afterChange.emit({ isMultiSelect: true, value: arrDate });
+    if (this.isMultiSelect && this.model.length >= 1 && this.model.length <= 3) {
+      console.log("isMultiSelect", this.model);
+      this.afterChange.emit({ isMultiSelect: true, value: this.model });
     }
 
     if (this.isDefault) {
@@ -134,19 +144,11 @@ export class MtCalendarComponent implements OnInit {
             let ar = [`${moment(this.range.value.start).format('YYYY/MM/DD')}`, `${moment(this.range.value.end).format('YYYY/MM/DD')}`];
             this.afterChange.emit({ isPresentRange: true, value: ar });
           } else {
-            this.notify.snackbar({
-              message: "Numero de dias sobrepasan a la de una semana.",
-              display: 'top',
-              color: 'danger'
-            });
+            this.openSnackBar("Numero de dias sobrepasan a la de una semana.");
           }
         }
       } else {
-        this.notify.snackbar({
-          message: "No puede iniciar el horario con ese dia.",
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar("No puede iniciar el horario con ese dia.");
       }
     }
   }
@@ -176,11 +178,7 @@ export class MtCalendarComponent implements OnInit {
 
 
     } else {
-      this.notify.snackbar({
-        message: "Solo puede seleccionar 3 fechas.",
-        display: 'top',
-        color: 'danger'
-      });
+      this.openSnackBar("Solo puede seleccionar 3 fechas.");
     }
   }
 
@@ -218,6 +216,17 @@ export class MtCalendarComponent implements OnInit {
     ctrlValue.month(normalizedMonth.month());
     this.date.setValue(ctrlValue);
     datepicker.close();
+    var futureMonth = moment(this.date.value).add(1, 'months');
+    this.afterChange.emit({ isPeriodo: true, value: [`${moment(this.date.value).format('YYYY')}`, `${moment(this.date.value).format('MM')}`, `${moment(futureMonth).format('MM')}`] });
+
+  }
+
+  openSnackBar(msj) {
+    this._snackBar.open(msj, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5 * 1000
+    });
   }
 
 }

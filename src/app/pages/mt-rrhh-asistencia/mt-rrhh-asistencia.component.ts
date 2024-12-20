@@ -110,7 +110,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(public notify: Notifications, private sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
 
@@ -356,9 +356,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       let arVerif = [];
 
       await (this.vMultiSelect || []).filter((dt) => {
-        
+
         let date = dt.split('/');
-        console.log(date,this.vCalendar[1]);
+        console.log(dt, this.vCalendar);
         if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
           arVerif.push(true);
         } else {
@@ -370,8 +370,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         this.openSnackBar("Fechas seleccionadas no son correcta..!!");
         this.isLoading = false;
       } else {
-        console.log(this.vCalendarDefault.length, this.vCalendar.length, this.vMultiSelect.length, this.vDetallado.length);
-        if (this.vCalendarDefault.length || (this.vCalendar.length && this.vMultiSelect.length) || this.vDetallado.length >= 2) {
+        console.log(this.vCalendarDefault, this.vCalendar, this.vMultiSelect, this.vDetallado);
+        if (this.vCalendarDefault.length || this.vDetallado.length >= 2) {
 
           var configuracion = {
             isDefault: this.isViewDefault,
@@ -381,23 +381,41 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
           };
 
-          this.isLoading = true;
-          this.socket.emit('consultaMarcacion', configuracion);
-        } else {
-          this.notify.snackbar({
-            message: "Seleccione una fecha.",
-            display: 'top',
-            color: 'danger'
-          });
+
+
+          if (this.isViewFeriados) {
+            if (this.vCalendar.length && this.vMultiSelect.length) {
+              this.isLoading = true;
+              this.socket.emit('consultaMarcacion', configuracion);
+            } else {
+              this.openSnackBar("Seleccione una fecha.");
+            }
+
+          }
+
+          if (this.isDetallado) {
+            if (this.vDetallado.length >= 2) {
+              this.isLoading = true;
+              this.socket.emit('consultaMarcacion', configuracion);
+            } else {
+              this.openSnackBar("Seleccione una fecha.");
+            }
+          }
+
+          if (this.isViewDefault) {
+            if (this.vCalendarDefault) {
+              this.isLoading = true;
+              this.socket.emit('consultaMarcacion', configuracion);
+            } else {
+              this.openSnackBar("Seleccione una fecha.");
+            }
+          }
+
         }
 
       }
     } else {
-      this.notify.snackbar({
-        message: "La fecha seleccionada no puede ser posterior a la fecha actual.",
-        display: 'top',
-        color: 'danger'
-      });
+      this.openSnackBar("La fecha seleccionada no puede ser posterior a la fecha actual.");
     }
 
   }
@@ -548,7 +566,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     if ($event.isPeriodo) {
       this.vCalendar = [];
       this.vCalendar = $event.value;
-      console.log(this.vCalendar);
     }
 
     if ($event.isMultiSelect) {
@@ -568,11 +585,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
       if (f1.getTime() > f2.getTime()) {
         this.isErrorFecha = true;
-        this.notify.snackbar({
-          message: "La fecha seleccionada no puede ser posterior a la actual.",
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar("La fecha seleccionada no puede ser posterior a la actual.");
       }
 
       this.vCalendarDefault = [`${$event.value}`];

@@ -1,7 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Notifications, setOptions } from '@mobiscroll/angular';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { io } from "socket.io-client";
 import { StorageService } from 'src/app/utils/storage';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'mt-observacion-horario',
@@ -54,7 +58,12 @@ export class MtObservacionHorarioComponent implements OnInit {
     { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
-  constructor(public notify: Notifications, private store: StorageService) { }
+  private _snackBar = inject(MatSnackBar);
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
+  constructor(private store: StorageService) { }
 
   ngOnInit() {
     let profileUser = this.store.getStore('mt-profile');
@@ -141,11 +150,7 @@ export class MtObservacionHorarioComponent implements OnInit {
         }
         this.changeObservation.emit(this.arObservacion);
       } else {
-        this.notify.snackbar({
-          message: 'Llene todos los campos..!!',
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar('Llene todos los campos..!!');
       }
     }
 
@@ -184,6 +189,14 @@ export class MtObservacionHorarioComponent implements OnInit {
     this.indexObservacion = -1;
     this.vObservacion = "";
     this.optionDefault = [];
+  }
+
+  openSnackBar(msj) {
+    this._snackBar.open(msj, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5 * 1000
+    });
   }
 
 }

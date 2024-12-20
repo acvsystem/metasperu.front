@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { io } from "socket.io-client";
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-mt-verification-comprobantes',
@@ -46,8 +51,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
   columnsToDisplayWithExpand: Array<any> = [];
   expandedElement: Array<PeriodicElement> = [];
   dataSource = new MatTableDataSource<PeriodicElement>(this.bodyList);
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  private _snackBar = inject(MatSnackBar);
 
-  constructor(public notify: Notifications, private service: ShareService, private store: StorageService) { }
+  constructor(private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
     this.service.onViewPageAdmin.subscribe((view) => {
@@ -345,12 +353,16 @@ export class MtVerificationComprobantesComponent implements OnInit {
         this.socket.emit('comunicationFront', 'angular');
       }, 1000);
     } else {
-      this.notify.snackbar({
-        message: 'Seleccione el Origen y Destino.',
-        display: 'top',
-        color: 'danger'
-      });
+      this.openSnackBar('Seleccione el Origen y Destino.');
     }
+  }
+
+  openSnackBar(msj) {
+    this._snackBar.open(msj, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5 * 1000
+    });
   }
 
 

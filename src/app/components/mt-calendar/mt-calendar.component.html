@@ -62,8 +62,8 @@
     @if(isPeriodo) {
 
       <mat-form-field appearance="outline">
-        <mat-label>Periodo</mat-label>
-        <input matInput [matDatepicker]="dp" [formControl]="date"  >
+        <mat-label>{{placeholder}}</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="date">
         <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
         <mat-datepicker #dp
                         startView="multi-year"

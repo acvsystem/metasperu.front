@@ -1,11 +1,15 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit,inject } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { StorageService } from 'src/app/utils/storage';
 import { ShareService } from 'src/app/services/shareService';
-import { Notifications, setOptions } from '@mobiscroll/angular';
 import * as $ from 'jquery';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -96,7 +100,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.screenHeight = window.innerHeight - 200;
   }
 
-  constructor(public notify: Notifications, private store: StorageService, private service: ShareService) {
+  
+  private _snackBar = inject(MatSnackBar);
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
+  constructor(private store: StorageService, private service: ShareService) {
     this.getScreenSize();
   }
 
@@ -128,19 +138,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.bodyList[index]['rechazado'] = response[0]['RECHAZADO'] ? true : false;
 
       if (response[0]['RECHAZADO']) {
-        this.notify.snackbar({
-          message: "Hora extra rechazada.",
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar("Hora extra rechazada.");
       }
 
       if (!response[0]['RECHAZADO']) {
-        this.notify.snackbar({
-          message: "Hora extra aprobada.",
-          display: 'top',
-          color: 'success'
-        });
+        this.openSnackBar("Hora extra aprobada.");
       }
 
 
@@ -665,11 +667,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.service.post(parms).then(async (response) => {
       if (!(response || {}).success) {
-        this.notify.snackbar({
-          message: (response || {}).msj,
-          display: 'top',
-          color: 'danger'
-        });
+        this.openSnackBar((response || {}).msj);
       } else {
         this.onListPapeleta();
 
@@ -686,16 +684,19 @@ export class MtPapeletaHorarioComponent implements OnInit {
         this.vObservacion = "";
 
         this.onGenerarCodigoPapeleta();
-
-        this.notify.snackbar({
-          message: "PAPELETA REGISTRADA CON EXISTO..!!!",
-          display: 'top',
-          color: 'success'
-        });
+        this.openSnackBar("PAPELETA REGISTRADA CON EXISTO..!!!");
       }
 
     });
 
+  }
+
+  openSnackBar(msj) {
+    this._snackBar.open(msj, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5 * 1000
+    });
   }
 
   onChange(data: any) {

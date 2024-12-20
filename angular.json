@@ -32,7 +32,6 @@
               }
             ],
             "styles": [
-              "./node_modules/@mobiscroll/angular/dist/css/mobiscroll.min.css",
               "src/theme/variables.scss",
               "src/global.scss"
             ],

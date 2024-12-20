@@ -1,4 +1,3 @@
-import { MbscModule } from '@mobiscroll/angular';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -82,7 +81,6 @@ import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtViewRegistroComponent } from './pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatTimepickerModule} from '@angular/material/timepicker'; 
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -120,7 +118,6 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
     imports: [
-        MbscModule,
         FormsModule, BrowserModule,
         DragDropModule,
         PortalModule,
