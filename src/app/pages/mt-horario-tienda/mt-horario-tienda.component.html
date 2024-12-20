@@ -1,380 +1,382 @@
 
 
-<div id="content" class="full-center-page" style="height: 100%;">
-  <div class="card-content" [ngStyle]="{'max-height.px':screenHeight}">
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <div class="content-button postition-start" *ngIf="!data.length">
-            <div class="content-button-comp" style="width: 100%;display: contents;">
-              @if(dataHorario.length){
-                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
-                id="searchProducto" type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onModal(true)">
-                Registrar Horario
-              </button>  
-              }@else{
-                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
-                id="searchProducto" type="button" class="btn btn-primary btn-sm"  disabled>
-                Registrar Horario
-              </button>  
-              }
- 
-            <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
-            ></mt-calendar>
-            <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSearchCalendario()">
-              <i class="fa fa-search" aria-hidden="true"></i>
+  <mat-drawer-container [hasBackdrop]="true" style="height: 100%;">
+    <mat-drawer #drawer [mode]="'over'" position="end">
+      <div style="border-bottom: 1px solid #ccc;padding: 17px;display: flex;align-items: center;justify-content: center;">
+        @if(!isPapeleta){
+          @if(isObservacion){
+            <button type="button" class="btn btn-light" (click)="isObservacion = false">
+              <i class="fa fa-arrow-left" aria-hidden="true"></i>
             </button>
-            @if(dataHorario.length){
-              <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" disabled>
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-              </button>
-            }@else{
-              <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-              </button>
-            }
-
-            <button style="margin-left: 8px;" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"  matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onOpenPapeleta()">
-              <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
-            </button>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
-      <div>
-        @for (data of dataHorario; track data.id) {
-          <table [ngClass]="[isOpenModal && !isPapeleta ? 'table table-bordered table-sm table-hover reduceTable': 'table table-bordered table-sm table-hover']" style="width: 99%;background-color: white;margin: 0;border-color: black;">
-            <thead>
-              <tr>
-                <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
-                  <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
-                    {{data.cargo}}
-                  </div>
-                </th>
-                <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #bbd6df;width: calc(100% - 233px) !important;">
-                  {{dia.fecha}}
-                </th>
-              </tr>
-              <tr style="text-align: center;">
-                <th scope="col" *ngFor="let dia of data.dias" style="background-color: #88c9ff;width: calc(429px - 233px) !important;">
-                  <div style="display: flex;align-items: center;justify-content: center;">
-                    <span style="margin-right: 20px;">{{dia.dia}}</span>
-                    @if(dia.isObservation) {
-                      <i class="fa fa-exclamation-circle" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onOpenObservacion(data,dia)" matTooltip="Observacion" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
-                    }
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
-                <th scope="row" style="background-color: #97b3fd;">
-                  {{rango.rg}}
-                </th>
-      
-                @for (dia of data.dias; track dia.id) {
-                <th scope="row">
-                  @for (trb of data.dias_trabajo; track trb) {
-                    <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
-                  }
-                </th>
-                }
-              </tr>
-              <tr style="text-align: center;">
-                <th scope="row" style="background-color: #FFD865;">DIAS LIBRES</th>
-                
-                @for (dia of data.dias; track dia.id) {
-                <th scope="row">
-                  @for (trb of data.dias_libres; track trb) {
-                    <span style="font-size: 14px;" *ngIf="dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
-                  }
-                </th>
-                }
-              </tr>
-              
-            </tbody>
-          </table>
           }
-      </div>
-  </div>
-</div>
-
-<div class="offcanvas offcanvas-end" data-bs-backdrop="false" tabindex="-1"  id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px;">
-  <div class="offcanvas-header" style="border-bottom: 1px solid #ccc;  margin-bottom: 10px;">
-    @if(!isPapeleta){
-      @if(isObservacion){
-        <button type="button" class="btn btn-light" (click)="isObservacion = false">
-          <i class="fa fa-arrow-left" aria-hidden="true"></i>
-        </button>
-      }
-      <h5 id="offcanvasRightLabel" style="color: black;display: grid;">
-        @if(!isObservacion){
-          Registro de Horario
-        } @else {
-          Registro de Observaciones
-          <span style="text-align: center;font-weight: 800;">{{titleObservacion}}</span>
-        }
-        
-      </h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="onModal(false)"></button>
-    } @else {
-      <h5 id="offcanvasRightLabel" style="color: black;display: grid;">
-        Registro de Papeleta
-      </h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="onModal(false)"></button>
-    }
-
-  </div>
-  <div class="offcanvas-body" style="display: contents;">
-    @if(!isObservacion && !isPapeleta){
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-          <mt-select id="cboCargo" placeHolder="Cargo" [optionList]="onListCargo"
-          (changeSelected)="onChangeSelect($event)"></mt-select>
-        </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
-          <div style="display: flex;">
-            <div style="width: 100px;">
-              <mt-calendar 
-                id="horaInit"
-                [isTime]="true" 
-                placeholder="Hora"
-                (afterChange)="onCaledar($event)">
-              </mt-calendar>
-            </div>
-            <div style="width: 100px;">
-              <mt-calendar 
-              id="horaEnd"
-              [isTime]="true" 
-              placeholder="Hora"
-              (afterChange)="onCaledar($event)">
-            </mt-calendar>
-            </div>
-            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
-              @if(!isRangoEdit){
-                <button matTooltip="Agregar Horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onAddHorario()">
-                  <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-              } @else {
-                <button matTooltip="Agregar Horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
-                  <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-              }
-            </div>
-            <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
-              @if(vSelectDia > 0){
-                <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onOpenObservacion()">
-                  <i class="fa fa-list-alt" aria-hidden="true"></i>
-                </button>
-              } @else {
-                <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
-                  <i class="fa fa-list-alt" aria-hidden="true"></i>
-                </button>
-              }
-            </div>
-          </div>
-        </ion-col>
-        <div style="width: 100%;display: contents;">
-          <ion-col  sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="padding-right: 0;">
-            <div style="color: black;
-            
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            margin-left: 5px;
-            border-color: #CCCCCC;">
-              Rango Horario
-            </div>
-          </ion-col>
-          <ion-col  sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="padding-right: 0;">
-            <div style="color: black;
-           
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            margin-left: 5px;
-            border-color: #CCCCCC;">
-              Dia
-            </div>
-          </ion-col>
-          <ion-col  sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7"  style="padding: 0;">
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="padding-right: 0;">
-                  <div style="color: black;
-                    
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding: 10px;
-                    border: 1px solid;
-                    border-radius: 5px;
-                    margin-bottom: 10px;
-                    margin-left: 5px;
-                    border-color: #CCCCCC;">
-                      Trabajadores 
-                    </div>
-                </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                  <div style="color: black;
-                  
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  padding: 10px;
-                  border: 1px solid;
-                  border-radius: 5px;
-                  margin-bottom: 10px;
-                  margin-left: 5px;
-                  border-color: #CCCCCC;">
-                    Registro del dia
-                  </div>
-                </ion-col>
-              </ion-row>
-          </ion-col>
-        </div>
-      </ion-row>
-      <ion-row *ngIf="cboCargo != undefined" style="overflow: auto;
-      padding-bottom: 250px;
-      height: 100%;">
-        @for(data of dataHorario; track data.id) {
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
-              <div class="example-list contenedor">
-                @for (rg of data.rg_hora; track rg.id) {
-                  <div style="display: inline-flex;justify-content: center;align-items: center;border-bottom: 0;">
-                    @if(isStartEditRg && selectedIdRango == rg.id){
-                    <div style="width: 149px;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
-                        <div style="width: 100px;">
-                          <mt-calendar 
-                            id="horaInit"
-                            [isTime]="true" 
-                            placeholder="Hora"
-                            (afterChange)="onCaledar($event)">
-                          </mt-calendar>
-                          </div>
-                          <div style="width: 100px;">
-                            <mt-calendar 
-                            id="horaEnd"
-                            [isTime]="true" 
-                            placeholder="Hora"
-                            (afterChange)="onCaledar($event)">
-                          </mt-calendar>
-                          </div>
-                        </div>
-                    }@else{
-                      <div style="width: 142px;justify-content: center;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
-                        <span>{{rg.rg}}</span>
-                      </div>
-                    }
-
-                    <div [ngClass]="[isStartEditRg && selectedIdRango == rg.id ? 'editRango': 'notEditRango']" style="border-bottom: solid 1px #ccc;justify-content: center;align-items: center;display: flex;">
-                      @if(!isStartEditRg){
-                        <button matTooltip="Editar Rango Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onEditHorario(rg.id)">
-                          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </button>
-                      }@else{
-                        @if(selectedIdRango == rg.id){
-                          <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onSaveRangoHorario(rg.id)">
-                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                          </button>
-                        }@else{
-                          <button matTooltip="Editar Rango Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onEditHorario(rg.id)">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                          </button>
-                        }
-                      }
-
-                    </div>
-                  </div>
-
-                }
-              </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="data.id == idCargo">
-          <div class="example-list contenedor">
-            @for (dia of data.dias; track dia.id) {
-              <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia)">
-                {{dia.dia}}
-                  @if(dia.isObservation) {
-                    <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
-                  }
-              </div>
+          <h5 style="color: black;display: grid;color: black;display: grid;width: 95%;text-align: center;">
+            @if(!isObservacion){
+              Registro de Horario
+            } @else {
+              Registro de Observaciones
+              <span style="text-align: center;font-weight: 800;">{{titleObservacion}}</span>
             }
-          </div>
-          
-          </ion-col>
-          <ion-col style="    padding-right: 12px;" sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" *ngIf="data.id == idCargo" style="padding: 0;">
-          <div>
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                  <div
-                  *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
-                  class="example-list contenedor">
-                  @for (trb of data.arListTrabajador; track trb) {
-                    <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
-                      <div style="max-width: 115px;">
-                        {{trb.nombre_completo}}
-                      </div>
-                      <div>
-                        <button id="addDL" [name]="'addDL'+'-'+trb.id" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px; 
-                        font-size: 12px;
-                        padding-top: 1px;
-                        padding-left: 5px;
-                        margin-right: 5px;
-                        padding-right: 5px;" (click)="onAddDLTrabajo(trb,trb.id)" matTooltip="Asignar trabajor a dia libre">
-                          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                        </button>
-                        <button id="addHorario" [name]="'addHorario'+'-'+trb.id" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px; 
-                        font-size: 12px;
-                        padding-top: 1px;
-                        padding-left: 5px;
-                        padding-right: 5px;" (click)="onAddDTrabajo(trb)" matTooltip="Asignar trabajor a este horario">
-                          <i class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    </div>
+            
+          </h5>
+        } @else {
+          <h5 style="color: black;display: grid;">
+            Registro de Papeleta
+          </h5>
+        }
+    
+      </div>
+      <div style="display: contents;">
+        @if(!isObservacion && !isPapeleta){
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+              <mt-select id="cboCargo" placeHolder="Cargo" [optionList]="onListCargo"
+              (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
+              <div style="display: flex;">
+                <div style="width: 100px;">
+                  <mt-calendar 
+                    id="horaInit"
+                    [isTime]="true" 
+                    placeholder="Hora"
+                    (afterChange)="onCaledar($event)">
+                  </mt-calendar>
+                </div>
+                <div style="width: 100px;">
+                  <mt-calendar 
+                  id="horaEnd"
+                  [isTime]="true" 
+                  placeholder="Hora"
+                  (afterChange)="onCaledar($event)">
+                </mt-calendar>
+                </div>
+                <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
+                  @if(!isRangoEdit){
+                    <button matTooltip="Agregar Horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onAddHorario()">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                  } @else {
+                    <button matTooltip="Agregar Horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
                   }
                 </div>
-              </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="padding-right: 10px;">
-                <div
-                *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
-                class="example-list contenedor">
-                @for (dtrb of data.dias_trabajo; track dtrb) {
-                  <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
-                    {{dtrb.nombre_completo}}
-                    <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
-                    font-size: 12px;
-                    padding-top: 1px;
-                    padding-left: 5px;
-                    padding-right: 5px;" (click)="onDeleteDTrabajo(dtrb)">
-                      <i class="fa fa-minus" aria-hidden="true"></i>
+                <div style="display: flex;justify-content: center;align-items: center;margin-left: 5px;">
+                  @if(vSelectDia > 0){
+                    <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onOpenObservacion()">
+                      <i class="fa fa-list-alt" aria-hidden="true"></i>
                     </button>
+                  } @else {
+                    <button id="searchProducto" matTooltip="Observacion" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" disabled>
+                      <i class="fa fa-list-alt" aria-hidden="true"></i>
+                    </button>
+                  }
+                </div>
+              </div>
+            </ion-col>
+            <div style="width: 100%;display: contents;">
+              <ion-col  sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="padding-right: 0;">
+                <div style="color: black;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                border: 1px solid;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                margin-left: 5px;
+                border-color: #CCCCCC;">
+                  Rango Horario
+                </div>
+              </ion-col>
+              <ion-col  sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="padding-right: 0;">
+                <div style="color: black;
+               
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                border: 1px solid;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                margin-left: 5px;
+                border-color: #CCCCCC;">
+                  Dia
+                </div>
+              </ion-col>
+              <ion-col  sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7"  style="padding: 0;">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="padding-right: 0;">
+                      <div style="color: black;
+                        
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px;
+                        border: 1px solid;
+                        border-radius: 5px;
+                        margin-bottom: 10px;
+                        margin-left: 5px;
+                        border-color: #CCCCCC;">
+                          Trabajadores 
+                        </div>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <div style="color: black;
+                      
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      padding: 10px;
+                      border: 1px solid;
+                      border-radius: 5px;
+                      margin-bottom: 10px;
+                      margin-left: 5px;
+                      border-color: #CCCCCC;">
+                        Registro del dia
+                      </div>
+                    </ion-col>
+                  </ion-row>
+              </ion-col>
+            </div>
+          </ion-row>
+          <ion-row *ngIf="cboCargo != undefined" style="overflow: auto;
+          padding-bottom: 250px;
+          height: 100%;">
+            @for(data of dataHorario; track data.id) {
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" *ngIf="data.id == idCargo">
+                  <div class="example-list contenedor">
+                    @for (rg of data.rg_hora; track rg.id) {
+                      <div style="display: inline-flex;justify-content: center;align-items: center;border-bottom: 0;">
+                        @if(isStartEditRg && selectedIdRango == rg.id){
+                        <div style="width: 149px;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
+                            <div style="width: 100px;">
+                              <mt-calendar 
+                                id="horaInit"
+                                [isTime]="true" 
+                                placeholder="Hora"
+                                (afterChange)="onCaledar($event)">
+                              </mt-calendar>
+                              </div>
+                              <div style="width: 100px;">
+                                <mt-calendar 
+                                id="horaEnd"
+                                [isTime]="true" 
+                                placeholder="Hora"
+                                (afterChange)="onCaledar($event)">
+                              </mt-calendar>
+                              </div>
+                            </div>
+                        }@else{
+                          <div style="width: 142px;justify-content: center;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
+                            <span>{{rg.rg}}</span>
+                          </div>
+                        }
+    
+                        <div [ngClass]="[isStartEditRg && selectedIdRango == rg.id ? 'editRango': 'notEditRango']" style="border-bottom: solid 1px #ccc;justify-content: center;align-items: center;display: flex;">
+                          @if(!isStartEditRg){
+                            <button matTooltip="Editar Rango Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onEditHorario(rg.id)">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                          }@else{
+                            @if(selectedIdRango == rg.id){
+                              <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onSaveRangoHorario(rg.id)">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                              </button>
+                            }@else{
+                              <button matTooltip="Editar Rango Horario" id="editProducto" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;" (click)="onEditHorario(rg.id)">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                              </button>
+                            }
+                          }
+    
+                        </div>
+                      </div>
+    
+                    }
+                  </div>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="data.id == idCargo">
+              <div class="example-list contenedor">
+                @for (dia of data.dias; track dia.id) {
+                  <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia)">
+                    {{dia.dia}}
+                      @if(dia.isObservation) {
+                        <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
+                      }
                   </div>
                 }
               </div>
+              
               </ion-col>
-            </ion-row>
-        </div>
+              <ion-col style="padding-right: 12px;" sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7" *ngIf="data.id == idCargo" style="padding: 0;">
+              <div>
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <div
+                      *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
+                      class="example-list contenedor">
+                      @for (trb of data.arListTrabajador; track trb) {
+                        <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
+                          <div style="max-width: 115px;">
+                            {{trb.nombre_completo}}
+                          </div>
+                          <div>
+                            <button id="addDL" [name]="'addDL'+'-'+trb.id" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px; 
+                            font-size: 12px;
+                            padding-top: 1px;
+                            padding-left: 5px;
+                            margin-right: 5px;
+                            padding-right: 5px;" (click)="onAddDLTrabajo(trb,trb.id)" matTooltip="Asignar trabajor a dia libre">
+                              <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                            </button>
+                            <button id="addHorario" [name]="'addHorario'+'-'+trb.id" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px; 
+                            font-size: 12px;
+                            padding-top: 1px;
+                            padding-left: 5px;
+                            padding-right: 5px;" (click)="onAddDTrabajo(trb)" matTooltip="Asignar trabajor a este horario">
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="padding-right: 10px;">
+                    <div
+                    *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
+                    class="example-list contenedor">
+                    @for (dtrb of data.dias_trabajo; track dtrb) {
+                      <div class="example-box-pointer" *ngIf="vSelectDia == dtrb.id_dia && vSelectHorario == dtrb.rg && dtrb.id_cargo == idCargo">
+                        {{dtrb.nombre_completo}}
+                        <button id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;
+                        font-size: 12px;
+                        padding-top: 1px;
+                        padding-left: 5px;
+                        padding-right: 5px;" (click)="onDeleteDTrabajo(dtrb)">
+                          <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                  </ion-col>
+                </ion-row>
+            </div>
+              </ion-col>
+              
+          }
+          </ion-row>
+        } 
+    
+        @if(isObservacion && !isPapeleta) {
+          <mt-observacion-horario (changeObservation)="opChangeObservation($event)" [vIdDia]="vSelectDia" [dataObservation]="dataObservation"></mt-observacion-horario>
+        }
+    
+        @if(isPapeleta){
+          <mt-papeleta-horario></mt-papeleta-horario>
+        }
+    
+      </div>
+    </mat-drawer>
+    <mat-drawer-content>
+      <div id="content" class="full-center-page" style="height: 100%;">
+      <div class="card-content" [ngStyle]="{'max-height.px':screenHeight}">
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div class="content-button postition-start" *ngIf="!data.length">
+              <div class="content-button-comp" style="width: 100%;display: contents;">
+                @if(dataHorario.length){
+                  <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
+                  id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="drawer.toggle()" (click) = "onModal(true)">
+                  Registrar Horario
+                </button>  
+                }@else{
+                  <button id="searchProducto" type="button" class="btn btn-primary btn-sm" 
+                  id="searchProducto" type="button" class="btn btn-primary btn-sm"  disabled>
+                  Registrar Horario
+                </button>  
+                }
+   
+              <mt-calendar [isPresentRange]="true"  placeholder="Seleccione Semana" (afterChange)="onCaledarRange($event)"
+              ></mt-calendar>
+              <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSearchCalendario()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </button>
+              @if(dataHorario.length){
+                <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" disabled>
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+              }@else{
+                <button style="margin-left: 8px;" matTooltip="Nuevo Calendario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onGenerarCalendario()">
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+              }
+  
+              <button style="margin-left: 8px;" (click)="drawer.toggle()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onOpenPapeleta()">
+                <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+              </button>
+              </div>
+            </div>
           </ion-col>
-          
-      }
-      </ion-row>
-    } 
-
-    @if(isObservacion && !isPapeleta) {
-      <mt-observacion-horario (changeObservation)="opChangeObservation($event)" [vIdDia]="vSelectDia" [dataObservation]="dataObservation"></mt-observacion-horario>
-    }
-
-    @if(isPapeleta){
-      <mt-papeleta-horario></mt-papeleta-horario>
-    }
-
+        </ion-row>
+        <div>
+          @for (data of dataHorario; track data.id) {
+            <table [ngClass]="[isOpenModal && !isPapeleta ? 'table table-bordered table-sm table-hover': 'table table-bordered table-sm table-hover']" style="width: 99%;background-color: white;margin: 0;border-color: black;">
+              <thead>
+                <tr>
+                  <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
+                    <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
+                      {{data.cargo}}
+                    </div>
+                  </th>
+                  <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #bbd6df;width: calc(100% - 233px) !important;">
+                    {{dia.fecha}}
+                  </th>
+                </tr>
+                <tr style="text-align: center;">
+                  <th scope="col" *ngFor="let dia of data.dias" style="background-color: #88c9ff;width: calc(429px - 233px) !important;">
+                    <div style="display: flex;align-items: center;justify-content: center;">
+                      <span style="margin-right: 20px;">{{dia.dia}}</span>
+                      @if(dia.isObservation) {
+                        <i class="fa fa-exclamation-circle" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="onOpenObservacion(data,dia)" matTooltip="Observacion" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
+                      }
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
+                  <th scope="row" style="background-color: #97b3fd;">
+                    {{rango.rg}}
+                  </th>
+        
+                  @for (dia of data.dias; track dia.id) {
+                  <th scope="row">
+                    @for (trb of data.dias_trabajo; track trb) {
+                      <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
+                    }
+                  </th>
+                  }
+                </tr>
+                <tr style="text-align: center;">
+                  <th scope="row" style="background-color: #FFD865;">DIAS LIBRES</th>
+                  
+                  @for (dia of data.dias; track dia.id) {
+                  <th scope="row">
+                    @for (trb of data.dias_libres; track trb) {
+                      <span style="font-size: 14px;" *ngIf="dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>
+                    }
+                  </th>
+                  }
+                </tr>
+                
+              </tbody>
+            </table>
+            }
+        </div>
+    </div>
   </div>
-</div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+  
