@@ -34,7 +34,7 @@
             </ion-col>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
               <div style="display: flex;">
-                <div style="width: 100px;">
+                <div style="width: 84px;">
                   <mt-calendar 
                     id="horaInit"
                     [isTime]="true" 
@@ -42,7 +42,7 @@
                     (afterChange)="onCaledar($event)">
                   </mt-calendar>
                 </div>
-                <div style="width: 100px;">
+                <div style="width: 84px;">
                   <mt-calendar 
                   id="horaEnd"
                   [isTime]="true" 
@@ -150,8 +150,8 @@
                     @for (rg of data.rg_hora; track rg.id) {
                       <div style="display: inline-flex;justify-content: center;align-items: center;border-bottom: 0;">
                         @if(isStartEditRg && selectedIdRango == rg.id){
-                        <div style="width: 149px;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
-                            <div style="width: 100px;">
+                        <div style="width: 180px;" [ngClass]="[rg.id == vSelectHorario ? 'example-box-pointer select': 'example-box-pointer']" (click)="onSelectDataDia(rg.id,'')">
+                            <div style="width: 84px;">
                               <mt-calendar 
                                 id="horaInit"
                                 [isTime]="true" 
@@ -159,7 +159,7 @@
                                 (afterChange)="onCaledar($event)">
                               </mt-calendar>
                               </div>
-                              <div style="width: 100px;">
+                              <div style="width: 84px;">
                                 <mt-calendar 
                                 id="horaEnd"
                                 [isTime]="true" 
@@ -181,7 +181,7 @@
                             </button>
                           }@else{
                             @if(selectedIdRango == rg.id){
-                              <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;width: 32px;" (click)="onSaveRangoHorario(rg.id)">
+                              <button matTooltip="Guardar Rango Horario" id="editProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 1px;width: 32px;margin-left: 3px;" (click)="onSaveRangoHorario(rg.id)">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                               </button>
                             }@else{

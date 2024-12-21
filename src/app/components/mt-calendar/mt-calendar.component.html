@@ -151,11 +151,9 @@
     }
 
     @if(isTime){
-      <mat-form-field>
-        <mat-label>Pick a time</mat-label>
-        <input matInput [matTimepicker]="picker">
-        <mat-timepicker-toggle matIconSuffix [for]="picker"/>
-        <mat-timepicker #picker/>
+      <mat-form-field appearance="outline">
+        <mat-label>{{placeholder}}</mat-label>
+        <input type="time" matInput name="week"  [(ngModel)]="vTimer" (keyup)="onChangeInput($event)"/>
       </mat-form-field>
 
       <!--

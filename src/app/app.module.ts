@@ -81,6 +81,7 @@ import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtViewRegistroComponent } from './pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {NgxMatTimepickerModule} from 'ngx-mat-timepicker';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -162,6 +163,7 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MatTreeModule,
         MatFormFieldModule,
         ReactiveFormsModule,
+        NgxMatTimepickerModule,
         IonicModule.forRoot(),
         AppRoutingModule,
         SocketIoModule.forRoot(confSocket)], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync()]

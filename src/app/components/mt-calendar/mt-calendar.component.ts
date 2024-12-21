@@ -61,6 +61,7 @@ export class MtCalendarComponent implements OnInit {
   @Input() id: string = "";
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Input() selected: string = "";
+  vTimer: string = "";
   date = new FormControl(moment());
   public model = [];
   @ViewChild('picker', { static: true }) _picker: MatDatepicker<Date>;
@@ -88,14 +89,12 @@ export class MtCalendarComponent implements OnInit {
 
 
   ngOnInit() {
-
     if (this.isDefault) {
       this.afterChange.emit({ id: this.id, isDefault: true, value: `${moment(this.date.value).format('YYYY/MM/DD')}` });
     }
   }
 
   onChangeInput(ev: any) {
-    console.log("onChangeInput", ev);
     let arrDate = ev;
     let date = new Date(ev);
 
@@ -114,10 +113,8 @@ export class MtCalendarComponent implements OnInit {
     }
 
     if (this.isTime) {
-      let dt = new Date(ev.value);
-      let minutos = dt.getMinutes().toString().length < 2 ? '0' + dt.getMinutes() : dt.getMinutes();
-
-      this.afterChange.emit({ isTime: true, value: `${dt.getHours()}:${minutos}`, id: this.id });
+      console.log({ isTime: true, value: `${this.vTimer}`, id: this.id });
+      this.afterChange.emit({ isTime: true, value: `${this.vTimer}`, id: this.id });
     }
 
     if (this.isRange) {
