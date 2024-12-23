@@ -63,7 +63,6 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   ngOnInit() {
     this.socket.on('lista_solicitudes', async (response) => {
       let dataResponse = response;
-      console.log(response);
       await dataResponse.filter(async (rs, i) => {
 
         let selectedLocal = await this.onListTiendas.find((data) => data.code == rs['CODIGO_TIENDA']) || {};
@@ -83,7 +82,6 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
       let data = (response || {}).data;
       this.parseHuellero = data;
-      console.log(this.parseHuellero);
       this.onDataTemp = [];
       this.bodyList = [];
       this.dataVerify = [];
@@ -130,7 +128,6 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
               this.onDataTemp[indexData]['hr_extra'] = process;//23:59
               let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
               let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
-              // let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
               let aprobado = estado == "correcto" ? true : false;
 
               this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
@@ -148,12 +145,10 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
         }
 
-
-
       });
       this.isLoading = false;
       this.isDetalle = true;
-      console.log("reporteHorario", this.onDataTemp);
+
       if ((this.dataVerify || []).length) {
         this.onVerificarHrExtra(this.dataVerify);
       }
@@ -197,6 +192,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     });
 
   }
+
   obtenerMinutos(hora_1, hora_2) {
 
     let hora_1_pr = hora_1.split(":");
@@ -359,10 +355,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       nro_documento: ev['NRO_DOCUMENTO_EMPLEADO']
     }]
 
-
     this.socket.emit('consultaHorasTrab', configuracion);
-
-
   }
 
   onBackPap() {

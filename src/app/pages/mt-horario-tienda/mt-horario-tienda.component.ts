@@ -504,6 +504,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           );
 
           console.log("onGenerarCalendario", this.dataHorario);
+          this.onSearchCalendario();
         });
 
 

@@ -270,7 +270,7 @@
         } 
     
         @if(isObservacion && !isPapeleta) {
-          <mt-observacion-horario (changeObservation)="opChangeObservation($event)" [vIdDia]="vSelectDia" [dataObservation]="dataObservation"></mt-observacion-horario>
+          <mt-observacion-horario (changeObservation)="opChangeObservation($event)" [dataTrabajadores]="arListTrabajador" [vIdDia]="vSelectDia" [dataObservation]="dataObservation"></mt-observacion-horario>
         }
     
         @if(isPapeleta){

@@ -17,6 +17,7 @@ export class MtObservacionHorarioComponent implements OnInit {
   @Input() vIdDia: number = 0;
   @Output() changeObservation: EventEmitter<any> = new EventEmitter();
   @Input() dataObservation: Array<any> = [];
+  @Input() dataTrabajadores: Array<any> = [];
   onListEmpleado: Array<any> = [];
   vObservacion: string = "";
   arObservacion: Array<any> = [];
@@ -71,56 +72,13 @@ export class MtObservacionHorarioComponent implements OnInit {
     this.codeTienda = profileUser.code.toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.unidServicio = unidServicio['uns'];
+    
+    this.dataTrabajadores.filter((trb) => {
+      this.onListEmpleado.push({ key: trb.nombre_completo, value: trb.nombre_completo },);
+    });
 
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
-    this.socket.on('reporteEmpleadoTienda', async (response) => {
-
-
-      if (response.id == "EJB") {
-        this.isEJB = true;
-        this.arDataEJB = (response || {}).data;
-      }
-
-      if (response.id == "server") {
-        this.isServer = true;
-        this.arDataServer = (response || {}).data;
-      }
-
-      if (this.arDataEJB.length && this.arDataServer.length) {
-
-        this.arDataServer.filter(async (ds) => {
-          if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
-            let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
-            let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
-
-            if (index != -1) {
-              var codigo = (ds || {}).caja.substr(0, 2);
-
-              if ((ds || {}).caja.substr(2, 2) == 7) {
-                codigo = (ds || {}).caja;
-              } else {
-                codigo.substr(0, 1)
-              }
-
-              let exist = this.parseEJB.findIndex((pr) => pr.documento == registro.nro_documento);
-
-              if (codigo == this.codeTienda && exist == -1) {
-
-                this.onListEmpleado.push({ key: registro.nro_documento, value: registro.nombre_completo });
-                this.parseEJB.push({
-                  nombre_completo: registro.nombre_completo,
-                  documento: registro.nro_documento,
-                  codigo_tienda: codigo
-                });
-              }
-            }
-          }
-        });
-
-        console.log("parseEJB ", this.parseEJB);
-      }
-    });
   }
 
 

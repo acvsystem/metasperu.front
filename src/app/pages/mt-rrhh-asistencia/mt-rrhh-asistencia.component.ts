@@ -21,6 +21,8 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-registro.component';
+import * as _moment from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -658,6 +660,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   obtenerDiferenciaHora(hr1, hr2) {
+
     let diferencia = 0;
     let hora_1 = this.obtenerHoras(hr1);
     let hora_2 = this.obtenerHoras(hr2);

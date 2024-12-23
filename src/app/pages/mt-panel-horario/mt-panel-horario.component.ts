@@ -60,7 +60,7 @@ export class MtPanelHorarioComponent implements OnInit {
     this.onListPapeleta();
   }
 
-
+//LISTA DE PAPELETAS
   onListPapeleta() {
     let parms = {
       url: '/papeleta/listarPapeleta'
