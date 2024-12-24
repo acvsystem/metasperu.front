@@ -471,47 +471,83 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   onCalcHorasSolicitadas() {
     this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
-    let diffH = this.diffHoraPap;
+    var hora = this.diffHoraPap;
+
+    // Dividir en partes
+    var parts = hora.split(':');
+
+    // Calcular minutos (horas * 60 + minutos)
+    let diffH = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
     let solicitado = this.diffHoraPap;
     let responseCalc = [];
     let isStop = false;
-    this.bodyList.filter((hrx, i) => {
+    let valor = "00:00";
+    this.bodyList.filter(async (hrx, i) => {
 
-      
-      
-      console.log((hrx || {}).extra, this.totalAcumulado || diffH, this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH));
-      responseCalc.push(this.totalAcumulado);
-      this.totalAcumulado = this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH);
+      var hora = hrx;
 
-      /** 
-            if (!isStop) {
-              if (!(this.totalAcumulado).length) {
-                this.totalAcumulado = this.obtenerDiferenciaHora((hrx || {}).extra, diffH);
-                
-              } else {
-                this.totalAcumulado = this.obtenerDiferenciaHora(this.totalAcumulado, diffH);
-                
-              }
-      
-              if (this.totalAcumulado != '00:00') {
-                console.log(this.totalAcumulado);
-                let sobrante = this.totalAcumulado;
-                let tomada = this.obtenerDiferenciaHora(sobrante, diffH);
-      
-                if (tomada == (hrx || {}).extra) {
-                  this.bodyList[i]['hrx_sobrante'] = "00:00";
-                } else {
-                  this.bodyList[i]['hrx_sobrante'] = sobrante;
-                }
-      
-                this.bodyList[i]['hrx_tomada'] = tomada;
-      
-                responseCalc.push(hrx);
-              } else {
-                isStop = true;
-              }
+      // Dividir en partes
+      var parts = hora.split(':');
+
+      // Calcular minutos (horas * 60 + minutos)
+      var total = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+      const ToTime = (num) => {
+        var horas: any = Math.floor(num / 3600);
+        horas = horas < 10 ? '0' + horas : horas;
+        var minutos: any = Math.floor((num / 60) % 60);
+        minutos = minutos < 10 ? '0' + minutos : minutos;
+        var segundos: any = num % 60;
+        segundos = segundos < 10 ? '0' + segundos : segundos;
+        return horas + ':' + minutos + ':' + segundos;
+      }
+
+      console.log(total - diffH, ToTime(total - diffH));
+
+      /*
+            responseCalc.push(this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH));
+            
+            if (responseCalc.length) {
+              valor = this.obtenerHorasTrabajadas(responseCalc[0] || "00:00", responseCalc[1] || "00:00");
+              console.log(valor,responseCalc);
             }
-      */
+      
+      
+            //console.log((hrx || {}).extra, this.totalAcumulado || diffH, this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH));
+      
+      
+            //this.totalAcumulado = this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH);
+      
+            /** 
+                  if (!isStop) {
+                    if (!(this.totalAcumulado).length) {
+                      this.totalAcumulado = this.obtenerDiferenciaHora((hrx || {}).extra, diffH);
+                      
+                    } else {
+                      this.totalAcumulado = this.obtenerDiferenciaHora(this.totalAcumulado, diffH);
+                      
+                    }
+            
+                    if (this.totalAcumulado != '00:00') {
+                      console.log(this.totalAcumulado);
+                      let sobrante = this.totalAcumulado;
+                      let tomada = this.obtenerDiferenciaHora(sobrante, diffH);
+            
+                      if (tomada == (hrx || {}).extra) {
+                        this.bodyList[i]['hrx_sobrante'] = "00:00";
+                      } else {
+                        this.bodyList[i]['hrx_sobrante'] = sobrante;
+                      }
+            
+                      this.bodyList[i]['hrx_tomada'] = tomada;
+            
+                      responseCalc.push(hrx);
+                    } else {
+                      isStop = true;
+                    }
+                  }
+            */
     });
   }
 

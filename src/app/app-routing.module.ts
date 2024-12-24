@@ -11,6 +11,7 @@ import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-e
 import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horario.component';
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtDetailCajaComponent } from './pages/mt-verification-comprobantes/mt-detail-caja/mt-detail-caja.component';
+import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
 
 const routes: Routes = [
   {
@@ -64,6 +65,11 @@ const routes: Routes = [
   {
     path: 'frontRetail',
     component: MtDetailCajaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'drive-cloud',
+    component: MtDropboxComponent,
     canActivate: [authGuard]
   }
 ];
