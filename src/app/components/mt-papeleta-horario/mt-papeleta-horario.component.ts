@@ -62,6 +62,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   hroSelectedPap: string = "";
   listaPapeletas: Array<any> = [];
   arCalHoraPap: Array<any> = [];
+  copyBodyList: Array<any> = [];
   diffHoraPap: string = "";
   totalAcumulado: string = "";
   onListCargo: Array<any> = [
@@ -459,7 +460,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this[ev.id] = ev.value;
 
       if (this.horaSalida.length && this.horaLlegada.length && this.cboCasos == 'Compensacion de horas trabajadas') {
-        this.onCalcHorasSolicitadas();
+        this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
+        let hrxLlegada = this.hroAcumuladaTotal.split(':');
+        let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+
+        let hrxSalida = this.diffHoraPap.split(':');
+        let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+        console.log(llegada , salida);
+        if (llegada > salida) {
+          this.onCalcHorasSolicitadas();
+          let newAcumulado = llegada - salida;
+
+          const ToTime = (num) => {
+            var minutos: any = Math.floor((num / 60) % 60);
+            minutos = minutos < 10 ? '0' + minutos : minutos;
+            var segundos: any = num % 60;
+            segundos = segundos < 10 ? '0' + segundos : segundos;
+            return minutos + ':' + segundos;
+          }
+
+          this.hroAcumulada = ToTime(newAcumulado);
+
+        } else {
+          this.openSnackBar("Las horas solicitadas no pueden ser mayor al acumulado...!!!");
+        }
+
       }
     }
 
@@ -470,85 +495,68 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onCalcHorasSolicitadas() {
+
     this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
-    var hora = this.diffHoraPap;
 
-    // Dividir en partes
-    var parts = hora.split(':');
+    let partDiff = this.diffHoraPap.split(':');
+    let solicitado = 0;
+    solicitado = parseInt(partDiff[0]) * 60 + parseInt(partDiff[1]);
+    let tot = solicitado;
+    let i = 0;
+    let nextProcess = true;
 
-    // Calcular minutos (horas * 60 + minutos)
-    let diffH = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+    this.bodyList.filter((hrx, i) => {
+      this.bodyList[i]['hrx_tomada'] = "00:00";
+      this.bodyList[i]['hrx_sobrante'] = "00:00";
+      this.bodyList[i]['checked'] = false;
+    });
 
-    let solicitado = this.diffHoraPap;
-    let responseCalc = [];
-    let isStop = false;
-    let valor = "00:00";
-    this.bodyList.filter(async (hrx, i) => {
+    do {
+      let estado = this.bodyList[i]['estado'] || "";
 
-      var hora = hrx;
+      if (estado == 'correcto') {
+        let parseTime = "00:00";
 
-      // Dividir en partes
-      var parts = hora.split(':');
+        const ToTime = (num) => {
 
-      // Calcular minutos (horas * 60 + minutos)
-      var total = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+          var minutos: any = Math.floor((num / 60) % 60);
+          minutos = minutos < 10 ? '0' + minutos : minutos;
+          var segundos: any = num % 60;
+          segundos = segundos < 10 ? '0' + segundos : segundos;
+          return minutos + ':' + segundos;
+        }
 
-      const ToTime = (num) => {
-        var horas: any = Math.floor(num / 3600);
-        horas = horas < 10 ? '0' + horas : horas;
-        var minutos: any = Math.floor((num / 60) % 60);
-        minutos = minutos < 10 ? '0' + minutos : minutos;
-        var segundos: any = num % 60;
-        segundos = segundos < 10 ? '0' + segundos : segundos;
-        return horas + ':' + minutos + ':' + segundos;
+        if (nextProcess) {
+
+          let object = this.bodyList[i]['extra'] || "";
+
+          let hora = object;
+
+          let parts = hora.split(':');
+
+          var total = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+          this.bodyList[i]['hrx_tomada'] = ToTime(tot);
+
+          tot = tot - total;
+
+          this.bodyList[i]['hrx_sobrante'] = tot < 0 ? ToTime(tot < 0 ? tot * -1 : tot) : parseTime;
+
+          this.bodyList[i]['checked'] = true;
+
+          console.log(total + "-" + tot, total, tot < 0 ? tot * -1 : tot, parseTime);
+
+
+          if (tot < 0 || tot == 0) {
+            nextProcess = false;
+          }
+        }
       }
 
-      console.log(total - diffH, ToTime(total - diffH));
+      i += 1;
+    }
+    while (nextProcess);
 
-      /*
-            responseCalc.push(this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH));
-            
-            if (responseCalc.length) {
-              valor = this.obtenerHorasTrabajadas(responseCalc[0] || "00:00", responseCalc[1] || "00:00");
-              console.log(valor,responseCalc);
-            }
-      
-      
-            //console.log((hrx || {}).extra, this.totalAcumulado || diffH, this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH));
-      
-      
-            //this.totalAcumulado = this.obtenerDiferenciaHora((hrx || {}).extra, this.totalAcumulado || diffH);
-      
-            /** 
-                  if (!isStop) {
-                    if (!(this.totalAcumulado).length) {
-                      this.totalAcumulado = this.obtenerDiferenciaHora((hrx || {}).extra, diffH);
-                      
-                    } else {
-                      this.totalAcumulado = this.obtenerDiferenciaHora(this.totalAcumulado, diffH);
-                      
-                    }
-            
-                    if (this.totalAcumulado != '00:00') {
-                      console.log(this.totalAcumulado);
-                      let sobrante = this.totalAcumulado;
-                      let tomada = this.obtenerDiferenciaHora(sobrante, diffH);
-            
-                      if (tomada == (hrx || {}).extra) {
-                        this.bodyList[i]['hrx_sobrante'] = "00:00";
-                      } else {
-                        this.bodyList[i]['hrx_sobrante'] = sobrante;
-                      }
-            
-                      this.bodyList[i]['hrx_tomada'] = tomada;
-            
-                      responseCalc.push(hrx);
-                    } else {
-                      isStop = true;
-                    }
-                  }
-            */
-    });
   }
 
   obtenerHorasTrabajadas(hrRs_1, hrRs_2) {

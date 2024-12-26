@@ -183,11 +183,11 @@
                       <tr>
                         <th class="columHead">Fecha</th>
                         <th class="columHead">Hora Extra</th>
-                        <th class="columHead">Hora Tomada</th>
+                        <th class="columHead">Hora Solicitado</th>
                         <th class="columHead">Hora Sobrante</th>
                         <th class="columHead">Estado</th>
-                        <th class="columHead">Seleccionar</th>
                         <th class="columHead">Aprobar</th>
+                        <th class="columHead">Seleccionado</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -203,18 +203,6 @@
                           <h6 *ngIf="columBody.rechazado || columBody.estado == 'rechazado'" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
                         </td>
                         <td class="columBody">
-                          <div>
-                            <div class="form-check form-switch">
-                              @if(columBody.estado == 'aprobar' || columBody.estado == 'rechazado'){
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" disabled>
-                              } @else {
-                                <input *ngIf="columBody.seleccionado && columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked disabled>
-                                <input *ngIf="!columBody.verify" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="onRecalcHoras($event,columBody.fecha)">
-                              }
-                            </div>
-                          </div>
-                        </td>
-                        <td class="columBody">
                             <div>
                               @if(columBody.estado == 'aprobar'){
                                 <button matTooltip="Aprobar Horas extras" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion(columBody)">
@@ -225,6 +213,15 @@
                                 </button>
                               } 
                             </div>
+                        </td>
+                        <td class="columBody">
+                          <div style="display: flex;justify-content: center;align-items: center;">
+                            @if(columBody.estado == 'aprobar' || columBody.estado == 'rechazado'){
+                              <span *ngIf="columBody.checked" style="color: grey;"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
+                            } @else {
+                              <span *ngIf="columBody.checked" style="color: green;"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
+                            }
+                          </div>
                         </td>
                       </tr>
                     </tbody>
