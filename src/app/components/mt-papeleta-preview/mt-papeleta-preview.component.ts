@@ -52,7 +52,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   onSearchPap(codigo) {
     let parms = {
-      url: '/papeleta/search',
+      url: '/recursos_humanos/pap/search/papeleta',
       body: [{ codigo_papeleta: codigo }]
     };
 
