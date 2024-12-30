@@ -58,6 +58,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
     this.service.post(parms).then(async (response) => {
       this.dataPap = response;
+
       if (this.dataPap.length) {
 
         (this.dataPap || []).filter((dt, i) => {
@@ -65,7 +66,12 @@ export class MtPapeletaPreviewComponent implements OnInit {
           let tienda = this.onListTiendas.find((td) => td.code == dt.codigo_tienda);
           this.dataPap[i]['uns'] = tienda.name;
           this.dataPap[i]['tipo_papeleta'] = tipo[0].DESCRIPCION;
-          this.bodyList = dt.horas_extras;
+
+          const ascDates = dt.horas_extras.sort((a, b) => {
+            return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+          });
+
+          this.bodyList = ascDates;
           this.observacion = dt.observacion;
         });
 
@@ -100,7 +106,11 @@ export class MtPapeletaPreviewComponent implements OnInit {
     };
 
     await this.service.get(parms).then(async (response) => {
-      this.listTipoPap = response;
+      const ascDates = response.sort((a, b) => {
+        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      });
+
+      this.listTipoPap = ascDates;
     });
 
     return;

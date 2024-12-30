@@ -315,7 +315,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
-      this.listaPapeletas = response;
+      const ascDates = response.sort((a, b) => {
+        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      });
+  
+      this.listaPapeletas = ascDates;
+      
       (this.listaPapeletas || []).filter((data, i) => {
         let tipo = this.onListCasos.filter((tp) => tp.key == data['id_tipo_papeleta']);
         this.listaPapeletas[i]['tipo'] = tipo[0]['value'];
