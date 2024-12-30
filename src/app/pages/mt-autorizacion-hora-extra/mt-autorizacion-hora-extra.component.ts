@@ -332,6 +332,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       codigo_tienda: ev.CODIGO_TIENDA
     }
     this.socket.emit('autorizar_hrx', parse);
+    this.onListHorasAutorizar();
   }
 
   onRechazar(ev) {
@@ -345,6 +346,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       codigo_tienda: ev.CODIGO_TIENDA
     }
     this.socket.emit('autorizar_hrx', parse);
+    this.onListHorasAutorizar();
   }
 
   onViewRegistro(ev) {
