@@ -282,6 +282,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
       this.bodyList.filter((dt, i) => {
+
+        let sobrante = dt.hrx_sobrante.split(':');
+        let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
+
+        if (hSobrante > 0) {
+          this.bodyList[i]['extra'] = dt.hrx_sobrante;
+        }
+
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
           if (!this.arHoraExtra.length) {
@@ -734,26 +742,26 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let dateNow = new Date();
     let day = new Date(dateNow).toLocaleDateString().split('/');
     let fechaActual = `${day[2]}-${day[1]}-${day[0]}`;
- 
+
     let caso = this.onListCasos.find((cs) => cs.value == this.cboCasos) || {};
 
-      (dataPapeleta || []).push({
-        codigo_papeleta: this.codigoPapeleta,
-        nombre_completo: ejb[0]['nombre_completo'] || "",
-        documento: ejb[0]['documento'],
-        id_tipo_pap: (caso || {}).key,
-        cargo_empleado: this.cboCargo,
-        fecha_desde: this.vFechaDesde,
-        fecha_hasta: this.vFechaHasta,
-        hora_salida: this.horaSalida,
-        hora_llegada: this.horaLlegada,
-        hora_acumulado: this.hroAcumuladaTotal,
-        hora_solicitada: this.diffHoraPap,
-        codigo_tienda: this.codeTienda,
-        fecha_creacion: fechaActual,
-        descripcion: this.vObservacion,
-        horas_extras: this.bodyList || []
-      });
+    (dataPapeleta || []).push({
+      codigo_papeleta: this.codigoPapeleta,
+      nombre_completo: ejb[0]['nombre_completo'] || "",
+      documento: ejb[0]['documento'],
+      id_tipo_pap: (caso || {}).key,
+      cargo_empleado: this.cboCargo,
+      fecha_desde: this.vFechaDesde,
+      fecha_hasta: this.vFechaHasta,
+      hora_salida: this.horaSalida,
+      hora_llegada: this.horaLlegada,
+      hora_acumulado: this.hroAcumuladaTotal,
+      hora_solicitada: this.diffHoraPap,
+      codigo_tienda: this.codeTienda,
+      fecha_creacion: fechaActual,
+      descripcion: this.vObservacion,
+      horas_extras: this.bodyList || []
+    });
 
     console.log(dataPapeleta);
 
@@ -761,31 +769,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
       url: '/recursos_humanos/pap/registrar',
       body: dataPapeleta
     };
-    
-        this.service.post(parms).then(async (response) => {
-          if (!(response || {}).success) {
-            this.openSnackBar((response || {}).msj);
-          } else {
-            this.onListPapeleta();
-    
-            this.cboCasos = "";
-            this.cboCargo = "";
-            this.vFechaDesde = "";
-            this.vFechaHasta = "";
-            this.horaSalida = "";
-            this.horaLlegada = "";
-            this.hroAcumuladaTotal = "";
-            this.hroTomada = "";
-            this.hroAcumulada = "";
-            this.bodyList = [];
-            this.vObservacion = "";
-    
-            this.onGenerarCodigoPapeleta();
-            //this.openSnackBar("PAPELETA REGISTRADA CON EXISTO..!!!");
-          }
-    
-        });
-    
+
+    this.service.post(parms).then(async (response) => {
+      if (!(response || {}).success) {
+        this.openSnackBar((response || {}).msj);
+      } else {
+        this.onListPapeleta();
+
+        this.cboCasos = "";
+        this.cboCargo = "";
+        this.vFechaDesde = "";
+        this.vFechaHasta = "";
+        this.horaSalida = "";
+        this.horaLlegada = "";
+        this.hroAcumuladaTotal = "";
+        this.hroTomada = "";
+        this.hroAcumulada = "";
+        this.bodyList = [];
+        this.vObservacion = "";
+
+        this.onGenerarCodigoPapeleta();
+        //this.openSnackBar("PAPELETA REGISTRADA CON EXISTO..!!!");
+      }
+
+    });
+
   }
 
   openSnackBar(msj) {
