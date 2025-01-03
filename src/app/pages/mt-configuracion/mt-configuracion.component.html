@@ -94,7 +94,11 @@
                           <div class="content-view">
                             <ion-row>
                               <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                                <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar agentes</button>
+                                <mt-select id="cboTipo" placeHolder="Plugin" [optionList]="onListPlugin"
+                                (changeSelected)="onChangeSelect($event)"></mt-select>
+                              </ion-col>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                                <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar</button>
                               </ion-col>
                             </ion-row>
                             <ion-row>

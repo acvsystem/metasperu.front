@@ -483,3 +483,23 @@ div.mat-mdc-form-field-subscript-wrapper {
 .mat-mdc-form-field-flex {
   height: 37px !important;
 }
+
+
+mt-dropbox {
+  table {
+    width: 100%;
+
+
+  }
+
+  tbody {
+
+    tr {
+      height: 40px !important;
+    }
+
+    tr:hover {
+      background: rgb(229 229 229) !important;
+    }
+  }
+}

@@ -49,6 +49,7 @@ export class MtConfiguracionComponent implements OnInit {
   userEmailService: string = "";
   passEmailService: string = "";
   vEmail: string = "";
+  cboTipo: string = "";
   tipoCuenta: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
@@ -73,7 +74,11 @@ export class MtConfiguracionComponent implements OnInit {
     { id: "SUNAT", value: "SUNAT" },
     { id: "DOCUMENTO", value: "DOCUMENTO" }
   ];
-
+  onListPlugin: Array<any> = [
+    { key: 'python', value: 'PYTHON' },
+    { key: 'sunat', value: 'SUNAT' },
+    { key: "validacion", value: "VALIDACION" }
+  ];
   selectNivel: any = {};
   selectedHashNivel: string = "";
   tiendasList: Array<any> = [
@@ -245,7 +250,7 @@ export class MtConfiguracionComponent implements OnInit {
       fileName: this.selectedHashNivel == "SUNAT" ? "SUNAT.zip" : this.selectedHashNivel == "AGENTE" ? "agnFront.py" : "PLUGIN_VALIDACION.zip"
     }
 
-    this.socket.emit('update:file:FrontAgent', "");
+    this.socket.emit('update:file:FrontAgent', this.cboTipo);
   }
 
   onAddEmailList() {
@@ -282,21 +287,24 @@ export class MtConfiguracionComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
     console.log(data);
-    this.onListMenuUsuario().then((menu: Array<any>) => {
-      this.notOptionMenuUserList = [];
-      this.optionMenuUserList = [];
-      this.optionMenuUserList = menu;
+    if (index != "cboTipo") {
+      this.onListMenuUsuario().then((menu: Array<any>) => {
+        this.notOptionMenuUserList = [];
+        this.optionMenuUserList = [];
+        this.optionMenuUserList = menu;
 
-      this.menuAllList.filter((allMenu) => {
-        if (menu.indexOf(allMenu) == -1) {
-          this.notOptionMenuUserList.push(allMenu);
-        }
+        this.menuAllList.filter((allMenu) => {
+          if (menu.indexOf(allMenu) == -1) {
+            this.notOptionMenuUserList.push(allMenu);
+          }
+        });
+      }).catch((rej) => {
+        this.notOptionMenuUserList = [];
+        this.optionMenuUserList = [];
+        this.notOptionMenuUserList = [...this.menuAllList];
       });
-    }).catch((rej) => {
-      this.notOptionMenuUserList = [];
-      this.optionMenuUserList = [];
-      this.notOptionMenuUserList = [...this.menuAllList];
-    });
+    }
+
   }
 
   onSelectEmail(value) {
@@ -546,5 +554,4 @@ export class MtConfiguracionComponent implements OnInit {
       this.onListAuthSession();
     });
   }
-
 }

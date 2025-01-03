@@ -1,67 +1,127 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
+import { Component, inject, OnInit } from '@angular/core';
+import { ShareService } from 'src/app/services/shareService';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
+import { MtAccionCloudComponent } from './mt-accion-cloud/mt-accion-cloud.component';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-mt-dropbox',
+  selector: 'mt-dropbox',
   templateUrl: './mt-dropbox.component.html',
   styleUrls: ['./mt-dropbox.component.scss'],
 })
 export class MtDropboxComponent implements OnInit {
-  displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
-  ELEMENT_DATA: PeriodicElement[] = [
-    { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-    { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-    { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-    { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-    { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-    { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-    { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-    { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-    { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-    { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  ];
+  dialog = inject(MatDialog);
+  arDirectorios: Array<any> = [];
+  dataSource: Array<any> = [];
+  displayedColumns: string[] = ['nombre', 'modificacion', 'tamaño', 'accion'];
+  private _snackBar = inject(MatSnackBar);
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  pathRoute: string = "";
 
-  dataSource2 = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
-  selection = new SelectionModel<PeriodicElement>(true, []);
+  constructor(private service: ShareService) { }
 
-
-  constructor() { }
-
-  ngOnInit() { }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource2.data.length;
-    return numSelected === numRows;
+  ngOnInit() {
+    this.onDirFile();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
 
+  openDialog(parametro) {
+    const dialogRef = this.dialog.open(MtAccionCloudComponent, {
+      data: {
+        accion: parametro,
+      },
+    });
 
-    this.selection.select(...this.dataSource2.data);
+    dialogRef.afterClosed().subscribe(result => {
+      this.onDirFile();
+    });
   }
 
-  checkboxLabel(row?: PeriodicElement): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  onDirFile() {
+    let parms = {
+      url: '/listDirectory'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.arDirectorios = [];
+      let directorioList = response;
+      (directorioList || []).filter((dir) => {
+        let evalueDir = (dir || "").split(".");
+        this.arDirectorios.push(
+          {
+            name: dir,
+            type: evalueDir.length >= 2 ? "file" : "directory"
+          }
+        );
+      });
+
+      this.dataSource = this.arDirectorios;
+
+    });
+  }
+
+  onDeleteFile(ev) {
+    let route = ev;
+    let parms = {
+      url: '/deleteDirectory',
+      body: {
+        route: route
+      }
+    };
+
+    this.service.post(parms).then((response) => {
+      this.openSnackBar((response || {}).msj);
+      this.onDirFile();
+    });
+  }
+
+  oneDirectory(ev) {
+    let route = ev;
+    this.pathRoute = !this.pathRoute.length ? route.name : this.pathRoute + "/" + route.name;
+    let parms = {
+      url: '/oneListDirectory',
+      body: {
+        path: this.pathRoute
+      }
+    };
+
+    console.log(parms);
+
+    this.service.post(parms).then((response) => {
+      this.arDirectorios = [];
+      let directorioList = response;
+      (directorioList || []).filter((dir) => {
+        let evalueDir = (dir || "").split(".");
+        this.arDirectorios.push(
+          {
+            name: dir,
+            type: evalueDir.length >= 2 ? "file" : "directory"
+          }
+        );
+      });
+
+      this.dataSource = this.arDirectorios;
+    });
+
+  }
+
+  openSnackBar(msj) {
+    this._snackBar.open(msj, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5 * 1000
+    });
   }
 
 }
 
-
-
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}

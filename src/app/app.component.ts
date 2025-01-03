@@ -124,6 +124,11 @@ export class AppComponent {
           ISVISIBLE: true,
           nombre_menu: "PLANILLA RRHH",
           ruta: "planilla"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "DRIVE CLOUD",
+          ruta: "drive-cloud"
         }
 
         ];

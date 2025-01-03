@@ -80,8 +80,10 @@ import { MtPapeletaPreviewComponent } from './components/mt-papeleta-preview/mt-
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtViewRegistroComponent } from './pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {NgxMatTimepickerModule} from 'ngx-mat-timepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
+import { MtAccionCloudComponent } from './pages/mt-dropbox/mt-accion-cloud/mt-accion-cloud.component';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -114,7 +116,9 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtPanelHorarioComponent,
         MtPapeletaPreviewComponent,
         MtPlanillaComponent,
-        MtViewRegistroComponent
+        MtViewRegistroComponent,
+        MtDropboxComponent,
+        MtAccionCloudComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],

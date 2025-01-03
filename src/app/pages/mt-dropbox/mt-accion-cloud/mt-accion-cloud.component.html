@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Carpeta nueva</h2>
+<mat-dialog-content>
+  <mt-input (afterChange)="onChangeInput($event)" id="directoryName" label="Filtro" placeholder="Carpeta sin titulo" type="text" value="{{ directoryName }}"></mt-input>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-button (click)="onCreateDirectory()">Crear</button>
+</mat-dialog-actions>
