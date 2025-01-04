@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, Input, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -26,19 +26,25 @@ export class MtAccionCloudComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<MtAccionCloudComponent>);
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
+  @Input() path: boolean = false;
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, @Inject(MAT_DIALOG_DATA) public data: { path: string }) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.data.path);
+  }
 
   onCancel(): void {
     this.dialogRef.close();
+
   }
 
   onCreateDirectory() {
+    let directory = this.data.path.length ? this.data.path + "/" + this.directoryName : this.directoryName;
+
     let parms = {
       url: '/createDirectory',
-      body: { route: this.directoryName }
+      body: { route: directory }
     };
 
     this.service.post(parms).then((response) => {

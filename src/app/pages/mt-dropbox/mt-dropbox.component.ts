@@ -39,6 +39,7 @@ export class MtDropboxComponent implements OnInit {
     const dialogRef = this.dialog.open(MtAccionCloudComponent, {
       data: {
         accion: parametro,
+        path: this.pathRoute
       },
     });
 
