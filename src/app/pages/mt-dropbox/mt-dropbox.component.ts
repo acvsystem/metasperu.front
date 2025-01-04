@@ -28,6 +28,8 @@ export class MtDropboxComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   pathRoute: string = "";
   arPathSelect: Array<any> = [];
+  uploading: boolean = false;
+
   constructor(private service: ShareService) { }
 
   ngOnInit() {
@@ -44,7 +46,7 @@ export class MtDropboxComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.onDirFile();
+      this.oneDirectory('', result);
     });
   }
 
@@ -88,19 +90,22 @@ export class MtDropboxComponent implements OnInit {
     });
   }
 
-  oneDirectory(ev) {
-    let route = ev;
-    this.pathRoute = !this.pathRoute.length ? route.name : this.pathRoute + "/" + route.name;
-    this.arPathSelect = this.pathRoute.split("/");
-    console.log(this.arPathSelect);
+  oneDirectory(ev, path?) {
+
+    if (!path.length) {
+      let route = ev;
+      this.pathRoute = !this.pathRoute.length ? route.name : this.pathRoute + "/" + route.name;
+      this.arPathSelect = this.pathRoute.split("/");
+    } else {
+      this.pathRoute = path;
+    }
+
     let parms = {
       url: '/oneListDirectory',
       body: {
         path: this.pathRoute
       }
     };
-
-    console.log(parms);
 
     this.service.post(parms).then((response) => {
       this.arDirectorios = [];
@@ -126,6 +131,39 @@ export class MtDropboxComponent implements OnInit {
       verticalPosition: this.verticalPosition,
       duration: 5 * 1000
     });
+  }
+
+
+  private uploadFiles(images: FileList): void {
+    this.uploading = true;
+
+    for (let index = 0; index < images.length; index++) {
+
+      const element = images[index];
+      let tamañoFile = (images[0].size / (1024 * 1024)).toFixed(2);
+      let isMega = images[0].size >= 1000000 ? true : false;
+      let nomenclatura = isMega ? ' MB' : ' KB';
+      console.log(images[0].name, images[0].size >= 1000000 ? tamañoFile : (images[0].size / 1024).toFixed(2)  + nomenclatura);
+      this.uploading = false;
+      /*
+            this.fakeImageUploadService.uploadImage(element).subscribe((p) => {
+              this.imagesUrl.push(p);
+      
+              this.uploading = false;
+            });*/
+    }
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+
+    if (event?.dataTransfer?.files) {
+      this.uploadFiles(event.dataTransfer.files);
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
   }
 
 }

@@ -30,6 +30,14 @@
                 </ion-col>
             </ion-row>
             <ion-row>
+                <ion-col>
+                    <div class="drag-drop-area" [class.uploading]="uploading" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                        <p>Drag and drop to automatic upload</p>
+                    </div>                      
+                    <div class="images"></div>
+                </ion-col>
+            </ion-row>
+            <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                       
@@ -80,7 +88,7 @@
                         </ng-container>
                       
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="oneDirectory(row)"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="oneDirectory(row,'')"></tr>
                       </table>                      
                 </ion-col>
             </ion-row>

@@ -1,4 +1,4 @@
-import { Component, Inject, inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, inject, Input, model, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -24,6 +24,7 @@ export class MtAccionCloudComponent implements OnInit {
   directoryName: string = "Carpeta sin titulo";
   private _snackBar = inject(MatSnackBar);
   readonly dialogRef = inject(MatDialogRef<MtAccionCloudComponent>);
+  readonly animal = model(this.data);
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   @Input() path: boolean = false;
@@ -49,7 +50,7 @@ export class MtAccionCloudComponent implements OnInit {
 
     this.service.post(parms).then((response) => {
       this.openSnackBar((response || {}).msj);
-      this.dialogRef.close();
+      this.dialogRef.close(this.data.path);
     });
 
   }

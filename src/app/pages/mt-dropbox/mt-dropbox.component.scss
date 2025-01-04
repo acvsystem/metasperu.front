@@ -63,3 +63,104 @@
 .pathView:hover {
     background: rgb(229 229 229) !important;
 }
+
+
+
+
+
+/**/
+
+:host {
+    display: flex;
+  
+    flex-direction: column;
+  
+    justify-content: center;
+  
+    align-items: center;
+  
+    min-height: 100vh;
+  
+    margin: 0;
+  
+    background-color: #f7f7f7;
+  }
+  
+  .drag-drop-area {
+    border: 2px dashed #ccc;
+  
+    padding: 40px;
+  
+    text-align: center;
+  
+    cursor: pointer;
+  }
+  
+  .upload-area {
+    padding: 1rem;
+  }
+  
+  .uploading {
+    display: flex;
+  
+    align-items: center;
+  
+    justify-content: center;
+  
+    height: 100px;
+  }
+  
+  .uploading::after {
+    content: "";
+  
+    display: inline-block;
+  
+    width: 20px;
+  
+    height: 20px;
+  
+    border: 2px solid #ccc;
+  
+    border-top-color: #333;
+  
+    border-radius: 50%;
+  
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .drag-drop-area p {
+    margin: 0;
+    color: #afafaf;
+  }
+  
+  .drag-drop-area:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .images {
+    padding-top: 2rem;
+  
+    display: flex;
+  
+    flex-wrap: wrap;
+  
+    gap: 1rem;
+  }
+  
+  .images > img {
+    border-radius: 0.5rem;
+  
+    max-width: 100%;
+  
+    height: auto;
+  }
