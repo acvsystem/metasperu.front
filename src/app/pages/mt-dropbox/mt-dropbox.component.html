@@ -2,13 +2,10 @@
     <div id="content" class="full-center">
         <div class="card-content">
             <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
-                    <button type="button" class="btn btn-primary btn-sm"(click)="onDirFile()">
-                        <i style="font-size: 20px;" class="fa fa-home" aria-hidden="true"></i>
-                    </button>
-                </ion-col>
-                
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                  <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm"(click)="onDirFile()">
+                    <i style="font-size: 19px;" class="fa fa-home" aria-hidden="true"></i>
+                  </button>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -23,6 +20,13 @@
                             <li><a class="dropdown-item" href="#">Subir archivo</a></li>
                         </ul>
                     </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  @for(pht of arPathSelect;track pht; let idx = $index, e = $even){
+                    <label *ngIf="idx >=1" style="color: rgb(165 165 165);font-size: 20px;font-weight: 500; margin-right: 5px;margin-left: 5px;">></label>
+                    <span class="pathView">{{pht}}</span>
+
+                  }                  
                 </ion-col>
             </ion-row>
             <ion-row>

@@ -27,7 +27,7 @@ export class MtDropboxComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   pathRoute: string = "";
-
+  arPathSelect: Array<any> = [];
   constructor(private service: ShareService) { }
 
   ngOnInit() {
@@ -54,6 +54,8 @@ export class MtDropboxComponent implements OnInit {
 
     this.service.get(parms).then((response) => {
       this.arDirectorios = [];
+      this.arPathSelect = [];
+      this.pathRoute = "";
       let directorioList = response;
       (directorioList || []).filter((dir) => {
         let evalueDir = (dir || "").split(".");
@@ -88,6 +90,8 @@ export class MtDropboxComponent implements OnInit {
   oneDirectory(ev) {
     let route = ev;
     this.pathRoute = !this.pathRoute.length ? route.name : this.pathRoute + "/" + route.name;
+    this.arPathSelect = this.pathRoute.split("/");
+    console.log(this.arPathSelect);
     let parms = {
       url: '/oneListDirectory',
       body: {
