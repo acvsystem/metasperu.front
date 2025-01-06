@@ -2,12 +2,12 @@
     <div id="content" class="full-center">
         <div class="card-content">
             <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm"(click)="onDirFile()">
                     <i style="font-size: 19px;" class="fa fa-home" aria-hidden="true"></i>
                   </button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                    <div class="btn-group" >
+                        <button type="button" style="margin-right: 5px;" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Nuevo
                         </button>
@@ -15,11 +15,16 @@
                             <li><a class="dropdown-item" (click)="openDialog('createDirectory')">
                                 <i class="fa fa-folder-o" aria-hidden="true"></i>
                                  Crear carperta
-                                </a></li>
-                            <li><a class="dropdown-item" href="#">Subir carpeta</a></li>
-                            <li><a class="dropdown-item" href="#">Subir archivo</a></li>
+                                </a>
+                            </li>
                         </ul>
                     </div>
+                    <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" >
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                    <button (click)="onDownload()" style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" >
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                    </button>
                 </ion-col>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                   @for(pht of arPathSelect;track pht; let idx = $index, e = $even){
@@ -29,19 +34,81 @@
                   }                  
                 </ion-col>
             </ion-row>
-            <ion-row>
-                <ion-col>
-                    <div class="drag-drop-area" [class.uploading]="uploading" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
-                        <p>Drag and drop to automatic upload</p>
-                    </div>                      
-                    <div class="images"></div>
-                </ion-col>
-            </ion-row>
+
             <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                          <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                          [checked]="selection.hasValue() && isAllSelected()"
+                                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                          [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                                          (change)="$event ? selection.toggle(row) : null"
+                                          [checked]="selection.isSelected(row)"
+                                          [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                            <td mat-cell *matCellDef="let element"> 
+                              <div style="display: flex;align-items: center;">
+                                  <i style="font-size: 19px;color:#ffa700" *ngIf="element.type == 'directory'" class="fa fa-folder" aria-hidden="true"></i>
+                                  <i style="font-size: 19px;" *ngIf="element.type == 'file'"class="fa fa-file-o" aria-hidden="true"></i>
+                                  <span style="font-size: 13px;margin-left: 10px;">{{element.name}}</span>
+                              </div>
+                            </td>
+                          </ng-container>
+                        
+                       
+                          <ng-container matColumnDef="modificacion">
+                            <th mat-header-cell *matHeaderCellDef> Ultima modificacion </th>
+                            <td mat-cell *matCellDef="let element" > - </td>
+                          </ng-container>
+                        
+                         
+                          <ng-container matColumnDef="tamaño">
+                            <th mat-header-cell *matHeaderCellDef> Tamaño </th>
+                            <td mat-cell *matCellDef="let element" > - </td>
+                          </ng-container>
+                        
+                         
+                          <ng-container matColumnDef="accion">
+                            <th mat-header-cell *matHeaderCellDef> 
+                              <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+                                  <mat-icon>more_vert</mat-icon>
+                              </button>
+                            </th>
+                            <td mat-cell *matCellDef="let element" > 
+                              <mat-menu #menu="matMenu">
+                                  <button mat-menu-item (click)="onDeleteFile(element.name)">
+                                    <mat-icon><i class="fa fa-trash-o" aria-hidden="true"></i></mat-icon>
+                                    <div style="display: flex; justify-content: center;">
+                                      <span>Mover a la papelera</span>
+                                    </div>
+                                  </button>
+                                </mat-menu>
+                            </td>
+                          </ng-container>
                       
-                        <!-- Position Column -->
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr id="myButton" mat-row *matRowDef="let row; columns: displayedColumns;"
+                            (click)="selection.toggle(row)" (dblclick)="oneDirectory(row,'')">
+                        </tr>
+                      </table>
+                      
+                    <!--
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                      
+                       
                         <ng-container matColumnDef="nombre">
                           <th mat-header-cell *matHeaderCellDef> Nombre </th>
                           <td mat-cell *matCellDef="let element"> 
@@ -53,19 +120,19 @@
                           </td>
                         </ng-container>
                       
-                        <!-- Name Column -->
+                     
                         <ng-container matColumnDef="modificacion">
                           <th mat-header-cell *matHeaderCellDef> Ultima modificacion </th>
                           <td mat-cell *matCellDef="let element" > - </td>
                         </ng-container>
                       
-                        <!-- Weight Column -->
+                       
                         <ng-container matColumnDef="tamaño">
                           <th mat-header-cell *matHeaderCellDef> Tamaño </th>
                           <td mat-cell *matCellDef="let element" > - </td>
                         </ng-container>
                       
-                        <!-- Symbol Column -->
+                       
                         <ng-container matColumnDef="accion">
                           <th mat-header-cell *matHeaderCellDef> 
                             <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
@@ -89,7 +156,16 @@
                       
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="oneDirectory(row,'')"></tr>
-                      </table>                      
+                      </table>    
+                      -->                  
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <div class="drag-drop-area" [class.uploading]="uploading" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                        <p>Drag and drop to automatic upload</p>
+                    </div>                      
+                    <div class="images"></div>
                 </ion-col>
             </ion-row>
         </div>

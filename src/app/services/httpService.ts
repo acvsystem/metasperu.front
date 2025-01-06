@@ -87,4 +87,30 @@ export class HttpService {
       }),
     );
   }
+
+  getDownload(request: IRequestParams, returnError?: boolean) {
+
+    let params = this.getParams(request);
+    let headers = this.getHeader(request);
+    let URL = `${request.server}${request.url}`;
+
+    this.eventShowLoading.emit(true);
+
+    return this.http.get<Blob>(URL, { headers, params, observe: 'response', responseType: 'blob' as 'json' }).pipe(
+      tap((x) => this.eventShowLoading.emit(false)),
+      retryWhen(
+        genericRetryStrategy({
+          excludedStatusCodes: [401, 403, 400, 500],
+        }),
+      ),
+      catchError((error) => {
+        this.eventShowLoading.emit(false);
+        if (returnError) return of(error);
+        else return throwError(error);
+      }),
+    );
+  }
+
+  
+  
 }

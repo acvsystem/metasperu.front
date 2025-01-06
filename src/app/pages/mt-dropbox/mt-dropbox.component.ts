@@ -12,6 +12,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'mt-dropbox',
@@ -22,18 +23,32 @@ export class MtDropboxComponent implements OnInit {
   dialog = inject(MatDialog);
   arDirectorios: Array<any> = [];
   dataSource: Array<any> = [];
-  displayedColumns: string[] = ['nombre', 'modificacion', 'tamaño', 'accion'];
+  displayedColumns: string[] = ['select', 'nombre', 'modificacion', 'tamaño', 'accion'];
   private _snackBar = inject(MatSnackBar);
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   pathRoute: string = "";
   arPathSelect: Array<any> = [];
   uploading: boolean = false;
+  selection = new SelectionModel<any>(true, []);
 
   constructor(private service: ShareService) { }
 
   ngOnInit() {
     this.onDirFile();
+    /*
+        var myButton = document.getElementById('myButton');
+        myButton.addEventListener('contextmenu', function(event) {
+          // Prevenir el comportamiento por defecto del navegador al hacer clic derecho
+          event.preventDefault();
+          // Limpiar consola
+          console.clear();
+          // Mostrar un mensaje en la consola cuando se simula un clic derecho
+          console.log('Clic derecho simulado');
+          // Mostrar el menú contextual cambiando su estilo para que sea visible
+    
+      });
+    */
   }
 
 
@@ -90,6 +105,27 @@ export class MtDropboxComponent implements OnInit {
     });
   }
 
+  onDownload() {
+    let selected = this.selection['_selected'];
+    let pathDownload = this.pathRoute + "/" + this.selection['_selected'][selected.length - 1]['name'];
+    let parms = {
+      url: '/download/driveCloud',
+      parms: [
+        { key: "route", value: pathDownload }
+      ]
+    };
+
+    this.service.getBlob(parms).then((response) => {
+      const link = document.createElement('a');
+      link.href = response.url;
+      link.download = this.selection['_selected'][selected.length - 1]['name'];
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+    });
+    console.log(pathDownload);
+  }
   oneDirectory(ev, path?) {
 
     if (!path.length) {
@@ -100,28 +136,51 @@ export class MtDropboxComponent implements OnInit {
       this.pathRoute = path;
     }
 
-    let parms = {
-      url: '/oneListDirectory',
-      body: {
-        path: this.pathRoute
-      }
-    };
+    let validDownload = this.arPathSelect[this.arPathSelect.length - 1];
+    let validDw = validDownload.split(".");
 
-    this.service.post(parms).then((response) => {
-      this.arDirectorios = [];
-      let directorioList = response;
-      (directorioList || []).filter((dir) => {
-        let evalueDir = (dir || "").split(".");
-        this.arDirectorios.push(
-          {
-            name: dir,
-            type: evalueDir.length >= 2 ? "file" : "directory"
-          }
-        );
+    if (validDw.length > 1) {
+      let parms = {
+        url: '/download/driveCloud',
+        parms: [
+          { key: "route", value: this.pathRoute }
+        ]
+      };
+
+      this.service.getBlob(parms).then((response) => {
+        console.log(validDownload);
+        const link = document.createElement('a');
+        link.href = response.url;
+        link.download = validDownload;
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
       });
 
-      this.dataSource = this.arDirectorios;
-    });
+    } else {
+      let parms = {
+        url: '/oneListDirectory',
+        body: {
+          path: this.pathRoute
+        }
+      };
+      this.service.post(parms).then((response) => {
+        this.arDirectorios = [];
+        let directorioList = response;
+        (directorioList || []).filter((dir) => {
+          let evalueDir = (dir || "").split(".");
+          this.arDirectorios.push(
+            {
+              name: dir,
+              type: evalueDir.length >= 2 ? "file" : "directory"
+            }
+          );
+        });
+
+        this.dataSource = this.arDirectorios;
+      });
+    }
 
   }
 
@@ -143,7 +202,7 @@ export class MtDropboxComponent implements OnInit {
       let tamañoFile = (images[0].size / (1024 * 1024)).toFixed(2);
       let isMega = images[0].size >= 1000000 ? true : false;
       let nomenclatura = isMega ? ' MB' : ' KB';
-      console.log(images[0].name, images[0].size >= 1000000 ? tamañoFile : (images[0].size / 1024).toFixed(2)  + nomenclatura);
+      console.log(images[0].name, images[0].size >= 1000000 ? tamañoFile : (images[0].size / 1024).toFixed(2) + nomenclatura);
       this.uploading = false;
       /*
             this.fakeImageUploadService.uploadImage(element).subscribe((p) => {
@@ -165,6 +224,32 @@ export class MtDropboxComponent implements OnInit {
   onDragOver(event: DragEvent): void {
     event.preventDefault();
   }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+
 
 }
 
