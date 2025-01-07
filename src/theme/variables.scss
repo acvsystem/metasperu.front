@@ -488,8 +488,11 @@ div.mat-mdc-form-field-subscript-wrapper {
 mt-dropbox {
   table {
     width: 100%;
+  }
 
-
+  mat-spinner {
+    width: 16.55px !important;
+    height: 19px !important;
   }
 
 }

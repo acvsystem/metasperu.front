@@ -13,6 +13,8 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
+import { saveAs } from 'file-saver';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'mt-dropbox',
@@ -22,7 +24,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class MtDropboxComponent implements OnInit {
   dialog = inject(MatDialog);
   arDirectorios: Array<any> = [];
-  dataSource: Array<any> = [];
+  dataSource = new MatTableDataSource<any>(this.arDirectorios);
   displayedColumns: string[] = ['select', 'nombre', 'modificacion', 'tamaño', 'accion'];
   private _snackBar = inject(MatSnackBar);
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
@@ -31,6 +33,8 @@ export class MtDropboxComponent implements OnInit {
   arPathSelect: Array<any> = [];
   uploading: boolean = false;
   selection = new SelectionModel<any>(true, []);
+  myFiles: Array<any> = [];
+  sMsg: string = '';
 
   constructor(private service: ShareService) { }
 
@@ -76,58 +80,84 @@ export class MtDropboxComponent implements OnInit {
       this.pathRoute = "";
       let directorioList = response;
       (directorioList || []).filter((dir) => {
-        let evalueDir = (dir || "").split(".");
+        let evalueDir = ((dir || {}).name || "").split(".");
+
+        let tamañoFile = (dir.size / (1024 * 1024)).toFixed(2);
+        let isMega = dir.size >= 1000000 ? true : false;
+        let nomenclatura = isMega ? ' MB' : ' KB';
+        console.log(dir.size >= 1000000 ? tamañoFile : (dir.size / 1024).toFixed(2) + nomenclatura);
+
         this.arDirectorios.push(
           {
-            name: dir,
-            type: evalueDir.length >= 2 ? "file" : "directory"
+            name: dir.name,
+            type: evalueDir.length >= 2 ? evalueDir[1] : "directory",
+            size: dir.size >= 1000000 ? tamañoFile : (dir.size / 1024).toFixed(2) + nomenclatura,
+            mFech: dir.mtime
           }
         );
       });
 
-      this.dataSource = this.arDirectorios;
+      this.dataSource = new MatTableDataSource(this.arDirectorios);
 
     });
   }
 
-  onDeleteFile(ev) {
-    let route = ev;
-    let parms = {
-      url: '/deleteDirectory',
-      body: {
-        route: route
-      }
-    };
+  onDeleteFile() {
 
-    this.service.post(parms).then((response) => {
-      this.openSnackBar((response || {}).msj);
-      this.onDirFile();
-    });
+
+    if (this.selection['_selected'].length) {
+      this.selection['_selected'].filter((row, i) => {
+
+        let pathDelete = this.pathRoute + "/" + row['name'];
+        let parms = {
+          url: '/deleteDirectory',
+          body: {
+            route: pathDelete
+          }
+        };
+
+        this.service.post(parms).then((response) => {
+          this.openSnackBar((response || {}).msj);
+        });
+
+        if (this.selection['_selected'].length - 1 == i) {
+          this.onDirFile();
+        }
+
+      });
+
+    } else {
+      this.openSnackBar("No hay documentos seleccionados..!!!");
+    }
+
   }
 
   onDownload() {
-    let selected = this.selection['_selected'];
-    let pathDownload = this.pathRoute + "/" + this.selection['_selected'][selected.length - 1]['name'];
-    let parms = {
-      url: '/download/driveCloud',
-      parms: [
-        { key: "route", value: pathDownload }
-      ]
-    };
+    if (this.selection['_selected'].length) {
+      this.selection['_selected'].filter((row) => {
 
-    this.service.getBlob(parms).then((response) => {
-      const link = document.createElement('a');
-      link.href = response.url;
-      link.download = this.selection['_selected'][selected.length - 1]['name'];
-      document.body.appendChild(link);
-      link.click();
+        let pathDownload = this.pathRoute + "/" + row['name'];
 
-      document.body.removeChild(link);
-    });
-    console.log(pathDownload);
+        let parms = {
+          url: '/download/driveCloud',
+          parms: [
+            { key: "route", value: pathDownload }
+          ]
+        };
+
+        this.service.getBlob(parms).then((response) => {
+          saveAs(response.body, row['name']);
+        });
+
+      });
+    } else {
+      this.openSnackBar("No hay documentos seleccionados..!!!");
+    }
+
   }
-  oneDirectory(ev, path?) {
 
+  oneDirectory(ev, path?) {
+    this.selection.clear();
     if (!path.length) {
       let route = ev;
       this.pathRoute = !this.pathRoute.length ? route.name : this.pathRoute + "/" + route.name;
@@ -169,16 +199,24 @@ export class MtDropboxComponent implements OnInit {
         this.arDirectorios = [];
         let directorioList = response;
         (directorioList || []).filter((dir) => {
-          let evalueDir = (dir || "").split(".");
+          let evalueDir = ((dir || {}).name || "").split(".");
+
+          let tamañoFile = (dir.size / (1024 * 1024)).toFixed(2);
+          let isMega = dir.size >= 1000000 ? true : false;
+          let nomenclatura = isMega ? ' MB' : ' KB';
+          console.log(dir.size >= 1000000 ? tamañoFile : (dir.size / 1024).toFixed(2) + nomenclatura);
+
           this.arDirectorios.push(
             {
-              name: dir,
-              type: evalueDir.length >= 2 ? "file" : "directory"
+              name: dir.name,
+              type: evalueDir.length >= 2 ? evalueDir[1] : "directory",
+              size: dir.size >= 1000000 ? tamañoFile : (dir.size / 1024).toFixed(2) + nomenclatura,
+              mFech: dir.mtime
             }
           );
         });
 
-        this.dataSource = this.arDirectorios;
+        this.dataSource = new MatTableDataSource(this.arDirectorios);
       });
     }
 
@@ -198,19 +236,36 @@ export class MtDropboxComponent implements OnInit {
 
     for (let index = 0; index < images.length; index++) {
 
-      const element = images[index];
-      let tamañoFile = (images[0].size / (1024 * 1024)).toFixed(2);
-      let isMega = images[0].size >= 1000000 ? true : false;
-      let nomenclatura = isMega ? ' MB' : ' KB';
-      console.log(images[0].name, images[0].size >= 1000000 ? tamañoFile : (images[0].size / 1024).toFixed(2) + nomenclatura);
+      let tamañoFile = (images[index].size / (1024 * 1024)).toFixed(2);
+      let isMega = images[index].size >= 1000000 ? true : false;
+      let nomenclatura = !isMega ? ' KB' : ' MB';
+
+      this.arDirectorios.push(
+        {
+          name: images[index].name,
+          type: "txt",
+          size: images[index].size >= 1000000 ? tamañoFile : (images[index].size / 1024).toFixed(2) + nomenclatura,
+          mFech: "",
+          process: true,
+          processEnd: false
+        }
+      );
+
+      this.myFiles.push({
+        name: images[index].name,
+        size: images[index].size >= 1000000 ? tamañoFile : (images[index].size / 1024).toFixed(2) + nomenclatura
+      });
+
+      console.log(this.myFiles);
       this.uploading = false;
-      /*
-            this.fakeImageUploadService.uploadImage(element).subscribe((p) => {
-              this.imagesUrl.push(p);
-      
-              this.uploading = false;
-            });*/
+      const frmData = new FormData();
+
+      for (var i = 0; i < this.myFiles.length; i++) {
+        frmData.append("fileUpload", images[0]);
+      }
     }
+    this.dataSource = new MatTableDataSource(this.arDirectorios);
+    console.log(this.dataSource);
   }
 
   onDrop(event: DragEvent): void {
@@ -227,7 +282,7 @@ export class MtDropboxComponent implements OnInit {
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.length;
+    const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
@@ -238,7 +293,7 @@ export class MtDropboxComponent implements OnInit {
       return;
     }
 
-    this.selection.select(...this.dataSource);
+    this.selection.select(...this.dataSource.data);
   }
 
   /** The label for the checkbox on the passed row */
@@ -248,6 +303,15 @@ export class MtDropboxComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
+
+  getFileDetails(e) {
+    //console.log (e.target.files);
+    for (var i = 0; i < e.target.files.length; i++) {
+      this.myFiles.push(e.target.files[i]);
+    }
+    console.log(this.myFiles)
+  }
+
 
 
 

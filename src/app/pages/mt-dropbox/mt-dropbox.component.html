@@ -13,13 +13,13 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" (click)="openDialog('createDirectory')">
-                                <i class="fa fa-folder-o" aria-hidden="true"></i>
+                                <i style="font-size: 19px;color:#ffa700" class="fa fa-folder" aria-hidden="true"></i>
                                  Crear carperta
                                 </a>
                             </li>
                         </ul>
                     </div>
-                    <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" >
+                    <button (click)="onDeleteFile()" style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" >
                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                     </button>
                     <button (click)="onDownload()" style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" >
@@ -62,7 +62,11 @@
                             <td mat-cell *matCellDef="let element"> 
                               <div style="display: flex;align-items: center;">
                                   <i style="font-size: 19px;color:#ffa700" *ngIf="element.type == 'directory'" class="fa fa-folder" aria-hidden="true"></i>
-                                  <i style="font-size: 19px;" *ngIf="element.type == 'file'"class="fa fa-file-o" aria-hidden="true"></i>
+                                  <img *ngIf="element.type != 'directory' && (element.type == 'xls' || element.type == 'csv' || element.type == 'xlsx')" src="../../../assets/icon/excel.png" width="16.55" height="19"> 
+                                  <img *ngIf="element.type != 'directory' && element.type == 'pdf'" src="../../../assets/icon/pdf.png" width="16.55" height="19"> 
+                                  <img *ngIf="element.type != 'directory' && element.type == 'txt'" src="../../../assets/icon/txt.png" width="16.55" height="19">
+                                  <img *ngIf="element.type != 'directory' && element.type == 'docx'" src="../../../assets/icon/word.png" width="16.55" height="19">
+                                  <img *ngIf="element.type != 'directory' && (element.type == 'img' || element.type == 'png' || element.type == 'jpeg')" src="../../../assets/icon/img.png" width="16.55" height="19">
                                   <span style="font-size: 13px;margin-left: 10px;">{{element.name}}</span>
                               </div>
                             </td>
@@ -77,7 +81,10 @@
                          
                           <ng-container matColumnDef="tamaño">
                             <th mat-header-cell *matHeaderCellDef> Tamaño </th>
-                            <td mat-cell *matCellDef="let element" > - </td>
+                            <td mat-cell *matCellDef="let element" > 
+                                <span *ngIf="element.type == 'directory'">-</span>
+                                <span *ngIf="element.type != 'directory'">{{element.size}}</span>
+                            </td>
                           </ng-container>
                         
                          
@@ -87,15 +94,8 @@
                                   <mat-icon>more_vert</mat-icon>
                               </button>
                             </th>
-                            <td mat-cell *matCellDef="let element" > 
-                              <mat-menu #menu="matMenu">
-                                  <button mat-menu-item (click)="onDeleteFile(element.name)">
-                                    <mat-icon><i class="fa fa-trash-o" aria-hidden="true"></i></mat-icon>
-                                    <div style="display: flex; justify-content: center;">
-                                      <span>Mover a la papelera</span>
-                                    </div>
-                                  </button>
-                                </mat-menu>
+                            <td mat-cell *matCellDef="let element"> 
+                                <mat-spinner *ngIf="element.process"></mat-spinner>
                             </td>
                           </ng-container>
                       
@@ -103,61 +103,7 @@
                         <tr id="myButton" mat-row *matRowDef="let row; columns: displayedColumns;"
                             (click)="selection.toggle(row)" (dblclick)="oneDirectory(row,'')">
                         </tr>
-                      </table>
-                      
-                    <!--
-                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                      
-                       
-                        <ng-container matColumnDef="nombre">
-                          <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <div style="display: flex;align-items: center;">
-                                <i style="font-size: 19px;" *ngIf="element.type == 'directory'" class="fa fa-folder" aria-hidden="true"></i>
-                                <i style="font-size: 19px;" *ngIf="element.type == 'file'"class="fa fa-file-o" aria-hidden="true"></i>
-                                <span style="font-size: 13px;margin-left: 10px;">{{element.name}}</span>
-                            </div>
-                          </td>
-                        </ng-container>
-                      
-                     
-                        <ng-container matColumnDef="modificacion">
-                          <th mat-header-cell *matHeaderCellDef> Ultima modificacion </th>
-                          <td mat-cell *matCellDef="let element" > - </td>
-                        </ng-container>
-                      
-                       
-                        <ng-container matColumnDef="tamaño">
-                          <th mat-header-cell *matHeaderCellDef> Tamaño </th>
-                          <td mat-cell *matCellDef="let element" > - </td>
-                        </ng-container>
-                      
-                       
-                        <ng-container matColumnDef="accion">
-                          <th mat-header-cell *matHeaderCellDef> 
-                            <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                          </th>
-                          <td mat-cell *matCellDef="let element" > 
-                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon button with a vertical three dot icon">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="onDeleteFile(element.name)">
-                                  <mat-icon><i class="fa fa-trash-o" aria-hidden="true"></i></mat-icon>
-                                  <div style="display: flex; justify-content: center;">
-                                    <span>Mover a la papelera</span>
-                                  </div>
-                                </button>
-                              </mat-menu>
-                        </td>
-                        </ng-container>
-                      
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="oneDirectory(row,'')"></tr>
-                      </table>    
-                      -->                  
+                      </table>               
                 </ion-col>
             </ion-row>
             <ion-row>
