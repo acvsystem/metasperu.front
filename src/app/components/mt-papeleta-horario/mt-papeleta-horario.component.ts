@@ -318,9 +318,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
       const ascDates = response.sort((a, b) => {
         return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
       });
-  
+
       this.listaPapeletas = ascDates;
-      
+
       (this.listaPapeletas || []).filter((data, i) => {
         let tipo = this.onListCasos.filter((tp) => tp.key == data['id_tipo_papeleta']);
         this.listaPapeletas[i]['tipo'] = tipo[0]['value'];
@@ -357,13 +357,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
       var mes = (dateNow.getMonth() + 1);
       let dayNow = dateNow.getDay();
       let day = new Date(dateNow).toLocaleDateString().split('/');
-
+      let añoIn = mes == 1 ? año - 1 : año;
+      let mesIn = mes == 1 ? 11 : mes == 2 ? 12 : mes - 2;
       let configuracion = [{
-        fechain: `${año}-${mes - 2}-${day[0]}`,
+        fechain: `${añoIn}-${mesIn}-${day[0]}`,
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }]
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
+      console.log("consultaHorasTrab", configuracion);
       this.socket.emit('consultaHorasTrab', configuracion);
     }
   }

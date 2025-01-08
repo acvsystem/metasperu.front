@@ -85,7 +85,6 @@ export class MtDropboxComponent implements OnInit {
         let tamañoFile = (dir.size / (1024 * 1024)).toFixed(2);
         let isMega = dir.size >= 1000000 ? true : false;
         let nomenclatura = isMega ? ' MB' : ' KB';
-        console.log(dir.size >= 1000000 ? tamañoFile : (dir.size / 1024).toFixed(2) + nomenclatura);
 
         this.arDirectorios.push(
           {
@@ -239,7 +238,7 @@ export class MtDropboxComponent implements OnInit {
       let tamañoFile = (images[index].size / (1024 * 1024)).toFixed(2);
       let isMega = images[index].size >= 1000000 ? true : false;
       let nomenclatura = !isMega ? ' KB' : ' MB';
-
+      let evalueDir = (images[index].name).split(".");
       this.arDirectorios.push(
         {
           name: images[index].name,
