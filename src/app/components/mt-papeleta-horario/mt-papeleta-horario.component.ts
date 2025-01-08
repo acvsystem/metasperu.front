@@ -517,6 +517,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let solicitado = 0;
     solicitado = parseInt(partDiff[0]) * 60 + parseInt(partDiff[1]);
     let tot = solicitado;
+    let tot2 = solicitado;
     let i = 0;
     let nextProcess = true;
 
@@ -551,7 +552,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           var total = parseInt(parts[0]) * 60 + parseInt(parts[1]);
 
-          this.bodyList[i]['hrx_solicitado'] = ToTime(tot);
+          tot2 = tot2 - total;
+
+          this.bodyList[i]['hrx_solicitado'] = (tot2 < 0 ? ToTime(tot2 < 0 ? tot2 * -1 : tot2) : parseTime) == "00:00" ? this.bodyList[i]['extra'] : ToTime(tot);
 
           tot = tot - total;
 
@@ -559,7 +562,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           this.bodyList[i]['checked'] = true;
 
-          console.log(total + "-" + tot, total, tot < 0 ? tot * -1 : tot, parseTime);
+          console.log(this.bodyList[i]);
 
 
           if (tot < 0 || tot == 0) {
