@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, inject, signal, model } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, inject, signal, model, SimpleChanges } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -57,10 +57,14 @@ export class MtCalendarComponent implements OnInit {
   @Input() maxSelect: boolean = false;
   @Input() isTime: boolean = false;
   @Input() isPresentRange: boolean = false;
+  @Input() isReset: boolean = false;
   @Input() placeholder: string = "";
   @Input() id: string = "";
-  @Output() afterChange: EventEmitter<any> = new EventEmitter();
   @Input() selected: string = "";
+
+
+  @Output() afterChange: EventEmitter<any> = new EventEmitter();
+
   vTimer: string = "";
   date = new FormControl(moment());
   public model = [];
@@ -91,6 +95,15 @@ export class MtCalendarComponent implements OnInit {
   ngOnInit() {
     if (this.isDefault) {
       this.afterChange.emit({ id: this.id, isDefault: true, value: `${moment(this.date.value).format('YYYY/MM/DD')}` });
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes && changes.hasOwnProperty('isReset')) {
+      if (this.isReset && this.isTime) {
+        this.vTimer = "";
+        this.afterChange.emit({ isTime: true, value: `${this.vTimer}`, id: this.id });
+      }
     }
   }
 

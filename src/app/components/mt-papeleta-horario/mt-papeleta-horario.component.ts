@@ -25,25 +25,28 @@ export class MtPapeletaHorarioComponent implements OnInit {
   cboCasos: string = "";
   codigoPap: string = "";
   horaSalida: string = "";
-  vObservacion: string = "";
   horaLlegada: string = "";
   totalHoras: string = "";
+  arHoraExtra: Array<any> = [];
+  arHoraTomada: Array<any> = [];
+  arHoraTomadaCalc: Array<any> = [];
+  arCopiHoraExtra: Array<any> = [];
+  bodyList: Array<any> = [];
+  vObservacion: string = "";
   nameTienda: string = "";
   cboEmpleado: string = "";
   vFechaHasta: string = "";
   vFechaDesde: string = "";
   isViewPapeleta: boolean = false;
+  isResetCalendar: boolean = false;
   hroAcumulada: string = "00:00";
   hroAcumuladaTotal: string = "00:00";
   hroTomada: string = "00:00";
   vHtomada: string = "";
   onDataTemp: Array<any> = [];
   parseHuellero: Array<any> = [];
-  arHoraExtra: Array<any> = [];
-  arHoraTomada: Array<any> = [];
-  arHoraTomadaCalc: Array<any> = [];
-  bodyList: Array<any> = [];
-  arCopiHoraExtra: Array<any> = [];
+
+
   arSelectRegistro: Array<any> = [];
   arDataEJB: Array<any> = [];
   arDataServer: Array<any> = [];
@@ -282,7 +285,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
       this.bodyList.filter((dt, i) => {
-
+        this.bodyList[i]['hrx_solicitado'] = "00:00";
         let sobrante = dt.hrx_sobrante.split(':');
         let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
 
@@ -295,7 +298,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
           if (!this.arHoraExtra.length) {
             this.arHoraExtra = [dt.extra];
           } else {
-            this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+            if(dt.estado == "correcto"){
+              this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+            }
           }
         }
 
@@ -346,6 +351,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
     if ((selectData || {}).value == 'Compensacion de horas trabajadas' || (index == "cboEmpleado" && this.idCboTipoPap)) {
+      this.isResetCalendar = false;
       if (index != "cboEmpleado") {
         this[index] = (selectData || {}).value;
         this.idCboTipoPap = (selectData || {}).key;
@@ -561,6 +567,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           this.bodyList[i]['hrx_sobrante'] = tot < 0 ? ToTime(tot < 0 ? tot * -1 : tot) : parseTime;
 
           this.bodyList[i]['checked'] = true;
+          this.bodyList[i]['estado'] = this.bodyList[i]['hrx_sobrante'] == "00:00" ? "utilizado" : "correcto";
 
           console.log(this.bodyList[i]);
 
@@ -797,6 +804,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         this.hroAcumulada = "";
         this.bodyList = [];
         this.vObservacion = "";
+        this.isResetCalendar = true;
 
         this.onGenerarCodigoPapeleta();
         //this.openSnackBar("PAPELETA REGISTRADA CON EXISTO..!!!");
