@@ -16,13 +16,16 @@ export class MtPanelHorarioComponent implements OnInit {
   displayedColumnsPap: string[] = ['tienda', 'nro_papeleta', 'nombres', 'cargo', 'tipo_papeleta', 'fecha', 'Accion'];
   dataView: Array<any> = [];
   dataViewPap: Array<any> = [];
+  listaPapeletas: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.dataView);
   dataSourcePap = new MatTableDataSource<any>(this.dataViewPap);
   filterEmpleado: string = "";
   codigoPap: string = "";
   isHorario: boolean = false;
   isViewPap: boolean = false;
+  isViewPapeleta: boolean = false;
   onSelectedHorario: Array<any> = [];
+  onListCasos: Array<any> = [];
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -58,6 +61,7 @@ export class MtPanelHorarioComponent implements OnInit {
   ngOnInit() {
     this.onListHorario();
     this.onListPapeleta();
+    this.onListTipoPapeleta();
   }
 
 //LISTA DE PAPELETAS
@@ -67,23 +71,28 @@ export class MtPanelHorarioComponent implements OnInit {
     };
 
     this.service.get(parms).then(async (response) => {
-      let dataResponse = response;
-      this.dataViewPap = [];
-      if ((dataResponse || {}).success != false) {
-        (dataResponse || []).filter(async (dt, i) => {
-          let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
+      const ascDates = response.sort((a, b) => {
+        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      });
 
-          this.dataViewPap.push({
-            tienda: tienda[0].name, nombre: dt.NOMBRE_COMPLETO, cargo: dt.CARGO_EMPLEADO, tipo: dt.ID_PAP_TIPO_PAPELETA, fecha: dt.FECHA_CREACION, nro_papeleta: dt.CODIGO_PAPELETA
-          });
+      this.listaPapeletas = ascDates;
 
-          if (dataResponse.length - 1 == i) {
-            this.dataSourcePap = new MatTableDataSource(this.dataViewPap);
-            this.dataSourcePap.paginator = this.paginator;
-            this.dataSourcePap.sort = this.sort;
-          }
-        });
-      }
+      (this.listaPapeletas || []).filter((data, i) => {
+        let tipo = this.onListCasos.filter((tp) => tp.key == data['id_tipo_papeleta']);
+        this.listaPapeletas[i]['tipo'] = tipo[0]['value'];
+      });
+    });
+  }
+
+  onListTipoPapeleta() {
+    let parms = {
+      url: '/papeleta/lista/tipo_papeleta'
+    };
+
+    this.service.get(parms).then(async (response) => {
+      (response || []).filter((tp) => {
+        this.onListCasos.push({ key: tp.ID_TIPO_PAPELETA, value: tp.DESCRIPCION });
+      });
     });
   }
 
@@ -131,19 +140,21 @@ export class MtPanelHorarioComponent implements OnInit {
   onBack() {
     this.isHorario = false
     this.onListHorario();
+    this.onListPapeleta();
   }
 
   onBackPap() {
+    this.codigoPap = "";
     this.isHorario = false
-    this.isViewPap = false
+    this.isViewPapeleta = false
     this.onListHorario();
+    this.onListPapeleta();
   }
 
   onViewPapeleta(ev) {
     this.codigoPap = "";
-    console.log(ev);
-    this.codigoPap = ev.nro_papeleta;
-    this.isViewPap = true;
+    this.codigoPap = ev.codigo_papeleta;
+    this.isViewPapeleta = true;
   }
 
 }
