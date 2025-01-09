@@ -72,7 +72,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
           });
 
           this.bodyList = ascDates;
-          this.observacion = dt.observacion;
+          this.observacion = dt.descripcion;
         });
 
 

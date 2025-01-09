@@ -298,7 +298,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           if (!this.arHoraExtra.length) {
             this.arHoraExtra = [dt.extra];
           } else {
-            if(dt.estado == "correcto"){
+            if (dt.estado == "correcto") {
               this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
             }
           }
@@ -350,6 +350,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
+    
+    if ((selectData || {}).value != 'Compensacion de horas trabajadas' && index == 'cboCasos') {
+      if (index != "cboEmpleado") {
+        this[index] = (selectData || {}).value;
+        this.idCboTipoPap = (selectData || {}).key;
+      }
+    }
+
     if ((selectData || {}).value == 'Compensacion de horas trabajadas' || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isResetCalendar = false;
       if (index != "cboEmpleado") {
@@ -759,7 +767,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let dateNow = new Date();
     let day = new Date(dateNow).toLocaleDateString().split('/');
     let fechaActual = `${day[2]}-${day[1]}-${day[0]}`;
-
+    console.log(this.onListCasos);
+    console.log(this.cboCasos);
     let caso = this.onListCasos.find((cs) => cs.value == this.cboCasos) || {};
 
     (dataPapeleta || []).push({

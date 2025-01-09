@@ -589,6 +589,8 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onSaveRangoHorario(id) {
+    let rowCargo = this.dataHorario.find((dt) => dt.id == this.cboCargo);
+    console.log(rowCargo);
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
 
     if (index != -1) {
@@ -645,6 +647,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   opChangeObservation(ev) {
+    
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let data = ev;
     let oldDAta = [...this.dataHorario[index]['observacion']];
@@ -663,6 +666,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
       });
 
+      
       this.socket.emit('actualizarHorario', this.dataHorario);
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
     }
