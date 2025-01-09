@@ -286,6 +286,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.arHoraExtra = [];
       this.bodyList.filter((dt, i) => {
         this.bodyList[i]['hrx_solicitado'] = "00:00";
+        //this.bodyList[i]['hrx_sobrante'] = "00:00";
         let sobrante = dt.hrx_sobrante.split(':');
         let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
 
@@ -350,7 +351,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-    
+
     if ((selectData || {}).value != 'Compensacion de horas trabajadas' && index == 'cboCasos') {
       if (index != "cboEmpleado") {
         this[index] = (selectData || {}).value;
@@ -489,13 +490,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this[ev.id] = ev.value;
 
       if (this.horaSalida.length && this.horaLlegada.length && this.cboCasos == 'Compensacion de horas trabajadas') {
+        this.diffHoraPap = "00:00";
         this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
         let hrxLlegada = this.hroAcumuladaTotal.split(':');
         let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
 
         let hrxSalida = this.diffHoraPap.split(':');
         let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-        console.log(llegada, salida);
+       
         if (llegada > salida) {
           this.onCalcHorasSolicitadas();
           let newAcumulado = llegada - salida;
@@ -524,7 +526,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onCalcHorasSolicitadas() {
-
+    this.diffHoraPap = "00:00";
     this.diffHoraPap = this.obtenerDiferenciaHora(this.horaSalida, this.horaLlegada);
 
     let partDiff = this.diffHoraPap.split(':');

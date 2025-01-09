@@ -208,15 +208,10 @@ export class MtHorarioTiendaComponent implements OnInit {
       let day = new Date(dateNow).toLocaleDateString().split('/');
 
       this.dataHorario[index]['dias'].filter((ds, i) => {
-
-
-
         let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
         if (obsExist != -1) {
           this.dataHorario[index]['dias'][i]['isObservation'] = true;
         }
-
-        console.log(day, ds);
 
       });
 
@@ -451,9 +446,9 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
     let listCargoTienda = [
-      { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Gerentes', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+      { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia }
     ];
 
@@ -647,7 +642,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   opChangeObservation(ev) {
-    
+
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let data = ev;
     let oldDAta = [...this.dataHorario[index]['observacion']];
@@ -666,7 +661,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
       });
 
-      
+
       this.socket.emit('actualizarHorario', this.dataHorario);
       this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
     }
@@ -709,10 +704,10 @@ export class MtHorarioTiendaComponent implements OnInit {
       if ((response || []).length) {
         this.onListCargo = [];
         this.dataHorario = response;
-        console.log(response);
         let dateNow = new Date();
         let day = new Date(dateNow).toLocaleDateString().split('/');
         let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
+
         await this.dataHorario.filter((dt, index) => {
           if (!this.dataHorario[index]['dias'].length) {
             this.dataHorario[index]['dias'] = this.arListDia
@@ -738,13 +733,27 @@ export class MtHorarioTiendaComponent implements OnInit {
           });
 
 
-          console.log(this.dataHorario);
+
+          this.idCargo = this.dataHorario[index]['id'];
+
+          this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
+  
+  
+          this.dataHorario[index]['dias'].filter((ds, i) => {
+            let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+            if (obsExist != -1) {
+              this.dataHorario[index]['dias'][i]['isObservation'] = true;
+            }
+          });
+
           this.onListCargo.push({ key: dt.id, value: dt.cargo });
         });
 
 
 
 
+
+        console.log(this.dataHorario);
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
         this.dataHorario = [];
