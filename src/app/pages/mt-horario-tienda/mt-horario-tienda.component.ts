@@ -98,7 +98,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   async ngOnInit() {
     this.getScreenSize();
-
+    console.log(this.vRangoDiasSearch);
     if ((this.data || []).length) {
       console.log(this.data);
       this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);
@@ -554,7 +554,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
     let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
     this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
-    console.log(this.vRangoDiasSearch);
+    
 
   }
 
