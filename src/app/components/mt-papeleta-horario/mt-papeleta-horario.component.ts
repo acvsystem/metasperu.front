@@ -226,31 +226,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
             this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
             let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
-            
+
 
 
             let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
             let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
-    
+
             let hrxSalida = ("8:00").split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-           
-          
-            let newAcumulado = llegada - salida;
-    
-              const ToTime = (num) => {
-                var minutos: any = Math.floor((num / 60) % 60);
-                minutos = minutos < 10 ? '0' + minutos : minutos;
-                var segundos: any = num % 60;
-                segundos = segundos < 10 ? '0' + segundos : segundos;
-                return minutos + ':' + segundos;
-              }
 
-              let process = ToTime(newAcumulado);
-            console.log(this.onDataTemp[indexData]['dia'],this.onDataTemp[indexData]['hr_trabajadas'], "8:00",ToTime(newAcumulado));
-            
-            
-            
+
+            let newAcumulado = llegada - salida;
+
+            const ToTime = (num) => {
+              var minutos: any = Math.floor((num / 60) % 60);
+              minutos = minutos < 10 ? '0' + minutos : minutos;
+              var segundos: any = num % 60;
+              segundos = segundos < 10 ? '0' + segundos : segundos;
+              return minutos + ':' + segundos;
+            }
+
+            let process = ToTime(newAcumulado);
+            console.log(this.onDataTemp[indexData]['dia'], this.onDataTemp[indexData]['hr_trabajadas'], "8:00", ToTime(newAcumulado));
+
+
+
             if (hora_1_pr[0] >= 8) {
               let hr = process.split(":");
               if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
@@ -275,7 +275,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
           }
-          
+
         }
       });
 
@@ -395,12 +395,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       var año = dateNow.getFullYear();
       var mes = (dateNow.getMonth() + 1);
-      let dayNow = dateNow.getDay();
+
       let day = new Date(dateNow).toLocaleDateString().split('/');
       let añoIn = mes == 1 ? año - 1 : año;
-      let mesIn = mes == 1 ? 11 : mes == 2 ? 12 : mes - 2;
+      let mesIn = mes == 1 ? mes : mes -1;
+      let dayNow = mes == 1 ? 1 : day[0];
       let configuracion = [{
-        fechain: `${añoIn}-${mesIn}-${day[0]}`,
+        fechain: `${año}-${mesIn}-${dayNow}`,
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }]
@@ -522,7 +523,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         let hrxSalida = this.diffHoraPap.split(':');
         let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-       
+
         if (llegada > salida) {
           this.onCalcHorasSolicitadas();
           let newAcumulado = llegada - salida;
