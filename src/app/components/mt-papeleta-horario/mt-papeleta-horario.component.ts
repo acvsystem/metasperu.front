@@ -185,6 +185,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     this.socket.on('reporteHorario', async (response) => {
+      console.log(response);
       let data = (response || {}).data;
       this.parseHuellero = data;
       this.onDataTemp = [];
@@ -225,8 +226,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
             this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
             let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
-            let process = this.obtenerHoraExtra(this.onDataTemp[indexData]['hr_trabajadas'], "8:00");
+            
 
+
+            let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
+            let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+    
+            let hrxSalida = ("8:00").split(':');
+            let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+           
+          
+            let newAcumulado = llegada - salida;
+    
+              const ToTime = (num) => {
+                var minutos: any = Math.floor((num / 60) % 60);
+                minutos = minutos < 10 ? '0' + minutos : minutos;
+                var segundos: any = num % 60;
+                segundos = segundos < 10 ? '0' + segundos : segundos;
+                return minutos + ':' + segundos;
+              }
+
+              let process = ToTime(newAcumulado);
+            console.log(this.onDataTemp[indexData]['dia'],this.onDataTemp[indexData]['hr_trabajadas'], "8:00",ToTime(newAcumulado));
+            
+            
+            
             if (hora_1_pr[0] >= 8) {
               let hr = process.split(":");
               if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
@@ -251,6 +275,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
           }
+          
         }
       });
 
