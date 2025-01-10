@@ -32,6 +32,8 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   unidServicio: string = "";
   isDetalle: boolean = false;
   isLoading: boolean = false;
+  profileUser: any = {};
+
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -61,8 +63,14 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   constructor(private store: StorageService, private service: ShareService) { }
 
   ngOnInit() {
+
+    this.profileUser = this.store.getStore('mt-profile');
+
+    console.log(this.profileUser);
+
     this.socket.on('lista_solicitudes', async (response) => {
       let dataResponse = response;
+      let viewData = [];
       await dataResponse.filter(async (rs, i) => {
 
         let selectedLocal = await this.onListTiendas.find((data) => data.code == rs['CODIGO_TIENDA']) || {};
@@ -71,7 +79,23 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       });
 
       this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
-      this.onDataView = dataResponse;
+
+      await dataResponse.filter(async (rs, i) => {
+        if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
+          viewData.push(rs);
+        }
+
+        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL')) {
+          viewData.push(rs);
+        }
+
+        if (this.profileUser.mt_nivel == "SISTEMAS" && this.profileUser.mt_nivel == "JOHNNY") {
+          viewData.push(rs);
+        }
+
+      });
+
+      this.onDataView = viewData;
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -306,6 +330,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
       this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
       let dataResponse = response;
+      let viewData = [];
 
       await dataResponse.filter(async (rs, i) => {
         let selectedLocal = await this.onListTiendas.find((data) => data.code == rs['CODIGO_TIENDA']) || {};
@@ -313,7 +338,23 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      this.onDataView = dataResponse;
+      await dataResponse.filter(async (rs, i) => {
+        if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
+          viewData.push(rs);
+        }
+
+        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL')) {
+          viewData.push(rs);
+        }
+
+        if (this.profileUser.mt_nivel == "SISTEMAS" && this.profileUser.mt_nivel == "JOHNNY") {
+          viewData.push(rs);
+        }
+
+      });
+
+      this.onDataView = viewData;
+
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
