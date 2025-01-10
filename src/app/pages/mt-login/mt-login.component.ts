@@ -99,6 +99,8 @@ export class MtLoginComponent implements OnInit {
 
     } else if ((profileUser || {}).mt_nivel == "RRHH") {
       this.nav.navigateRoot('asistencia');
+    } else if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno") {
+      this.nav.navigateRoot('asistencia');
     }
 
   }

@@ -59,24 +59,46 @@ export class AppComponent {
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
       let profileUser = this.store.getStore('mt-profile');
 
-      if((profileUser || {}).mt_nivel == "RRHH"){
+      if ((profileUser || {}).mt_nivel == "RRHH") {
         self.menuUser = [
-        {
-          ISVISIBLE: true,
-          nombre_menu: "ASISTENCIA",
-          ruta: "asistencia"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "PLANILLA RRHH",
-          ruta: "planilla"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "PANEL HORARIOS",
-          ruta: "panel-horario"
-        }
+          {
+            ISVISIBLE: true,
+            nombre_menu: "ASISTENCIA",
+            ruta: "asistencia"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "PLANILLA RRHH",
+            ruta: "planilla"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "PANEL HORARIOS",
+            ruta: "panel-horario"
+          }
 
+        ];
+
+        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      }
+
+      if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno") {
+        self.menuUser = [
+          {
+            ISVISIBLE: true,
+            nombre_menu: "ASISTENCIA",
+            ruta: "asistencia"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "PANEL HORARIOS",
+            ruta: "panel-horario"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "AUTORIZACION HORA EXTRA",
+            ruta: "auth-hora-extra"
+          }
         ];
 
         this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
@@ -235,7 +257,7 @@ export class AppComponent {
 
               if ((profileUser || {}).mt_nivel == "RRHH") {
                 this.service.onViewPageAdmin.emit(false);
-                
+
                 //this.nav.navigateRoot('asistencia');
               }
 
