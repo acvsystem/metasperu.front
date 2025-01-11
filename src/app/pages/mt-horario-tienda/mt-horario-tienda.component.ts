@@ -611,7 +611,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
       this.isStartEditRg = false;
       this.socket.emit('actualizarHorario', this.dataHorario);
-      this.onSearchCalendario();
+      //this.onSearchCalendario();
     }
   }
 
