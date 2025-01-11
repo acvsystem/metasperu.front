@@ -147,6 +147,8 @@ export class MtObservacionHorarioComponent implements OnInit {
     this.indexObservacion = -1;
     this.vObservacion = "";
     this.optionDefault = [];
+    this.openSnackBar('Observacion eliminada..!!');
+    this.changeObservation.emit(this.arObservacion);
   }
 
   openSnackBar(msj) {
