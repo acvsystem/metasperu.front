@@ -157,6 +157,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.socket.on('reporteEmpleadoTienda', async (response) => {
 
       let dataEmpleado = (response || {}).data;
+      console.log(dataEmpleado);
       let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
 
@@ -195,7 +196,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.dataVerify = [];
 
       await (this.parseHuellero || []).filter(async (huellero) => {
-
+        let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
+        
+        let defaultHT = !tipoAsc.length ? "08:00": tipoAsc.length == 2 ? "07:00" : "";
+        console.log(defaultHT);
         var codigo = (huellero || {}).caja.substr(0, 2);
 
         if ((huellero || {}).caja.substr(2, 2) == 7) {
@@ -249,7 +253,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
             let process = ToTime(newAcumulado);
-            console.log(this.onDataTemp[indexData]['dia'], this.onDataTemp[indexData]['hr_trabajadas'], "8:00", ToTime(newAcumulado));
+            console.log(this.onDataTemp[indexData]['dia'], this.onDataTemp[indexData]['hr_trabajadas'], defaultHT, ToTime(newAcumulado));
 
 
 
