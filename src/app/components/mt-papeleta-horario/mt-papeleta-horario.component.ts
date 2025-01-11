@@ -197,8 +197,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       await (this.parseHuellero || []).filter(async (huellero) => {
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
-        
-        let defaultHT = !tipoAsc.length ? "08:00": tipoAsc.length == 2 ? "07:00" : "";
+       
+        let defaultHT = !tipoAsc.length || !((huellero || {}).tpAsociado || "").length ? "08:00": tipoAsc.length == 2 ? "07:00" : "";
         console.log(defaultHT);
         var codigo = (huellero || {}).caja.substr(0, 2);
 
