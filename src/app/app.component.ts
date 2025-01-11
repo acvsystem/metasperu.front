@@ -86,6 +86,11 @@ export class AppComponent {
         self.menuUser = [
           {
             ISVISIBLE: true,
+            nombre_menu: "INVENTARIO",
+            ruta: "inventario"
+          },
+          {
+            ISVISIBLE: true,
             nombre_menu: "ASISTENCIA",
             ruta: "asistencia"
           },

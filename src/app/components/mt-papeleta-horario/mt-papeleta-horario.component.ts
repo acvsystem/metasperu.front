@@ -221,7 +221,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
               hr_salida_2: "",
               hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
               hr_extra: 0,
-              hr_faltante: 0
+              hr_faltante: 0,
+              dataRegistro: [huellero]
             });
           } else {
 
@@ -232,13 +233,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
             this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
             let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
-
+            this.onDataTemp[indexData]['dataRegistro'].push(huellero);
 
 
             let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
             let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
 
-            let hrxSalida = ("8:00").split(':');
+            let hrxSalida = (defaultHT).split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
 
@@ -262,7 +263,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
               if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
                 this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                 let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
-                let estado = salida[0] == 23 && salida[1] == 59 ? 'aprobar' : 'correcto';
+               
+                let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3  ? 'aprobar' : 'correcto';
+                
                 let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
                 let aprobado = estado == "correcto" ? true : false;
                 this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
@@ -286,6 +289,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       if ((this.dataVerify || []).length) {
+        console.log(this.dataVerify);
         this.onVerificarHrExtra(this.dataVerify);
       }
 
