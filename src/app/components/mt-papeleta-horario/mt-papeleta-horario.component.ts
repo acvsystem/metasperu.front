@@ -767,8 +767,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onSearchRegistro(fecha) {
-    let dataSelect = this.onDataTemp.filter((dt) => dt.dia == fecha);
-    this.arSelectRegistro = dataSelect;
+    let dataSelect = this.onDataTemp.find((dt) => dt.dia == fecha);
+    console.log(dataSelect);
+    this.arSelectRegistro = dataSelect.dataRegistro;
   }
 
   onBack() {

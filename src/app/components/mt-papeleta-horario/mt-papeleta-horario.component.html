@@ -151,26 +151,16 @@
                 <table class="table table-bordered table-hover table-fixed">
                   <thead>
                     <tr>
-                      <th class="columHead">Fecha</th>
-                      <th class="columHead">Ingreso 1</th>
-                      <th class="columHead">Salida 1</th>
-                      <th class="columHead">Brake</th>
-                      <th class="columHead">Ingreso 2</th>
-                      <th class="columHead">Salida 2</th>
-                      <th class="columHead">h.Trabajadas</th>
-                      <th class="columHead">h.Extra</th>
+                      <th class="columHead" style="width: 33% !important;">Fecha</th>
+                      <th class="columHead" style="width: 33% !important;">Hora Entrada</th>
+                      <th class="columHead" style="width: 33% !important;">Hora Salida</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let columBody of arSelectRegistro;let index = index">
                       <td class="columBody">{{columBody.dia}}</td>
-                      <td class="columBody">{{columBody.hr_ingreso_1}}</td>
-                      <td class="columBody">{{columBody.hr_salida_1}}</td>
-                      <td class="columBody">{{columBody.hr_brake}}</td>
-                      <td class="columBody">{{columBody.hr_ingreso_2}}</td>
-                      <td class="columBody">{{columBody.hr_salida_2}}</td>
-                      <td class="columBody">{{columBody.hr_trabajadas}}</td>
-                      <td class="columBody">{{columBody.hr_extra}}</td>
+                      <td class="columBody">{{columBody.hrIn}}</td>
+                      <td class="columBody">{{columBody.hrOut}}</td>
                     </tr>
                   </tbody>
                 </table>
