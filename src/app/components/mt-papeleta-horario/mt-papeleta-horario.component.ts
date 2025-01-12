@@ -857,7 +857,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
         }
 
         if (this.cboCasos != "Compensacion de horas trabajadas") {
-          if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras") {
+          if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada") {
+            console.log(property);
             arVerify.push(false);
           } else {
             arVerify.push(true);
