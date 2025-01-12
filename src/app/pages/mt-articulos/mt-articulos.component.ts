@@ -153,7 +153,49 @@ export class MtArticulosComponent implements OnInit {
     if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code.length) {
       this.isVendedor = true;
 
-      let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+      let profileUser = this.store.getStore('mt-profile');
+
+      let codeTiendasVs = [
+        { code: '9N' },
+        { code: '9D' },
+        { code: '9B' },
+        { code: '9C' },
+        { code: '9I' },
+        { code: '9G' },
+        { code: '9H' },
+        { code: '9M' },
+        { code: '9K' },
+        { code: '9L' },
+        { code: '9F' },
+        { code: '9P' }
+      ];
+
+      let codeTiendasBBW = [
+        { code: '7A' },
+        { code: '7J' },
+        { code: '7E' },
+        { code: '7C' },
+        { code: '7D' },
+        { code: '7F' },
+        { code: '7A7' },
+        { code: '7I' }
+      ];
+
+      let undServicio = "";
+
+      let indexVS = (codeTiendasVs || []).find((tienda) => tienda.code == (profileUser || {}).code);
+   
+      if (Object.keys(indexVS || {}).length) {
+        undServicio = 'VICTORIA SECRET';
+      }
+
+      let indexBBW = (codeTiendasBBW || []).find((tienda) => tienda.code == (profileUser || {}).code);
+
+      if (Object.keys(indexBBW || {}).length) {
+        undServicio = 'BATH AND BODY WORKS';
+      }
+
+
       this.selectedUS = undServicio;
       this.onProcessPetition(undServicio);
     }
@@ -466,6 +508,7 @@ export class MtArticulosComponent implements OnInit {
 
   onProcessPetition(undNegocio) {
     let storeConxOnline = this.store.getStore('conx_online');
+    console.log();
     if (undNegocio == 'VICTORIA SECRET') {
       this.onDataView = [];
       this.onReporteList = [];
@@ -542,7 +585,48 @@ export class MtArticulosComponent implements OnInit {
         this.onProcessPetition(this.selectedUS);
       } else {
         let profileUser = this.store.getStore('mt-profile');
-        let undServicio = (profileUser || {}).mt_nivel == "VSBA" ? 'VICTORIA SECRET' : (profileUser || {}).mt_nivel == "BBW" ? 'BATH AND BODY WORKS' : '';
+
+        let codeTiendasVs = [
+          { code: '9N' },
+          { code: '9D' },
+          { code: '9B' },
+          { code: '9C' },
+          { code: '9I' },
+          { code: '9G' },
+          { code: '9H' },
+          { code: '9M' },
+          { code: '9K' },
+          { code: '9L' },
+          { code: '9F' },
+          { code: '9P' }
+        ];
+
+        let codeTiendasBBW = [
+          { code: '7A' },
+          { code: '7J' },
+          { code: '7E' },
+          { code: '7C' },
+          { code: '7D' },
+          { code: '7F' },
+          { code: '7A7' },
+          { code: '7I' }
+        ];
+
+        let undServicio = "";
+
+        let indexVS = (codeTiendasVs || []).find((tienda) => tienda.code == (profileUser || {}).code);
+      console.log(indexVS);
+        if (Object.keys(indexVS || {}).length) {
+          undServicio = 'VICTORIA SECRET';
+        }
+
+        let indexBBW = (codeTiendasBBW || []).find((tienda) => tienda.code == (profileUser || {}).code);
+
+        if (Object.keys(indexBBW || {}).length) {
+          undServicio = 'BATH AND BODY WORKS';
+        }
+
+        console.log(undServicio);
         this.onProcessPetition(undServicio);
       }
 
