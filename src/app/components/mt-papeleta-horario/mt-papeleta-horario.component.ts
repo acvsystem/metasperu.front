@@ -114,7 +114,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   constructor(private store: StorageService, private service: ShareService) {
     this.getScreenSize();
   }
-
+  isPartTime = false;
   ngOnInit() {
 
     let profileUser = this.store.getStore('mt-profile');
@@ -186,7 +186,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     });
 
-
+   
     this.socket.on('reporteHorario', async (response) => {
       console.log(response);
       let data = (response || {}).data;
@@ -196,6 +196,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.dataVerify = [];
 
       await (this.parseHuellero || []).filter(async (huellero) => {
+
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
 
 
@@ -223,96 +224,103 @@ export class MtPapeletaHorarioComponent implements OnInit {
               hr_faltante: 0,
               dataRegistro: [huellero]
             });
+
+            if (huellero.tpAsociado == "**") {
+              this.isPartTime = true;
+              this.onProcesarPartTime({
+                dia: (huellero || {}).dia,
+                hr_ingreso_1: (huellero || {}).hrIn,
+                hr_salida_1: (huellero || {}).hrOut,
+                hr_brake: "",
+                hr_ingreso_2: "",
+                hr_salida_2: "",
+                hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
+                hr_extra: 0,
+                hr_faltante: 0,
+                dataRegistro: [huellero]
+              });
+            }
+
           } else {
+            if (huellero.tpAsociado != "**") {
 
-            this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
-            this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
-            this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
-            let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
-            let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
-            this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
-            let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
-            this.onDataTemp[indexData]['dataRegistro'].push(huellero);
+              this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
+              this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
+              this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
+              let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
+              let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+              this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
+              let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
+              this.onDataTemp[indexData]['dataRegistro'].push(huellero);
 
-            let defaultHT = "08:00";
-
-            console.log((huellero || {}).tpAsociado);
-            if (tipoAsc.length == 2) {
+              let defaultHT = "08:00";
 
 
-              let fechahr = new Date(this.onDataTemp[indexData]['dia']);
-              let añohr = fechahr.getFullYear();
-              let meshr = (fechahr.getMonth());
-              let dayhr = fechahr.getDay();
+              if (tipoAsc.length == 2) { //SI ES LACTANCIA
 
-              let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
+                let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
 
-              console.log(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + (parseInt(fechaLactancia[0]) + 1));
-              var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
-              var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
+                var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
+                var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
 
-              console.log(this.onDataTemp[indexData]['dia'], f1, f2);
-              if (f1 >= f2) {
-                defaultHT = "07:00";
-                console.log(defaultHT, this.onDataTemp[indexData]['dia']);
-
-              }
-            }
-
-
-
-
-            let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
-            let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
-
-            let hrxSalida = (defaultHT).split(':');
-            let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-
-            let newAcumulado = llegada - salida;
-
-            const ToTime = (num) => {
-              var minutos: any = Math.floor((num / 60) % 60);
-              minutos = minutos < 10 ? '0' + minutos : minutos;
-              var segundos: any = num % 60;
-              segundos = segundos < 10 ? '0' + segundos : segundos;
-              return minutos + ':' + segundos;
-            }
-
-            let process = ToTime(newAcumulado);
-
-            if (hora_1_pr[0] >= 8) {
-              let hr = process.split(":");
-              if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
-                this.onDataTemp[indexData]['hr_extra'] = process;//23:59
-                let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
-
-                let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 ? 'aprobar' : 'correcto';
-
-                let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
-                let aprobado = estado == "correcto" ? true : false;
-
-
-                this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
-
-                this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
-                if (estado == 'correcto') {
-                  if (!this.arHoraExtra.length) {
-                    this.arHoraExtra = [process];
-                  } else {
-                    this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
-                  }
+                if (f1 >= f2) {
+                  defaultHT = "07:00";
                 }
               }
-            } else {
-              this.onDataTemp[indexData]['hr_faltante'] = process;
-            }
 
+
+
+              let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
+              let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+
+              let hrxSalida = (defaultHT).split(':');
+              let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+
+              let newAcumulado = llegada - salida;
+
+              const ToTime = (num) => {
+                var minutos: any = Math.floor((num / 60) % 60);
+                minutos = minutos < 10 ? '0' + minutos : minutos;
+                var segundos: any = num % 60;
+                segundos = segundos < 10 ? '0' + segundos : segundos;
+                return minutos + ':' + segundos;
+              }
+
+              let process = ToTime(newAcumulado);
+
+              if (hora_1_pr[0] >= 8) {
+                let hr = process.split(":");
+                if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
+                  this.onDataTemp[indexData]['hr_extra'] = process;//23:59
+                  let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
+
+                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 ? 'aprobar' : 'correcto';
+
+                  let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
+                  let aprobado = estado == "correcto" ? true : false;
+
+
+                  this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
+
+                  this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
+                  if (estado == 'correcto') {
+                    if (!this.arHoraExtra.length) {
+                      this.arHoraExtra = [process];
+                    } else {
+                      this.arHoraExtra[0] = this.obtenerHorasTrabajadas(process, this.arHoraExtra[0]);
+                    }
+                  }
+                }
+              } else {
+                this.onDataTemp[indexData]['hr_faltante'] = process;
+              }
+            }
           }
 
         }
       });
 
-      if ((this.dataVerify || []).length) {
+      if ((this.dataVerify || []).length && !this.isPartTime) {
         console.log(this.dataVerify);
         this.onVerificarHrExtra(this.dataVerify);
       }
@@ -327,6 +335,69 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.onListPapeleta();
 
   }
+
+  arPartTimeFech = [];
+
+  onProcesarPartTime(row) {
+    let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
+
+    var dias = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
+    var indice = new Date(parseInt(fecha[0]), (parseInt(fecha[1]) - 1), parseInt(fecha[2])).getDay();
+    let estado = row.dataRegistro.length >= 3 ? 'aprobar' : 'correcto';
+    let aprobado = estado == "correcto" ? true : false;
+
+    this.arPartTimeFech.push({
+
+      dia: row.dia, diaNom: dias[indice], hr_trabajadas: row.hr_trabajadas, indice: indice
+    });
+
+    const ascDates = this.arPartTimeFech.sort((a, b) => {
+      return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+    });
+
+    this.arPartTimeFech = ascDates;
+    let count = "00:00";
+    this.arPartTimeFech.filter((pt, index) => {
+
+      if (pt.indice > (this.arPartTimeFech[index - 1] || {}).indice || typeof this.arPartTimeFech[index - 1] == "undefined") {
+        count = this.obtenerHorasTrabajadas(pt.hr_trabajadas, count);
+      }
+
+      if ((this.arPartTimeFech[index - 1] || {}).indice > pt.indice) {
+
+        let hrxLlegada = count.split(':');
+        let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+
+        let hrxSalida = ("24:00").split(':');
+        let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+
+        let newAcumulado = llegada - salida;
+
+        const ToTime = (num) => {
+          var minutos: any = Math.floor((num / 60) % 60);
+          minutos = minutos < 10 ? '0' + minutos : minutos;
+          var segundos: any = num % 60;
+          segundos = segundos < 10 ? '0' + segundos : segundos;
+          return minutos + ':' + segundos;
+        };
+
+        let process = ToTime(newAcumulado);
+        this.arPartTimeFech[index - 1]["hrTrabajadas"] = count;
+        if (parseInt(count.split(":")[0]) >= 24) {
+          this.arPartTimeFech[index - 1]["hrExtra"] = process;
+          this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, fecha: row.dia, hrx_acumulado: "00:00", extra: "00:00", estado: estado, aprobado: aprobado, seleccionado: false });
+
+        }
+
+
+        count = pt.hr_trabajadas;
+      }
+    });
+
+    this.onVerificarHrExtra(this.dataVerify);
+    console.log(this.arPartTimeFech);
+  }
+
 
   onVerificarHrExtra(dataVerificar) {
     let parms = {
