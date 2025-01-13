@@ -41,7 +41,7 @@ export class MtLoginComponent implements OnInit {
   async onLogin() {
     const { browser, cpu, device, os } = UAParser();
     let publicIP = await publicIpv4();
-    
+
     console.log();
     if (this.userName == "BBW" || this.userName == "VSBA") {
       this.shrService.createToken(this.userName, this.password).then((token) => {
@@ -65,21 +65,22 @@ export class MtLoginComponent implements OnInit {
 
       this.shrService.post(parms).then(async (response) => {
         if ((response || {}).success) {
+          this.isLogin = true;
           this.shrService.createToken(this.userName, this.password).then((token) => {
             if (token) {
               this.onRouteDefault();
             }
           });
-        }
-
-        if ((response || {}).isSendCode) {
+        } else if (!(response || {}).login) {
+          this.isLogin = false;
+        } else if ((response || {}).isSendCode) {
           this.isLogin = true;
           this.isCodigo = true;
         }
 
-        if (!(response || {}).login) {
-         this.isLogin = false;
-        }
+
+
+
 
       });
     }
