@@ -197,9 +197,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       await (this.parseHuellero || []).filter(async (huellero) => {
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
-       
-        let defaultHT = !tipoAsc.length || !((huellero || {}).tpAsociado || "").length ? "08:00": tipoAsc.length == 2 ? "07:00" : "";
-        console.log(defaultHT);
+
+
         var codigo = (huellero || {}).caja.substr(0, 2);
 
         if ((huellero || {}).caja.substr(2, 2) == 7) {
@@ -235,13 +234,39 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
             this.onDataTemp[indexData]['dataRegistro'].push(huellero);
 
+            let defaultHT = "08:00";
+
+            console.log((huellero || {}).tpAsociado);
+            if (tipoAsc.length == 2) {
+
+
+              let fechahr = new Date(this.onDataTemp[indexData]['dia']);
+              let añohr = fechahr.getFullYear();
+              let meshr = (fechahr.getMonth());
+              let dayhr = fechahr.getDay();
+
+              let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
+
+              console.log(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + (parseInt(fechaLactancia[0]) + 1));
+              var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
+              var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
+
+              console.log(this.onDataTemp[indexData]['dia'], f1, f2);
+              if (f1 >= f2) {
+                defaultHT = "07:00";
+                console.log(defaultHT, this.onDataTemp[indexData]['dia']);
+
+              }
+            }
+
+
+
 
             let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
             let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
 
             let hrxSalida = (defaultHT).split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-
 
             let newAcumulado = llegada - salida;
 
@@ -254,20 +279,19 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
             let process = ToTime(newAcumulado);
-            console.log(this.onDataTemp[indexData]['dia'], this.onDataTemp[indexData]['hr_trabajadas'], defaultHT, ToTime(newAcumulado));
-
-
 
             if (hora_1_pr[0] >= 8) {
               let hr = process.split(":");
               if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
                 this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                 let salida = this.onDataTemp[indexData]['hr_salida_2'].split(":");
-               
-                let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3  ? 'aprobar' : 'correcto';
-                
+
+                let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 ? 'aprobar' : 'correcto';
+
                 let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
                 let aprobado = estado == "correcto" ? true : false;
+
+
                 this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
 
                 this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
@@ -403,20 +427,20 @@ export class MtPapeletaHorarioComponent implements OnInit {
       }
 
       let dateNow = new Date();
-/*
-      var año = dateNow.getFullYear();
-      var mes = (dateNow.getMonth() + 1);
-
-      let day = new Date(dateNow).toLocaleDateString().split('/');
-      let añoIn = mes == 1 ? año - 1 : año;
-      let mesIn = mes == 1 ? mes : mes - 1;
-      let dayNow = mes == 1 ? 1 : day[0];
-      let configuracion = [{
-        fechain: `${año}-${mesIn}-${dayNow}`,
-        fechaend: `${año}-${mes}-${day[0]}`,
-        nro_documento: this.cboEmpleado
-      }]
-        */
+      /*
+            var año = dateNow.getFullYear();
+            var mes = (dateNow.getMonth() + 1);
+      
+            let day = new Date(dateNow).toLocaleDateString().split('/');
+            let añoIn = mes == 1 ? año - 1 : año;
+            let mesIn = mes == 1 ? mes : mes - 1;
+            let dayNow = mes == 1 ? 1 : day[0];
+            let configuracion = [{
+              fechain: `${año}-${mesIn}-${dayNow}`,
+              fechaend: `${año}-${mes}-${day[0]}`,
+              nro_documento: this.cboEmpleado
+            }]
+              */
 
 
       var año = dateNow.getFullYear();
