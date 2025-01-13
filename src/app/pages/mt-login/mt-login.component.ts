@@ -18,6 +18,7 @@ export class MtLoginComponent implements OnInit {
   isCodigo: boolean = false;
   isCodeExpired: boolean = false;
   isCodeFail: boolean = false;
+  isLogin: boolean = true;
   msjError: string = "";
 
   constructor(
@@ -40,7 +41,8 @@ export class MtLoginComponent implements OnInit {
   async onLogin() {
     const { browser, cpu, device, os } = UAParser();
     let publicIP = await publicIpv4();
-
+    
+    console.log();
     if (this.userName == "BBW" || this.userName == "VSBA") {
       this.shrService.createToken(this.userName, this.password).then((token) => {
         if (token) {
@@ -70,8 +72,13 @@ export class MtLoginComponent implements OnInit {
           });
         }
 
-        if (!(response || {}).success) {
+        if ((response || {}).isSendCode) {
+          this.isLogin = true;
           this.isCodigo = true;
+        }
+
+        if (!(response || {}).login) {
+         this.isLogin = false;
         }
 
       });

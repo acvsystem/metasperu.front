@@ -42,6 +42,13 @@
           </div>
         </ion-col>
       </ion-row>
+      <ion-row *ngIf="!isLogin">
+        <ion-col>
+          <div class="footer-button full-center" style="padding: 0;">
+            <p style="color: red;margin: 0;">Usuario o contraseña incorrectos.</p>
+          </div>
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col>
           <div class="footer-button full-center">
