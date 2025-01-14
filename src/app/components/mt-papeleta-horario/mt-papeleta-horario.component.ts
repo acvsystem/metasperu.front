@@ -66,8 +66,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
   listaPapeletas: Array<any> = [];
   arCalHoraPap: Array<any> = [];
   copyBodyList: Array<any> = [];
+  arPartTimeFech: Array<any> = [];
   diffHoraPap: string = "";
   totalAcumulado: string = "";
+  isVacacionesProgramadas: boolean = false;
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -195,7 +197,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.bodyList = [];
       this.dataVerify = [];
 
-      await (this.parseHuellero || []).filter(async (huellero) => {
+      await (this.parseHuellero || []).filter(async (huellero, i) => {
 
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
 
@@ -227,7 +229,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             if (huellero.tpAsociado == "**") {
               this.isPartTime = true;
-              this.onProcesarPartTime({
+              this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
                 hr_salida_1: (huellero || {}).hrOut,
@@ -300,7 +302,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   let aprobado = estado == "correcto" ? true : false;
 
 
-                  this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
+                  this.dataVerify.push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'],fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
 
                   this.arCopiHoraExtra.push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
                   if (estado == 'correcto') {
@@ -321,7 +323,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       if ((this.dataVerify || []).length && !this.isPartTime) {
-        console.log(this.dataVerify);
         this.onVerificarHrExtra(this.dataVerify);
       }
 
@@ -336,13 +337,17 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   }
 
-  arPartTimeFech = [];
 
-  onProcesarPartTime(row) {
+
+  onProcesarPartTime(length, index, row) {
+    this.dataVerify = [];
+
     let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
 
     var dias = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
-    var indice = new Date(parseInt(fecha[0]), (parseInt(fecha[1]) - 1), parseInt(fecha[2])).getDay();
+
+    var indice = new Date((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + (parseInt(fecha[2]))).getDay();
+    console.log((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + parseInt(fecha[2]), "dia:", dias[indice], indice);
     let estado = row.dataRegistro.length >= 3 ? 'aprobar' : 'correcto';
     let aprobado = estado == "correcto" ? true : false;
 
@@ -357,10 +362,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.arPartTimeFech = ascDates;
     let count = "00:00";
+    let arFechas = [];
     this.arPartTimeFech.filter((pt, index) => {
 
       if (pt.indice > (this.arPartTimeFech[index - 1] || {}).indice || typeof this.arPartTimeFech[index - 1] == "undefined") {
+        arFechas.push({ dia: (this.arPartTimeFech[index - 1] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index - 1] || {}).hr_trabajadas });
         count = this.obtenerHorasTrabajadas(pt.hr_trabajadas, count);
+
       }
 
       if ((this.arPartTimeFech[index - 1] || {}).indice > pt.indice) {
@@ -383,22 +391,27 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         let process = ToTime(newAcumulado);
         this.arPartTimeFech[index - 1]["hrTrabajadas"] = count;
-
+        arFechas.push({ dia: (this.arPartTimeFech[index - 1] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index - 1] || {}).hr_trabajadas });
         if (parseInt(this.arPartTimeFech[index - 1]["hrTrabajadas"].split(":")[0]) >= 24) {
-          let exist = this.dataVerify.find((dt) => dt.fecha == row.dia) || {};
-          if (!Object.keys(exist).length) {
-            this.arPartTimeFech[index - 1]["hrExtra"] = process
-            this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, fecha: row.dia, hrx_acumulado: this.arPartTimeFech[index - 1]["hrTrabajadas"], extra: this.arPartTimeFech[index - 1]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false });
+          this.arPartTimeFech[index - 1]["hrExtra"] = process;
+          this.arPartTimeFech[index - 1]["fechas"] = arFechas;
+          this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.arPartTimeFech[index - 1]["hrTrabajadas"], fecha: this.arPartTimeFech[index - 1]["fechas"][0]['dia'], hrx_acumulado: this.arPartTimeFech[index - 1]["hrExtra"], extra: this.arPartTimeFech[index - 1]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: this.arPartTimeFech[index - 1]["fechas"] });
 
-          }
         }
 
         count = pt.hr_trabajadas;
+        arFechas = [];
       }
     });
 
-    // this.onVerificarHrExtra(this.dataVerify);
-    console.log(this.dataVerify);
+    if (length - 1 == index) {
+      console.log(this.dataVerify);
+      this.onVerificarHrExtra(this.dataVerify);
+    }
+  }
+
+  onSearchFechasPartTime(index) {
+    this.arSelectRegistro = this.dataVerify[index].arFechas;
   }
 
 
@@ -412,7 +425,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       const ascDates = response.sort((a, b) => {
         return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
       });
-
+      this.bodyList = [];
       this.bodyList = ascDates;
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
@@ -486,10 +499,20 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
+    if (index == 'cboCasos') {
+      this.isVacacionesProgramadas = false;
+    }
+
     if ((selectData || {}).value != 'Compensacion de horas trabajadas' && index == 'cboCasos') {
       if (index != "cboEmpleado") {
         this[index] = (selectData || {}).value;
         this.idCboTipoPap = (selectData || {}).key;
+      }
+    }
+
+    if ((selectData || {}).value == 'Vacaciones programadas' && index == 'cboCasos') {
+      if (index != "cboEmpleado") {
+        this.isVacacionesProgramadas = true;
       }
     }
 
@@ -954,9 +977,17 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
         }
 
-        if (this.cboCasos != "Compensacion de horas trabajadas") {
+        if (this.cboCasos != "Compensacion de horas trabajadas" && !this.isVacacionesProgramadas) {
           if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada") {
-            console.log(property);
+            arVerify.push(false);
+          } else {
+            arVerify.push(true);
+          }
+        }
+
+
+        if (this.isVacacionesProgramadas) {
+          if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada" && property != "hora_salida" && property != "hora_llegada") {
             arVerify.push(false);
           } else {
             arVerify.push(true);

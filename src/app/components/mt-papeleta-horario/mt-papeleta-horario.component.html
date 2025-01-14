@@ -65,7 +65,7 @@
                     </div>
                   </div>
                 </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isVacacionesProgramadas">
                   <div style="display: flex;justify-content: center;align-items: center;">
                     <div style="width: 100px;">
                       <span style="color: black;">Salida</span>
@@ -98,7 +98,7 @@
                     </div>
                   </div>
                 </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isVacacionesProgramadas">
                   <div style="display: flex;justify-content: center;align-items: center;">
                     <div style="width: 100px;">
                       <span style="color: black;">Llegada</span>
@@ -147,20 +147,30 @@
           </ion-row>
           @if(arSelectRegistro.length) {
             <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="max-height: 150px;overflow: auto;">
                 <table class="table table-bordered table-hover table-fixed">
                   <thead>
                     <tr>
-                      <th class="columHead" style="width: 33% !important;">Fecha</th>
-                      <th class="columHead" style="width: 33% !important;">Hora Entrada</th>
-                      <th class="columHead" style="width: 33% !important;">Hora Salida</th>
+                      @if(isPartTime){
+                        <th class="columHead" style="width: 33% !important;">Fecha</th>
+                        <th class="columHead" style="width: 33% !important;">Hora Trabajadas</th>
+                      }@else{
+                        <th class="columHead" style="width: 33% !important;">Fecha</th>
+                        <th class="columHead" style="width: 33% !important;">Hora Entrada</th>
+                        <th class="columHead" style="width: 33% !important;">Hora Salida</th>
+                      }
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let columBody of arSelectRegistro;let index = index">
-                      <td class="columBody">{{columBody.dia}}</td>
-                      <td class="columBody">{{columBody.hrIn}}</td>
-                      <td class="columBody">{{columBody.hrOut}}</td>
+                      @if(isPartTime){
+                        <td class="columBody">{{columBody.dia}}</td>
+                        <td class="columBody">{{columBody.hr_trabajadas}}</td>
+                      }@else{
+                        <td class="columBody">{{columBody.dia}}</td>
+                        <td class="columBody">{{columBody.hrIn}}</td>
+                        <td class="columBody">{{columBody.hrOut}}</td>
+                      }
                     </tr>
                   </tbody>
                 </table>
@@ -184,7 +194,15 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let columBody of bodyList;let index = index">
-                        <td class="columBody">{{columBody.fecha}}</td>
+                        <td class="columBody">
+                          @if(isPartTime){
+                            <button matTooltip="Ver fechas" id="searchProducto" (click)="onSearchFechasPartTime(index)" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                              <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                          }@else{
+                            {{columBody.fecha}}
+                          }
+                        </td>
                         <td class="columBody">{{columBody.extra}}</td>
                         <td class="columBody">{{columBody.hrx_solicitado}}</td>
                         <td class="columBody">{{columBody.hrx_sobrante}}</td>
