@@ -71,11 +71,11 @@ export class MtLoginComponent implements OnInit {
               this.onRouteDefault();
             }
           });
-        } else if (!(response || {}).login) {
-          this.isLogin = false;
         } else if ((response || {}).isSendCode) {
           this.isLogin = true;
           this.isCodigo = true;
+        } else if (!(response || {}).login) {
+          this.isLogin = false;
         }
 
 
