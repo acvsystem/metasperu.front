@@ -96,6 +96,11 @@ export class MtCalendarComponent implements OnInit {
     if (this.isDefault) {
       this.afterChange.emit({ id: this.id, isDefault: true, value: `${moment(this.date.value).format('YYYY/MM/DD')}` });
     }
+
+    if (this.isPeriodo) {
+      var futureMonth = moment(this.date.value).add(1, 'months');
+      this.afterChange.emit({ isPeriodo: true, value: [`${moment(this.date.value).format('YYYY')}`, `${moment(this.date.value).format('MM')}`, `${moment(futureMonth).format('MM')}`] });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

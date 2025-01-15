@@ -17,11 +17,12 @@ export class MtPlanillaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
 
   onDataView: Array<any> = [];
-  vCalendar: string = "202411";
+  vCalendar: string = "";
   fileName: string = "";
   fileName_2: string = "";
   text: string = "";
   isLoading: boolean = false;
+  isResetPeriodo: boolean = true;
   filterEmpleado: string = "";
   cboBanco: number = 0;
   cboReporte: string = "Adel.Quincena";
@@ -61,6 +62,7 @@ export class MtPlanillaComponent implements OnInit {
       this.isLoading = false;
     });
 
+    
   }
 
   async onGenTxtTotal() {
