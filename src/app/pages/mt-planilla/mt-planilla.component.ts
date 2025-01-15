@@ -52,17 +52,21 @@ export class MtPlanillaComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.onDataPlanilla();
+    //this.onDataPlanilla();
     this.socket.on('reporteQuincena', async (response) => {
+      console.log(response);
       this.onDataView = [];
-      this.onDataView = response.data || [];
+      this.onDataView = (response || {}).data || [];
+
+
+
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.isLoading = false;
     });
 
-    
+
   }
 
   async onGenTxtTotal() {
@@ -413,7 +417,7 @@ export class MtPlanillaComponent implements OnInit {
       tipo_planilla: this.cboReporte,
       date: this.vCalendar
     };
-    console.log(option);
+    console.log("consultaPlanilla",option);
     this.socket.emit('consultaPlanilla', option);
   }
 
