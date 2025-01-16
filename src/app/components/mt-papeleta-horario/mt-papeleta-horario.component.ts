@@ -271,7 +271,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
 
-
+              
               let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
               let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
 
@@ -323,6 +323,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       if ((this.dataVerify || []).length && !this.isPartTime) {
+        console.log(this.dataVerify);
         this.onVerificarHrExtra(this.dataVerify);
       }
 

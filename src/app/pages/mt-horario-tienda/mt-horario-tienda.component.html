@@ -218,6 +218,7 @@
                       *ngIf="vSelectDia > 0 && vSelectHorario > 0 && isExpiredDay == false"
                       class="example-list contenedor">
                       @for (trb of data.arListTrabajador; track trb) {
+                        {{vSelectDia}} {{trb.id_dia}}  {{vSelectHorario}}  {{trb.rg}}  {{trb.id_cargo}}  {{idCargo}}
                         <div class="example-box-no-pointer" *ngIf="vSelectDia == trb.id_dia && vSelectHorario == trb.rg && trb.id_cargo == idCargo">
                           <div style="max-width: 115px;">
                             {{trb.nombre_completo}}
@@ -315,6 +316,9 @@
   
               <button style="margin-left: 8px;" (click)="drawer.toggle()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onOpenPapeleta()">
                 <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+              </button>
+              <button style="margin-left: 8px;" (click)="onSaveCalendario()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
+                Registrar
               </button>
               </div>
             </div>
