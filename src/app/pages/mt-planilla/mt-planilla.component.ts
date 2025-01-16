@@ -52,13 +52,23 @@ export class MtPlanillaComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    //this.onDataPlanilla();
+    this.onDataPlanilla();
     this.socket.on('reporteQuincena', async (response) => {
       console.log(response);
       this.onDataView = [];
-      this.onDataView = (response || {}).data || [];
+      let data = (response || {}).data || [];
 
+      await (data || []).filter((dt, i) => {
+        if (this.cboReporte == "Comisiones" && ((dt || {}).CODIGO_UNID_SERVICIO || "").trim() == '0001') {
+          ((data || [])[i] || {})['ADELANTO_QUINCENA'] = ((data || [])[i] || {})['COMISIONES'];
+        }
 
+        let exist = this.onDataView.find((pr) => pr.NRO_DOCUMENTO == dt.NRO_DOCUMENTO);
+
+        if (!Object.keys(exist || {}).length) {
+          this.onDataView.push(dt);
+        }
+      });
 
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
@@ -417,7 +427,7 @@ export class MtPlanillaComponent implements OnInit {
       tipo_planilla: this.cboReporte,
       date: this.vCalendar
     };
-    console.log("consultaPlanilla",option);
+    console.log(option);
     this.socket.emit('consultaPlanilla', option);
   }
 
