@@ -52,6 +52,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     arDataEJB: Array<any> = [];
     arDataServer: Array<any> = [];
     screenHeight: number = 0;
+    screenWith: number = 0;
     onListTiendas: Array<any> = [
         { code_uns: '0003', uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
         { code_uns: '0023', uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -89,7 +90,8 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     getScreenSize(event?) {
         this.screenHeight = window.innerHeight - 100;
-        console.log(this.screenHeight);
+        this.screenWith = window.innerWidth - 10;
+        console.log(this.screenWith);
     }
 
     constructor(private store: StorageService, private service: ShareService) { }
@@ -269,7 +271,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
             });
 
-            this.socket.emit('actualizarHorario', this.dataHorario);
+            // this.socket.emit('actualizarHorario', this.dataHorario);
             this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
         }
@@ -497,7 +499,17 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     onSaveCalendario() {
         console.log(this.dataHorario);
-        this.socket.emit('actualizarHorario', this.dataHorario);
+
+        let parms = {
+            url: '/horario/registrar',
+            body: this.dataHorario
+        };
+
+        this.service.post(parms).then(async (response) => {
+            
+        });
+
+        //this.socket.emit('actualizarHorario', this.dataHorario);
     }
 
     async onGenerarCalendario() {
@@ -544,6 +556,8 @@ export class MtHorarioTiendaComponent implements OnInit {
                 {
                     id: this.dataHorario.length + 1,
                     cargo: cargo.value,
+                    fecha: `${day[0]}-${day[1]}-${day[2]}`, 
+                    rango: this.vRangoDiasSearch,
                     codigo_tienda: this.codeTienda,
                     rg_hora: [],
                     dias: this.arListDia,
@@ -902,6 +916,8 @@ export interface HorarioElement {
     id: number,
     cargo: string,
     codigo_tienda: string,
+    fecha: string,
+    rango: any,
     rg_hora: Array<any>,
     dias: Array<any>,
     dias_trabajo: Array<any>,
