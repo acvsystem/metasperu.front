@@ -861,7 +861,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
                     this.idCargo = this.dataHorario[index]['id'];
 
-                    this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
+                    //this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
 
 
                     this.dataHorario[index]['dias'].filter((ds, i) => {
