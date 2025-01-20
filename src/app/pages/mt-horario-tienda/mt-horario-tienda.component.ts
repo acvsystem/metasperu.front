@@ -254,10 +254,10 @@ export class MtHorarioTiendaComponent implements OnInit {
         if (typeof this.cboCargo != "undefined") {
 
             let index = this.dataHorario.findIndex((cr) => cr.id == this.cboCargo);
-
+            console.log(index);
             this.idCargo = this.dataHorario[index]['id'];
 
-            this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
+           // this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
 
             let dateNow = new Date();
 
@@ -831,7 +831,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                 this.dataHorario = response;
                 let dateNow = new Date();
                 let day = new Date(dateNow).toLocaleDateString().split('/');
-                let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
+                let fechaActual = `${day[2]}-${day[1]}-${day[0]}`;
 
                 await this.dataHorario.filter((dt, index) => {
                     if (!this.dataHorario[index]['dias'].length) {
@@ -873,8 +873,6 @@ export class MtHorarioTiendaComponent implements OnInit {
 
                     this.onListCargo.push({ key: dt.id, value: dt.cargo });
                 });
-
-
 
 
 
