@@ -6,6 +6,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { ShareService } from 'src/app/services/shareService';
 
 @Component({
   selector: 'mt-observacion-horario',
@@ -18,6 +19,8 @@ export class MtObservacionHorarioComponent implements OnInit {
   @Output() changeObservation: EventEmitter<any> = new EventEmitter();
   @Input() dataObservation: Array<any> = [];
   @Input() dataTrabajadores: Array<any> = [];
+  @Input() isSearch: boolean = false;
+  @Input() idHorario: number = 0;
   onListEmpleado: Array<any> = [];
   vObservacion: string = "";
   arObservacion: Array<any> = [];
@@ -64,7 +67,7 @@ export class MtObservacionHorarioComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private store: StorageService) { }
+  constructor(private store: StorageService, private service: ShareService) { }
 
   ngOnInit() {
     let profileUser = this.store.getStore('mt-profile');
@@ -72,7 +75,7 @@ export class MtObservacionHorarioComponent implements OnInit {
     this.codeTienda = profileUser.code.toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.unidServicio = unidServicio['uns'];
-    
+
     this.dataTrabajadores.filter((trb) => {
       this.onListEmpleado.push({ key: trb.nombre_completo, value: trb.nombre_completo },);
     });
@@ -102,9 +105,39 @@ export class MtObservacionHorarioComponent implements OnInit {
       if (this.vObservacion.length && this.cboEmpleado.length) {
         let index = this.arObservacion.findIndex((obs) => obs.nombre_completo == this.cboEmpleado);
         if (index == -1) {
-          this.arObservacion.push({ id: this.arObservacion.length + 1, id_dia: this.idDia, nombre_completo: this.cboEmpleado, codigo_tienda: this.codeTienda, observacion: this.vObservacion, selected: this.dataOptionSelected });
+          this.arObservacion.push({ id: this.arObservacion.length + 1, isNew: true, id_dia: this.idDia, nombre_completo: this.cboEmpleado, codigo_tienda: this.codeTienda, observacion: this.vObservacion, selected: this.dataOptionSelected });
+          if (this.isSearch) {
+            let parms = {
+              url: '/horario/insert/observacion',
+              body: {
+                id_dia: this.idDia,
+                id_horario: this.idHorario,
+                codigo_tienda: this.codeTienda,
+                nombre_completo: this.cboEmpleado,
+                observacion: this.vObservacion
+              }
+            };
+
+            this.service.post(parms).then(async (response) => {
+
+            });
+          }
         } else {
           this.arObservacion[index]['observacion'] = this.vObservacion;
+          this.arObservacion[index]['isEdit'] = true;
+          if (this.isSearch) {
+            let parms = {
+              url: '/horario/update/observacion',
+              body: {
+                id: this.arObservacion[index]['id'],
+                observacion: this.vObservacion
+              }
+            };
+
+            this.service.post(parms).then(async (response) => {
+
+            });
+          }
         }
         this.changeObservation.emit(this.arObservacion);
       } else {
