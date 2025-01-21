@@ -94,7 +94,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     getScreenSize(event?) {
         this.screenHeight = window.innerHeight - 100;
         this.screenWith = window.innerWidth - 10;
-        console.log(this.screenWith);
     }
 
     constructor(private store: StorageService, private service: ShareService) { }
@@ -103,9 +102,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     async ngOnInit() {
         this.getScreenSize();
-        //console.log(this.vRangoDiasSearch);
         if ((this.data || []).length) {
-            // console.log(this.data);
             // this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);
         }
 
@@ -118,7 +115,6 @@ export class MtHorarioTiendaComponent implements OnInit {
                 if (!this.dataHorario[index]['dias'].length) {
                     this.dataHorario[index]['dias'] = this.arListDia
                 }
-                console.log({ key: dt.id, value: dt.cargo });
                 //this.onListCargo.push({ key: dt.id, value: dt.cargo });
             });
 
@@ -194,10 +190,8 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.socket.emit('horario/empleadoEJB', this.unidServicio);
 
         this.socket.on('reporteEmpleadoTienda', async (response) => {
-            console.log("reporteEmpleadoTienda", response);
             let dataEmpleado = (response || {}).data;
             let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
-            console.log(codigo_uns);
 
             dataEmpleado.filter((emp) => {
                 if (response.id == "EJB") {
@@ -262,7 +256,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         if (typeof this.cboCargo != "undefined") {
 
             let index = this.dataHorario.findIndex((cr) => cr.id == this.cboCargo);
-            console.log(index);
+            
             this.idCargo = this.dataHorario[index]['id'];
 
             // this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
@@ -300,7 +294,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
 
     onAddHorario() {
-        console.log(this.cboCargo);
         let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
 
         if (index != -1 && this.horaInit.length && this.horaEnd.length) {
@@ -501,7 +494,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
 
     onAddDLTrabajo(data, id) {
-        console.log(data, id);
         let elemntButtonAdd = document.getElementsByName('addHorario-' + id);
 
         let elementButtonDL = document.getElementsByName('addDL-' + id);
@@ -558,7 +550,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             elemntButtonAdd[0]['disabled'] = false;
             elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
             elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
-            console.log(data.id);
+
             let dataDL = this.dataHorario[index]['dias_libres'].find((dt) => dt.id_dia == data.id_dia && dt.nombre_completo == data.nombre_completo);
             this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != dataDL.id);
 
@@ -684,7 +676,6 @@ export class MtHorarioTiendaComponent implements OnInit {
                 }
             );
 
-            console.log("onGenerarCalendario", this.dataHorario);
             //this.onSearchCalendario();
         });
 
@@ -786,7 +777,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             let index = this.arListDia.findIndex((dia) => dia.id == count);
             fechaInicio.setDate(fechaInicio.getDate() + 1);
             let date = new Date(fechaInicio).toLocaleDateString().split('/');
-            console.log(date);
+            
             this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
             this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
         }
@@ -829,7 +820,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     onSaveRangoHorario(id) {
         let rowCargo = this.dataHorario.find((dt) => dt.id == this.cboCargo);
-        console.log(rowCargo);
+
         let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
 
         if (index != -1) {
@@ -942,7 +933,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                 this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
             } else {
                 this.dataHorario = [];
-                console.log((response || {}).msj);
+                
                 this.service.toastError("Algo salio mal..!!", "Rango horario");
             }
 
@@ -969,7 +960,6 @@ export class MtHorarioTiendaComponent implements OnInit {
                 (lsOrden || []).filter((orden, i) => {
                     let row = response.find((rs) => rs.cargo == orden);
                     this.dataHorario.push(row);
-                    console.log(row);
 
                 });
 

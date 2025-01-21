@@ -209,7 +209,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-      console.log(data);
+      console.log("dataStockParse",data);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -508,7 +508,7 @@ export class MtArticulosComponent implements OnInit {
 
   onProcessPetition(undNegocio) {
     let storeConxOnline = this.store.getStore('conx_online');
-    console.log();
+   
     if (undNegocio == 'VICTORIA SECRET') {
       this.onDataView = [];
       this.onReporteList = [];
