@@ -84,6 +84,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
 import { MtAccionCloudComponent } from './pages/mt-dropbox/mt-accion-cloud/mt-accion-cloud.component';
+import { provideToastr, ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -123,7 +125,9 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
     imports: [
-        FormsModule, BrowserModule,
+        FormsModule,
+        BrowserModule,
+        BrowserAnimationsModule,
         DragDropModule,
         PortalModule,
         ScrollingModule,
@@ -170,6 +174,20 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         NgxMatTimepickerModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        SocketIoModule.forRoot(confSocket)], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync()]
+        ToastrModule.forRoot(),
+        SocketIoModule.forRoot(confSocket)],
+    providers: [
+        provideAnimations(),
+        provideToastr({
+            positionClass: 'toast-bottom-right',
+            progressBar: true
+        }),
+        {
+            provide: RouteReuseStrategy,
+            useClass: IonicRouteStrategy
+        },
+        provideHttpClient(
+            withInterceptorsFromDi()),
+        provideAnimationsAsync()]
 })
 export class AppModule { }

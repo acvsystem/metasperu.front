@@ -100,12 +100,25 @@ export class MtObservacionHorarioComponent implements OnInit {
     const self = this;
     if (self.indexObservacion > -1) {
       this.arObservacion[self.indexObservacion]['observacion'] = this.vObservacion;
+      if (this.isSearch) {
+        let parms = {
+          url: '/horario/update/observacion',
+          body: {
+            id: this.arObservacion[self.indexObservacion]['id'],
+            observacion: this.vObservacion
+          }
+        };
+
+        this.service.post(parms).then(async (response) => {
+
+        });
+      }
       this.changeObservation.emit(this.arObservacion);
     } else {
       if (this.vObservacion.length && this.cboEmpleado.length) {
         let index = this.arObservacion.findIndex((obs) => obs.nombre_completo == this.cboEmpleado);
+
         if (index == -1) {
-          this.arObservacion.push({ id: this.arObservacion.length + 1, isNew: true, id_dia: this.idDia, nombre_completo: this.cboEmpleado, codigo_tienda: this.codeTienda, observacion: this.vObservacion, selected: this.dataOptionSelected });
           if (this.isSearch) {
             let parms = {
               url: '/horario/insert/observacion',
@@ -119,35 +132,39 @@ export class MtObservacionHorarioComponent implements OnInit {
             };
 
             this.service.post(parms).then(async (response) => {
+              if ((response || {}).success) {
+                this.arObservacion.push({ id: (response || {}).id, id_dia: this.idDia, nombre_completo: this.cboEmpleado, codigo_tienda: this.codeTienda, observacion: this.vObservacion, selected: this.dataOptionSelected });
+                this.changeObservation.emit(this.arObservacion);
+                self.indexObservacion = -1;
+                this.vObservacion = "";
+                this.optionDefault = [];
+
+                this.service.toastSuccess('Registrado con exito..!!', 'Observacion');
+              } else {
+                this.service.toastError('Algo salio mal..!!', 'Observacion');
+              }
 
             });
+          } else {
+            this.arObservacion.push({ id: this.arObservacion.length + 1, id_dia: this.idDia, nombre_completo: this.cboEmpleado, codigo_tienda: this.codeTienda, observacion: this.vObservacion, selected: this.dataOptionSelected });
+            this.changeObservation.emit(this.arObservacion);
+            self.indexObservacion = -1;
+            this.vObservacion = "";
+            this.optionDefault = [];
           }
         } else {
           this.arObservacion[index]['observacion'] = this.vObservacion;
           this.arObservacion[index]['isEdit'] = true;
-          if (this.isSearch) {
-            let parms = {
-              url: '/horario/update/observacion',
-              body: {
-                id: this.arObservacion[index]['id'],
-                observacion: this.vObservacion
-              }
-            };
-
-            this.service.post(parms).then(async (response) => {
-
-            });
-          }
+          this.changeObservation.emit(this.arObservacion);
+          self.indexObservacion = -1;
+          this.vObservacion = "";
+          this.optionDefault = [];
         }
-        this.changeObservation.emit(this.arObservacion);
+
       } else {
         this.openSnackBar('Llene todos los campos..!!');
       }
     }
-
-    self.indexObservacion = -1;
-    this.vObservacion = "";
-    this.optionDefault = [];
   }
 
 

@@ -3,7 +3,7 @@ import { concatMap, of, throwError } from 'rxjs';
 import { IRequestParams } from '../const/IRequestParams';
 import { StorageService } from '../utils/storage';
 import { HttpService } from './httpService';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class ShareService {
 
   serverRute: string = 'http://38.187.8.22:3200';
 
-  constructor(private store: StorageService, private xhr: HttpService) { }
+  constructor(private store: StorageService, private xhr: HttpService, private toastr: ToastrService) { }
 
   public post(parms_: IRequestParams): Promise<any> {
     const self = this;
@@ -204,7 +204,7 @@ export class ShareService {
         this.eventIsLoggedIn.emit(true);
         this.store.setStore('tn', token);
         this.onProfileUser.emit(((response || [])[0].profile || {}));
-       // this.onMenuUser.emit(((response || {}).menu || {}));
+        // this.onMenuUser.emit(((response || {}).menu || {}));
         return token;
       } else {
         this.eventIsLoggedIn.emit(false);
@@ -212,6 +212,15 @@ export class ShareService {
     });
   }
 
-  
+
+  toastSuccess(mensaje, titulo) {
+    this.toastr.success(mensaje, titulo);
+  }
+
+  toastError(mensaje, titulo) {
+    this.toastr.error(mensaje, titulo);
+  }
+
+
 
 }

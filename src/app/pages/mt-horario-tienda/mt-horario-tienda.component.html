@@ -200,7 +200,7 @@
               <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="data.id == idCargo">
               <div class="example-list contenedor">
                 @for (dia of data.dias; track dia.id) {
-                  <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia)">
+                  <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia,data.id)">
                     {{dia.dia}}
                       @if(dia.isObservation) {
                         <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
@@ -270,7 +270,7 @@
         } 
     
         @if(isObservacion && !isPapeleta) {
-          <mt-observacion-horario (changeObservation)="opChangeObservation($event)" [dataTrabajadores]="arListTrabajador" [vIdDia]="vSelectDia" [dataObservation]="dataObservation"></mt-observacion-horario>
+          <mt-observacion-horario [isSearch]="isSearch" [idHorario]="idCalendar"(changeObservation)="opChangeObservation($event)" [dataTrabajadores]="arListTrabajador" [vIdDia]="vSelectDia" [dataObservation]="dataObservation"></mt-observacion-horario>
         }
     
         @if(isPapeleta){
@@ -316,9 +316,16 @@
               <button style="margin-left: 8px;" (click)="drawer.toggle()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onOpenPapeleta()">
                 <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
               </button>
-              <button style="margin-left: 8px;" (click)="onSaveCalendario()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
-                Guardar Calendario
-              </button>
+              @if(isSearch){
+                <button style="margin-left: 8px;" disabled matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
+                  Guardar Calendario
+                </button>
+              }@else{
+                <button style="margin-left: 8px;" (click)="onSaveCalendario()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
+                  Guardar Calendario
+                </button>
+              }
+
               </div>
             </div>
           </ion-col>
