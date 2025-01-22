@@ -137,8 +137,8 @@
                     <div style="width: 100px;">
                       <span style="color: black;">Solicitadas</span>
                     </div>
-                    <div style="width: 200px;">
-                      <span style="color: black;">{{diffHoraPap}} Horas</span>
+                    <div style="width: 200px;" class="mini-spinner-container">
+                      <span style="color: black;display: inline-flex;">{{diffHoraPap}} Horas <mat-spinner *ngIf="isLoaderHrx"></mat-spinner></span>
                     </div>
                   </div>
                 </ion-col>

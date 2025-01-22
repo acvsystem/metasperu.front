@@ -180,7 +180,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         provideAnimations(),
         provideToastr({
             positionClass: 'toast-bottom-right',
-            progressBar: true
+            progressBar: true,
+            preventDuplicates: true
         }),
         {
             provide: RouteReuseStrategy,

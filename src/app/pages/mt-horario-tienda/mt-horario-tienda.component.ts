@@ -345,7 +345,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.vSelectHorario = id_horario;
         if (this.vSelectHorario > 0) {
             this.vSelectDia = id_dia;
-            
+
             this.idCalendar = idSelectH;
             this.isExpiredDay = (dataDia || {})['isExpired'] || false;
             let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
@@ -473,7 +473,6 @@ export class MtHorarioTiendaComponent implements OnInit {
                         id_horario: this.dataHorario[index]['id']
                     }
                 }
-
 
                 this.service.post(parms).then(async (response) => {
                     if ((response || {}).success) {

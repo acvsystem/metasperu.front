@@ -192,13 +192,41 @@ export class MtObservacionHorarioComponent implements OnInit {
   }
 
   onDeleteObservacion() {
-    let objObservacion = this.arObservacion[this.indexObservacion];
-    this.arObservacion = this.arObservacion.filter((obs) => obs.id != objObservacion.id);
-    this.indexObservacion = -1;
-    this.vObservacion = "";
-    this.optionDefault = [];
-    this.openSnackBar('Observacion eliminada..!!');
-    this.changeObservation.emit(this.arObservacion);
+    if (this.isSearch) {
+      let objObservacion = this.arObservacion[this.indexObservacion];
+
+      let parms = {
+        url: '/horario/insert/observacion',
+        body: {
+          id: (objObservacion || {}).id
+        }
+      }
+
+      this.service.post(parms).then(async (response) => {
+        if ((response || {}).success) {
+          let objObservacion = this.arObservacion[this.indexObservacion];
+          this.arObservacion = (this.arObservacion || []).filter((obs) => obs.id != (objObservacion || {}).id);
+          this.indexObservacion = -1;
+          this.vObservacion = "";
+          this.optionDefault = [];
+          this.openSnackBar('Observacion eliminada..!!');
+          this.changeObservation.emit(this.arObservacion);
+          this.service.toastSuccess('Registrado con exito..!!', 'Observacion');
+        } else {
+          this.service.toastError('Algo salio mal..!!', 'Observacion');
+        }
+      });
+    } else {
+      let objObservacion = this.arObservacion[this.indexObservacion];
+      this.arObservacion = this.arObservacion.filter((obs) => obs.id != objObservacion.id);
+      this.indexObservacion = -1;
+      this.vObservacion = "";
+      this.optionDefault = [];
+      this.openSnackBar('Observacion eliminada..!!');
+      this.changeObservation.emit(this.arObservacion);
+    }
+
+
   }
 
   openSnackBar(msj) {
