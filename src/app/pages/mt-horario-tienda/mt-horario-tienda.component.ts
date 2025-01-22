@@ -254,9 +254,9 @@ export class MtHorarioTiendaComponent implements OnInit {
         this[index] = (selectData || {}).key || "";
 
         if (typeof this.cboCargo != "undefined") {
-
+            this.vSelectHorario = 0;
             let index = this.dataHorario.findIndex((cr) => cr.id == this.cboCargo);
-            
+
             this.idCargo = this.dataHorario[index]['id'];
 
             // this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
@@ -342,107 +342,113 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
     onSelectDataDia(id_horario?, id_dia?, dataDia?, idSelectH?) {
-        this.vSelectDia = id_dia;
         this.vSelectHorario = id_horario;
-        this.idCalendar = idSelectH;
-        this.isExpiredDay = (dataDia || {})['isExpired'] || false;
-        let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
-
-        let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
-
-        this.titleObservacion = objDia['dia'];
-
-        let dateNow = new Date();
-        let day = new Date(dateNow).toLocaleDateString().split('/');
-        let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
-
-        this.dataHorario[index]['dias'].filter((ds, i) => {
-            let parseDate = ds.fecha_number.split('-');
-            let fechaInicio = new Date(fechaActual);
-            let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
-
-            if (fechaFin.getTime() < fechaInicio.getTime()) {
-                this.dataHorario[index]['dias'][i]['isExpired'] = true;
-            } else {
-                this.dataHorario[index]['dias'][i]['isExpired'] = false;
-            }
-
-            let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
-
-            if (obsExist != -1) {
-                this.dataHorario[index]['dias'][i]['isObservation'] = true;
-            }
-        });
-
-        if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
-
+        if (this.vSelectHorario > 0) {
+            this.vSelectDia = id_dia;
+            
+            this.idCalendar = idSelectH;
+            this.isExpiredDay = (dataDia || {})['isExpired'] || false;
             let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
-            let dataTrabajadores = [];
 
-            if (index != -1) {
-                let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
+            let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
 
-                this.titleObservacion = objDia['dia'];
-                this.dataHorario[index]['arListTrabajador'] = [];
+            this.titleObservacion = objDia['dia'];
 
-                this.arListTrabajador.filter((emp) => {
-                    this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo, numero_documento: emp.documento });
-                });
+            let dateNow = new Date();
+            let day = new Date(dateNow).toLocaleDateString().split('/');
+            let fechaActual = `${day[2]}-${day[1]}-${day[0]}`
 
-                dataTrabajadores = [...this.dataHorario[index]['arListTrabajador']];
+            this.dataHorario[index]['dias'].filter((ds, i) => {
+                let parseDate = ds.fecha_number.split('-');
+                let fechaInicio = new Date(fechaActual);
+                let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
 
-                this.dataHorario[index]['arListTrabajador'] = [];
-                dataTrabajadores.filter((tr) => {
-
-                    let isExist = this.dataHorario[index]['dias_trabajo'].findIndex((dt) => dt.nombre_completo == tr.nombre_completo && dt.id_dia == tr.id_dia && dt.id_cargo == tr.id_cargo);
-                    if (isExist != -1) {
-
-                    } else {
-                        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: tr.nombre_completo, numero_documento: tr.numero_documento });
-                    }
-                });
-
-                if (this.dataHorario[index]['arListTrabajador'].length) {
-                    this.dataHorario[index]['dias_libres'].filter((dl) => {
-
-                        let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
-
-                        if (Object.keys(registro).length) {
-                            setTimeout(() => {
-                                let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
-                                let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
-
-                                let classList;
-                                classList = elementButtonDL[0]['classList']['value'].split(' ');
-
-                                let exist = classList.indexOf('agregado');
-
-                                if (exist == -1) {
-                                    elemntButtonAdd[0]['disabled'] = true
-                                    elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
-                                    elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
-                                    elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
-                                    elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
-                                    elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
-                                } else {
-                                    elemntButtonAdd[0]['disabled'] = false;
-                                    elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
-                                    elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
-                                }
-                            }, 50);
-
-
-                        }
-
-                    });
+                if (fechaFin.getTime() < fechaInicio.getTime()) {
+                    this.dataHorario[index]['dias'][i]['isExpired'] = true;
+                } else {
+                    this.dataHorario[index]['dias'][i]['isExpired'] = false;
                 }
 
-                // this.socket.emit('actualizarHorario', this.dataHorario);
-                this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+                let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+
+                if (obsExist != -1) {
+                    this.dataHorario[index]['dias'][i]['isObservation'] = true;
+                }
+            });
+
+            if (this.vSelectDia > 0 && this.vSelectHorario > 0 && dataDia['isExpired'] == false) {
+
+                let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
+                let dataTrabajadores = [];
+
+                if (index != -1) {
+                    let objDia = this.dataHorario[index]['dias'].find((dia) => dia.id == this.vSelectDia);
+
+                    this.titleObservacion = objDia['dia'];
+                    this.dataHorario[index]['arListTrabajador'] = [];
+
+                    this.arListTrabajador.filter((emp) => {
+                        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo, numero_documento: emp.documento });
+                    });
+
+                    dataTrabajadores = [...this.dataHorario[index]['arListTrabajador']];
+
+                    this.dataHorario[index]['arListTrabajador'] = [];
+                    dataTrabajadores.filter((tr) => {
+
+                        let isExist = this.dataHorario[index]['dias_trabajo'].findIndex((dt) => dt.nombre_completo == tr.nombre_completo && dt.id_dia == tr.id_dia && dt.id_cargo == tr.id_cargo);
+                        if (isExist != -1) {
+
+                        } else {
+                            this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: tr.nombre_completo, numero_documento: tr.numero_documento });
+                        }
+                    });
+
+                    if (this.dataHorario[index]['arListTrabajador'].length) {
+                        this.dataHorario[index]['dias_libres'].filter((dl) => {
+
+                            let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
+
+                            if (Object.keys(registro).length) {
+                                setTimeout(() => {
+                                    let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
+                                    let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
+
+                                    let classList;
+                                    classList = elementButtonDL[0]['classList']['value'].split(' ');
+
+                                    let exist = classList.indexOf('agregado');
+
+                                    if (exist == -1) {
+                                        elemntButtonAdd[0]['disabled'] = true
+                                        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
+                                        elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
+                                        elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
+                                        elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
+                                        elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
+                                    } else {
+                                        elemntButtonAdd[0]['disabled'] = false;
+                                        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
+                                        elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
+                                    }
+                                }, 50);
+
+
+                            }
+
+                        });
+                    }
+
+                    // this.socket.emit('actualizarHorario', this.dataHorario);
+                    this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+
+                }
 
             }
-
+        } else {
+            this.service.toastError("Seleccione un rango horario...!!", "Horario");
         }
+
     }
 
     onAddDTrabajo(data) {
@@ -777,7 +783,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             let index = this.arListDia.findIndex((dia) => dia.id == count);
             fechaInicio.setDate(fechaInicio.getDate() + 1);
             let date = new Date(fechaInicio).toLocaleDateString().split('/');
-            
+
             this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
             this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
         }
@@ -933,7 +939,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                 this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
             } else {
                 this.dataHorario = [];
-                
+
                 this.service.toastError("Algo salio mal..!!", "Rango horario");
             }
 
