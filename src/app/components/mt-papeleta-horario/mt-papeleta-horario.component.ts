@@ -990,10 +990,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             this.service.post(parms).then(async (response) => {
               if ((response || {}).success) {
-                this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
-              } else {
                 this.onListPapeleta();
-
                 this.cboCasos = "";
                 this.cboCargo = "";
                 this.vFechaDesde = "";
@@ -1008,6 +1005,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.isResetCalendar = true;
 
                 this.onGenerarCodigoPapeleta();
+                this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
               }
             });
 
