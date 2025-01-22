@@ -20,6 +20,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { ShareService } from 'src/app/services/shareService';
 
 const moment = _rollupMoment || _moment;
 
@@ -89,7 +90,7 @@ export class MtCalendarComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
 
-  constructor() { }
+  constructor(private service: ShareService) { }
 
 
   ngOnInit() {
@@ -159,11 +160,11 @@ export class MtCalendarComponent implements OnInit {
             let ar = [`${moment(this.range.value.start).format('YYYY/MM/DD')}`, `${moment(this.range.value.end).format('YYYY/MM/DD')}`];
             this.afterChange.emit({ isPresentRange: true, value: ar });
           } else {
-            this.openSnackBar("Numero de dias sobrepasan a la de una semana.");
+            this.service.toastError("Numero de dias no son los de una semana.", "Horario");
           }
         }
       } else {
-        this.openSnackBar("No puede iniciar el horario con ese dia.");
+        this.service.toastError("No puede iniciar el horario con ese dia.", "Horario");
       }
     }
   }
@@ -193,7 +194,7 @@ export class MtCalendarComponent implements OnInit {
 
 
     } else {
-      this.openSnackBar("Solo puede seleccionar 3 fechas.");
+      this.service.toastError("Solo puede seleccionar 3 fechas.", "Calendario");
     }
   }
 
@@ -234,14 +235,6 @@ export class MtCalendarComponent implements OnInit {
     var futureMonth = moment(this.date.value).add(1, 'months');
     this.afterChange.emit({ isPeriodo: true, value: [`${moment(this.date.value).format('YYYY')}`, `${moment(this.date.value).format('MM')}`, `${moment(futureMonth).format('MM')}`] });
 
-  }
-
-  openSnackBar(msj) {
-    this._snackBar.open(msj, '', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration: 5 * 1000
-    });
   }
 
 }
