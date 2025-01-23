@@ -407,6 +407,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
       this.bodyList = [];
       this.copyBodyList = [];
+      this.store.removeStore('mt-hrExtra');
       this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
       this.bodyList = ascDates;
       this.hroAcumulada = "";
@@ -990,6 +991,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             this.service.post(parms).then(async (response) => {
               if ((response || {}).success) {
+                this.store.removeStore('mt-hrExtra');
                 this.onListPapeleta();
                 this.cboCasos = "";
                 this.cboCargo = "";
