@@ -478,12 +478,20 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   async onChangeSelect(data: any) {
     const self = this;
+
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
     if (index == 'cboCasos') {
       this.isVacacionesProgramadas = false;
+      this.horaSalida = "";
+      this.horaLlegada = "";
+      $('#horaLlegada input')[0].value = "";
+      $('#horaSalida input')[0].value = "";
+      this.diffHoraPap = "";
+      this.hroAcumulada = "";
+      this.hroAcumuladaTotal = "";
     }
 
     if ((selectData || {}).value != 'Compensacion de horas trabajadas' && index == 'cboCasos') {
@@ -500,8 +508,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
     }
 
     if ((selectData || {}).value == 'Compensacion de horas trabajadas' || (index == "cboEmpleado" && this.idCboTipoPap)) {
-      this.isResetCalendar = false;
       this.isPartTime = false;
+
       if (index != "cboEmpleado") {
         this[index] = (selectData || {}).value;
         this.idCboTipoPap = (selectData || {}).key;
@@ -519,7 +527,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
         fechain: `${añoIn}-${mesIn}-${day[0]}`,
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
-      }]
+      }];
+
+
 
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
       this.socket.emit('consultaHorasTrab', configuracion);
@@ -691,21 +701,21 @@ export class MtPapeletaHorarioComponent implements OnInit {
         }, 1500);
       }
     }
-
-    if (ev.isDefault) { //VERIFICACION DE FECHA ANTERIOR PAPELETA
-      let dateNow = new Date();
-
-      let day = new Date(dateNow).toLocaleDateString().split('/');
-
-      let date = new Date(ev.value).toLocaleDateString().split('/');
-      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
-      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
-
-      if (f1.getTime() < f2.getTime()) {
-        this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
-      }
-    }
-
+    /*
+        if (ev.isDefault) { //VERIFICACION DE FECHA ANTERIOR PAPELETA
+          let dateNow = new Date();
+    
+          let day = new Date(dateNow).toLocaleDateString().split('/');
+    
+          let date = new Date(ev.value).toLocaleDateString().split('/');
+          var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
+          var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
+    
+          if (f1.getTime() < f2.getTime()) {
+            this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
+          }
+        }
+    */
     if (ev.isDefault) {
       let date = new Date(ev.value).toLocaleDateString().split('/');
       this[ev.id] = `${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`;
@@ -1004,8 +1014,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.hroAcumulada = "";
                 this.bodyList = [];
                 this.vObservacion = "";
-                this.isResetCalendar = true;
-
+                this.horaSalida = "";
+                this.horaLlegada = "";
+                $('#horaLlegada input')[0].value = "";
+                $('#horaSalida input')[0].value = "";
                 this.onGenerarCodigoPapeleta();
                 this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
               }

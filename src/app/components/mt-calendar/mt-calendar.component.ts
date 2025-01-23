@@ -108,7 +108,7 @@ export class MtCalendarComponent implements OnInit {
     if (changes && changes.hasOwnProperty('isReset')) {
       if (this.isReset && this.isTime) {
         this.vTimer = "";
-        this.afterChange.emit({ isTime: true, value: `${this.vTimer}`, id: this.id });
+        this.afterChange.emit({ isTime: true, value: ``, id: this.id });
       }
     }
   }

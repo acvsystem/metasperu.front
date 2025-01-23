@@ -20,7 +20,7 @@
         ></mt-input>
         </div>
         <ul class="isSelectComponent">
-          <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option isSelectComponent" *ngFor="let option of optionList">
+          <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option isSelectComponent mt-select-pat" *ngFor="let option of optionList">
             <span class="option-text isSelectComponent">{{ option.value }}</span>
           </li>
         </ul>
