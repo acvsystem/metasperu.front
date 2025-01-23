@@ -179,6 +179,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.nameTienda = profileUser.mt_name_1.toUpperCase();
         this.codeTienda = profileUser.code.toUpperCase();
         let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
+
         this.unidServicio = unidServicio['uns'];
         this.onListEmpleado = [];
 
@@ -187,7 +188,10 @@ export class MtHorarioTiendaComponent implements OnInit {
             this.socket.io.opts.transports = ["polling", "websocket"];
         });
 
+
         this.socket.emit('horario/empleadoEJB', this.unidServicio);
+
+
 
         this.socket.on('reporteEmpleadoTienda', async (response) => {
             let dataEmpleado = (response || {}).data;
@@ -199,15 +203,26 @@ export class MtHorarioTiendaComponent implements OnInit {
                 }
 
                 if (this.arDataEJB.length) {
-
+                    
                     this.arDataEJB.filter(async (ejb) => {
-
-                        if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
-                            let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
-                            if (exist == -1) {
-                                this.arListTrabajador.push(
-                                    { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: (ejb || {}).nombre_completo, documento: ((ejb || {}).nro_documento).trim() }
-                                );
+                        if (this.codeTienda == '7F') {
+                            if (((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+                                let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
+                                
+                                if (exist == -1) {
+                                    this.arListTrabajador.push(
+                                        { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: (ejb || {}).nombre_completo, documento: ((ejb || {}).nro_documento).trim() }
+                                    );
+                                }
+                            }
+                        } else {
+                            if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+                                let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
+                                if (exist == -1) {
+                                    this.arListTrabajador.push(
+                                        { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: (ejb || {}).nombre_completo, documento: ((ejb || {}).nro_documento).trim() }
+                                    );
+                                }
                             }
                         }
                     });
@@ -615,18 +630,77 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         this.service.post(parms).then(async (response) => {
             if ((response || {}).success) {
+                let data = (response || {}).data || [];
+                if ((data || []).length) {
+                    this.dataHorario = [];
+                    this.isSearch = true;
+                    this.store.setStore("mt-isSearch", true);
+                    this.onListCargo = [];
+                    let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
+
+                    (lsOrden || []).filter((orden, i) => {
+                        let row = data.find((rs) => rs.cargo == orden);
+                        this.dataHorario.push(row);
+
+                    });
+
+                    let dateNow = new Date();
+                    let day = new Date(dateNow).toLocaleDateString().split('/');
+                    let fechaActual = `${day[2]}-${day[1]}-${day[0]}`;
+
+                    await this.dataHorario.filter((dt, index) => {
+                        if (!this.dataHorario[index]['dias'].length) {
+                            this.dataHorario[index]['dias'] = this.arListDia
+                        }
+
+
+                        this.dataHorario[index]['dias'].filter((ds, i) => {
+                            let parseDate = ds.fecha_number.split('-');
+                            let fechaInicio = new Date(fechaActual);
+                            let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
+
+                            if (fechaFin.getTime() < fechaInicio.getTime()) {
+                                this.dataHorario[index]['dias'][i]['isExpired'] = true;
+                            } else {
+                                this.dataHorario[index]['dias'][i]['isExpired'] = false;
+                            }
+
+                            let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+
+                            if (obsExist != -1) {
+                                this.dataHorario[index]['dias'][i]['isObservation'] = true;
+                            }
+                        });
+
+                        this.idCargo = this.dataHorario[index]['id'];
+
+                        this.dataHorario[index]['dias'].filter((ds, i) => {
+                            let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+                            if (obsExist != -1) {
+                                this.dataHorario[index]['dias'][i]['isObservation'] = true;
+                            }
+                        });
+
+                        this.onListCargo.push({ key: dt.id, value: dt.cargo });
+                    });
+
+                    this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+                } else {
+                    this.dataHorario = [];
+                    this.service.toastError((data || {}).msj, "Horario");
+                }
+
                 this.service.toastSuccess("Registrado con exito...!!", "Horario");
             } else {
                 this.service.toastError("Algo salio mal..!!", "Horario");
             }
         });
-
-        //this.socket.emit('actualizarHorario', this.dataHorario);
     }
 
     async onGenerarCalendario() {
         let dateNow = new Date();
         this.isSearch = false;
+        this.store.removeStore('mt-horario');
         this.store.setStore("mt-isSearch", false);
         var año = dateNow.getFullYear();
         var mes = (dateNow.getMonth() + 1);
@@ -663,8 +737,10 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         }
 
-        await listCargo.filter((cargo) => {
+        this.onListCargo = [];
 
+        await listCargo.filter((cargo, i) => {
+            this.onListCargo.push({ key: i + 1, value: cargo.value });
             this.dataHorario.push(
                 {
                     id: this.dataHorario.length + 1,
