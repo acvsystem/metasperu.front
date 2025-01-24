@@ -1209,17 +1209,17 @@ export class MtHorarioTiendaComponent implements OnInit {
         var element: any;
         element = $('#content-pdf').clone();
         var opt = {
-          filename: `PAPELETA.pdf`,
+          filename: `HORARIO.pdf`,
           margin: [0.1, 0.1, 0.2, 0.1],
           image: {
-            type: 'jpg', quality: 0.99
+            type: 'png', quality: 0.99
           },
           html2canvas: {
             dpi: 192,
             useCORS: true,
             scale: 2
           },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'l' }
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'l' }
         };
         
         await html2pdf().from(element[0]).set(opt).save();
