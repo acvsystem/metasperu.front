@@ -53,13 +53,13 @@
           </ion-row>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <ion-row>
+              <ion-row *ngIf="!isResetCalendarComp">
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <div style="display: flex;justify-content: center;align-items: center;">
                     <div style="width: 100px;">
                       <span style="color: black;">Desde</span>
                     </div>
-                    <div style="width: 200px;">
+                    <div style="width: 200px;" >
                       <mt-calendar id="vFechaDesde" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
                       ></mt-calendar>
                     </div>
@@ -86,7 +86,7 @@
           </ion-row>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <ion-row>
+              <ion-row  *ngIf="!isResetCalendarComp">
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <div style="display: flex;justify-content: center;align-items: center;">
                     <div style="width: 100px;">

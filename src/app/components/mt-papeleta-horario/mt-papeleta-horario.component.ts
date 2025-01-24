@@ -40,6 +40,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   vFechaDesde: string = "";
   isViewPapeleta: boolean = false;
   isResetCalendar: boolean = false;
+  isResetCalendarComp: boolean = false;
   hroAcumulada: string = "00:00";
   hroAcumuladaTotal: string = "00:00";
   hroTomada: string = "00:00";
@@ -521,7 +522,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         this.isVacacionesProgramadas = true;
       }
     }
-    
+
     if (this.cboCasos == '7' || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isPartTime = false;
 
@@ -933,6 +934,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onGenerarCodigoPapeleta() { //GENERAR CODIGO DE LA PAPELETA
+    
     let parms = {
       url: '/recursos_humanos/pap/gen_codigo_pap',
       body: {
@@ -940,6 +942,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       }
     };
     this.service.post(parms).then((response) => {
+      this.isResetCalendarComp = false;
       this.codigoPapeleta = (response || {})['codigo'];
     })
   }
@@ -1014,6 +1017,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             this.service.post(parms).then(async (response) => {
               if ((response || {}).success) {
+                this.isResetCalendarComp = true;
                 this.store.removeStore('mt-hrExtra');
                 this.onListPapeleta();
                 this.cboCasos = "";
@@ -1045,6 +1049,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
 
                 this.onGenerarCodigoPapeleta();
+                
                 this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
               }
             });
