@@ -202,7 +202,7 @@
               <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="data.id == idCargo">
               <div class="example-list contenedor">
                 @for (dia of data.dias; track dia.id) {
-                  <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia,data.id)">
+                  <div [ngClass]="[dia.id == vSelectDia ? dia.isExpired == false ? 'example-box-pointer select' : 'example-box-pointer select disabled-Pointer' : dia.isExpired ? 'example-box-pointer disabled-Pointer':'example-box-pointer']" (click)="onSelectDataDia(vSelectHorario,dia.id,dia,data.id,dia.position)">
                     {{dia.dia}}
                       @if(dia.isObservation) {
                         <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: #d14f4f;cursor: pointer;font-size: 21px;"></i>
