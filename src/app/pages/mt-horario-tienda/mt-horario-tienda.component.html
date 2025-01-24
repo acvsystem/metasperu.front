@@ -328,9 +328,10 @@
                 </button>
               }
 
-              <button style="margin-left: 8px;" (click)="onPdf()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
-                Descargar
+              <button type="button" class="btn btn-danger btn-sm" (click)="onPdf()">
+                <span style="margin-right: 5px;">Descargar PDF</span> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
               </button>
+
 
               </div>
             </div>
@@ -342,7 +343,7 @@
               <thead>
                 <tr>
                   <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
-                    <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
+                    <div style="display: flex;justify-content: center;align-items: center;height: 50px;width: 131.59px;">
                       {{data.cargo}}
                     </div>
                   </th>
