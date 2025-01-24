@@ -259,7 +259,7 @@
   </mat-tab>
   <mat-tab label="Papeletas Creadas" style="min-height: 1000px">
     <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
-      <ion-row>
+      <ion-row *ngIf="!isViewPapeleta">
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
           <mt-input id="filterProducto" label="Filtro" placeholder="Filtro" type="text" value="{{ filterProducto }}"
             (keyup)="applyFilter($event)"></mt-input>
