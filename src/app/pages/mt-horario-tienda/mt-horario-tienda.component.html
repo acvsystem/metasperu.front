@@ -1,5 +1,7 @@
 
-
+<div class="console-loading" *ngIf="isLoading">
+  <div class="loader"></div>
+</div>
   <mat-drawer-container [hasBackdrop]="true" style="height: 100%;">
     <mat-drawer #drawer [mode]="'over'" position="end">
       <div style="border-bottom: 1px solid #ccc;padding: 17px;display: flex;align-items: center;justify-content: center;">
@@ -326,11 +328,15 @@
                 </button>
               }
 
+              <button style="margin-left: 8px;" (click)="onPdf()" matTooltip="Generar papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
+                Descargar
+              </button>
+
               </div>
             </div>
           </ion-col>
         </ion-row>
-        <div>
+        <div id="content-pdf">
           @for (data of dataHorario; track data.id) {
             <table [ngClass]="[isOpenModal && !isPapeleta ? 'table table-bordered table-sm table-hover': 'table table-bordered table-sm table-hover']" [ngStyle]="{'max-width.px':screenWith}" style="background-color: white;margin: 0;border-color: black;">
               <thead>

@@ -8,6 +8,8 @@ import {
 } from '@angular/material/snack-bar';
 import { ShareService } from '../../services/shareService';
 import { ToastrService } from 'ngx-toastr';
+import * as html2pdf from 'html2pdf.js';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'mt-horario-tienda',
@@ -25,6 +27,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     isPapeleta: boolean = false;
     isExpiredDay: boolean = false;
     isStartEditRg: boolean = false;
+    isLoading: boolean = false;
     dataObservation: Array<any> = [];
     onListEmpleado: Array<any> = [];
     selectedIdRango: number = 0;
@@ -1199,6 +1202,29 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
     }
+
+
+     async onPdf() {
+        this.isLoading = true;
+        var element: any;
+        element = $('#content-pdf').clone();
+        var opt = {
+          filename: `PAPELETA.pdf`,
+          margin: [0.1, 0.1, 0.2, 0.1],
+          image: {
+            type: 'jpg', quality: 0.99
+          },
+          html2canvas: {
+            dpi: 192,
+            useCORS: true,
+            scale: 2
+          },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'l' }
+        };
+        
+        await html2pdf().from(element[0]).set(opt).save();
+        this.isLoading = false;
+      }
 
 
 
