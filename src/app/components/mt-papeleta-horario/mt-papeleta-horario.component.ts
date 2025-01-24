@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, inject } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -10,6 +10,9 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -48,7 +51,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
   onDataTemp: Array<any> = [];
   parseHuellero: Array<any> = [];
   isValidPapeleta: boolean = false;
-
+  listaPapeletas: Array<any> = [];
+  dataSource = new MatTableDataSource<any>(this.listaPapeletas);
   arSelectRegistro: Array<any> = [];
   arDataEJB: Array<any> = [];
   arDataServer: Array<any> = [];
@@ -65,7 +69,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   idCboTipoPap: number = 0;
   screenHeight: number = 0;
   hroSelectedPap: string = "";
-  listaPapeletas: Array<any> = [];
+
   arCalHoraPap: Array<any> = [];
   copyBodyList: any = [];
   arPartTimeFech: Array<any> = [];
@@ -80,7 +84,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { key: 'Cajero', value: 'Cajero' },
     { key: 'Almacenero', value: 'Almacenero' }
   ];
-
+  filterProducto: string = "";
   onListCasos: Array<any> = [];
 
   onListTiendas: Array<any> = [
@@ -105,12 +109,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
     { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
+  displayedColumns: string[] = ['codigo_papeleta', 'Fecha', 'tipo_papeleta', 'nombre_completo', 'Accion'];
 
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight - 200;
   }
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
@@ -118,6 +125,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.getScreenSize();
   }
 
+  
   ngOnInit() {
 
     let profileUser = this.store.getStore('mt-profile');
@@ -463,6 +471,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
         let tipo = this.onListCasos.filter((tp) => tp.key == data['id_tipo_papeleta']);
         this.listaPapeletas[i]['tipo'] = tipo[0]['value'];
       });
+
+      this.dataSource = new MatTableDataSource(this.listaPapeletas);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
@@ -1117,6 +1129,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
   onBackPap() {
     this.isViewPapeleta = false;
     this.codigoPap = "";
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
