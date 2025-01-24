@@ -22,7 +22,7 @@
           </div>
         </ion-col>
       </ion-row>
-      <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;">
+      <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;" *ngIf="!isResetForm">
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
@@ -119,7 +119,7 @@
               </ion-row>
             </ion-col>
           </ion-row>
-      @if(cboCasos == 'Compensacion de horas trabajadas') {
+      @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7") {
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <ion-row>
@@ -242,7 +242,7 @@
           </ion-row>
       }
 
-      @if(cboCasos != 'Compensacion de horas trabajadas'){
+      @if(cboCasos != 'Compensacion de horas trabajadas' && cboCasos != "7"){
         <ion-row>
           <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
             <div style="width: 100%;color: black;padding: 10px;">

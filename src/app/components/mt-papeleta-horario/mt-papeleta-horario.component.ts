@@ -42,6 +42,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   vFechaHasta: string = "";
   vFechaDesde: string = "";
   isViewPapeleta: boolean = false;
+  isResetForm: boolean = false;
   isResetCalendar: boolean = false;
   isResetCalendarComp: boolean = false;
   hroAcumulada: string = "00:00";
@@ -497,18 +498,20 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
+
     if (index == 'cboCasos') {
       this.isVacacionesProgramadas = false;
       this.horaSalida = "";
       this.horaLlegada = "";
-      $('#horaLlegada input')[0].value = "";
-      $('#horaSalida input')[0].value = "";
+
       this.diffHoraPap = "";
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
-      $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
+     // $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
+      //$('#horaLlegada input')[0].value = "";
+      //$('#horaSalida input')[0].value = "";
     }
-    console.log(this.cboCargo);
+    
     if (index == 'cboCargo') {
       $("#cboCargo span#cboCargo")[0].innerText = (selectData || {}).value;
     }
@@ -532,10 +535,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
     if ((selectData || {}).value == 'Vacaciones programadas' && index == 'cboCasos') {
       if (index != "cboEmpleado") {
         this.isVacacionesProgramadas = true;
+        this.bodyList = [];
       }
     }
-
-    if (this.cboCasos == '7' || (index == "cboEmpleado" && this.idCboTipoPap)) {
+    console.log(this.cboCasos);
+    if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isPartTime = false;
 
       if (index != "cboEmpleado") {
@@ -560,6 +564,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
       this.socket.emit('consultaHorasTrab', configuracion);
     }
+
+
   }
 
   obtenerMinutos(hora_1, hora_2) {
@@ -952,7 +958,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onGenerarCodigoPapeleta() { //GENERAR CODIGO DE LA PAPELETA
-
+    console.log("onGenerarCodigoPapeleta");
     let parms = {
       url: '/recursos_humanos/pap/gen_codigo_pap',
       body: {
@@ -961,6 +967,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     };
     this.service.post(parms).then((response) => {
       this.isResetCalendarComp = false;
+      this.isResetForm = false;
       this.codigoPapeleta = (response || {})['codigo'];
     })
   }
@@ -994,7 +1001,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         descripcion: this.vObservacion,
         horas_extras: this.bodyList || []
       });
-
+      console.log(dataPapeleta);
       await (dataPapeleta || []).filter((pap, i) => {
         Object.keys(pap).filter((property) => {
           if (this.cboCasos == "Compensacion de horas trabajadas") {
@@ -1014,7 +1021,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
 
           if (this.isVacacionesProgramadas) {
-            if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada" && property != "hora_salida" && property != "hora_llegada") {
+            if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada" && property != "hora_acumulado" && property != "hora_salida" && property != "hora_llegada") {
+             console.log(property);
               arVerify.push(false);
             } else {
               arVerify.push(true);
@@ -1035,7 +1043,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           const isBelowThreshold = (currentValue) => currentValue == true;
 
           this.isValidPapeleta = arVerify.every(isBelowThreshold);
-
+     
           if (this.isValidPapeleta) {
             let parms = {
               url: '/recursos_humanos/pap/registrar',
@@ -1044,9 +1052,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             this.service.post(parms).then(async (response) => {
               if ((response || {}).success) {
+                this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
                 this.isResetCalendarComp = true;
+                this.isResetForm = true;
                 this.store.removeStore('mt-hrExtra');
-                this.onListPapeleta();
+                
                 this.cboCasos = "";
                 this.cboCargo = "";
                 //this.vFechaDesde = "";
@@ -1060,6 +1070,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.vObservacion = "";
                 this.horaSalida = "";
                 this.horaLlegada = "";
+
+
+                this.onListPapeleta();
+                this.onGenerarCodigoPapeleta();
+
+                
+                
                 $('#horaLlegada input')[0].value = "";
                 $('#horaSalida input')[0].value = "";
 
@@ -1075,9 +1092,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 $("#cboCasos span#cboCasos")[0].innerText = "Tipo de caso";
                 $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
 
-                this.onGenerarCodigoPapeleta();
-
-                this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
               }
             });
 
