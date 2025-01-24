@@ -196,7 +196,7 @@ export class MtObservacionHorarioComponent implements OnInit {
       let objObservacion = this.arObservacion[this.indexObservacion];
 
       let parms = {
-        url: '/horario/insert/observacion',
+        url: '/horario/delete/observacion',
         body: {
           id: (objObservacion || {}).id
         }
@@ -209,9 +209,8 @@ export class MtObservacionHorarioComponent implements OnInit {
           this.indexObservacion = -1;
           this.vObservacion = "";
           this.optionDefault = [];
-          this.openSnackBar('Observacion eliminada..!!');
           this.changeObservation.emit(this.arObservacion);
-          this.service.toastSuccess('Registrado con exito..!!', 'Observacion');
+          this.service.toastSuccess('Observacion elimanda con exito..!!', 'Observacion');
         } else {
           this.service.toastError('Algo salio mal..!!', 'Observacion');
         }

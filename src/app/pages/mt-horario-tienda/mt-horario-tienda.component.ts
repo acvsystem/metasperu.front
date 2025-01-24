@@ -1065,6 +1065,8 @@ export class MtHorarioTiendaComponent implements OnInit {
                 let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
                 if (obsExist != -1) {
                     this.dataHorario[index]['dias'][i]['isObservation'] = true;
+                }else{
+                    this.dataHorario[index]['dias'][i]['isObservation'] = false;
                 }
             });
 
