@@ -733,6 +733,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
     if (ev.isDefault) {
       let date = new Date(ev.value).toLocaleDateString().split('/');
       this[ev.id] = `${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`;
+
+      if (this.vFechaDesde.length && this.vFechaHasta.length && this.cboCasos == 'Compensacion de horas trabajadas') {
+        if (this.vFechaDesde != this.vFechaHasta) {
+          this.service.toastError("Las fechas de salida y entrada deben ser iguales..!!", "Papeleta");
+        }
+      }
     }
   }
 
@@ -934,7 +940,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onGenerarCodigoPapeleta() { //GENERAR CODIGO DE LA PAPELETA
-    
+
     let parms = {
       url: '/recursos_humanos/pap/gen_codigo_pap',
       body: {
@@ -1002,6 +1008,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
               arVerify.push(true);
             }
           }
+
+          if (this.cboCasos == "Compensacion de horas trabajadas") {
+            if (pap['fecha_desde'] != pap['fecha_hasta']) {
+              arVerify.push(false);
+              this.service.toastError("Las fechas de salida y entrada deben ser iguales..!!", "Papeleta");
+            } else {
+              arVerify.push(true);
+            }
+          }
         });
 
         if (arVerify.length && dataPapeleta.length - 1 == i) {
@@ -1049,7 +1064,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
 
                 this.onGenerarCodigoPapeleta();
-                
+
                 this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
               }
             });
