@@ -14,12 +14,12 @@ export class MtSelectComponent implements OnInit {
   @Input() isRequired: boolean = false;
   @Input() selectOption: boolean = false;
   @Input() optionDefault: Array<any> = [];
+  @Input() nameOptionSelected: string = "";
   @Output() changeSelected: EventEmitter<any> = new EventEmitter();
 
   activeSelect: boolean = false;
   sboSearch: string = "";
   optionSelected: any = {};
-  nameOptionSelected: string = "";
   originalOptionList = [];
 
   constructor(private service: ShareService) {

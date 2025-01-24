@@ -2,8 +2,8 @@
   <ion-col [ngClass]="[isRequired ? 'required': '']" sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
     <div class="{{activeSelect ? 'select-menu active isSelectComponent':'select-menu isSelectComponent'}}">
       <div class="select-btn isSelectComponent" (click)="onOpenSelect()">
-        <span class="option-text select-placeholder isSelectComponent" *ngIf="!nameOptionSelected.length">{{placeHolder}}</span>
-        <span class="option-text isSelectComponent" *ngIf="nameOptionSelected.length">{{nameOptionSelected}}</span>
+        <span class="option-text select-placeholder isSelectComponent" id="{{id}}" *ngIf="!nameOptionSelected.length">{{placeHolder}}</span>
+        <span class="option-text isSelectComponent" id="{{id}}" *ngIf="nameOptionSelected.length">{{nameOptionSelected}}</span>
         <i class="fa fa-angle-down isSelectComponent" aria-hidden="true"></i>
       </div>
 
@@ -20,7 +20,7 @@
         ></mt-input>
         </div>
         <ul class="isSelectComponent">
-          <li (click)="onSelectedOption(option)" id="{{ option.id }}" class="option isSelectComponent mt-select-pat" *ngFor="let option of optionList">
+          <li (click)="onSelectedOption(option)"  class="option isSelectComponent mt-select-pat" *ngFor="let option of optionList">
             <span class="option-text isSelectComponent">{{ option.value }}</span>
           </li>
         </ul>

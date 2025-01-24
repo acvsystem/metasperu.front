@@ -26,6 +26,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   codigoPap: string = "";
   horaSalida: string = "";
   horaLlegada: string = "";
+  vNameOptionSelected: string = "";
   totalHoras: string = "";
   arHoraExtra: Array<any> = [];
   arHoraTomada: Array<any> = [];
@@ -492,6 +493,20 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.diffHoraPap = "";
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
+      $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
+    }
+    console.log(this.cboCargo);
+    if (index == 'cboCargo') {
+      $("#cboCargo span#cboCargo")[0].innerText = (selectData || {}).value;
+    }
+
+    if (index == "cboEmpleado") {
+      this.horaSalida = "";
+      this.horaLlegada = "";
+      $('#horaLlegada input')[0].value = "";
+      $('#horaSalida input')[0].value = "";
+
+      $("#cboEmpleado span#cboEmpleado")[0].innerText = (selectData || {}).value;
     }
 
     if ((selectData || {}).value != 'Compensacion de horas trabajadas' && index == 'cboCasos') {
@@ -506,8 +521,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
         this.isVacacionesProgramadas = true;
       }
     }
-
-    if ((selectData || {}).value == 'Compensacion de horas trabajadas' || (index == "cboEmpleado" && this.idCboTipoPap)) {
+    
+    if (this.cboCasos == '7' || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isPartTime = false;
 
       if (index != "cboEmpleado") {
@@ -528,8 +543,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }];
-
-
 
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
       this.socket.emit('consultaHorasTrab', configuracion);
@@ -1005,8 +1018,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.onListPapeleta();
                 this.cboCasos = "";
                 this.cboCargo = "";
-                this.vFechaDesde = "";
-                this.vFechaHasta = "";
+                //this.vFechaDesde = "";
+                //this.vFechaHasta = "";
                 this.horaSalida = "";
                 this.horaLlegada = "";
                 this.hroAcumuladaTotal = "";
@@ -1018,6 +1031,19 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.horaLlegada = "";
                 $('#horaLlegada input')[0].value = "";
                 $('#horaSalida input')[0].value = "";
+
+                this.horaSalida = "";
+                this.horaLlegada = "";
+                $('#horaLlegada input')[0].value = "";
+                $('#horaSalida input')[0].value = "";
+
+
+                this.cboEmpleado = "";
+                this.vNameOptionSelected = "";
+                $("#cboEmpleado span#cboEmpleado")[0].innerText = "Seleccione Empleado";
+                $("#cboCasos span#cboCasos")[0].innerText = "Tipo de caso";
+                $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
+
                 this.onGenerarCodigoPapeleta();
                 this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
               }
