@@ -432,45 +432,47 @@ export class MtHorarioTiendaComponent implements OnInit {
                                 }
                             });
 
-                            arOf.filter((emp,indexEmp) => {
+                            arOf.filter((emp, indexEmp) => {
                                 this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo, numero_documento: emp.documento });
-                            if(arOf.length -1 == indexEmp){
-                                if (this.dataHorario[index]['arListTrabajador'].length) {
-                                    this.dataHorario[index]['dias_libres'].filter((dl) => {
-            
-                                        let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
-            
-                                        if (Object.keys(registro).length) {
-                                            setTimeout(() => {
-                                                let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
-                                                let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
-            
-                                                let classList;
-                                                classList = elementButtonDL[0]['classList']['value'].split(' ');
-            
-                                                let exist = classList.indexOf('agregado');
-            
-                                                if (exist == -1) {
-                                                    console.log(registro);
-                                                    elemntButtonAdd[0]['disabled'] = true
-                                                    elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
-                                                    elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
-                                                    elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
-                                                    elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
-                                                    elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
-                                                } else {
-                                                    elemntButtonAdd[0]['disabled'] = false;
-                                                    elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
-                                                    elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
-                                                }
-                                            }, 50);
-            
-            
-                                        }
-            
-                                    });
+
+                                if (arOf.length - 1 == indexEmp) {
+                                    if (this.dataHorario[index]['arListTrabajador'].length) {
+                                        this.dataHorario[index]['dias_libres'].filter((dl) => {
+
+                                            let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
+
+                                            if (Object.keys(registro).length) {
+                                                setTimeout(() => {
+                                                    let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
+                                                    let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
+
+                                                    let classList;
+                                                    classList = elementButtonDL[0]['classList']['value'].split(' ');
+
+                                                    let exist = classList.indexOf('agregado');
+
+                                                    if (exist == -1) {
+                                                        console.log(registro);
+                                                        elemntButtonAdd[0]['disabled'] = true
+                                                        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
+                                                        elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
+                                                        elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
+                                                        elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
+                                                        elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
+                                                    } else {
+                                                        elemntButtonAdd[0]['disabled'] = false;
+                                                        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
+                                                        elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
+                                                    }
+                                                }, 50);
+
+
+                                            }
+
+                                        });
+                                    }
                                 }
-                            }
+
                             });
                         }
                     });
@@ -490,7 +492,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                                             }
                                         });
                     */
-          
+
 
 
                     // this.socket.emit('actualizarHorario', this.dataHorario);
@@ -506,7 +508,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
 
     onAddDTrabajo(data) {
-
+        console.log(data);
         let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
         let isRegister = this.dataHorario[index]['dias_trabajo'].findIndex((dtr) => dtr.id_dia == data.id_dia && dtr.nombre_completo == data.nombre_completo);
         if (isRegister != -1) {
@@ -537,24 +539,49 @@ export class MtHorarioTiendaComponent implements OnInit {
 
                             let arOf = [...this.arListTrabajador];
                             this.dataHorario[index]['arListTrabajador'] = [];
+                            let arDiasT = [];
+                            let positonRes = this.dataHorario[0]['dias'].find((d) => (d || {}).id == (data || {}).id_dia);
                             this.dataHorario.filter(async (dt2, index2) => {
-                                await this.dataHorario[index2]['dias_trabajo'].filter((diaTr) => {
-                                    if (diaTr.id_dia == data.id_dia) {
-                                        arrDiaTrabajo.push(diaTr);
+
+                                this.dataHorario[index2]['dias'].filter(async (diaRes, indexDias) => {
+                                    if ((diaRes || {}).position == (positonRes || {}).position) {
+                                        arDiasT.push((diaRes || {}).id);
+                                    }
+
+                                    if (arDiasT.length == 4) {
+                                        await this.dataHorario.filter(async (artd,i) => {
+                                            await this.dataHorario[i]['dias_trabajo'].filter((diaTr) => {
+
+                                                if (this.isSearch) {
+                                                    
+                                                    let verify = arDiasT.includes((rd) => rd == (diaTr || {}).id_dia);
+
+                                                    if (!verify) {
+                                                        console.log(diaTr);
+                                                        arrDiaTrabajo.push(diaTr);
+                                                    }
+                                                } else {
+                                                    if (diaTr.id_dia == this.vSelectDia) {
+                                                        arrDiaTrabajo.push(diaTr);
+                                                    }
+                                                }
+                                            });
+    
+                                            if (this.dataHorario.length - 1 == index2) {
+                                                await arrDiaTrabajo.filter((artd) => {
+                                                    let index = arOf.findIndex((ar) => ar.nombre_completo == artd.nombre_completo);
+                                                    if (index > -1) {
+                                                        arOf.splice(index, 1);
+                                                    }
+                                                });
+                                                arOf.filter((emp) => {
+                                                    this.dataHorario[i]['arListTrabajador'].push({ id: this.dataHorario[i]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo, numero_documento: emp.documento });
+                                                });
+                                            }
+                                        });
                                     }
                                 });
 
-                                if (this.dataHorario.length - 1 == index2) {
-                                    await arrDiaTrabajo.filter((artd) => {
-                                        let index = arOf.findIndex((ar) => ar.nombre_completo == artd.nombre_completo);
-                                        if (index > -1) {
-                                            arOf.splice(index, 1);
-                                        }
-                                    });
-                                    arOf.filter((emp) => {
-                                        this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo, numero_documento: emp.documento });
-                                    });
-                                }
                             });
 
                             this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
