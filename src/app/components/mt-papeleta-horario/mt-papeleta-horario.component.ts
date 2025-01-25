@@ -557,7 +557,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let mesIn = mes == 1 ? mes : mes > 1 ? mes - 2 : mes;
       let diaR = mes == 1 ? 1 : day[0];
       let configuracion = [{
-        fechain: `${añoIn -1}-11-${diaR}`,
+        fechain: `${añoIn}-${mesIn}-${diaR}`,
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }];
