@@ -81,6 +81,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
 
       await dataResponse.filter(async (rs, i) => {
+        console.log(rs);
         if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
           viewData.push(rs);
         }
@@ -339,20 +340,21 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       });
 
       await dataResponse.filter(async (rs, i) => {
+        console.log(rs);
         if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
           viewData.push(rs);
         }
 
-        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL')) {
+        if (this.profileUser.mt_nivel == "jcarreno" && ((dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL'))) {
           viewData.push(rs);
         }
 
-        if (this.profileUser.mt_nivel == "SISTEMAS" && this.profileUser.mt_nivel == "JOHNNY") {
+        if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY") {
           viewData.push(rs);
         }
-
+        
       });
-
+      
       this.onDataView = viewData;
 
       this.dataSource = new MatTableDataSource(this.onDataView);
