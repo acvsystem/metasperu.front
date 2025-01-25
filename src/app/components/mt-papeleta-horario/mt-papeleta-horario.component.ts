@@ -553,14 +553,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
       var mes = (dateNow.getMonth() + 1);
       let dayNow = dateNow.getDay();
       let day = new Date(dateNow).toLocaleDateString().split('/');
-      let añoIn = mes == 1 ? año - 1 : año;
-      let mesIn = mes == 1 ? 11 : mes == 2 ? 12 : mes - 2;
+      let añoIn = año;
+      let mesIn = mes == 1 ? mes : mes > 1 ? mes - 2 : mes;
+      let diaR = mes == 1 ? 1 : day[0];
       let configuracion = [{
-        fechain: `${añoIn}-${mesIn}-${day[0]}`,
+        fechain: `${añoIn}-${mesIn}-${diaR}`,
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }];
-
+      console.log(configuracion);
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
       this.socket.emit('consultaHorasTrab', configuracion);
     }
