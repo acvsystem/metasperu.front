@@ -117,6 +117,7 @@ export class MtConfiguracionComponent implements OnInit {
   constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    
     /* this.onListPerfil();
      this.onListConfiguration();
      this.onListMenu();

@@ -359,10 +359,10 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   vDataDiaSelected: any = {};
-  vIdSelectH:number = 0;
-  vIdPosition:number = 0;
+  vIdSelectH: number = 0;
+  vIdPosition: number = 0;
   onSelectDataDia(id_horario?, id_dia?, dataDia?, idSelectH?, idPosicion?) {
-    console.log(id_horario, id_dia, dataDia,idSelectH,idPosicion);
+    console.log(id_horario, id_dia, dataDia, idSelectH, idPosicion);
     this.vSelectHorario = id_horario;
     this.vDataDiaSelected = dataDia;
     this.vIdSelectH = idSelectH;
@@ -527,12 +527,25 @@ export class MtHorarioTiendaComponent implements OnInit {
     } else {
 
       let isContinue = true;
+      let arDias = [];
+      this.dataHorario.filter((dt) => {
+        dt.dias.filter((d) => {
+          if (d.position == this.vIdPosition) {
+            arDias.push(d.id);
+          }
+        });
+      });
+
+      console.log(arDias);
       this.dataHorario.filter((dth, i) => {
-        let exist = this.dataHorario[i]['dias_libres'].findIndex((dl) => dl.nombre_completo == (data || {}).nombre_completo);
-        if (exist > -1) {
-          isContinue = false;
-          this.service.toastError('No puede asignar al trabajor porque tiene un dia libre...!!', "Dia Trabajo");
-        }
+        let exist = this.dataHorario[i]['dias_libres'].find((dl) => dl.nombre_completo == (data || {}).nombre_completo && dl.id_dia == (data || {}).id_dia);
+        console.log(arDias, (exist || {}).id_dia, (data || {}).id_dia);
+        
+          if (Object.keys(exist || {}).length && isContinue) {
+            isContinue = false;
+            this.service.toastError('Ya esta asignado a un dia libre...!!', "Dia Trabajo");
+          }
+        
 
       });
 
@@ -554,7 +567,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             if ((response || {}).success) {
               this.dataHorario[index]['dias_trabajo'].push({ id: (response || {}).id, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
 
-              this.onSelectDataDia(this.vSelectHorario, this.vSelectDia, this.vDataDiaSelected,this.vIdSelectH,this.vIdPosition);
+              this.onSelectDataDia(this.vSelectHorario, this.vSelectDia, this.vDataDiaSelected, this.vIdSelectH, this.vIdPosition);
 
               this.service.toastSuccess("Registrado con exito...!!", "Dia Trabajo");
             } else {
@@ -621,101 +634,100 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onAddDLTrabajo(data, id) {
     let isContinue = true;
+    console.log(data);
+    let elemntButtonAdd = document.getElementsByName('addHorario-' + id);
+
+    let elementButtonDL = document.getElementsByName('addDL-' + id);
+
+    let classList;
+    classList = elementButtonDL[0]['classList']['value'].split(' ');
+
+    let exist = classList.indexOf('agregado');
 
 
+    let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
 
-    
-      let elemntButtonAdd = document.getElementsByName('addHorario-' + id);
+    if (exist == -1) {
+      this.dataHorario.filter((dth, i) => {
+        let exist = this.dataHorario[i]['dias_libres'].find((dl) => dl.nombre_completo == (data || {}).nombre_completo);
 
-      let elementButtonDL = document.getElementsByName('addDL-' + id);
-  
-      let classList;
-      classList = elementButtonDL[0]['classList']['value'].split(' ');
-  
-      let exist = classList.indexOf('agregado');
-      let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
-  
-      if (exist == -1) {
-
-        this.dataHorario.filter((dth, i) => {
-          let exist = this.dataHorario[i]['dias_libres'].findIndex((dl) => dl.nombre_completo == (data || {}).nombre_completo);
-          if (exist > -1) {
-            isContinue = false;
-            this.service.toastError('Ya esta asignado a un dia libre...!!', "Dia Trabajo");
-          }
-        });
-
-        if(isContinue){
-          elemntButtonAdd[0]['disabled'] = true
-          elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
-          elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
-          elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
-          elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
-          elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
-    
-          let isRegister = this.dataHorario[index]['dias_libres'].findIndex((dtr) => dtr.id_dia == data.id_dia && dtr.nombre_completo == data.nombre_completo);
-    
-          if (isRegister != -1) {
-            this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != data.id);
-    
-          } else {
-            if (this.isSearch) {
-              let parms = {
-                url: '/horario/insert/diaLibre',
-                body: {
-                  codigo_tienda: this.codeTienda,
-                  numero_documento: (data || {}).numero_documento,
-                  nombre_completo: (data || {}).nombre_completo,
-                  id_rango: (data || {}).rg,
-                  id_dia: (data || {}).id_dia,
-                  id_horario: this.dataHorario[index]['id']
-                }
-              };
-    
-              this.service.post(parms).then(async (response) => {
-                if ((response || {}).success) {
-                  this.dataHorario[index]['dias_libres'].push({ id: (response || {}).id, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
-                  this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-    
-                  this.service.toastSuccess("Registrado con exito...!!", "Dia Libre");
-                } else {
-                  this.service.toastError("Algo salio mal..!!", "Dia Libre");
-                }
-              });
-            } else {
-              this.dataHorario[index]['dias_libres'].push({ id: this.dataHorario[index]['dias_libres'].length + 1, isNew: true, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
-              this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-            }
-          }
+        if (Object.keys(exist || {}).length && (exist || {}).id_dia == this.vSelectDia) {
+          isContinue = false;
+          this.service.toastError('Ya esta asignado a un dia libre...!!', "Dia Trabajo");
         }
+      });
 
-      } else {
-        elemntButtonAdd[0]['disabled'] = false;
-        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
-        elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
-  
-        let dataDL = this.dataHorario[index]['dias_libres'].find((dt) => dt.id_dia == data.id_dia && dt.nombre_completo == data.nombre_completo);
-        this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != dataDL.id);
-  
-        if (this.isSearch) {
-          let parms = {
-            url: '/horario/delete/diaLibre',
-            body: { id: dataDL.id }
-          };
-  
-          this.service.post(parms).then(async (response) => {
-            if ((response || {}).success) {
-              this.service.toastSuccess("Eliminado con exito...!!", "Dia Libre");
-            } else {
-              this.service.toastError("Algo salio mal..!!", "Dia Libre");
-            }
-          });
+      if (isContinue) {
+        elemntButtonAdd[0]['disabled'] = true
+        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
+        elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
+        elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
+        elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
+        elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
+
+        let isRegister = this.dataHorario[index]['dias_libres'].findIndex((dtr) => dtr.id_dia == data.id_dia && dtr.nombre_completo == data.nombre_completo);
+
+        if (isRegister != -1) {
+          this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != data.id);
+
+        } else {
+          if (this.isSearch) {
+            let parms = {
+              url: '/horario/insert/diaLibre',
+              body: {
+                codigo_tienda: this.codeTienda,
+                numero_documento: (data || {}).numero_documento,
+                nombre_completo: (data || {}).nombre_completo,
+                id_rango: (data || {}).rg,
+                id_dia: (data || {}).id_dia,
+                id_horario: this.dataHorario[index]['id']
+              }
+            };
+
+            this.service.post(parms).then(async (response) => {
+              if ((response || {}).success) {
+                this.dataHorario[index]['dias_libres'].push({ id: (response || {}).id, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
+                this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+
+                this.service.toastSuccess("Registrado con exito...!!", "Dia Libre");
+              } else {
+                this.service.toastError("Algo salio mal..!!", "Dia Libre");
+              }
+            });
+          } else {
+            this.dataHorario[index]['dias_libres'].push({ id: this.dataHorario[index]['dias_libres'].length + 1, isNew: true, dl: true, rg: data.rg, id_dia: data.id_dia, id_cargo: data.id_cargo, nombre_completo: data.nombre_completo, numero_documento: data.numero_documento, codigo_tienda: this.codeTienda });
+            this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+          }
         }
       }
-  
-      //this.socket.emit('actualizarHorario', this.dataHorario);
-      this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-    
+
+    } else {
+      elemntButtonAdd[0]['disabled'] = false;
+      elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
+      elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
+
+      let dataDL = this.dataHorario[index]['dias_libres'].find((dt) => dt.id_dia == data.id_dia && dt.nombre_completo == data.nombre_completo);
+      this.dataHorario[index]['dias_libres'] = this.dataHorario[index]['dias_libres'].filter((dt) => dt.id != dataDL.id);
+
+      if (this.isSearch) {
+        let parms = {
+          url: '/horario/delete/diaLibre',
+          body: { id: dataDL.id }
+        };
+
+        this.service.post(parms).then(async (response) => {
+          if ((response || {}).success) {
+            this.service.toastSuccess("Eliminado con exito...!!", "Dia Libre");
+          } else {
+            this.service.toastError("Algo salio mal..!!", "Dia Libre");
+          }
+        });
+      }
+    }
+
+    //this.socket.emit('actualizarHorario', this.dataHorario);
+    this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+
   }
 
   //BORRAR EMPLEADO DE DIA DE TRABAJO
