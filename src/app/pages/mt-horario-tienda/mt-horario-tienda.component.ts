@@ -432,8 +432,45 @@ export class MtHorarioTiendaComponent implements OnInit {
                                 }
                             });
 
-                            arOf.filter((emp) => {
+                            arOf.filter((emp,indexEmp) => {
                                 this.dataHorario[index]['arListTrabajador'].push({ id: this.dataHorario[index]['arListTrabajador'].length + 1, dl: false, rg: this.vSelectHorario, id_dia: this.vSelectDia, id_cargo: this.dataHorario[index]['id'], nombre_completo: emp.nombre_completo, numero_documento: emp.documento });
+                            if(arOf.length -1 == indexEmp){
+                                if (this.dataHorario[index]['arListTrabajador'].length) {
+                                    this.dataHorario[index]['dias_libres'].filter((dl) => {
+            
+                                        let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
+            
+                                        if (Object.keys(registro).length) {
+                                            setTimeout(() => {
+                                                let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
+                                                let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
+            
+                                                let classList;
+                                                classList = elementButtonDL[0]['classList']['value'].split(' ');
+            
+                                                let exist = classList.indexOf('agregado');
+            
+                                                if (exist == -1) {
+                                                    console.log(registro);
+                                                    elemntButtonAdd[0]['disabled'] = true
+                                                    elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
+                                                    elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
+                                                    elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
+                                                    elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
+                                                    elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
+                                                } else {
+                                                    elemntButtonAdd[0]['disabled'] = false;
+                                                    elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
+                                                    elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
+                                                }
+                                            }, 50);
+            
+            
+                                        }
+            
+                                    });
+                                }
+                            }
                             });
                         }
                     });
@@ -453,40 +490,8 @@ export class MtHorarioTiendaComponent implements OnInit {
                                             }
                                         });
                     */
-                    if (this.dataHorario[index]['arListTrabajador'].length) {
-                        this.dataHorario[index]['dias_libres'].filter((dl) => {
+          
 
-                            let registro = this.dataHorario[index]['arListTrabajador'].find((tr) => tr.id_dia == dl.id_dia && tr.nombre_completo == dl.nombre_completo) || {};
-
-                            if (Object.keys(registro).length) {
-                                setTimeout(() => {
-                                    let elemntButtonAdd = document.getElementsByName('addHorario-' + registro.id);
-                                    let elementButtonDL = document.getElementsByName('addDL-' + registro.id);
-
-                                    let classList;
-                                    classList = elementButtonDL[0]['classList']['value'].split(' ');
-
-                                    let exist = classList.indexOf('agregado');
-
-                                    if (exist == -1) {
-                                        elemntButtonAdd[0]['disabled'] = true
-                                        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
-                                        elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
-                                        elementButtonDL[0]['attributes']['mattooltip']['value'] = 'Quitar trabajor de dia libre';
-                                        elementButtonDL[0]['attributes']['mattooltip']['textContent'] = 'Quitar trabajor de dia libre';
-                                        elementButtonDL[0]['attributes']['mattooltip']['nodeValue'] = 'Quitar trabajor de dia libre';
-                                    } else {
-                                        elemntButtonAdd[0]['disabled'] = false;
-                                        elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>';
-                                        elementButtonDL[0]['className'] = 'btn btn-success btn-sm';
-                                    }
-                                }, 50);
-
-
-                            }
-
-                        });
-                    }
 
                     // this.socket.emit('actualizarHorario', this.dataHorario);
                     this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
