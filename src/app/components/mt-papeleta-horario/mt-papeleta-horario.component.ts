@@ -418,10 +418,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
       this.bodyList = [];
       this.copyBodyList = [];
-      this.store.removeStore('mt-hrExtra');
-      this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
       this.bodyList = ascDates;
-      console.log(this.bodyList);
+     
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
@@ -450,6 +448,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           this.hroAcumulada = this.arHoraExtra[0];
           this.hroAcumuladaTotal = this.arHoraExtra[0];
+
+          this.store.removeStore('mt-hrExtra');
+          this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
         }
       });
     });
