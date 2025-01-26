@@ -118,7 +118,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
+
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
@@ -126,7 +126,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.getScreenSize();
   }
 
-  
+
   ngOnInit() {
 
     let profileUser = this.store.getStore('mt-profile');
@@ -421,6 +421,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.store.removeStore('mt-hrExtra');
       this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
       this.bodyList = ascDates;
+      console.log(this.bodyList);
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
@@ -507,11 +508,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.diffHoraPap = "";
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
-     // $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
+      // $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
       //$('#horaLlegada input')[0].value = "";
       //$('#horaSalida input')[0].value = "";
     }
-    
+
     if (index == 'cboCargo') {
       $("#cboCargo span#cboCargo")[0].innerText = (selectData || {}).value;
     }
@@ -783,7 +784,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     do {
       let estado = this.bodyList[i]['estado'] || "";
 
-      if (estado == 'correcto') {
+      if (estado == 'correcto' && !this.bodyList[i]['seleccionado']) {
         let parseTime = "00:00";
 
         const ToTime = (num) => {
@@ -815,7 +816,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           this.bodyList[i]['checked'] = true;
           this.bodyList[i]['estado'] = this.bodyList[i]['hrx_sobrante'] == "00:00" ? "utilizado" : "correcto";
-
+          this.bodyList[i]['seleccionado'] = this.bodyList[i]['estado'] == 'utilizado' ? true : false;
           if (tot < 0 || tot == 0) {
             nextProcess = false;
           }
@@ -1023,7 +1024,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           if (this.isVacacionesProgramadas) {
             if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada" && property != "hora_acumulado" && property != "hora_salida" && property != "hora_llegada") {
-             console.log(property);
+              console.log(property);
               arVerify.push(false);
             } else {
               arVerify.push(true);
@@ -1044,7 +1045,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           const isBelowThreshold = (currentValue) => currentValue == true;
 
           this.isValidPapeleta = arVerify.every(isBelowThreshold);
-     
+
           if (this.isValidPapeleta) {
             let parms = {
               url: '/recursos_humanos/pap/registrar',
@@ -1057,7 +1058,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.isResetCalendarComp = true;
                 this.isResetForm = true;
                 this.store.removeStore('mt-hrExtra');
-                
+
                 this.cboCasos = "";
                 this.cboCargo = "";
                 //this.vFechaDesde = "";
@@ -1076,8 +1077,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.onListPapeleta();
                 this.onGenerarCodigoPapeleta();
 
-                
-                
+
+
                 $('#horaLlegada input')[0].value = "";
                 $('#horaSalida input')[0].value = "";
 
