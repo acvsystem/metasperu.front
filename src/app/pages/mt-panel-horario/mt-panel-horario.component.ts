@@ -64,7 +64,7 @@ export class MtPanelHorarioComponent implements OnInit {
     this.onListTipoPapeleta();
   }
 
-//LISTA DE PAPELETAS
+  //LISTA DE PAPELETAS
   onListPapeleta() {
     let parms = {
       url: '/papeleta/listarPapeleta'
@@ -111,13 +111,14 @@ export class MtPanelHorarioComponent implements OnInit {
           let horario = ((dt || {}).RANGO_DIAS || "").split(" ");
 
           if ((tienda || []).length && (dt || {}).RANGO_DIAS != "") {
-            this.dataView.push({
-              code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
-            });
+            if ((dt || {}).RANGO_DIAS != 'undefined') {
+              this.dataView.push({
+                code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
+              });
+            }
           }
 
           if (dataResponse.length - 1 == i) {
-            console.log(this.dataView);
             this.dataSource = new MatTableDataSource(this.dataView);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;

@@ -106,7 +106,8 @@ export class MtHorarioTiendaComponent implements OnInit {
   async ngOnInit() {
     this.getScreenSize();
     if ((this.data || []).length) {
-      // this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);
+      this.isLoading = true;
+      this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);
     }
 
     let dataHr = this.store.getStore("mt-horario") || [];
@@ -540,12 +541,12 @@ export class MtHorarioTiendaComponent implements OnInit {
       this.dataHorario.filter((dth, i) => {
         let exist = this.dataHorario[i]['dias_libres'].find((dl) => dl.nombre_completo == (data || {}).nombre_completo && dl.id_dia == (data || {}).id_dia);
         console.log(arDias, (exist || {}).id_dia, (data || {}).id_dia);
-        
-          if (Object.keys(exist || {}).length && isContinue) {
-            isContinue = false;
-            this.service.toastError('Ya esta asignado a un dia libre...!!', "Dia Trabajo");
-          }
-        
+
+        if (Object.keys(exist || {}).length && isContinue) {
+          isContinue = false;
+          this.service.toastError('Ya esta asignado a un dia libre...!!', "Dia Trabajo");
+        }
+
 
       });
 
@@ -1242,6 +1243,9 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.service.toastError((response || {}).msj, "Horario");
       }
 
+      if ((this.data || {}).length) {
+        this.isLoading = false;
+      }
     });
 
   }
