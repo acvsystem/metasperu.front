@@ -109,9 +109,10 @@ export class MtPanelHorarioComponent implements OnInit {
           let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
 
           let horario = ((dt || {}).RANGO_DIAS || "").split(" ");
-
+          
           if ((tienda || []).length && (dt || {}).RANGO_DIAS != "") {
-            if ((dt || {}).RANGO_DIAS != 'undefined') {
+
+            if ((dt || {}).RANGO_DIAS != 'undefined' && horario[0] != '20-1-2025') {
               this.dataView.push({
                 code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
               });

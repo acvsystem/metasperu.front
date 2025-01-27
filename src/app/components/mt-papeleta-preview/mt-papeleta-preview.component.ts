@@ -82,7 +82,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   async onPdf() {
     var element: any;
-    element = $('#content-pdf').clone();
+    element = $('#papeleta-pdf').clone();
     var opt = {
       filename: `PAPELETA.pdf`,
       margin: [0.1, 0.1, 0.2, 0.1],
