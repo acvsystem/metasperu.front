@@ -1024,7 +1024,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
 
           if (this.cboCasos != "Compensacion de horas trabajadas" && !this.isVacacionesProgramadas) {
-            if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada") {
+            if ((pap[property] == "" || typeof pap[property] == "undefined") && property != "horas_extras" && property != "hora_solicitada" && property != 'hora_acumulado') {
               arVerify.push(false);
             } else {
               arVerify.push(true);
