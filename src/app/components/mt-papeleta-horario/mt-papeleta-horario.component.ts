@@ -286,7 +286,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               let process = ToTime(newAcumulado);
 
-              if (hora_1_pr[0] >= 8) {
+              let fecha = new Date().toLocaleDateString().split('/'); new Date();
+
+              let validFecha = new Date(this.onDataTemp[indexData]['dia']).getTime() != new Date((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + (parseInt(fecha[2]))).getTime() ? true : false;
+
+              console.log(new Date(this.onDataTemp[indexData]['dia']).getTime(), new Date((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + (parseInt(fecha[2]))).getTime());
+
+              if (hora_1_pr[0] >= 8 && validFecha) {
                 let hr = process.split(":");
                 if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
                   this.onDataTemp[indexData]['hr_extra'] = process;//23:59
@@ -419,7 +425,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.bodyList = [];
       this.copyBodyList = [];
       this.bodyList = ascDates;
-     
+
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
@@ -987,6 +993,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let fechaActual = `${day[2]}-${day[1]}-${day[0]}`;
       let caso = this.onListCasos.find((cs) => cs.value == this.cboCasos) || {};
       let arVerify = [];
+      let isErrorHSolicitada = false;
       (dataPapeleta || []).push({
         codigo_papeleta: this.codigoPapeleta,
         nombre_completo: ((ejb || [])[0] || {})['nombre_completo'] || "",
@@ -1039,6 +1046,21 @@ export class MtPapeletaHorarioComponent implements OnInit {
             } else {
               arVerify.push(true);
             }
+
+            let hrxLlegada = this.hroAcumuladaTotal.split(':');
+            let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+
+            let hrxSalida = this.diffHoraPap.split(':');
+            let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+
+            if (llegada < salida) {
+              arVerify.push(false);
+              isErrorHSolicitada = true;
+              this.service.toastError("Las horas solicitadas no pueden ser mayor al acumulado...!!!", "Papeleta");
+            } else {
+              isErrorHSolicitada = false;
+              arVerify.push(true);
+            }
           }
         });
 
@@ -1047,6 +1069,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           this.isValidPapeleta = arVerify.every(isBelowThreshold);
 
+          console.log(arVerify);
           if (this.isValidPapeleta) {
             let parms = {
               url: '/recursos_humanos/pap/registrar',
@@ -1099,7 +1122,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
             });
 
           } else {
-            this.service.toastError("Complete todos los campos..!!", "Papeleta");
+            if (!isErrorHSolicitada) {
+              this.service.toastError("Complete todos los campos..!!", "Papeleta");
+            }
           }
           /*
           VALIDACION CON FECHA ANTERIOR NO SE PUEDE CREAR PAPELETA
