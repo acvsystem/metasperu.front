@@ -109,6 +109,23 @@ export class AppComponent {
         this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
       }
 
+      if ((profileUser || {}).mt_nivel == "acarbajal") {
+        self.menuUser = [
+          {
+            ISVISIBLE: true,
+            nombre_menu: "INVENTARIO",
+            ruta: "inventario"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "PANEL HORARIOS",
+            ruta: "panel-horario"
+          }
+        ];
+
+        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      }
+
       if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
         self.menuUser = [{
           ISVISIBLE: true,
