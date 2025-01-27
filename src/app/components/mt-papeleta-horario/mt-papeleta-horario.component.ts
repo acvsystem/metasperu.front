@@ -441,10 +441,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
-          if (!this.arHoraExtra.length) {
+          if (!this.arHoraExtra.length && dt.estado != "utilizado") {
+            console.log(dt);
             this.arHoraExtra = [dt.extra];
           } else {
-            if (dt.estado == "correcto") {
+            if (dt.estado == "correcto" && !dt.seleccionado) {
               this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
             }
           }
