@@ -13,22 +13,26 @@ import { MatSort } from '@angular/material/sort';
 })
 export class MtPanelHorarioComponent implements OnInit {
   displayedColumns: string[] = ['Tienda', 'Inicio_semana', 'Termino_semana', 'Accion'];
-  displayedColumnsPap: string[] = ['tienda', 'nro_papeleta', 'nombres', 'cargo', 'tipo_papeleta', 'fecha', 'Accion'];
+  displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
   dataView: Array<any> = [];
   dataViewPap: Array<any> = [];
   listaPapeletas: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.dataView);
-  dataSourcePap = new MatTableDataSource<any>(this.dataViewPap);
+  dataSourcePap = new MatTableDataSource<any>(this.listaPapeletas);
   filterEmpleado: string = "";
   codigoPap: string = "";
   isHorario: boolean = false;
   isViewPap: boolean = false;
   isViewPapeleta: boolean = false;
   onSelectedHorario: Array<any> = [];
+  onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  @ViewChild('MatPaginator2') paginator_pap: MatPaginator;
+  @ViewChild(MatSort) sort_pap: MatSort;
 
   arDataHorario: Array<any> = [
     { code: '7A', rango: '', name: 'BBW JOCKEY', isHorario: false, id_Horario: 0 },
@@ -58,10 +62,10 @@ export class MtPanelHorarioComponent implements OnInit {
   constructor(private service: ShareService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.onListTipoPapeleta();
     this.onListHorario();
-    this.onListPapeleta();
-    this.onListTipoPapeleta();
+
   }
 
   //LISTA DE PAPELETAS
@@ -79,8 +83,16 @@ export class MtPanelHorarioComponent implements OnInit {
 
       (this.listaPapeletas || []).filter((data, i) => {
         let tipo = this.onListCasos.filter((tp) => tp.key == data['id_tipo_papeleta']);
-        this.listaPapeletas[i]['tipo'] = tipo[0]['value'];
+        this.listaPapeletas[i]['tipo'] = ((tipo || [])[0] || {})['value'];
+        this.listaPapeletas[i]['uns'] = this.arDataHorario.find((tp) => tp.code == data['codigo_tienda'])['name'];
+        if (this.listaPapeletas.length - 1 == i) {
+          this.dataSourcePap = new MatTableDataSource(this.listaPapeletas);
+          this.dataSourcePap.paginator = this.paginator_pap;
+          this.dataSourcePap.sort = this.sort_pap;
+        }
       });
+
+
     });
   }
 
@@ -109,7 +121,7 @@ export class MtPanelHorarioComponent implements OnInit {
           let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
 
           let horario = ((dt || {}).RANGO_DIAS || "").split(" ");
-          
+
           if ((tienda || []).length && (dt || {}).RANGO_DIAS != "") {
 
             if ((dt || {}).RANGO_DIAS != 'undefined' && horario[0] != '20-1-2025') {
@@ -134,6 +146,12 @@ export class MtPanelHorarioComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  applyFilterPapeleta(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourcePap.filter = filterValue.trim().toLowerCase();
+  }
+
+
   onViewHorario(ev) {
     this.isHorario = true;
     this.onSelectedHorario = [ev];
@@ -157,6 +175,23 @@ export class MtPanelHorarioComponent implements OnInit {
     this.codigoPap = "";
     this.codigoPap = ev.codigo_papeleta;
     this.isViewPapeleta = true;
+  }
+
+  async onCall(ev) {
+    if (ev.tab.textLabel == "Horarios Creados") {
+      await this.onListHorario();
+      this.dataSourcePap = new MatTableDataSource<any>([]);
+      this.dataSourcePap.paginator = this.paginator_pap;
+      this.dataSourcePap.sort = this.sort_pap;
+    }
+
+    if (ev.tab.textLabel == "Papeletas Creadas") {
+      await this.onListPapeleta();
+      this.dataSource = new MatTableDataSource<any>([]);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+
   }
 
 }
