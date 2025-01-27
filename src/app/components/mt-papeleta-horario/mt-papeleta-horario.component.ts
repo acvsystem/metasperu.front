@@ -718,7 +718,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
           if (salida <= 480) {
-            if (llegada > salida) {
+            if (llegada > salida || llegada == salida ) {
               this.onCalcHorasSolicitadas();
               let newAcumulado = llegada - salida;
 
@@ -1053,7 +1053,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             let hrxSalida = this.diffHoraPap.split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-
+           
             if (llegada < salida) {
               arVerify.push(false);
               isErrorHSolicitada = true;
