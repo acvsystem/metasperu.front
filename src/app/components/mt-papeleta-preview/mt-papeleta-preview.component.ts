@@ -94,7 +94,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
         useCORS: true,
         scale: 2
       },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'l' }
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'p' }
     };
     console.log(element);
     await html2pdf().from(element[0]).set(opt).save();
