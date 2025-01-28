@@ -31,6 +31,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   dataObservation: Array<any> = [];
   onListEmpleado: Array<any> = [];
   selectedIdRango: number = 0;
+  indexObservacion: number = -1;
   horaEnd: string = "";
   codeTienda: string = "";
   unidServicio: string = "";
@@ -55,10 +56,13 @@ export class MtHorarioTiendaComponent implements OnInit {
   nameTienda: string = "";
   arListTrabajador: Array<any> = [];
   parseEJB: Array<any> = [];
+  optionDefault: Array<any> = [];
   arDataEJB: Array<any> = [];
   arDataServer: Array<any> = [];
+  arObservacion: Array<any> = [];
   screenHeight: number = 0;
   screenWith: number = 0;
+  vObservacion: string = "";
   onListTiendas: Array<any> = [
     { code_uns: '0003', uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { code_uns: '0023', uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -979,6 +983,13 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.isOpenModal = value;
     this.isPapeleta = false;
     this.isObservacion = false;
+    this.onViewObservacion(false);
+  }
+
+  isObervacionView: boolean = false;
+
+  onViewObservacion(ev) {
+    this.isObervacionView = ev;
   }
 
   onCaledarRange($event) {
@@ -1097,7 +1108,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onOpenObservacion(data?, diaData?) {
-
+    console.log(data, diaData);
     let idCargo = Object.keys((data || {})).length ? (data || {}).id : this.cboCargo;
     let idDia = Object.keys((diaData || {})).length ? (diaData || {}).id : this.vSelectDia;
 
@@ -1105,6 +1116,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     if (index != -1) {
       this.dataObservation = this.dataHorario[index]['observacion'].filter((obs) => obs.id_dia == idDia);
     }
+    console.log(this.dataObservation);
     this.isObservacion = true;
     this.isOpenModal = true;
   }
@@ -1248,6 +1260,14 @@ export class MtHorarioTiendaComponent implements OnInit {
       }
     });
 
+  }
+
+  onObservacionSelected(ev) {
+    const self = this;
+    self.indexObservacion = -1;
+    this.vObservacion = ev.observacion;
+    this.optionDefault = ev.selected;
+    self.indexObservacion = this.dataObservation.findIndex((obs) => obs.id == ev.id);
   }
 
   obtenerHorasTrabajadas(hrRs_1, hrRs_2) {

@@ -5,7 +5,7 @@
         <span style="color: black;">Observacion</span>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="!isViewObservacion">
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
         <mt-select id="cboEmpleado"  [optionDefault]="optionDefault"placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"
         (changeSelected)="onChangeSelect($event)"></mt-select>
@@ -16,7 +16,7 @@
         <textarea id="vObservacion" class="form-control" rows="10" [value]="vObservacion" (keyup)="onChange($event)"></textarea>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="!isViewObservacion">
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
         <button id="searchProducto" (click)="onAddObservacion()" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 1px;">
           @if(indexObservacion == -1){

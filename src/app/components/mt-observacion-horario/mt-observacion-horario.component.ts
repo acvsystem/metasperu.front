@@ -21,6 +21,8 @@ export class MtObservacionHorarioComponent implements OnInit {
   @Input() dataTrabajadores: Array<any> = [];
   @Input() isSearch: boolean = false;
   @Input() idHorario: number = 0;
+  @Input() isViewObservacion: boolean = false;
+  
   onListEmpleado: Array<any> = [];
   vObservacion: string = "";
   arObservacion: Array<any> = [];
@@ -75,11 +77,11 @@ export class MtObservacionHorarioComponent implements OnInit {
     this.codeTienda = profileUser.code.toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.unidServicio = unidServicio['uns'];
-
+    this.vObservacion = "";
     this.dataTrabajadores.filter((trb) => {
       this.onListEmpleado.push({ key: trb.nombre_completo, value: trb.nombre_completo },);
     });
-
+    console.log(this.isViewObservacion);
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
   }
@@ -88,11 +90,14 @@ export class MtObservacionHorarioComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.hasOwnProperty('dataObservation')) {
       this.arObservacion = this.dataObservation;
+      this.vObservacion = "";
+      
     }
 
     if (changes && changes.hasOwnProperty('vIdDia')) {
       this.idDia = this.vIdDia;
-    }
+      this.vObservacion = "";
+    }   
 
   }
 
