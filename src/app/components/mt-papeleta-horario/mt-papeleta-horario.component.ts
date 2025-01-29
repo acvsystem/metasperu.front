@@ -211,9 +211,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         if (codigo == this.codeTienda) {
           let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
-
+         
           if (indexData == -1) {
-            
+            console.log(huellero);
               (this.onDataTemp || []).push({
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -251,7 +251,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
               let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
               //let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
-              console.log(this.onDataTemp[indexData]);
+              
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
               let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
