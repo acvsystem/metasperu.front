@@ -191,6 +191,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
 
       let data = (response || {}).data || [];
+      
       this.parseHuellero = data;
       this.onDataTemp = [];
       this.bodyList = [];
@@ -212,7 +213,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
           if (indexData == -1) {
-            let objeto =
+            
               (this.onDataTemp || []).push({
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -244,18 +245,18 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           } else {
             if (huellero.tpAsociado != "**") { //DEFAULT
-
+     
               this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
               this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
               this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
-              let hora_trb_1 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_1'], this.onDataTemp[indexData]['hr_salida_1']);
-              let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
-              this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(hora_trb_1, hora_trb_2);
+              let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
+              //let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+              this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
               let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
-
+             
               let defaultHT = "08:00";
-
+             
               if (tipoAsc.length == 2) { //LACTANCIA
 
                 let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
@@ -270,7 +271,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
               let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
-
               let hrxSalida = (defaultHT).split(':');
               let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
@@ -288,16 +288,17 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               let fecha = new Date().toLocaleDateString().split('/'); new Date();
 
-              let validFecha = new Date(this.onDataTemp[indexData]['dia']).getTime() != new Date((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + (parseInt(fecha[2]))).getTime() ? true : false;
-
-              console.log(new Date(this.onDataTemp[indexData]['dia']).getTime(), new Date((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + (parseInt(fecha[2]))).getTime());
+              let validFecha = new Date(this.onDataTemp[indexData]['dia']).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
 
               if (hora_1_pr[0] >= 8 && validFecha) {
                 let hr = process.split(":");
                 if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
                   this.onDataTemp[indexData]['hr_extra'] = process;//23:59
-                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 ? 'aprobar' : 'correcto';
+                  let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
+                  let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 ? 'aprobar' : 'correcto';
                   let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
+                 
                   let aprobado = estado == "correcto" ? true : false;
 
                   (this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
@@ -322,6 +323,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       if ((this.dataVerify || []).length && !this.isPartTime) {
+   
         this.onVerificarHrExtra(this.dataVerify);
       }
 
@@ -425,7 +427,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.bodyList = [];
       this.copyBodyList = [];
       this.bodyList = ascDates;
-
+      console.log(this.bodyList);
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
@@ -442,7 +444,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
           if (!this.arHoraExtra.length && dt.estado != "utilizado") {
-            console.log(dt);
+
             this.arHoraExtra = [dt.extra];
           } else {
             if (dt.estado == "correcto" && !dt.seleccionado) {
@@ -718,7 +720,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
           if (salida <= 480) {
-            if (llegada > salida || llegada == salida ) {
+            if (llegada > salida || llegada == salida) {
               this.onCalcHorasSolicitadas();
               let newAcumulado = llegada - salida;
 
@@ -1053,7 +1055,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             let hrxSalida = this.diffHoraPap.split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-           
+
             if (llegada < salida) {
               arVerify.push(false);
               isErrorHSolicitada = true;
