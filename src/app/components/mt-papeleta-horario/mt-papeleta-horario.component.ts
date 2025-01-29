@@ -251,6 +251,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
               let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
               //let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+              console.log(this.onDataTemp[indexData]);
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
               let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
@@ -291,6 +292,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let validFecha = new Date(this.onDataTemp[indexData]['dia']).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
 
               if (hora_1_pr[0] >= 8 && validFecha) {
+                
                 let hr = process.split(":");
                 if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
                   this.onDataTemp[indexData]['hr_extra'] = process;//23:59
