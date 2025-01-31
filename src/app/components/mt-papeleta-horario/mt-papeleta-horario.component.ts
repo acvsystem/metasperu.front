@@ -171,18 +171,36 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         if (this.arDataEJB.length) {
           (this.arDataEJB || []).filter(async (ejb) => {
-            if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns) {
 
-              let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
-              if (exist == -1) {
-                (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
-                (this.parseEJB || []).push({
-                  nombre_completo: (ejb || {}).nombre_completo,
-                  documento: (ejb || {}).nro_documento,
-                  codigo_tienda: this.codeTienda
-                });
+            if ((codigo_uns || {}).code_uns == '0016') {
+              if ((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') {
+
+                let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
+                if (exist == -1) {
+                  (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
+                  (this.parseEJB || []).push({
+                    nombre_completo: (ejb || {}).nombre_completo,
+                    documento: (ejb || {}).nro_documento,
+                    codigo_tienda: this.codeTienda
+                  });
+                }
+              }
+            } else {
+              if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns) {
+
+                let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
+                if (exist == -1) {
+                  (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
+                  (this.parseEJB || []).push({
+                    nombre_completo: (ejb || {}).nombre_completo,
+                    documento: (ejb || {}).nro_documento,
+                    codigo_tienda: this.codeTienda
+                  });
+                }
               }
             }
+
+
           });
         }
       });
