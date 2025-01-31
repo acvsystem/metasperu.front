@@ -305,7 +305,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                   let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-                 
+
                   let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 ? 'aprobar' : 'correcto';
                   let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
@@ -521,12 +521,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
         }
 
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
-
+          
           if (!this.arHoraExtra.length && dt.estado != "utilizado") {
-
+            console.log(dt.extra);
             this.arHoraExtra = [dt.extra];
           } else {
-            if (dt.estado == "correcto" && !dt.seleccionado) {
+            if (dt.estado == "correcto" || dt.estado == "aprobado") {
+              console.log(dt.extra);
               this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
             }
           }
