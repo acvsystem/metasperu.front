@@ -667,17 +667,30 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     let minutos = this.obtenerMinutos(hr1, hr2);
     let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
 
+
+
+    let hrxLlegada = hr1.split(':');
+    let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+    let hrxSalida = hr2.split(':');
+    let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+
     if (hora_1 > hora_2) {
-      diferencia = hora_1 - hora_2;
+      diferencia = llegada - salida;
     } else {
-      diferencia = hora_2 - hora_1;
+      diferencia = salida - llegada;
     }
 
-    let hora_1_pr = hr1.split(":");
-    let hora_2_pr = hr2.split(":");
-    let hr_resta: number = (hora_1_pr[1] > 0) ? parseInt(hora_1_pr[1]) : parseInt(hora_2_pr[1]);
-    let horaResult = ((diferencia - hr_resta) / 60).toString();
-    return `${parseInt(horaResult) + hrExtr}:${(minutos[1] < 10) ? '0' + minutos[1] : minutos[1]}`;
+    const ToTime = (num) => {
+      var minutos: any = Math.floor((num / 60) % 60);
+      minutos = minutos < 10 ? '0' + minutos : minutos;
+      var segundos: any = num % 60;
+      segundos = segundos < 10 ? '0' + segundos : segundos;
+      return minutos + ':' + segundos;
+    }
+
+    let horaResult = ToTime(diferencia);
+
+    return horaResult;
   }
 
   onVerificacionJornada(hr) {
