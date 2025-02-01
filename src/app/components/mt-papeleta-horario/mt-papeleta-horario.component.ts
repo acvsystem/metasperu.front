@@ -936,9 +936,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       let estado = this.bodyList[i]['estado'] || "";
 
-      if (this.bodyList[i]['fecha'] == '2025-01-07') {
-        console.log(this.bodyList[i]);
-      }
       if ((estado == 'correcto' || estado == 'aprobado') && !this.bodyList[i]['seleccionado']) {
         let parseTime = "00:00";
 
