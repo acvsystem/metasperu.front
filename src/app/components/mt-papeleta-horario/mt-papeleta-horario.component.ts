@@ -533,12 +533,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       this.bodyList.filter((dt, i) => {
         this.bodyList[i]['hrx_solicitado'] = "00:00";
+
         let sobrante = dt.hrx_sobrante.split(':');
         let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
 
         if (hSobrante > 0) {
           this.bodyList[i]['extra'] = dt.hrx_sobrante;
         }
+        this.bodyList[i]['aprobado'] = dt.aprobado;
+        this.bodyList[i]['estado'] = dt.estado;
 
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
@@ -665,7 +668,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let dayNow = dateNow.getDay();
       let day = new Date(dateNow).toLocaleDateString().split('/');
       let añoIn = año;
-      let mesIn = mes == 1 ? mes : mes > 1 ? mes - 2 : mes;
+      let mesIn = mes > 1 ? mes - 1 : mes;
       let diaR = mes == 1 ? 1 : day[0];
       let configuracion = [{
         fechain: `${añoIn}-${mesIn}-${diaR}`,
@@ -930,9 +933,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     do {
+
       let estado = this.bodyList[i]['estado'] || "";
 
-      if (estado == 'correcto' && !this.bodyList[i]['seleccionado']) {
+      if (this.bodyList[i]['fecha'] == '2025-01-07') {
+        console.log(this.bodyList[i]);
+      }
+      if ((estado == 'correcto' || estado == 'aprobado') && !this.bodyList[i]['seleccionado']) {
         let parseTime = "00:00";
 
         const ToTime = (num) => {
