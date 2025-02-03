@@ -233,9 +233,16 @@ export class MtDropboxComponent implements OnInit {
 
   private uploadFiles(images: FileList): void {
     this.uploading = true;
-   
+
 
     for (let index = 0; index < images.length; index++) {
+
+      this.service.post({ url: '/upload/driveCloud', body: images[index] }).then((rs) => {
+        if (rs.status == 200) {
+          this.uploading = false;
+          console.log(images);
+        }
+      });
 
       let tamañoFile = (images[index].size / (1024 * 1024)).toFixed(2);
       let isMega = images[index].size >= 1000000 ? true : false;
@@ -262,22 +269,6 @@ export class MtDropboxComponent implements OnInit {
 
 
 
-      const frmData = new FormData();
-
-      for (var i = 0; i < this.myFiles.length; i++) {
-        frmData.append("fileUpload", images[0]);
-      }
-      
-      this.http.post('http://38.187.8.22:3200/upload/driveCloud', frmData, { reportProgress: true, observe: 'events' })
-      .subscribe(event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.percentDone = Math.round(100 * event.loaded / event.total);
-        } else if (event instanceof HttpResponse) {
-          this.uploadSuccess = true;
-  
-          this.uploading = false;
-        }
-      });
 
     }
 
