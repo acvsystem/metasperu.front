@@ -15,6 +15,7 @@ import {
 import { SelectionModel } from '@angular/cdk/collections';
 import { saveAs } from 'file-saver';
 import { MatTableDataSource } from '@angular/material/table';
+import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mt-dropbox',
@@ -36,7 +37,7 @@ export class MtDropboxComponent implements OnInit {
   myFiles: Array<any> = [];
   sMsg: string = '';
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, private http: HttpClient) { }
 
   ngOnInit() {
     this.onDirFile();
@@ -232,6 +233,7 @@ export class MtDropboxComponent implements OnInit {
 
   private uploadFiles(images: FileList): void {
     this.uploading = true;
+   
 
     for (let index = 0; index < images.length; index++) {
 
@@ -239,6 +241,9 @@ export class MtDropboxComponent implements OnInit {
       let isMega = images[index].size >= 1000000 ? true : false;
       let nomenclatura = !isMega ? ' KB' : ' MB';
       let evalueDir = (images[index].name).split(".");
+      const file: File = images[index];
+
+
       this.arDirectorios.push(
         {
           name: images[index].name,
@@ -255,16 +260,33 @@ export class MtDropboxComponent implements OnInit {
         size: images[index].size >= 1000000 ? tamañoFile : (images[index].size / 1024).toFixed(2) + nomenclatura
       });
 
-      console.log(this.myFiles);
-      this.uploading = false;
+
+
       const frmData = new FormData();
 
       for (var i = 0; i < this.myFiles.length; i++) {
         frmData.append("fileUpload", images[0]);
       }
+      
+      this.http.post('http://38.187.8.22:3200/upload/driveCloud', frmData, { reportProgress: true, observe: 'events' })
+      .subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.percentDone = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.uploadSuccess = true;
+  
+          this.uploading = false;
+        }
+      });
+
     }
+
+
+
+
     this.dataSource = new MatTableDataSource(this.arDirectorios);
     console.log(this.dataSource);
+
   }
 
   onDrop(event: DragEvent): void {
@@ -311,8 +333,25 @@ export class MtDropboxComponent implements OnInit {
     console.log(this.myFiles)
   }
 
+  uploadSuccess: boolean = false;
+  percentDone: any = 0;
 
+  uploadAndProgress(files: FormData) {
+    console.log(files)
 
+    //Array.from(files).forEach(f => formData.append('file', f))
+
+    this.http.post('http://38.187.8.22:3200/upload/driveCloud', files, { reportProgress: true, observe: 'events' })
+      .subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.percentDone = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.uploadSuccess = true;
+
+          this.uploading = false;
+        }
+      });
+  }
 
 }
 
