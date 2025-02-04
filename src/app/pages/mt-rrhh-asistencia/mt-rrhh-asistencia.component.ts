@@ -33,7 +33,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-rrhh-asistencia.component.scss'],
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
   isLoading: boolean = false;
   fechaInicio: string = "";

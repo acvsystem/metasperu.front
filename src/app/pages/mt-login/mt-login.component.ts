@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { StorageService } from '../../utils/storage';
 import { UAParser } from 'ua-parser-js';
 import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'app-mt-login',
@@ -11,7 +12,8 @@ import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
   styleUrls: ['./mt-login.component.scss'],
 })
 export class MtLoginComponent implements OnInit {
-
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
+  
   userName: string = "";
   password: string = "";
   codigo_auth: string = "";

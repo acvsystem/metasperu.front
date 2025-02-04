@@ -18,7 +18,7 @@ import * as $ from 'jquery';
 })
 export class MtHorarioTiendaComponent implements OnInit {
   @Input() data: Array<any> = [];
-  socket = io('http://38.187.8.22:3200', { reconnectionDelayMax: 10000, query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { reconnectionDelayMax: 10000, query: { code: 'app' } });
   cboCargo: number = 0;
   idCargo: number = 1;
   horaInit: string = "";
