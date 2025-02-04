@@ -16,6 +16,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { saveAs } from 'file-saver';
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'mt-dropbox',
@@ -23,6 +24,7 @@ import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
   styleUrls: ['./mt-dropbox.component.scss'],
 })
 export class MtDropboxComponent implements OnInit {
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   dialog = inject(MatDialog);
   arDirectorios: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.arDirectorios);
@@ -237,7 +239,7 @@ export class MtDropboxComponent implements OnInit {
 
     for (let index = 0; index < images.length; index++) {
 
-      this.service.post({ url: '/upload/driveCloud', body: images[index] }).then((rs) => {
+      this.service.post({ url: '/upload/driveCloud', file: images[index] }).then((rs) => {
         if (rs.status == 200) {
           this.uploading = false;
           console.log(images);
