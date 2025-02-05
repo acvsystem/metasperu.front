@@ -12,7 +12,7 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./mt-panel-horario.component.scss'],
 })
 export class MtPanelHorarioComponent implements OnInit {
-  displayedColumns: string[] = ['Tienda', 'Inicio_semana', 'Termino_semana', 'Accion'];
+  displayedColumns: string[] = ['Tienda', 'Fecha', 'Inicio_semana', 'Termino_semana', 'Accion'];
   displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
   dataView: Array<any> = [];
   dataViewPap: Array<any> = [];
@@ -27,7 +27,7 @@ export class MtPanelHorarioComponent implements OnInit {
   onSelectedHorario: Array<any> = [];
   onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -115,6 +115,7 @@ export class MtPanelHorarioComponent implements OnInit {
 
     this.service.get(parms).then(async (response) => {
       let dataResponse = response;
+
       this.dataView = [];
       if ((dataResponse || []).length) {
         (dataResponse || []).filter(async (dt, i) => {
@@ -125,9 +126,11 @@ export class MtPanelHorarioComponent implements OnInit {
           if ((tienda || []).length && (dt || {}).RANGO_DIAS != "") {
 
             if ((dt || {}).RANGO_DIAS != 'undefined' && horario[0] != '20-1-2025') {
+
               this.dataView.push({
-                code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
+                id: this.dataView.length + 1, fecha: dt.FECHA, code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
               });
+
             }
           }
 

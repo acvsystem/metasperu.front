@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -23,11 +23,13 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-papeleta-horario.component.scss'],
 })
 export class MtPapeletaHorarioComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
+  @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
   onListEmpleado: Array<any> = [];
   cboCasos: string = "";
   codigoPap: string = "";
+  cboTiendaConsulting: string = "";
   horaSalida: string = "";
   horaLlegada: string = "";
   vNameOptionSelected: string = "";
@@ -71,11 +73,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
   idCboTipoPap: number = 0;
   screenHeight: number = 0;
   hroSelectedPap: string = "";
-
+  vNameTienda: string = "";
   arCalHoraPap: Array<any> = [];
   copyBodyList: any = [];
   arPartTimeFech: Array<any> = [];
   diffHoraPap: string = "";
+  vCodeTiendaSelected: string = "";
   totalAcumulado: string = "";
   isVacacionesProgramadas: boolean = false;
   isPartTime: boolean = false;
@@ -111,6 +114,30 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
     { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
+
+  cboListCargo: Array<any> = [
+    { key: '7A', value: 'BBW JOCKEY' },
+    { key: '9N', value: 'VS MALL AVENTURA AQP' },
+    { key: '7J', value: 'BBW MALL AVENTURA AQP' },
+    { key: '7E', value: 'BBW LA RAMBLA' },
+    { key: '9D', value: 'VS LA RAMBLA' },
+    { key: '9B', value: 'VS PLAZA NORTE' },
+    { key: '7C', value: 'BBW SAN MIGUEL' },
+    { key: '9C', value: 'VS SAN MIGUEL' },
+    { key: '7D', value: 'BBW SALAVERRY' },
+    { key: '9I', value: 'VS SALAVERRY' },
+    { key: '9G', value: 'VS MALL DEL SUR' },
+    { key: '9H', value: 'VS PURUCHUCO' },
+    { key: '9M', value: 'VS ECOMMERCE' },
+    { key: '7F', value: 'BBW ECOMMERCE' },
+    { key: '9K', value: 'VS MEGA PLAZA' },
+    { key: '9L', value: 'VS MINKA' },
+    { key: '9F', value: 'VSFA JOCKEY FULL' },
+    { key: '7A7', value: 'BBW ASIA' },
+    { key: '9P', value: 'VS MALL PLAZA TRU' },
+    { key: '7I', value: 'BBW MALL PLAZA TRU' }
+  ];
+
   displayedColumns: string[] = ['codigo_papeleta', 'Fecha', 'tipo_papeleta', 'nombre_completo', 'Accion'];
 
   @HostListener('window:resize', ['$event'])
@@ -136,7 +163,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.unidServicio = unidServicio['uns'];
     this.onListEmpleado = [];
-
+    console.log(this.unidServicio);
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
     this.socket.on('respuesta_autorizacion', async (response) => { //AUTORIZACION HORAS EXTRA
@@ -430,10 +457,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.hroAcumuladaTotal = this.arHoraExtra[0];
     });
 
-    this.onGenerarCodigoPapeleta();
-    this.onListTipoPapeleta();
-    this.onListPapeleta();
-
+    if (!this.isConsulting) {
+      this.onGenerarCodigoPapeleta();
+      this.onListTipoPapeleta();
+      this.onListPapeleta();
+    }
   }
 
   onProcesarPartTime(length, index, row) {
@@ -652,7 +680,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         this.bodyList = [];
       }
     }
-    console.log(this.cboCasos);
+
     if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isPartTime = false;
 
@@ -678,6 +706,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
       console.log(configuracion);
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
       this.socket.emit('consultaHorasTrab', configuracion);
+    }
+
+    if (index == 'cboTiendaConsulting') {
+      console.log(this.cboTiendaConsulting);
+      let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.cboTiendaConsulting);
+      this.unidServicio = unidServicio['uns'];
+      console.log(this.unidServicio);
+      this.socket.emit('consultaListaEmpleado', this.unidServicio);
+      this.onListTipoPapeleta();
+      this.onListPapeleta();
     }
 
 
