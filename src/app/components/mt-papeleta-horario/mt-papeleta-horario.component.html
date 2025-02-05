@@ -32,7 +32,7 @@
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                 <mt-select id="cboEmpleado" (changeSelected)="onChangeSelect($event)" [nameOptionSelected]="vNameOptionSelected" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"></mt-select>
               </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="!isConsulting">
                 <mt-select id="cboCasos" placeHolder="Tipo de caso" [optionList]="onListCasos" (changeSelected)="onChangeSelect($event)"></mt-select>
               </ion-col>
             </ion-row>
@@ -123,7 +123,7 @@
                 </ion-row>
               </ion-col>
             </ion-row>
-        @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7") {
+        @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7" || isConsulting) {
             <ion-row>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                 <ion-row>
@@ -246,7 +246,7 @@
             </ion-row>
         }
   
-        @if(cboCasos != 'Compensacion de horas trabajadas' && cboCasos != "7"){
+        @if(cboCasos != 'Compensacion de horas trabajadas' && cboCasos != "7" && !isConsulting){
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <div style="width: 100%;color: black;padding: 10px;">

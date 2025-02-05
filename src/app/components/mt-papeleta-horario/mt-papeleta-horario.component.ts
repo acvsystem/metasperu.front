@@ -682,7 +682,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       }
     }
 
-    if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || (index == "cboEmpleado" && this.idCboTipoPap)) {
+    if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isPartTime = false;
 
       if (index != "cboEmpleado") {
