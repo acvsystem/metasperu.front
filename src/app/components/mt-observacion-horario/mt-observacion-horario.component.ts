@@ -14,7 +14,7 @@ import { ShareService } from 'src/app/services/shareService';
   styleUrls: ['./mt-observacion-horario.component.scss'],
 })
 export class MtObservacionHorarioComponent implements OnInit {
-  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   @Input() vIdDia: number = 0;
   @Output() changeObservation: EventEmitter<any> = new EventEmitter();
   @Input() dataObservation: Array<any> = [];

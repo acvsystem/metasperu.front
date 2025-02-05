@@ -12,7 +12,7 @@ import { StorageService } from 'src/app/utils/storage';
   styleUrls: ['./mt-autorizacion-hora-extra.component.scss'],
 })
 export class MtAutorizacionHoraExtraComponent implements OnInit {
-  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   onDataView: Array<any> = [];
   arDataEJB: Array<any> = [];
   onDataTemp: Array<any> = [];

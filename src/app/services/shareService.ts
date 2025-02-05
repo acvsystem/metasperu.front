@@ -19,7 +19,7 @@ export class ShareService {
   @Output() onCloseSelect: EventEmitter<any> = new EventEmitter();
   @Output() onViewPageAdmin: EventEmitter<any> = new EventEmitter();
 
-  serverRute: string = 'http://38.187.8.22:3700';
+  serverRute: string = 'http://38.187.8.22:3200';
 
   constructor(private store: StorageService, private xhr: HttpService, private toastr: ToastrService) { }
 
