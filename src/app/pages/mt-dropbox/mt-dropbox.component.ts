@@ -240,7 +240,7 @@ export class MtDropboxComponent implements OnInit {
     for (let index = 0; index < images.length; index++) {
 
       this.service.post({ url: '/upload/driveCloud', file: images[index] }).then((rs) => {
-        if (rs.status == 200) {
+        if (rs.message == 'success') {
           this.uploading = false;
           console.log(images);
         }
