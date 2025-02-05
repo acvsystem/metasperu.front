@@ -243,6 +243,10 @@ export class MtDropboxComponent implements OnInit {
         if (rs.message == 'success') {
           this.uploading = false;
           console.log(images);
+          let indexField = this.arDirectorios.findIndex((dir) => dir.name == (images || [])[index]['name']);
+         
+          this.arDirectorios[indexField]['process'] = false;
+          this.arDirectorios[indexField]['upload'] = true;
         }
       });
 
