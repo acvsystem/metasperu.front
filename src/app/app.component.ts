@@ -7,12 +7,14 @@ import { NavController } from '@ionic/angular';
 import { ShareService } from './services/shareService';
 import { MenuController } from '@ionic/angular';
 import { UAParser } from 'ua-parser-js';
+import { io } from 'socket.io-client';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   isShowLoading: boolean = false;
   renderNavBar: boolean = false;
   isMobil: boolean = false;
@@ -31,6 +33,10 @@ export class AppComponent {
     private service: ShareService,
     private menu: MenuController
   ) {
+
+    setInterval(() => {
+      this.socket.emit('comunicationEnlace', 'RECONECT');
+    }, 10000)
 
     this.httpService.eventShowLoading.subscribe((response) => {
       setTimeout(() => {

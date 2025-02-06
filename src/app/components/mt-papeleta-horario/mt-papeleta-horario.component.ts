@@ -681,6 +681,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     }
 
     if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
+      
       this.isPartTime = false;
 
       if (index != "cboEmpleado") {
@@ -708,6 +709,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
     }
 
     if (index == 'cboTiendaConsulting') {
+      this.socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+      
       let perfil = this.store.getStore("mt-profile");
 
       this.store.setStore("mt-profile", JSON.stringify({
