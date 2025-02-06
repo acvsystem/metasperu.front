@@ -17,7 +17,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-articulos.component.scss'],
 })
 export class MtArticulosComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   displayedColumns: string[] = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color'];
   headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];

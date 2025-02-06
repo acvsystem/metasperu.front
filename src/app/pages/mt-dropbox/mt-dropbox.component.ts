@@ -24,7 +24,7 @@ import { io } from 'socket.io-client';
   styleUrls: ['./mt-dropbox.component.scss'],
 })
 export class MtDropboxComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   dialog = inject(MatDialog);
   arDirectorios: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.arDirectorios);
@@ -338,7 +338,7 @@ export class MtDropboxComponent implements OnInit {
 
     //Array.from(files).forEach(f => formData.append('file', f))
 
-    this.http.post('http://38.187.8.22:3200/upload/driveCloud', files, { reportProgress: true, observe: 'events' })
+    this.http.post('http://38.187.8.22:3700/upload/driveCloud', files, { reportProgress: true, observe: 'events' })
       .subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.percentDone = Math.round(100 * event.loaded / event.total);

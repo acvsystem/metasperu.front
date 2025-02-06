@@ -87,7 +87,7 @@ import { MtAccionCloudComponent } from './pages/mt-dropbox/mt-accion-cloud/mt-ac
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 
-const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
+const confSocket: SocketIoConfig = { url: 'http://localhost:3700', options: {} };
 
 @NgModule({
     declarations: [

@@ -23,7 +23,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-papeleta-horario.component.scss'],
 })
 export class MtPapeletaHorarioComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
   onListEmpleado: Array<any> = [];
@@ -682,7 +682,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       }
     }
 
-    if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
+    if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || (index == "cboEmpleado" && this.idCboTipoPap)) {
       this.isPartTime = false;
 
       if (index != "cboEmpleado") {
@@ -700,7 +700,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let mesIn = mes > 1 ? mes - 1 : mes;
       let diaR = mes == 1 ? 1 : day[0];
       let configuracion = [{
-        fechain: `${añoIn}-${mesIn}-${1}`,
+        fechain: `${añoIn}-${mesIn}-${diaR}`,
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }];
