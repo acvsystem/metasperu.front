@@ -86,7 +86,7 @@ import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
 import { MtAccionCloudComponent } from './pages/mt-dropbox/mt-accion-cloud/mt-accion-cloud.component';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
-
+import { MtHrExtraConsolidadoComponent } from './components/mt-hr-extra-consolidado/mt-hr-extra-consolidado.component';
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
@@ -120,7 +120,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtPlanillaComponent,
         MtViewRegistroComponent,
         MtDropboxComponent,
-        MtAccionCloudComponent
+        MtAccionCloudComponent,
+        MtHrExtraConsolidadoComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],

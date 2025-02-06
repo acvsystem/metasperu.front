@@ -157,8 +157,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   ngOnInit() {
 
-
-
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
     this.codeTienda = profileUser.code.toUpperCase();
