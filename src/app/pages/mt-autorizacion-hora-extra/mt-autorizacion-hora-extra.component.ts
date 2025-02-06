@@ -111,16 +111,17 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       this.bodyList = [];
       this.dataVerify = [];
 
-      await (this.parseHuellero || []).filter(async (huellero) => {
+      await (this.parseHuellero || []).filter(async (huellero, i) => {
 
         var codigo = (huellero || {}).caja.substr(0, 2);
+
+        this.parseHuellero[i]['hrWorking'] = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
 
         if ((huellero || {}).caja.substr(2, 2) == 7) {
           codigo = (huellero || {}).caja;
         } else {
           codigo.substr(0, 1)
         }
-
 
         let indexData = this.onDataTemp.findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
@@ -171,6 +172,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         }
 
       });
+
       this.isLoading = false;
       this.isDetalle = true;
 
@@ -301,26 +303,37 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   }
 
   obtenerDiferenciaHora(hr1, hr2) {
+
     let diferencia = 0;
     let hora_1 = this.obtenerHoras(hr1);
     let hora_2 = this.obtenerHoras(hr2);
     let minutos = this.obtenerMinutos(hr1, hr2);
-    let hrExtr = 0;
-    if (minutos[1] > 0) {
-      hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
-    }
+    let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
+
+
+
+    let hrxLlegada = hr1.split(':');
+    let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+    let hrxSalida = hr2.split(':');
+    let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
     if (hora_1 > hora_2) {
-      diferencia = hora_1 - hora_2;
+      diferencia = llegada - salida;
     } else {
-      diferencia = hora_2 - hora_1;
+      diferencia = salida - llegada;
     }
 
-    let hora_1_pr = hr1.split(":");
-    let hora_2_pr = hr2.split(":");
-    let hr_resta: number = (hora_1_pr[1] > 0) ? parseInt(hora_1_pr[1]) : parseInt(hora_2_pr[1]);
-    let horaResult = ((diferencia - hr_resta) / 60).toString();
-    return `${parseInt(horaResult) + hrExtr}:${(minutos[1] < 10) ? '0' + minutos[1] : minutos[1]}`;
+    const ToTime = (num) => {
+      var minutos: any = Math.floor((num / 60) % 60);
+      minutos = minutos < 10 ? '0' + minutos : minutos;
+      var segundos: any = num % 60;
+      segundos = segundos < 10 ? '0' + segundos : segundos;
+      return minutos + ':' + segundos;
+    }
+
+    let horaResult = ToTime(diferencia);
+
+    return horaResult;
   }
 
   onListHorasAutorizar() {
@@ -352,9 +365,9 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY") {
           viewData.push(rs);
         }
-        
+
       });
-      
+
       this.onDataView = viewData;
 
       this.dataSource = new MatTableDataSource(this.onDataView);
