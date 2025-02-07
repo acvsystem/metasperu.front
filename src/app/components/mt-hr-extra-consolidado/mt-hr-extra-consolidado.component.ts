@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,6 +14,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() vTiendaLogin: any = {};
+  @Output() afterChange: EventEmitter<any> = new EventEmitter();
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   onListEmpleado: Array<any> = [];
   arDataEJB: Array<any> = [];
@@ -160,6 +161,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
         if (dataEmpleado.length - 1 == index) {
           console.log(this.parseEJB);
+          this.afterChange.emit(response);
           this.parseEJB.filter((arEmp) => {
 
             let dateNow = new Date();

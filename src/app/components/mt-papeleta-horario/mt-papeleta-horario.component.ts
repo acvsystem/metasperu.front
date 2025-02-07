@@ -162,10 +162,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.codeTienda = profileUser.code.toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.onSelectTienda = unidServicio;
-    
+
     this.unidServicio = unidServicio['uns'];
     this.onListEmpleado = [];
-    
+    console.log(this.unidServicio);
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
     this.socket.on('respuesta_autorizacion', async (response) => { //AUTORIZACION HORAS EXTRA
@@ -190,49 +190,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
       console.log(response);
-      let dataEmpleado = (response || {}).data || [];
-      let codigo_uns = (this.onListTiendas || []).find((tienda) => (tienda || {}).code == this.codeTienda);
 
-      (dataEmpleado || []).filter((emp) => {
-        if (response.id == "EJB") {
-          this.arDataEJB = (response || {}).data;
-        }
-
-        if (this.arDataEJB.length) {
-          (this.arDataEJB || []).filter(async (ejb) => {
-
-            if ((codigo_uns || {}).code_uns == '0016') {
-              if ((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') {
-
-                let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
-                if (exist == -1) {
-                  (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
-                  (this.parseEJB || []).push({
-                    nombre_completo: (ejb || {}).nombre_completo,
-                    documento: (ejb || {}).nro_documento,
-                    codigo_tienda: this.codeTienda
-                  });
-                }
-              }
-            } else {
-              if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns) {
-
-                let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
-                if (exist == -1) {
-                  (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
-                  (this.parseEJB || []).push({
-                    nombre_completo: (ejb || {}).nombre_completo,
-                    documento: (ejb || {}).nro_documento,
-                    codigo_tienda: this.codeTienda
-                  });
-                }
-              }
-            }
-
-
-          });
-        }
-      });
 
     });
 
@@ -466,6 +424,52 @@ export class MtPapeletaHorarioComponent implements OnInit {
     }
   }
 
+  onCargarEmpleado(response) {
+    let dataEmpleado = (response || {}).data || [];
+    let codigo_uns = (this.onListTiendas || []).find((tienda) => (tienda || {}).code == this.codeTienda);
+
+    (dataEmpleado || []).filter((emp) => {
+      if (response.id == "EJB") {
+        this.arDataEJB = (response || {}).data;
+      }
+
+      if (this.arDataEJB.length) {
+        (this.arDataEJB || []).filter(async (ejb) => {
+
+          if ((codigo_uns || {}).code_uns == '0016') {
+            if ((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') {
+
+              let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
+              if (exist == -1) {
+                (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
+                (this.parseEJB || []).push({
+                  nombre_completo: (ejb || {}).nombre_completo,
+                  documento: (ejb || {}).nro_documento,
+                  codigo_tienda: this.codeTienda
+                });
+              }
+            }
+          } else {
+            if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns) {
+
+              let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
+              if (exist == -1) {
+                (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
+                (this.parseEJB || []).push({
+                  nombre_completo: (ejb || {}).nombre_completo,
+                  documento: (ejb || {}).nro_documento,
+                  codigo_tienda: this.codeTienda
+                });
+              }
+            }
+          }
+
+
+        });
+      }
+    });
+  }
+
   onProcesarPartTime(length, index, row) {
     this.dataVerify = [];
 
@@ -481,8 +485,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.arPartTimeFech.push({
       dia: row.dia, diaNom: dias[indice], hr_trabajadas: row.hr_trabajadas, indice: indice
     });
-
-
 
     if (length - 1 == index) {
 
