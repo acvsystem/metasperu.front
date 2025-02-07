@@ -313,7 +313,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                   let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 ? 'aprobar' : 'correcto';
+                  console.log(this.onDataTemp[indexData]['hr_salida_2']);
+
+                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' ? 'aprobar' : 'correcto';
                   let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
                   let aprobado = estado == "correcto" ? true : false;
@@ -383,7 +385,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                 let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                 let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-                let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 ? 'aprobar' : 'correcto';
+                let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' ? 'aprobar' : 'correcto';
                 let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
                 let aprobado = estado == "correcto" ? true : false;
