@@ -363,9 +363,11 @@
       </ion-row>
     </div>
   </mat-tab>
-  <mat-tab label="Horas Extras Consolidado" style="min-height: 1000px">
-   <mt-hr-extra-consolidado [vTiendaLogin]="onSelectTienda" (afterChange)="onCargarEmpleado($event)"></mt-hr-extra-consolidado>
-  </mat-tab>
+  @if(!isConsulting){
+    <mat-tab label="Horas Extras Consolidado" style="min-height: 1000px">
+      <mt-hr-extra-consolidado [vTiendaLogin]="onSelectTienda" (afterChange)="onCargarEmpleado($event)"></mt-hr-extra-consolidado>
+    </mat-tab>
+  }
 </mat-tab-group>
 
 
