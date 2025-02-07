@@ -89,7 +89,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   isRangoEdit: boolean = false;
 
   arListaDiaTrab: Array<any> = [];
-
+  profileUser: any = {};
 
   private _snackBar = inject(MatSnackBar);
 
@@ -108,6 +108,18 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
   async ngOnInit() {
+
+
+    this.profileUser = this.store.getStore('mt-profile');
+
+    if ((this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+      this.store.setStore('mt-profile', JSON.stringify({
+        "mt_name_1": (this.profileUser || {}).mt_name_1,
+        "mt_nivel": (this.profileUser || {}).mt_nivel,
+        "code": ""
+      }));
+    }
+
     this.getScreenSize();
     if ((this.data || []).length) {
       this.isLoading = true;
