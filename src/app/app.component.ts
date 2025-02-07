@@ -33,11 +33,11 @@ export class AppComponent {
     private service: ShareService,
     private menu: MenuController
   ) {
-
+/*
     setInterval(() => {
       this.socket.emit('comunicationEnlace', 'RECONECT');
     }, 10000)
-
+*/
     this.httpService.eventShowLoading.subscribe((response) => {
       setTimeout(() => {
         this.isShowLoading = response;

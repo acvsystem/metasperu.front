@@ -162,9 +162,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.codeTienda = profileUser.code.toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.onSelectTienda = unidServicio;
-    console.log( this.onSelectTienda);
+    
     this.unidServicio = unidServicio['uns'];
     this.onListEmpleado = [];
+    
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
     this.socket.on('respuesta_autorizacion', async (response) => { //AUTORIZACION HORAS EXTRA
@@ -188,7 +189,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
-
+      console.log(response);
       let dataEmpleado = (response || {}).data || [];
       let codigo_uns = (this.onListTiendas || []).find((tienda) => (tienda || {}).code == this.codeTienda);
 
