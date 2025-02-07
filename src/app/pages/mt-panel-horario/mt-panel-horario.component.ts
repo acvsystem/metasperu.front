@@ -158,10 +158,12 @@ export class MtPanelHorarioComponent implements OnInit {
 
   onViewHorario(ev) {
     this.isHorario = true;
+    this.isObservaciones = false;
     this.onSelectedHorario = [ev];
   }
 
   onViewObservacion(ev) {
+    this.isHorario = true;
     this.isObservaciones = true;
     this.onSelectedHorario = [ev];
   }

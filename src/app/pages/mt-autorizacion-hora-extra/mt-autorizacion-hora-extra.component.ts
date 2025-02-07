@@ -362,6 +362,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
           viewData.push(rs);
         }
 
+
         if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY") {
           viewData.push(rs);
         }

@@ -1,4 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
 
@@ -11,7 +14,22 @@ export class MtSearchObervacionComponent implements OnInit {
   @Input() data: Array<any> = [];
   dataHorario: Array<any> = [];
   onListCargo: Array<any> = [];
+  onListView: Array<any> = [];
+  filterEmpleado: string = "";
+  displayedColumns: Array<any> = ["Dia", "Nombre_Completo", "Observacion"];
+  dataSource = new MatTableDataSource<any>(this.onListView);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   arListDia: Array<any> = [
+    { id: 1, dia: "Lunes", fecha: "16-sep", isObservacion: false, isExpired: false },
+    { id: 2, dia: "Martes", fecha: "17-sep", isObservacion: false, isExpired: false },
+    { id: 3, dia: "Miercoles", fecha: "18-sep", isObservacion: false, isExpired: false },
+    { id: 4, dia: "Jueves", fecha: "19-sep", isObservacion: false, isExpired: false },
+    { id: 5, dia: "Viernes", fecha: "20-sep", isObservacion: false, isExpired: false },
+    { id: 6, dia: "Sabado", fecha: "21-sep", isObservacion: false, isExpired: false },
+    { id: 7, dia: "Domingo", fecha: "22-sep", isObservacion: false, isExpired: false }
+  ];
+  arListDiaOrg: Array<any> = [
     { id: 1, dia: "Lunes", fecha: "16-sep", isObservacion: false, isExpired: false },
     { id: 2, dia: "Martes", fecha: "17-sep", isObservacion: false, isExpired: false },
     { id: 3, dia: "Miercoles", fecha: "18-sep", isObservacion: false, isExpired: false },
@@ -26,7 +44,13 @@ export class MtSearchObervacionComponent implements OnInit {
 
   constructor(private service: ShareService, private store: StorageService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.data);
+    if ((this.data || []).length) {
+      this.isLoading = true;
+      this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);
+    }
+  }
 
   onSearchCalendario(rango?, codigo?) {
 
@@ -104,11 +128,33 @@ export class MtSearchObervacionComponent implements OnInit {
       }
 
       if ((this.data || {}).length) {
-        console.log(this.data);
+        console.log(this.dataHorario);
+
+        this.dataHorario.filter((d, i) => {
+          this.dataHorario[i]['dias'].filter((rdia) => {
+            let registro = this.dataHorario[i]['observacion'].find((obs) => (obs || {}).id_dia == (rdia || {}).id);
+            if (Object.keys(registro || {}).length) {
+              this.onListView.push({ dia: (rdia || {}).dia, nombre_completo: registro['nombre_completo'], observacion: registro['observacion'] });
+            }
+          });
+
+          if (this.dataHorario.length - 1 == i) {
+            this.dataSource = new MatTableDataSource(this.onListView);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }
+        });
+
+
         this.isLoading = false;
       }
     });
 
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
