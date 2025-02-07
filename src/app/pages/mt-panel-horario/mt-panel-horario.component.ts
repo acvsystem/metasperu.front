@@ -24,6 +24,7 @@ export class MtPanelHorarioComponent implements OnInit {
   isHorario: boolean = false;
   isViewPap: boolean = false;
   isViewPapeleta: boolean = false;
+  isObservaciones: boolean = false;
   onSelectedHorario: Array<any> = [];
   onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
@@ -157,6 +158,11 @@ export class MtPanelHorarioComponent implements OnInit {
 
   onViewHorario(ev) {
     this.isHorario = true;
+    this.onSelectedHorario = [ev];
+  }
+
+  onViewObservacion(ev) {
+    this.isObservaciones = true;
     this.onSelectedHorario = [ev];
   }
 

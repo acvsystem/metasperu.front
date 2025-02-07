@@ -45,7 +45,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     { id: 5, dia: "Viernes", fecha: "20-sep", isObservacion: false, isExpired: false },
     { id: 6, dia: "Sabado", fecha: "21-sep", isObservacion: false, isExpired: false },
     { id: 7, dia: "Domingo", fecha: "22-sep", isObservacion: false, isExpired: false }
-  ];;
+  ];
   arRangeFecha: Array<any> = [];
   vSelectDia: number = 0;
   vSelectHorario: number = 0;
