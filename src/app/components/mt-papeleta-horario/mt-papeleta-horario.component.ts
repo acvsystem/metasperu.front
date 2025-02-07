@@ -190,7 +190,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
       console.log(response);
-
+      this.onCargarEmpleado(response);
 
     });
 
