@@ -404,7 +404,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         let fechaInicio = new Date(fechaActual);
         let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
 
-        if (fechaFin.getTime() < fechaInicio.getTime()) {
+        if (fechaFin.getTime() < fechaInicio.getTime() || fechaFin.getTime() == fechaInicio.getTime()) {
           this.dataHorario[index]['dias'][i]['isExpired'] = true;
         } else {
           this.dataHorario[index]['dias'][i]['isExpired'] = false;
