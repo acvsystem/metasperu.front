@@ -86,7 +86,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
           viewData.push(rs);
         }
 
-        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL')) {
+        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' && dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' && dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' && dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' && dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' && dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' && dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' && dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' && dataResponse[i]['TIENDA'] == 'VS SALAVERRY' && dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' && dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' && dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' && dataResponse[i]['TIENDA'] == 'VS MINKA' && dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
           viewData.push(rs);
         }
 
