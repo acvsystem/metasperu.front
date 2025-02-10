@@ -168,11 +168,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
       if (configuracion.id == "servGeneral") {
         this.isDataServer = true;
-        
+
         let dataServGeneral = [];
         this.parseHuellero = [];
         dataServGeneral = (configuracion || {}).data || [];
-        
+
         (dataServGeneral || []).filter((huellero) => {
           this.parseHuellero.push({
             nro_documento: (huellero || {}).nroDocumento,
@@ -181,7 +181,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             hr_ingreso: (huellero || {}).hrIn,
             hr_salida: (huellero || {}).hrOut,
             hr_trabajadas: (huellero || {}).hrWorking,
-            caja: (huellero || {}).caja
+            caja: (huellero || {}).caja,
+            papeletas: (huellero || {}).papeleta,
+            isPapeleta: ((huellero || {}).papeleta || []).length ? true : false
           });
         });
 
@@ -236,7 +238,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   isBrakeComplete: false,
                   isRegistroMax: false,
                   statusRegistro: 'CORRECTO',
-                  dataRegistro: [huellero]
+                  dataRegistro: [huellero],
+                  papeletas: (huellero || {}).papeletas || [],
+                  isPapeleta: (huellero || {}).isPapeleta,
+                  estadoPapeleta: (huellero || {}).isPapeleta ? 'papeleta' : ''
                 });
 
               } else {
@@ -257,6 +262,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
 
         if (this.isViewDefault || this.isDetallado) {
+          console.log(this.onDataTemp);
           this.onDataView = this.onDataTemp;
           this.dataSource = new MatTableDataSource(this.onDataView);
           this.dataSource.paginator = this.paginator;
@@ -694,6 +700,20 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     return horaResult;
   }
 
+  codigoPap: string = "";
+  isViewPapeleta: boolean = true;
+
+  onViewPapeleta(ev) {
+    console.log(ev);
+    this.codigoPap = "";
+    this.codigoPap = (ev || [])[0].CODIGO_PAPELETA;
+    this.isViewPapeleta = true;
+  }
+
+  onGrafic() {
+    this.isViewPapeleta = false;
+  }
+  
   onVerificacionJornada(hr) {
     let hora_pr = hr.split(":");
     return hora_pr[0] >= 8;
