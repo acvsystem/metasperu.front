@@ -117,7 +117,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   ngOnInit() {
 
     this.socket.on('reporteHuellero', async (configuracion) => {
-
+      console.log("servGeneral new", configuracion);
       if (configuracion.id == "EJB") {
         this.isDataEJB = true;
         let dateNow = new Date();
@@ -168,10 +168,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
       if (configuracion.id == "servGeneral") {
         this.isDataServer = true;
-        console.log("servGeneral", true);
+        
         let dataServGeneral = [];
         this.parseHuellero = [];
         dataServGeneral = (configuracion || {}).data || [];
+        
         (dataServGeneral || []).filter((huellero) => {
           this.parseHuellero.push({
             nro_documento: (huellero || {}).nroDocumento,
