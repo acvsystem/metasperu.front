@@ -83,6 +83,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   isVacacionesProgramadas: boolean = false;
   isPartTime: boolean = false;
   isLoaderHrx: boolean = false;
+  cantidadPapeletas: number = 0;
   onListCargo: Array<any> = [
     { key: 'Asesor', value: 'Asesor' },
     { key: 'Gerente', value: 'Gerente' },
@@ -315,7 +316,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                   console.log(this.onDataTemp[indexData]['hr_ingreso_1']);
 
-                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' || this.onDataTemp[indexData]['hr_ingreso_1'] == '00:00:00'? 'aprobar' : 'correcto';
+                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' || this.onDataTemp[indexData]['hr_ingreso_1'] == '00:00:00' ? 'aprobar' : 'correcto';
                   let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
                   let aprobado = estado == "correcto" ? true : false;
@@ -710,7 +711,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
         fechaend: `${año}-${mes}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }];
-      console.log(configuracion);
+
+      console.log(this.listaPapeletas);
+      let cantidadPap = this.listaPapeletas.filter((pap) => (pap || {}).documento == this.cboEmpleado);
+
+      this.cantidadPapeletas = (cantidadPap || []).length;
       //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
       this.socket.emit('consultaHorasTrab', configuracion);
     }
