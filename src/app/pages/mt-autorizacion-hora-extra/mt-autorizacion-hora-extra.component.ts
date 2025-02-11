@@ -78,7 +78,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
 
       await dataResponse.filter(async (rs, i) => {
 
@@ -342,7 +342,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     };
     this.service.get(parms).then(async (response) => {
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
       let dataResponse = response;
       let viewData = [];
 
