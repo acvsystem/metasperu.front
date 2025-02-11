@@ -379,14 +379,15 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   }
 
   onAutorizar(ev) {
-
+    let perfil = this.store.getStore('mt-profile');
     let parse = {
       hora_extra: ev.HR_EXTRA_ACOMULADO,
       nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
       aprobado: true,
       rechazado: false,
       fecha: ev.FECHA,
-      codigo_tienda: ev.CODIGO_TIENDA
+      codigo_tienda: ev.CODIGO_TIENDA,
+      usuario: (perfil || {}).mt_name_1 || ''
     }
     this.socket.emit('autorizar_hrx', parse);
     this.onListHorasAutorizar();
