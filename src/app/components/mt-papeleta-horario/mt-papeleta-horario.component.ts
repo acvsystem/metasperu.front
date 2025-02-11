@@ -196,9 +196,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
-
+    
       let data = (response || {}).data || [];
-      console.log(data);
+      
       this.parseHuellero = data;
       this.onDataTemp = [];
       this.bodyList = [];
@@ -302,13 +302,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let fecha = new Date().toLocaleDateString().split('/'); new Date();
 
               let validFecha = new Date(this.onDataTemp[indexData]['dia']).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
-
+              
               if (hora_1_pr[0] >= 8 && validFecha) {
 
                 let hr = process.split(":");
 
                 if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
-
+                  
                   this.onDataTemp[indexData]['hr_extra'] = process;//23:59
 
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
@@ -386,7 +386,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                 let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                 let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-                
+
                 console.log(this.onDataTemp[indexData]['hr_salida_2']);
 
                 let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' || this.onDataTemp[indexData]['hr_ingreso_1'] == '00:00:00' ? 'aprobar' : 'correcto';
@@ -929,7 +929,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                     let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                     let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-                    let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 ? 'aprobar' : 'correcto';
+                    let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' || this.onDataTemp[indexData]['hr_ingreso_1'] == '00:00:00' ? 'aprobar' : 'correcto';
                     let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
                     let aprobado = estado == "correcto" ? true : false;
@@ -999,7 +999,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                   let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-                  let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 ? 'aprobar' : 'correcto';
+                  let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' || this.onDataTemp[indexData]['hr_ingreso_1'] == '00:00:00' ? 'aprobar' : 'correcto';
                   let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
                   let aprobado = estado == "correcto" ? true : false;
