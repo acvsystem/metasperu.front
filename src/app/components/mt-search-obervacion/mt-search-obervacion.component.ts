@@ -128,13 +128,18 @@ export class MtSearchObervacionComponent implements OnInit {
       }
 
       if ((this.data || {}).length) {
-        console.log(this.dataHorario);
 
         this.dataHorario.filter((d, i) => {
+
           this.dataHorario[i]['dias'].filter((rdia) => {
-            let registro = this.dataHorario[i]['observacion'].find((obs) => (obs || {}).id_dia == (rdia || {}).id);
-            if (Object.keys(registro || {}).length) {
-              this.onListView.push({ dia: (rdia || {}).dia, nombre_completo: registro['nombre_completo'], observacion: registro['observacion'] });
+
+            let registro = this.dataHorario[i]['observacion'].filter((obs) => (obs || {}).id_dia == (rdia || {}).id);
+
+            if ((registro || []).length) {
+              (registro || []).filter((rg) => {
+                this.onListView.push({ dia: (rdia || {}).dia, nombre_completo: rg['nombre_completo'], observacion: rg['observacion'] });
+              });
+
             }
           });
 
