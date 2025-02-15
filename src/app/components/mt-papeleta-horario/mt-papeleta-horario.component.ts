@@ -653,12 +653,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     if (index == 'cboCasos') {
       this.isVacacionesProgramadas = false;
-      this.horaSalida = "";
+     
+     /* this.horaSalida = "";
       this.horaLlegada = "";
 
       this.diffHoraPap = "";
       this.hroAcumulada = "";
-      this.hroAcumuladaTotal = "";
+      this.hroAcumuladaTotal = "";*/
       // $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
       //$('#horaLlegada input')[0].value = "";
       //$('#horaSalida input')[0].value = "";
