@@ -479,11 +479,11 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
-          if (!this.arHoraExtra.length && dt.estado != "utilizado") {
+          if (!this.arHoraExtra.length && dt.estado != "utilizado" && dt.estado != "rechazado") {
 
             this.arHoraExtra = [dt.extra];
           } else {
-            if (dt.estado == "correcto" || dt.estado == "aprobado") {
+            if ((dt.estado == "correcto" || dt.estado == "aprobado") && dt.estado != "rechazado") {
 
               this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
             }

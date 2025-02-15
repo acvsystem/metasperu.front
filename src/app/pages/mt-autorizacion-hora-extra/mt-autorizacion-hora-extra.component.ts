@@ -33,7 +33,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   isDetalle: boolean = false;
   isLoading: boolean = false;
   profileUser: any = {};
-
+  filterEmpleado: string = "";
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -80,20 +80,38 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
       this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
 
-      await dataResponse.filter(async (rs, i) => {
+      let dataPendiente = dataResponse.filter((pendiente) => pendiente.ESTADO == 'pendiente');
 
+      await dataPendiente.filter((pen, i) => {
         if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
-          viewData.push(rs);
+          viewData.push(pen);
         }
-        console.log(this.profileUser.mt_nivel, dataResponse[i]['TIENDA']);
+
         if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
-          viewData.push(rs);
+          viewData.push(pen);
         }
 
-        if (this.profileUser.mt_nivel == "SISTEMAS" && this.profileUser.mt_nivel == "JOHNNY") {
-          viewData.push(rs);
-        }
 
+        if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+          viewData.push(pen);
+        }
+      });
+
+      await dataResponse.filter((pen, i) => {
+        if (pen.ESTADO != 'pendiente') {
+          if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
+            viewData.push(pen);
+          }
+
+          if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
+            viewData.push(pen);
+          }
+
+
+          if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+            viewData.push(pen);
+          }
+        }
       });
 
       this.onDataView = viewData;
@@ -352,21 +370,39 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      await dataResponse.filter(async (rs, i) => {
-        console.log(rs);
+      let dataPendiente = dataResponse.filter((pendiente) => pendiente.ESTADO == 'pendiente');
+
+
+      await dataPendiente.filter((pen, i) => {
         if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
-          viewData.push(rs);
+          viewData.push(pen);
         }
 
         if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
-          viewData.push(rs);
+          viewData.push(pen);
         }
 
 
         if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
-          viewData.push(rs);
+          viewData.push(pen);
         }
+      });
 
+      await dataResponse.filter((pen, i) => {
+        if (pen.ESTADO != 'pendiente') {
+          if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
+            viewData.push(pen);
+          }
+
+          if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
+            viewData.push(pen);
+          }
+
+
+          if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+            viewData.push(pen);
+          }
+        }
       });
 
       this.onDataView = viewData;
@@ -422,6 +458,11 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   onBackPap() {
     this.parseHuellero = [];
     this.isDetalle = false;
+  }
+
+  applyFilterPapeleta(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
