@@ -269,7 +269,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           this.dataSource.sort = this.sort;
 
           this.onDataTemp.filter((dt) => {
-            if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '81433419' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
+            if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
               let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
 
               if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
@@ -329,7 +329,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   onGenerarGraffic() {
     this.arrDataGrafic = [];
     this.onDataTemp.filter((dt) => {
-      if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '81433419' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
+      if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
         let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
 
         if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {

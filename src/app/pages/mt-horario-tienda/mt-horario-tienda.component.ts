@@ -226,7 +226,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
           this.arDataEJB.filter(async (ejb) => {
             if (this.codeTienda == '7F') {
-              if (((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+              if (((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
                 let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
 
                 if (exist == -1) {
@@ -236,7 +236,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                 }
               }
             } else {
-              if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+              if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
                 let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
                 if (exist == -1) {
                   this.arListTrabajador.push(
