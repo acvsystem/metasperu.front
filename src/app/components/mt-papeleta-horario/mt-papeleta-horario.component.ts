@@ -653,12 +653,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
     if (index == 'cboCasos') {
       this.isVacacionesProgramadas = false;
      
-     /* this.horaSalida = "";
+      this.horaSalida = "";
       this.horaLlegada = "";
 
       this.diffHoraPap = "";
       this.hroAcumulada = "";
-      this.hroAcumuladaTotal = "";*/
+      this.hroAcumuladaTotal = "";
       // $("#cboCasos span#cboCasos")[0].innerText = (selectData || {}).value;
       //$('#horaLlegada input')[0].value = "";
       //$('#horaSalida input')[0].value = "";
@@ -691,37 +691,40 @@ export class MtPapeletaHorarioComponent implements OnInit {
       }
     }
 
-    if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
+    if(index != 'cboCargo'){
+      if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
 
-      this.isPartTime = false;
-
-      if (index != "cboEmpleado") {
-        this[index] = (selectData || {}).value;
-        this.idCboTipoPap = (selectData || {}).key;
+        this.isPartTime = false;
+  
+        if (index != "cboEmpleado") {
+          this[index] = (selectData || {}).value;
+          this.idCboTipoPap = (selectData || {}).key;
+        }
+  
+        let dateNow = new Date();
+  
+        var año = dateNow.getFullYear();
+        var mes = (dateNow.getMonth() + 1);
+        let dayNow = dateNow.getDay();
+        let day = new Date(dateNow).toLocaleDateString().split('/');
+        let añoIn = año;
+        let mesIn = mes > 1 ? mes - 1 : mes;
+        let diaR = mes == 1 ? 1 : day[0];
+        let configuracion = [{
+          fechain: `${añoIn}-${mesIn}-${1}`,
+          fechaend: `${año}-${mes}-${day[0]}`,
+          nro_documento: this.cboEmpleado
+        }];
+  
+        console.log(this.listaPapeletas);
+        let cantidadPap = this.listaPapeletas.filter((pap) => (pap || {}).documento == this.cboEmpleado);
+  
+        this.cantidadPapeletas = (cantidadPap || []).length;
+        //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
+        this.socket.emit('consultaHorasTrab', configuracion);
       }
-
-      let dateNow = new Date();
-
-      var año = dateNow.getFullYear();
-      var mes = (dateNow.getMonth() + 1);
-      let dayNow = dateNow.getDay();
-      let day = new Date(dateNow).toLocaleDateString().split('/');
-      let añoIn = año;
-      let mesIn = mes > 1 ? mes - 1 : mes;
-      let diaR = mes == 1 ? 1 : day[0];
-      let configuracion = [{
-        fechain: `${añoIn}-${mesIn}-${1}`,
-        fechaend: `${año}-${mes}-${day[0]}`,
-        nro_documento: this.cboEmpleado
-      }];
-
-      console.log(this.listaPapeletas);
-      let cantidadPap = this.listaPapeletas.filter((pap) => (pap || {}).documento == this.cboEmpleado);
-
-      this.cantidadPapeletas = (cantidadPap || []).length;
-      //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
-      this.socket.emit('consultaHorasTrab', configuracion);
     }
+
 
     if (index == 'cboTiendaConsulting') {
       this.socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
