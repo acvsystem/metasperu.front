@@ -1,0 +1,8 @@
+<mat-dialog-content>
+  <p>Ingrese un comentario.</p>
+  <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Canelar</button>
+  <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

@@ -1,10 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
 import { io } from "socket.io-client";
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { StorageService } from 'src/app/utils/storage';
+import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'mt-autorizacion-hora-extra',
@@ -13,6 +23,7 @@ import { StorageService } from 'src/app/utils/storage';
 })
 export class MtAutorizacionHoraExtraComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  readonly dialog = inject(MatDialog);
   onDataView: Array<any> = [];
   arDataEJB: Array<any> = [];
   onDataTemp: Array<any> = [];
@@ -78,7 +89,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'COMENTARIO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
 
       let dataPendiente = dataResponse.filter((pendiente) => pendiente.ESTADO == 'pendiente');
 
@@ -360,7 +371,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     };
     this.service.get(parms).then(async (response) => {
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'COMENTARIO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
       let dataResponse = response;
       let viewData = [];
 
@@ -429,19 +440,34 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     this.onListHorasAutorizar();
   }
 
+
   onRechazar(ev) {
-    let perfil = this.store.getStore('mt-profile');
-    let parse = {
-      hora_extra: ev.HR_EXTRA_ACOMULADO,
-      nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
-      aprobado: false,
-      rechazado: true,
-      fecha: ev.FECHA,
-      codigo_tienda: ev.CODIGO_TIENDA,
-      usuario: (perfil || {}).mt_name_1 || ''
-    }
-    this.socket.emit('autorizar_hrx', parse);
-    this.onListHorasAutorizar();
+
+    const dialogRef = this.dialog.open(MtModalComentarioComponent, {
+      data: {},
+      width: '500px'
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if ((result || "").length) {
+        let perfil = this.store.getStore('mt-profile');
+        let parse = {
+          hora_extra: ev.HR_EXTRA_ACOMULADO,
+          nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
+          aprobado: false,
+          rechazado: true,
+          fecha: ev.FECHA,
+          codigo_tienda: ev.CODIGO_TIENDA,
+          usuario: (perfil || {}).mt_name_1 || '',
+          comentario: result
+        }
+        this.socket.emit('autorizar_hrx', parse);
+        this.onListHorasAutorizar();
+      } else {
+        this.service.toastError("Tiene que poner un comentario sobre el porque fue rechazado", "Autorizacion Hora extra");
+      }
+    });
   }
 
   onViewRegistro(ev) {
