@@ -42,7 +42,7 @@ export class MtDropboxComponent implements OnInit {
   sMsg: string = '';
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
+
   constructor(private service: ShareService, private http: HttpClient) { }
 
   ngOnInit() {
@@ -125,12 +125,13 @@ export class MtDropboxComponent implements OnInit {
         };
 
         this.service.post(parms).then((response) => {
-          this.openSnackBar((response || {}).msj);
+          this.service.toastSuccess("Eliminado con Exito..!!", "Driver Cloud");
+          this.onDirFile();
         });
 
-        if (this.selection['_selected'].length - 1 == i) {
-          this.onDirFile();
-        }
+        /* if (this.selection['_selected'].length - 1 == i) {
+           this.onDirFile();
+         }*/
 
       });
 
@@ -247,14 +248,15 @@ export class MtDropboxComponent implements OnInit {
 
     for (let index = 0; index < images.length; index++) {
 
-      this.service.post({ url: '/upload/driveCloud', file: images[index] }).then((rs) => {
+      this.service.post({ url: '/upload/driveCloud', parms: [{ key: 'path', value: this.pathRoute }], file: images[index] }).then((rs) => {
         if (rs.message == 'success') {
           this.uploading = false;
-          console.log(images);
+
           let indexField = this.arDirectorios.findIndex((dir) => dir.name == (images || [])[index]['name']);
-         
+
           this.arDirectorios[indexField]['process'] = false;
           this.arDirectorios[indexField]['upload'] = true;
+
         }
       });
 
@@ -264,11 +266,10 @@ export class MtDropboxComponent implements OnInit {
       let evalueDir = (images[index].name).split(".");
       const file: File = images[index];
 
-
       this.arDirectorios.unshift(
         {
           name: images[index].name,
-          type: "txt",
+          type: evalueDir.length >= 2 ? evalueDir[1] : "directory",
           size: images[index].size >= 1000000 ? tamañoFile : (images[index].size / 1024).toFixed(2) + nomenclatura,
           mFech: "",
           process: true,
@@ -294,6 +295,7 @@ export class MtDropboxComponent implements OnInit {
     event.preventDefault();
 
     if (event?.dataTransfer?.files) {
+      console.log(event.dataTransfer.files);
       this.uploadFiles(event.dataTransfer.files);
     }
   }
