@@ -2,15 +2,21 @@
 
   <mat-drawer-container class="example-container" [hasBackdrop]="true">
     <mat-drawer #drawer [mode]="'over'" position="end">
-      <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <mt-select id="cboTipoGraffic" placeHolder="Tipo Reporte" [optionList]="listTipoGraffic"
-          (changeSelected)="onChangeSelect($event)"></mt-select>
-        </ion-col>
-      </ion-row>
-      <div class="center-graffic">
-        <div style="width: 800px;"><canvas id="ctx"></canvas></div>
-      </div>
+      @if(!isViewPapeleta){
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <mt-select id="cboTipoGraffic" placeHolder="Tipo Reporte" [optionList]="listTipoGraffic"
+            (changeSelected)="onChangeSelect($event)"></mt-select>
+          </ion-col>
+        </ion-row>
+        <div class="center-graffic">
+          <div style="width: 800px;"><canvas id="ctx"></canvas></div>
+        </div>
+      }@else{
+        <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;width: 800px;">
+          <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap.length"></mt-papeleta-preview>
+        </div>
+      }
     </mat-drawer>
     <mat-drawer-content>
       <div id="content" class="full-center-page">
@@ -55,7 +61,7 @@
                 <div class="content-button-comp">
                   <button id="searchProducto" type="button" class="btn btn-primary btn-sm"
                     (click)="onConsultarAsistencia()"><i class="fa fa-search" aria-hidden="true"></i></button>
-                  <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="drawer.toggle()"><i
+                  <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="drawer.toggle()" (click)="onGrafic()"><i
                       class="fa fa-pie-chart" aria-hidden="true"></i></button>
                   <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport(true)"
                     *ngIf="isViewFeriados"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Feriados</button>
@@ -148,6 +154,9 @@
                           } @else {
                             <h6 style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
                           }
+
+                          <h6 style="margin: 0;" *ngIf="element.isPapeleta"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: orange !important;">papeleta</span></h6>
+
                         </td>
                       </ng-container>
     
@@ -156,6 +165,9 @@
                         <td mat-cell *matCellDef="let element">
                           <button matTooltip="Ver registro" id="searchProducto"  (click)="openDialog(element.dataRegistro)" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
                             <i class="fa fa-eye" aria-hidden="true"></i>
+                          </button>
+                          <button *ngIf="element.isPapeleta" (click)="drawer.toggle()" matTooltip="Ver papeleta" id="searchProducto"  (click)="onViewPapeleta(element.papeletas)" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                            <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
                           </button>
                         </td>
                       </ng-container>
@@ -223,6 +235,8 @@
               </ion-row>
             </ion-col>
           </ion-row>
+
+          
         </div>
     <!--
         <div class="offcanvas offcanvas-end" data-bs-scroll="true"  tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">

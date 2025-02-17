@@ -1,10 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
 import { io } from "socket.io-client";
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { StorageService } from 'src/app/utils/storage';
+import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'mt-autorizacion-hora-extra',
@@ -12,7 +22,8 @@ import { StorageService } from 'src/app/utils/storage';
   styleUrls: ['./mt-autorizacion-hora-extra.component.scss'],
 })
 export class MtAutorizacionHoraExtraComponent implements OnInit {
-  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  readonly dialog = inject(MatDialog);
   onDataView: Array<any> = [];
   arDataEJB: Array<any> = [];
   onDataTemp: Array<any> = [];
@@ -33,7 +44,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   isDetalle: boolean = false;
   isLoading: boolean = false;
   profileUser: any = {};
-
+  filterEmpleado: string = "";
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -78,22 +89,40 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'COMENTARIO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
 
-      await dataResponse.filter(async (rs, i) => {
-        console.log(rs);
+      let dataPendiente = dataResponse.filter((pendiente) => pendiente.ESTADO == 'pendiente');
+
+      await dataPendiente.filter((pen, i) => {
         if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
-          viewData.push(rs);
+          viewData.push(pen);
         }
 
-        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' && dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' && dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL')) {
-          viewData.push(rs);
+        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
+          viewData.push(pen);
         }
 
-        if (this.profileUser.mt_nivel == "SISTEMAS" && this.profileUser.mt_nivel == "JOHNNY") {
-          viewData.push(rs);
-        }
 
+        if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+          viewData.push(pen);
+        }
+      });
+
+      await dataResponse.filter((pen, i) => {
+        if (pen.ESTADO != 'pendiente') {
+          if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
+            viewData.push(pen);
+          }
+
+          if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
+            viewData.push(pen);
+          }
+
+
+          if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+            viewData.push(pen);
+          }
+        }
       });
 
       this.onDataView = viewData;
@@ -342,7 +371,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     };
     this.service.get(parms).then(async (response) => {
 
-      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'ESTADO', 'AUTORIZAR'];
+      this.displayedColumns = ['TIENDA', 'FECHA', 'HORA_EXTRA', 'NOMBRE_COMPLETO', 'COMENTARIO', 'APROBADO_POR', 'ESTADO', 'AUTORIZAR'];
       let dataResponse = response;
       let viewData = [];
 
@@ -352,20 +381,39 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
         dataResponse[i]['ESTADO'] = !rs.APROBADO && !rs.RECHAZADO ? 'pendiente' : rs.APROBADO ? 'aprobado' : rs.RECHAZADO ? 'rechazado' : '';
       });
 
-      await dataResponse.filter(async (rs, i) => {
-        console.log(rs);
+      let dataPendiente = dataResponse.filter((pendiente) => pendiente.ESTADO == 'pendiente');
+
+
+      await dataPendiente.filter((pen, i) => {
         if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
-          viewData.push(rs);
+          viewData.push(pen);
         }
 
-        if (this.profileUser.mt_nivel == "jcarreno" && ((dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL'))) {
-          viewData.push(rs);
+        if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
+          viewData.push(pen);
         }
 
-        if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY") {
-          viewData.push(rs);
-        }
 
+        if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+          viewData.push(pen);
+        }
+      });
+
+      await dataResponse.filter((pen, i) => {
+        if (pen.ESTADO != 'pendiente') {
+          if (this.profileUser.mt_nivel == "cmoron" && (dataResponse[i]['TIENDA'] == 'BBW MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL AVENTURA AQP' || dataResponse[i]['TIENDA'] == 'VS MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'BBW MALL PLAZA TRU' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW JOCKEY')) {
+            viewData.push(pen);
+          }
+
+          if (this.profileUser.mt_nivel == "jcarreno" && (dataResponse[i]['TIENDA'] == 'BBW JOCKEY' || dataResponse[i]['TIENDA'] == 'BBW LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS LA RAMBLA' || dataResponse[i]['TIENDA'] == 'VS PLAZA NORTE' || dataResponse[i]['TIENDA'] == 'VSFA JOCKEY FULL' || dataResponse[i]['TIENDA'] == 'BBW SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'VS SAN MIGUEL' || dataResponse[i]['TIENDA'] == 'BBW SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS SALAVERRY' || dataResponse[i]['TIENDA'] == 'VS MALL DEL SUR' || dataResponse[i]['TIENDA'] == 'VS PURUCHUCO' || dataResponse[i]['TIENDA'] == 'VS MEGA PLAZA' || dataResponse[i]['TIENDA'] == 'VS MINKA' || dataResponse[i]['TIENDA'] == 'BBW ASIA')) {
+            viewData.push(pen);
+          }
+
+
+          if (this.profileUser.mt_nivel == "SISTEMAS" || this.profileUser.mt_nivel == "JOHNNY" || this.profileUser.mt_nivel == 'RRHH') {
+            viewData.push(pen);
+          }
+        }
       });
 
       this.onDataView = viewData;
@@ -378,31 +426,48 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   }
 
   onAutorizar(ev) {
-
+    let perfil = this.store.getStore('mt-profile');
     let parse = {
       hora_extra: ev.HR_EXTRA_ACOMULADO,
       nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
       aprobado: true,
       rechazado: false,
       fecha: ev.FECHA,
-      codigo_tienda: ev.CODIGO_TIENDA
+      codigo_tienda: ev.CODIGO_TIENDA,
+      usuario: (perfil || {}).mt_name_1 || ''
     }
     this.socket.emit('autorizar_hrx', parse);
     this.onListHorasAutorizar();
   }
 
+
   onRechazar(ev) {
 
-    let parse = {
-      hora_extra: ev.HR_EXTRA_ACOMULADO,
-      nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
-      aprobado: false,
-      rechazado: true,
-      fecha: ev.FECHA,
-      codigo_tienda: ev.CODIGO_TIENDA
-    }
-    this.socket.emit('autorizar_hrx', parse);
-    this.onListHorasAutorizar();
+    const dialogRef = this.dialog.open(MtModalComentarioComponent, {
+      data: {},
+      width: '500px'
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if ((result || "").length) {
+        let perfil = this.store.getStore('mt-profile');
+        let parse = {
+          hora_extra: ev.HR_EXTRA_ACOMULADO,
+          nro_documento: ev.NRO_DOCUMENTO_EMPLEADO,
+          aprobado: false,
+          rechazado: true,
+          fecha: ev.FECHA,
+          codigo_tienda: ev.CODIGO_TIENDA,
+          usuario: (perfil || {}).mt_name_1 || '',
+          comentario: result
+        }
+        this.socket.emit('autorizar_hrx', parse);
+        this.onListHorasAutorizar();
+      } else {
+        this.service.toastError("Tiene que poner un comentario sobre el porque fue rechazado", "Autorizacion Hora extra");
+      }
+    });
   }
 
   onViewRegistro(ev) {
@@ -419,6 +484,11 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   onBackPap() {
     this.parseHuellero = [];
     this.isDetalle = false;
+  }
+
+  applyFilterPapeleta(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }

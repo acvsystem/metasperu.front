@@ -21,13 +21,6 @@
                               <th mat-header-cell *matHeaderCellDef> Tienda </th>
                               <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                             </ng-container>
-          
-                            <ng-container matColumnDef="Fecha">
-                              <th mat-header-cell *matHeaderCellDef> Fecha Creacion </th>
-                              <td mat-cell *matCellDef="let element"> 
-                                <span>{{element.fecha}}</span>
-                              </td>
-                            </ng-container>
 
                             <ng-container matColumnDef="Inicio_semana">
                               <th mat-header-cell *matHeaderCellDef> Inicio semana </th>
@@ -49,6 +42,11 @@
                                 <button (click)="onViewHorario(element)" style="margin-left: 8px;" matTooltip="ver horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
                                   <i class="fa fa-calendar" aria-hidden="true"></i>
                                 </button>
+
+                                <button (click)="onViewObservacion(element)" style="margin-left: 8px;" matTooltip="ver observaciones" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
+                                  <i class="fa fa-bars" aria-hidden="true"></i>
+                                </button>
+                      
                               </td>
                             </ng-container>
           
@@ -67,7 +65,9 @@
               <button type="button" class="btn btn-light" (click)="onBack()">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
               </button>
-              <mt-horario-tienda [data]="onSelectedHorario" *ngIf="onSelectedHorario.length"></mt-horario-tienda>
+              <mt-horario-tienda [data]="onSelectedHorario" *ngIf="onSelectedHorario.length && !isObservaciones"></mt-horario-tienda>
+
+              <mt-search-obervacion [data]="onSelectedHorario" *ngIf="isObservaciones && onSelectedHorario.length"></mt-search-obervacion>
             }
 
           </div>
@@ -146,8 +146,11 @@
             }
           </div>
         </mat-tab>
-        <mat-tab label="Horas Extras" style="min-height: 1000px">
+        <mat-tab label="Horas Extras Detallado" style="min-height: 1000px">
           <mt-papeleta-horario [isConsulting]="true"></mt-papeleta-horario>
+        </mat-tab>
+        <mat-tab label="Horas Extras Consolidado" style="min-height: 1000px">
+          <mt-hr-extra-consolidado></mt-hr-extra-consolidado>
         </mat-tab>
       </mat-tab-group>
     </div>

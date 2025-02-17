@@ -7,12 +7,14 @@ import { NavController } from '@ionic/angular';
 import { ShareService } from './services/shareService';
 import { MenuController } from '@ionic/angular';
 import { UAParser } from 'ua-parser-js';
+import { io } from 'socket.io-client';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   isShowLoading: boolean = false;
   renderNavBar: boolean = false;
   isMobil: boolean = false;
@@ -31,7 +33,11 @@ export class AppComponent {
     private service: ShareService,
     private menu: MenuController
   ) {
-
+/*
+    setInterval(() => {
+      this.socket.emit('comunicationEnlace', 'RECONECT');
+    }, 10000)
+*/
     this.httpService.eventShowLoading.subscribe((response) => {
       setTimeout(() => {
         this.isShowLoading = response;
@@ -75,6 +81,11 @@ export class AppComponent {
             ISVISIBLE: true,
             nombre_menu: "PANEL HORARIOS",
             ruta: "panel-horario"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "AUTORIZACION HORA EXTRA",
+            ruta: "auth-hora-extra"
           }
 
         ];
@@ -103,6 +114,29 @@ export class AppComponent {
             ISVISIBLE: true,
             nombre_menu: "AUTORIZACION HORA EXTRA",
             ruta: "auth-hora-extra"
+          }
+        ];
+
+        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      }
+
+
+      if ((profileUser || {}).mt_nivel == "nduran" || (profileUser || {}).mt_nivel == "aseijo") {
+        self.menuUser = [
+          {
+            ISVISIBLE: true,
+            nombre_menu: "INVENTARIO",
+            ruta: "inventario"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "ASISTENCIA",
+            ruta: "asistencia"
+          },
+          {
+            ISVISIBLE: true,
+            nombre_menu: "PANEL HORARIOS",
+            ruta: "panel-horario"
           }
         ];
 

@@ -109,7 +109,7 @@ export class MtLoginComponent implements OnInit {
 
     } else if ((profileUser || {}).mt_nivel == "RRHH") {
       this.nav.navigateRoot('asistencia');
-    } else if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno") {
+    } else if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno" || (profileUser || {}).mt_nivel == "nduran" || (profileUser || {}).mt_nivel == "aseijo") {
       this.nav.navigateRoot('asistencia');
     }else if ((profileUser || {}).mt_nivel == "acarbajal") {
       this.nav.navigateRoot('inventario');

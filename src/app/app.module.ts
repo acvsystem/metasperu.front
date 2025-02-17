@@ -86,6 +86,9 @@ import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
 import { MtAccionCloudComponent } from './pages/mt-dropbox/mt-accion-cloud/mt-accion-cloud.component';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { MtHrExtraConsolidadoComponent } from './components/mt-hr-extra-consolidado/mt-hr-extra-consolidado.component';
+import { MtSearchObervacionComponent } from './components/mt-search-obervacion/mt-search-obervacion.component';
+import { MtModalComentarioComponent } from './components/mt-modal-comentario/mt-modal-comentario.component';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3700', options: {} };
 
@@ -120,7 +123,10 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3700', options: {} }
         MtPlanillaComponent,
         MtViewRegistroComponent,
         MtDropboxComponent,
-        MtAccionCloudComponent
+        MtAccionCloudComponent,
+        MtHrExtraConsolidadoComponent,
+        MtSearchObervacionComponent,
+        MtModalComentarioComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],

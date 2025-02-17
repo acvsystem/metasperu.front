@@ -45,7 +45,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     { id: 5, dia: "Viernes", fecha: "20-sep", isObservacion: false, isExpired: false },
     { id: 6, dia: "Sabado", fecha: "21-sep", isObservacion: false, isExpired: false },
     { id: 7, dia: "Domingo", fecha: "22-sep", isObservacion: false, isExpired: false }
-  ];;
+  ];
   arRangeFecha: Array<any> = [];
   vSelectDia: number = 0;
   vSelectHorario: number = 0;
@@ -89,7 +89,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   isRangoEdit: boolean = false;
 
   arListaDiaTrab: Array<any> = [];
-
+  profileUser: any = {};
 
   private _snackBar = inject(MatSnackBar);
 
@@ -108,6 +108,18 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
   async ngOnInit() {
+
+
+    this.profileUser = this.store.getStore('mt-profile');
+
+    if ((this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+      this.store.setStore('mt-profile', JSON.stringify({
+        "mt_name_1": (this.profileUser || {}).mt_name_1,
+        "mt_nivel": (this.profileUser || {}).mt_nivel,
+        "code": ""
+      }));
+    }
+
     this.getScreenSize();
     if ((this.data || []).length) {
       this.isLoading = true;
@@ -152,7 +164,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           let fechaInicio = new Date(fechaActual);
           let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
 
-          if (fechaFin.getTime() < fechaInicio.getTime()) {
+          if (fechaFin.getTime() < fechaInicio.getTime() || fechaFin.getTime() == fechaInicio.getTime()) {
             this.dataHorario[index]['dias'][i]['isExpired'] = true;
           } else {
             this.dataHorario[index]['dias'][i]['isExpired'] = false;
@@ -214,7 +226,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
           this.arDataEJB.filter(async (ejb) => {
             if (this.codeTienda == '7F') {
-              if (((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+              if (((ejb || {}).code_unid_servicio == '0016' || (ejb || {}).code_unid_servicio == '0019') && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
                 let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
 
                 if (exist == -1) {
@@ -224,7 +236,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                 }
               }
             } else {
-              if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '81433419' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
+              if ((ejb || {}).code_unid_servicio == (codigo_uns || {}).code_uns && ((ejb || {}).nro_documento).trim() != '001763881' && ((ejb || {}).nro_documento).trim() != '75946420' && ((ejb || {}).nro_documento).trim() != '003755453' && ((ejb || {}).nro_documento).trim() != '002217530' && ((ejb || {}).nro_documento).trim() != '002190263' && ((ejb || {}).nro_documento).trim() != '70276451') {
                 let exist = this.arListTrabajador.findIndex((pr) => pr.documento == ((ejb || {}).nro_documento).trim());
                 if (exist == -1) {
                   this.arListTrabajador.push(
@@ -391,13 +403,13 @@ export class MtHorarioTiendaComponent implements OnInit {
         let parseDate = ds.fecha_number.split('-');
         let fechaInicio = new Date(fechaActual);
         let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
-
-        if (fechaFin.getTime() < fechaInicio.getTime()) {
+      
+        if (fechaFin.getTime() < fechaInicio.getTime() || fechaFin.getTime() == fechaInicio.getTime()) {
           this.dataHorario[index]['dias'][i]['isExpired'] = true;
         } else {
           this.dataHorario[index]['dias'][i]['isExpired'] = false;
         }
-
+        
         let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
         if (obsExist != -1) {

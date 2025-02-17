@@ -12,7 +12,7 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./mt-panel-horario.component.scss'],
 })
 export class MtPanelHorarioComponent implements OnInit {
-  displayedColumns: string[] = ['Tienda', 'Fecha', 'Inicio_semana', 'Termino_semana', 'Accion'];
+  displayedColumns: string[] = ['Tienda', 'Inicio_semana', 'Termino_semana', 'Accion'];
   displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
   dataView: Array<any> = [];
   dataViewPap: Array<any> = [];
@@ -24,6 +24,7 @@ export class MtPanelHorarioComponent implements OnInit {
   isHorario: boolean = false;
   isViewPap: boolean = false;
   isViewPapeleta: boolean = false;
+  isObservaciones: boolean = false;
   onSelectedHorario: Array<any> = [];
   onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
@@ -157,6 +158,13 @@ export class MtPanelHorarioComponent implements OnInit {
 
   onViewHorario(ev) {
     this.isHorario = true;
+    this.isObservaciones = false;
+    this.onSelectedHorario = [ev];
+  }
+
+  onViewObservacion(ev) {
+    this.isHorario = true;
+    this.isObservaciones = true;
     this.onSelectedHorario = [ev];
   }
 

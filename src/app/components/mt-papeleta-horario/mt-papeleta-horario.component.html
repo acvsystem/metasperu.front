@@ -44,8 +44,14 @@
               </ion-col>
             </ion-row>
           </ion-col>
+          @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7" || isConsulting){
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="display: flex;justify-content: flex-end;">
+              <div style="display: flex;align-items: center;font-weight: 500;padding-right: 32px;">
+                Papeletas Asociadas: {{cantidadPapeletas}}
+              </div>
+            </ion-col>
+          }
         </ion-row>
-        
   
           <div>
             <ion-row *ngIf="!isConsulting">
@@ -220,7 +226,7 @@
                           <td class="columBody">
                               <div>
                                 @if(columBody.estado == 'aprobar'){
-                                  <button matTooltip="Aprobar Horas extras" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion(columBody)">
+                                  <button matTooltip="Solicitar parobacion" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion(columBody)">
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                   </button>
                                   <button matTooltip="Revisar Registro del dia" id="searchProducto" type="button" class="btn btn-warning btn-sm" style="color: #fff; padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onSearchRegistro(columBody.fecha)">
@@ -363,6 +369,13 @@
       </ion-row>
     </div>
   </mat-tab>
+  <!--
+  @if(!isConsulting){
+    <mat-tab label="Horas Extras Consolidado" style="min-height: 1000px">
+      <mt-hr-extra-consolidado [vTiendaLogin]="onSelectTienda" (afterChange)="onCargarEmpleado($event)"></mt-hr-extra-consolidado>
+    </mat-tab>
+  }
+    -->
 </mat-tab-group>
 
 
