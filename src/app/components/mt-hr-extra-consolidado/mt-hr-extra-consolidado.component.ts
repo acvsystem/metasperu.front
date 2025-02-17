@@ -15,7 +15,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input() vTiendaLogin: any = {};
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
   onListEmpleado: Array<any> = [];
   arDataEJB: Array<any> = [];
   parseEJB: Array<any> = [];
@@ -92,7 +92,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
   onProcess() {
 
-    this.socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+    this.socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
 
 
 

@@ -727,7 +727,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     if (index == 'cboTiendaConsulting') {
-      this.socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+      this.socket = io('http://38.187.8.22:3700', { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
 
