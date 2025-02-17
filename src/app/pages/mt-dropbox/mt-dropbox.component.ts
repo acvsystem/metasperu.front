@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
 import {
   MatDialog,
@@ -17,6 +17,8 @@ import { saveAs } from 'file-saver';
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { io } from 'socket.io-client';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'mt-dropbox',
@@ -38,7 +40,9 @@ export class MtDropboxComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   myFiles: Array<any> = [];
   sMsg: string = '';
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  
   constructor(private service: ShareService, private http: HttpClient) { }
 
   ngOnInit() {
@@ -100,6 +104,8 @@ export class MtDropboxComponent implements OnInit {
       });
 
       this.dataSource = new MatTableDataSource(this.arDirectorios);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
 
     });
   }
@@ -219,6 +225,8 @@ export class MtDropboxComponent implements OnInit {
         });
 
         this.dataSource = new MatTableDataSource(this.arDirectorios);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       });
     }
 
@@ -257,7 +265,7 @@ export class MtDropboxComponent implements OnInit {
       const file: File = images[index];
 
 
-      this.arDirectorios.push(
+      this.arDirectorios.unshift(
         {
           name: images[index].name,
           type: "txt",
@@ -268,20 +276,16 @@ export class MtDropboxComponent implements OnInit {
         }
       );
 
-      this.myFiles.push({
+      this.myFiles.unshift({
         name: images[index].name,
         size: images[index].size >= 1000000 ? tamañoFile : (images[index].size / 1024).toFixed(2) + nomenclatura
       });
 
-
-
-
     }
 
-
-
-
     this.dataSource = new MatTableDataSource(this.arDirectorios);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     console.log(this.dataSource);
 
   }
