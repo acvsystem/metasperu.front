@@ -81,11 +81,6 @@ export class AppComponent {
             ISVISIBLE: true,
             nombre_menu: "PANEL HORARIOS",
             ruta: "panel-horario"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "AUTORIZACION HORA EXTRA",
-            ruta: "auth-hora-extra"
           }
 
         ];
@@ -303,7 +298,7 @@ export class AppComponent {
         )
         .subscribe(
           (event: NavigationEnd) => {
-
+/*
             if (this.store.getStore('tn')) {
               let profileUser = this.store.getStore('mt-profile');
 
@@ -322,18 +317,7 @@ export class AppComponent {
               }
 
 
-              /* if (location.pathname.split('/')[1] == "comprobantes" && ) {
-                 this.store.setStore('pathURL', location.pathname.split('/')[1]);
-                 pathActual = { value: this.store.getStore('pathURL') || location.pathname.split('/')[1] };
-                 if (!this.store.getStore('tn') || ((pathActual || {}).value == "postulante" || (pathActual || {}).value.length == 0)) {
-                   this.renderNavBar = false;
-                 }
-                 this.nav.navigateRoot((pathActual || {}).value);
-               } else {
-                 let path = location.pathname.split('/')[1];
-                 this.nav.navigateRoot(path);
-               }*/
-            }
+            }*/
           }
         )
 

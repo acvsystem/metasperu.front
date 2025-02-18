@@ -70,13 +70,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
     const self = this;
     this.headList = []
-    this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Tipo documento adq.', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Codigo sunat', 'Fecha emision']
+    this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Fecha emision']
     this.columnsToDisplay = ['codigo', 'Tienda', 'isVerification', 'cant_comprobantes', 'transacciones', 'clientes_null', 'online', 'conexICG'];
     this.onTransacciones();
     this.onListClient();
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
       dataList = sunat || [];
+      console.log(sunat);
       this.bodyListSunat = [];
       (dataList || []).filter((dataSocket: any) => {
         const fechaDocumento = new Date((dataSocket || {}).FECHA_EMISION).toLocaleDateString('en-CA');

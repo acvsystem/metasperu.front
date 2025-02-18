@@ -200,7 +200,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.codeTienda = profileUser.code.toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
-    this.unidServicio = unidServicio['uns'];
+    this.unidServicio = (unidServicio || {})['uns'];
     this.onListEmpleado = [];
 
     this.socket.on("connect_error", () => {

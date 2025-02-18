@@ -286,12 +286,10 @@
                     <td class="columBody">{{columBody.nro_correlativo}}</td>
                     <td class="columBody">{{columBody.nom_aquiriente}}</td>
                     <td class="columBody">{{columBody.nro_documento}}</td>
-                    <td class="columBody">{{columBody.tipo_doc_adquiriente}}</td>
                     <td class="columBody">{{columBody.observacion}}</td>
                     <td class="columBody">{{columBody.estado_sunat}}</td>
                     <td class="columBody">{{columBody.estado_comprobante}}</td>
-                    <td class="columBody">{{columBody.codigo_sunat}}</td>
-                    <td class="columBody">{{columBody.fecha_emision}}</td>
+                    <td class="columBody">{{ columBody.fecha_emision | date: 'yyyy-MM-dd' }}</td>
                   </tr>
                 </tbody>
               </table>

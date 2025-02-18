@@ -164,7 +164,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.onSelectTienda = unidServicio;
 
-    this.unidServicio = unidServicio['uns'];
+    this.unidServicio = (unidServicio || {})['uns'];
     this.onListEmpleado = [];
     console.log(this.unidServicio);
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
@@ -741,7 +741,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.nameTienda = profileUser.mt_name_1.toUpperCase();
       this.codeTienda = profileUser.code.toUpperCase();
       let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
-      this.unidServicio = unidServicio['uns'];
+      this.unidServicio = (unidServicio || {})['uns'];
       this.onListEmpleado = [];
       this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
