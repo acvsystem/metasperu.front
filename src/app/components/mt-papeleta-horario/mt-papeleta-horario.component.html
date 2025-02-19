@@ -219,14 +219,14 @@
                           <td class="columBody">{{columBody.hrx_sobrante}}</td>
                           <td class="columBody">
                             <h6 *ngIf="!columBody.seleccionado && !columBody.verify && columBody.estado == 'correcto' || columBody.estado == 'aprobado' && !columBody.verify" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
-                            <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify && !columBody.rechazado" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">aprobar</span></h6>
+                            <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify && !columBody.rechazado" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">solicitar aprobacion</span></h6>
                             <h6 *ngIf="columBody.estado == 'utilizado' || columBody.seleccionado" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
                             <h6 *ngIf="columBody.rechazado || columBody.estado == 'rechazado'" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
                           </td>
                           <td class="columBody">
                               <div>
                                 @if(columBody.estado == 'aprobar'){
-                                  <button matTooltip="Solicitar parobacion" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion(columBody)">
+                                  <button matTooltip="Solicitar aprobacion" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion(columBody)">
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                   </button>
                                   <button matTooltip="Revisar Registro del dia" id="searchProducto" type="button" class="btn btn-warning btn-sm" style="color: #fff; padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onSearchRegistro(columBody.fecha)">
