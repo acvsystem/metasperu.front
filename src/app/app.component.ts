@@ -298,7 +298,7 @@ export class AppComponent {
         )
         .subscribe(
           (event: NavigationEnd) => {
-/*
+
             if (this.store.getStore('tn')) {
               let profileUser = this.store.getStore('mt-profile');
 
@@ -317,7 +317,7 @@ export class AppComponent {
               }
 
 
-            }*/
+            }
           }
         )
 
