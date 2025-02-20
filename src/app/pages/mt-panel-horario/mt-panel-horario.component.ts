@@ -115,7 +115,7 @@ export class MtPanelHorarioComponent implements OnInit {
     };
 
     this.service.get(parms).then(async (response) => {
-      let dataResponse = response;
+      let dataResponse = response.reverse();
 
       this.dataView = [];
       if ((dataResponse || []).length) {
@@ -128,10 +128,13 @@ export class MtPanelHorarioComponent implements OnInit {
 
             if ((dt || {}).RANGO_DIAS != 'undefined' && horario[0] != '20-1-2025') {
 
-              this.dataView.push({
-                id: this.dataView.length + 1, fecha: dt.FECHA, code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
-              });
+              let exist = this.dataView.find((dw) => dw.code == tienda[0].code && dw.rango_1 == horario[0]);
 
+              if (!Object.keys(exist || {}).length) {
+                this.dataView.push({
+                  id: this.dataView.length + 1, fecha: dt.FECHA, code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
+                })
+              }
             }
           }
 
