@@ -76,9 +76,7 @@ export class MtPanelHorarioComponent implements OnInit {
     };
 
     this.service.get(parms).then(async (response) => {
-      const ascDates = response.sort((a, b) => {
-        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
-      });
+      const ascDates = response.reverse();
 
       this.listaPapeletas = ascDates;
 
