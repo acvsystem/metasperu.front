@@ -250,6 +250,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
                 let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
                 //let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
+                if ((huellero || {}).nro_documento == '005360632' && (huellero || {}).dia == "2025-02-19") {
+                  console.log((huellero || {}).hr_ingreso, (huellero || {}).hr_salida, this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1, this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
+                }
+                console.log();
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
                 this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
                 this.onDataTemp[indexData]['isBrakeComplete'] = this.onVerficacionBrake(this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso));
@@ -713,7 +717,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   onGrafic() {
     this.isViewPapeleta = false;
   }
-  
+
   onVerificacionJornada(hr) {
     let hora_pr = hr.split(":");
     return hora_pr[0] >= 8;
