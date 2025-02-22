@@ -511,10 +511,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.arPartTimeFech.filter((pt, index) => {
 
         if (pt.indice > (this.arPartTimeFech[index - 1] || {}).indice || typeof this.arPartTimeFech[index - 1] == "undefined") {
- 
+          let hr = ((this.arPartTimeFech[index - 1] || {}).hr_trabajadas || "").split(":");
+          if (parseInt(hr[1]) >= 15 || parseInt(hr[0]) > 0) {
             arFechas.push({ dia: (this.arPartTimeFech[index - 1] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index - 1] || {}).hr_trabajadas });
             count = this.obtenerHorasTrabajadas(pt.hr_trabajadas, count);
-          
+          }
 
         }
 
