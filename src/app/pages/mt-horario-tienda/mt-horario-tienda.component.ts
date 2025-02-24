@@ -170,7 +170,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             this.dataHorario[index]['dias'][i]['isExpired'] = false;
           }
 
-          if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9G') {
+          if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
             this.dataHorario[index]['dias'][i]['isExpired'] = false;
           }
 
@@ -416,7 +416,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.dataHorario[index]['dias'][i]['isExpired'] = false;
         }
 
-        if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9G') {
+        if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
           this.dataHorario[index]['dias'][i]['isExpired'] = false;
         }
 
@@ -833,7 +833,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
               }
 
-              if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9G') {
+              if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
               }
 
@@ -1251,7 +1251,7 @@ export class MtHorarioTiendaComponent implements OnInit {
               this.dataHorario[index]['dias'][i]['isExpired'] = false;
             }
 
-            if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9G') {
+            if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
               this.dataHorario[index]['dias'][i]['isExpired'] = false;
             }
 
