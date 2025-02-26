@@ -1,8 +1,18 @@
 <mat-dialog-content>
-  <p>Ingrese un comentario.</p>
-  <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+  @if(!isViewcomentario){
+    <p>Ingrese un comentario.</p>
+    <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+  }@else{
+    {{data.comentario}}
+  }
+  
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Canelar</button>
-  <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
+  @if(!isViewcomentario){
+    <button mat-button (click)="onNoClick()">Canelar</button>
+    <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
+  }@else{
+    <button mat-button (click)="onNoClick()" cdkFocusInitial>Ok</button>
+  }
+
 </mat-dialog-actions>

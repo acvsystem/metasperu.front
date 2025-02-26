@@ -17,6 +17,7 @@ export class MtModalContentComponent implements OnInit {
 
   ngOnInit() {
     this.contentHTML = this.sanitizer.bypassSecurityTrustHtml(this.bodyContent);
+    console.log(this.contentHTML);
   }
 
   oncloseModal() {
