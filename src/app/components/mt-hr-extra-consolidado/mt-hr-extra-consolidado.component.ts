@@ -222,6 +222,12 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
           if (indexData == -1) {
 
+            let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
+
+            if (((huellero || {})['papeleta'] || []).length) {
+              htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
+            }
+
             (this.onDataTemp || []).push({
               dia: (huellero || {}).dia,
               hr_ingreso_1: (huellero || {}).hrIn,
@@ -230,7 +236,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
               hr_brake: "",
               hr_ingreso_2: "",
               hr_salida_2: "",
-              hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
+              hr_trabajadas: htrb,
               hr_extra: 0,
               hr_faltante: 0,
               dataRegistro: [huellero]
@@ -315,7 +321,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                   let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-                  let estado = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || salida >= 356 ? 'aprobar' : 'correcto';
+                  let estado = this.onDataTemp[indexData]['dataRegistro'].length == 1 || salida >= 356 || this.onDataTemp[indexData]['hr_salida_2'] == '23:59:59' || this.onDataTemp[indexData]['hr_ingreso_1'] == '00:00:00' ? 'aprobar' : 'correcto';
                   let ejb = this.parseEJB.filter((ejb) => ejb.documento == documentoConsultar);
 
                   let aprobado = estado == "correcto" ? true : false;
@@ -377,7 +383,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             if (hora_1_pr[0] >= 8 && validFecha) {
 
               let hr = process.split(":");
-              if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0) {
+              if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
                 this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                 let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                 let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
@@ -405,7 +411,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
           }
 
           if (this.onDataTemp.length - 1 == indexData) {
-
             this.onVerificarHrExtra(this.dataVerify);
           }
         });
@@ -464,7 +469,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       this.hroAcumulada = "";
       this.hroAcumuladaTotal = "";
       this.arHoraExtra = [];
-
       this.bodyList.filter((dt, i) => {
         this.bodyList[i]['hrx_solicitado'] = "00:00";
 
@@ -480,11 +484,9 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
         if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
           if (!this.arHoraExtra.length && dt.estado != "utilizado" && dt.estado != "rechazado") {
-
             this.arHoraExtra = [dt.extra];
           } else {
             if ((dt.estado == "correcto" || dt.estado == "aprobado") && dt.estado != "rechazado") {
-
               this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
             }
           }
