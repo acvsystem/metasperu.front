@@ -170,9 +170,10 @@ export class MtHorarioTiendaComponent implements OnInit {
             this.dataHorario[index]['dias'][i]['isExpired'] = false;
           }
 
-          if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
+          //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+          /*if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
             this.dataHorario[index]['dias'][i]['isExpired'] = false;
-          }
+          }*/
 
           let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
@@ -415,10 +416,10 @@ export class MtHorarioTiendaComponent implements OnInit {
         } else {
           this.dataHorario[index]['dias'][i]['isExpired'] = false;
         }
-
-        if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
-          this.dataHorario[index]['dias'][i]['isExpired'] = false;
-        }
+        //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+        /* if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
+           this.dataHorario[index]['dias'][i]['isExpired'] = false;
+         }*/
 
         let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
@@ -832,10 +833,10 @@ export class MtHorarioTiendaComponent implements OnInit {
               } else {
                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
               }
-
-              if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
-                this.dataHorario[index]['dias'][i]['isExpired'] = false;
-              }
+              //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+              /* if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
+                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
+               }*/
 
               let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
@@ -1250,10 +1251,10 @@ export class MtHorarioTiendaComponent implements OnInit {
             } else {
               this.dataHorario[index]['dias'][i]['isExpired'] = false;
             }
-
-            if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
-              this.dataHorario[index]['dias'][i]['isExpired'] = false;
-            }
+            //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+            /*  if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
+                this.dataHorario[index]['dias'][i]['isExpired'] = false;
+              }*/
 
 
             let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
