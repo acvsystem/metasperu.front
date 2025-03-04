@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, inject, model, signal, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, inject, model, signal, Component, OnInit, Input } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -12,6 +12,7 @@ import * as $ from 'jquery';
 
 export interface DialogData {
   comentario: string;
+  isViewComentario: boolean;
 }
 
 @Component({
@@ -23,11 +24,15 @@ export class MtModalComentarioComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<MtModalComentarioComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   readonly comentario = model(this.data.comentario);
+  readonly isViewComentarioModal = model(this.data.isViewComentario);
   vComentario: string = "";
+  isViewcomentario: any = this.isViewComentarioModal;
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.isViewcomentario.value);
+   }
 
   onChangeTextArea(data: any) {
     let id = data.target.id;

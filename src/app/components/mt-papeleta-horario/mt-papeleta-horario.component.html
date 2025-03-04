@@ -233,6 +233,11 @@
                                     <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
                                   </button>
                                 } 
+                                @if(columBody.estado == 'rechazado'){
+                                  <button matTooltip="Ver comentario" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onViewComentario(columBody)">
+                                    <i class="fa fa-commenting" aria-hidden="true"></i>
+                                  </button>
+                                }
                               </div>
                           </td>
                           <td class="columBody">

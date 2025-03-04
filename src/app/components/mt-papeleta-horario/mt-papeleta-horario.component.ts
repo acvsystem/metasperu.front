@@ -13,6 +13,18 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
+import { ModalController } from '@ionic/angular';
+import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -26,6 +38,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
+  readonly dialog = inject(MatDialog);
   onListEmpleado: Array<any> = [];
   cboCasos: string = "";
   codigoPap: string = "";
@@ -151,7 +164,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private store: StorageService, private service: ShareService) {
+  constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService) {
     this.getScreenSize();
   }
 
@@ -604,6 +617,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       this.bodyList.filter((dt, i) => {
         this.bodyList[i]['hrx_solicitado'] = "00:00";
+        this.bodyList[i]['comentario'] = (((dt || {}).comentario || [])[0] || {})['COMENTARIO'];
 
         let sobrante = dt.hrx_sobrante.split(':');
         let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
@@ -1696,6 +1710,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
     } else {
       this.service.toastError("solo puede solicitar 8 horas por papeleta..!!", "Papeleta");
     }
+  }
+
+  async onViewComentario(row) {
+    const dialogRef = this.dialog.open(MtModalComentarioComponent, {
+      data: { comentario: (row || {}).comentario, isViewComentario: true },
+      width: '500px'
+
+    });
+
+
   }
 
   onChange(data: any) {
