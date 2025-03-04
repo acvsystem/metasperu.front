@@ -20,12 +20,15 @@ export class MtConfiguracionComponent implements OnInit {
   displayedColumnsSession: string[] = ['id_session', 'email', 'ip', 'divice'];
   displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo', 'accion'];
   displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel'];
+  displayedColumnsCajas: string[] = ['nro_caja', 'mac', 'serie_tienda', 'database_instance', 'database_name', 'cod_tipo_factura', 'cod_tipo_boleta', 'property_stock', 'asunto_email_stock', 'name_excel_stock', 'ruta_download_agente', 'ruta_download_sunat'];
   dataViewSession: Array<any> = [];
   dataViewAuthSession: Array<any> = [];
   dataViewUser: Array<any> = [];
+  dataViewCaja: Array<any> = [];
   dataSourceSession = new MatTableDataSource<any>(this.dataViewSession);
   dataSourceAuthSession = new MatTableDataSource<any>(this.dataViewAuthSession);
   dataSourceUser = new MatTableDataSource<any>(this.dataViewUser);
+  dataSourceCajas = new MatTableDataSource<any>(this.dataViewCaja);
 
   menuAllList: Array<any> = [];
   menuUserList: Array<any> = [];
@@ -42,6 +45,7 @@ export class MtConfiguracionComponent implements OnInit {
   ];
 
   lstRol: string = "";
+  filterTienda: string = "";
 
   emailList: Array<any> = [];
   emailSend: string = "";
@@ -64,6 +68,7 @@ export class MtConfiguracionComponent implements OnInit {
   vPassword: string = "";
   isSession: boolean = false;
   isUsers: boolean = false;
+  isCajas: boolean = false;
   token: any = localStorage.getItem('tn');
   optionNivelList: Array<any> = [];
   selectOptionNivel = {};
@@ -104,6 +109,19 @@ export class MtConfiguracionComponent implements OnInit {
     { key: '7I', value: 'BBW MALL PLAZA', progress: -1 }
   ];
 
+  vSerieTienda: String = "";
+  vNumeroCaja: String = "";
+  vMac: String = "";
+  vInstanciaDataBase: String = "";
+  vNameDataBase: String = "";
+  vCodigoTipoFactura: String = "";
+  vCodigoTipoBoleta: String = "";
+  vPropertyStock: String = "";
+  vAsuntoEmailStock: String = "";
+  vRutaDownloadAgente: String = "";
+  vRutaDownloadSunat: String = "";
+  vNameExcelStock: String = "";
+
   optionListRol: Array<any> = [];
   vListaClientes: String = "";
   socket = io('http://38.187.8.22:3200', { query: { code: 'app', token: this.token } });
@@ -113,11 +131,14 @@ export class MtConfiguracionComponent implements OnInit {
   @ViewChild(MatPaginator) paginator_session: MatPaginator;
   @ViewChild(MatSort) sort_session: MatSort;
 
+  @ViewChild(MatPaginator) paginator_caja: MatPaginator;
+  @ViewChild(MatSort) sort_caja: MatSort;
+
 
   constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    
+
     /* this.onListPerfil();
      this.onListConfiguration();
      this.onListMenu();
@@ -224,6 +245,17 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataSourceUser = new MatTableDataSource<any>([]);
       this.dataSourceUser.paginator = this.paginator_user;
       this.dataSourceUser.sort = this.sort_user;
+    }
+
+    if (ev.tab.textLabel == "Registro Tiendas") {
+      this.isSession = false;
+      this.isUsers = false;
+      this.isCajas = true;
+      this.onListCajas();
+
+      this.dataSourceCajas = new MatTableDataSource<any>([]);
+      this.dataSourceCajas.paginator = this.paginator_caja;
+      this.dataSourceCajas.sort = this.sort_caja;
     }
 
   }
@@ -555,4 +587,48 @@ export class MtConfiguracionComponent implements OnInit {
       this.onListAuthSession();
     });
   }
+
+
+
+  onRegistrarCaja() {
+    let parms = {
+      url: '/security/add/tienda',
+      body: [{
+        nro_caja: this.vNumeroCaja || "",
+        mac: this.vMac || "",
+        serie_tienda: this.vSerieTienda || "",
+        database_instance: this.vInstanciaDataBase || "",
+        database_name: this.vNameDataBase || "",
+        cod_tipo_factura: this.vCodigoTipoFactura || "",
+        cod_tipo_boleta: this.vCodigoTipoFactura || "",
+        property_stock: this.vPropertyStock || "",
+        asunto_email_stock: this.vAsuntoEmailStock || "",
+        name_excel_stock: this.vNameExcelStock || "",
+        ruta_download_agente: this.vRutaDownloadAgente || "",
+        ruta_download_sunat: this.vRutaDownloadSunat || ""
+      }]
+    };
+    console.log(parms);
+    this.service.post(parms).then((response) => {
+      console.log(response);
+    });
+  }
+
+  onListCajas() {
+    let parms = {
+      url: '/security/lista/tienda'
+    };
+    this.service.get(parms).then((response) => {
+      this.dataViewCaja = (response || [])['data'];
+      this.dataSourceCajas = new MatTableDataSource(this.dataViewCaja);
+      this.dataSourceCajas.paginator = this.paginator_caja;
+      this.dataSourceCajas.sort = this.sort_caja;
+    });
+  }
+
+  applyFilterPapeleta(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceCajas.filter = filterValue.trim().toLowerCase();
+  }
+
 }

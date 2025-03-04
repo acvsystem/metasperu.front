@@ -309,6 +309,156 @@
         <mat-tab label="Registro Tiendas">
           <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
 
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <label style="color: black;margin: 6px;">Informacion</label>
+                    <hr style="background-color: black;margin: 6px;">
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vSerieTienda" label="Serie Tienda" placeholder="Serie tienda" type="text" value="{{ vSerieTienda }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vNumeroCaja" label="Caja" placeholder="Numero caja" type="text" value="{{ vNumeroCaja }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vMac" label="Mac" placeholder="Mac" type="text" value="{{ vMac }}"></mt-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <label style="color: black;margin: 6px;">Base de datos</label>
+                    <hr style="background-color: black;margin: 6px;">
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vInstanciaDataBase" label="Instancia BD" placeholder="Instancia Base de Datos" type="text" value="{{ vInstanciaDataBase }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vNameDataBase" label="Nombre BD" placeholder="Nombre Base de Datos" type="text" value="{{ vNameDataBase }}"></mt-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoFactura" label="Cod Factura" placeholder="Codigo factura" type="text" value="{{ vCodigoTipoFactura }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoBoleta" label="Cod Boleta" placeholder="Codigo boleta" type="text" value="{{ vCodigoTipoBoleta }}"></mt-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <label style="color: black;margin: 6px;">Inventario</label>
+                    <hr style="background-color: black;margin: 6px;">
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vPropertyStock" label="Propiedad Stock" placeholder="Propiedad stock" type="text" value="{{ vPropertyStock }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vAsuntoEmailStock" label="Asunto email stock" placeholder="Escriba el asunto" type="text" value="{{ vAsuntoEmailStock }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vNameExcelStock" label="Nombre Excel export" placeholder="Escriba el nombre" type="text" value="{{ vNameExcelStock }}"></mt-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <label style="color: black;margin: 6px;">Plugins</label>
+                    <hr style="background-color: black;margin: 6px;">
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadAgente" label="Ruta install agente" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadAgente }}"></mt-input>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                    <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadSunat" label="Ruta install sunat" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadSunat }}"></mt-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                    <button  id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onRegistrarCaja()">
+                      Registrar Caja
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+                    <mt-input id="filterTienda" label="Filtro" placeholder="Filtro" type="text" value="{{ filterTienda }}"
+                      (keyup)="applyFilterPapeleta($event)"></mt-input>
+                  </ion-col>
+                </ion-row>
+                <div class="mat-elevation-z8" *ngIf="isCajas">
+                  <table mat-table [dataSource]="dataSourceCajas">
+                      <ng-container matColumnDef="nro_caja">
+                        <th mat-header-cell *matHeaderCellDef> Nro caja </th>
+                        <td mat-cell *matCellDef="let element"> {{element.NUM_CAJA}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="mac">
+                        <th mat-header-cell *matHeaderCellDef> MAC </th>
+                        <td mat-cell *matCellDef="let element"> {{element.MAC}} </td>
+                      </ng-container>
+    
+                      <ng-container matColumnDef="serie_tienda">
+                        <th mat-header-cell *matHeaderCellDef> Serie tienda </th>
+                        <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="database_instance">
+                        <th mat-header-cell *matHeaderCellDef> Database instance </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DATABASE_INSTANCE}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="database_name">
+                        <th mat-header-cell *matHeaderCellDef> Database name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DATABASE_NAME}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="cod_tipo_factura">
+                        <th mat-header-cell *matHeaderCellDef> Cod tipo factura </th>
+                        <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_FAC}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="cod_tipo_boleta">
+                        <th mat-header-cell *matHeaderCellDef> Cod tipo boleta </th>
+                        <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_BOL}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="property_stock">
+                        <th mat-header-cell *matHeaderCellDef> Property stock </th>
+                        <td mat-cell *matCellDef="let element"> {{element.PROPERTY_STOCK}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="asunto_email_stock">
+                        <th mat-header-cell *matHeaderCellDef> Asunto email stock </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ASUNTO_EMAIL_REPORT_STOCK}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="name_excel_stock">
+                        <th mat-header-cell *matHeaderCellDef> Name excel stock </th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME_EXCEL_REPORT_STOCK}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ruta_download_agente">
+                        <th mat-header-cell *matHeaderCellDef> Ruta download agente </th>
+                        <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_PY}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ruta_download_sunat">
+                        <th mat-header-cell *matHeaderCellDef> Ruta download sunat </th>
+                        <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_SUNAT}} </td>
+                      </ng-container>
+    
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsCajas"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsCajas;"></tr>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                    aria-label="Select page of periodic elements">
+                  </mat-paginator>
+                </div>
+              </ion-col>
+            </ion-row>
           </div>
         </mat-tab>
       </mat-tab-group>
