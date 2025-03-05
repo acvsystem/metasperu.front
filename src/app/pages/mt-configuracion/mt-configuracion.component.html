@@ -1,467 +1,495 @@
-<ion-content>
-  <div id="content" class="full-center">
-    <div class="card-content">
-      <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
-        <mat-tab label="Plugin">
-          <div class="example-small-box mat-elevation-z4 boy-tap" style="padding-top: 20px;">
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-              <!--
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <div class="card-content-configuration">
-                    <ion-row>
-                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                        <div class="content-view">
-                          <ion-row class="border-bottom-title">
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                              <span class="title card-title">Configuracion servidor de correo</span>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                              <span class="card-subtitle">Servicio de envio</span>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                              <mt-input
-                              id="userEmailService"
-                              label="Usuario"
-                              placeholder="Correo electronico"
-                              type="text"
-                              value="{{ userEmailService }}"
-                              (afterChange)="onChangeInput($event)"
-                            ></mt-input>
-                            </ion-col>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                              <mt-input
-                              id="passEmailService"
-                              label="Password"
-                              placeholder="Password"
-                              type="text"
-                              value="{{ passEmailService }}"
-                              (afterChange)="onChangeInput($event)"
-                            ></mt-input>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                              <span class="card-subtitle">Correo a enviar</span>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="10" sizeSm="10" sizeMd="6" sizeLg="6">
-                              <mt-input
-                              id="emailSend"
-                              label="Email"
-                              placeholder="Correo electronico"
-                              value="{{ emailSend }}"
-                              (afterChange)="onChangeInput($event)"
-                              type="text"
-                            ></mt-input>
-                            </ion-col>
-                            <ion-col sizeXs="2" sizeSm="2" sizeMd="4" sizeLg="4" class="aling-left">
-                              <button (click)="onAddEmailList()" type="button" class="btn btn-outline-primary btn-sm" style="margin-right: 5px !important;"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                              <button *ngIf="isEmailDelete" (click)="onDeleteEmail()" type="button" class="btn btn-outline-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                              <div class="list-group full-width">
-                                <span (click)="onSelectEmail(email.name)" class="list-group-item list-group-item-action list-group-item-dark" *ngFor="let email of emailList">{{ email.name }}</span>
-                              </div>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                              <button (click)="onSaveConfiguration()" type="button" class="btn btn-primary btn-sm save"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
-                              <button (click)="onSendTestEmail()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar correo de prueba</button>
-                            </ion-col>
-                          </ion-row>
-                        </div>
-                      </ion-col>
-                    </ion-row>
-                    </div>
-                  </ion-col>
-                </ion-row>
-        -->
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <div class="card-content-configuration">
+<mat-drawer-container [hasBackdrop]="true" style="height: 100%;">
+  <mat-drawer #drawer [mode]="'over'" position="end">
+    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <label style="color: black;margin: 6px;">Tienda</label>
+          <hr style="background-color: black;margin: 6px;">
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <mt-select id="cboTienda" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListTienda"></mt-select>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="3">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddSerieTienda" label="Serie" placeholder="Serie tienda" type="text" value="{{ vAddSerieTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="4">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddNombreTienda" label="Nombre Tienda" placeholder="Escriba el nombre" type="text" value="{{ vAddNombreTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
+          <div style="height: 100%;display: flex;align-items: center;">
+            <button matTooltip="Agregar tienda" id="searchProducto" (click)="onRegistrarTienda()" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0;padding-top: 2px;padding-right: 6px;padding-left: 6px;">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <label style="color: black;margin: 6px;">Informacion</label>
+          <hr style="background-color: black;margin: 6px;">
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <mt-input (afterChange)="onChangeInput($event)" id="vSerieTienda" label="Serie Tienda" placeholder="Serie tienda" type="text" value="{{ vSerieTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <mt-input (afterChange)="onChangeInput($event)" id="vNumeroCaja" label="Caja" placeholder="Numero caja" type="text" value="{{ vNumeroCaja }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vMac" label="Mac" placeholder="Mac" type="text" value="{{ vMac }}"></mt-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <label style="color: black;margin: 6px;">Base de datos</label>
+          <hr style="background-color: black;margin: 6px;">
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vInstanciaDataBase" label="Instancia BD" placeholder="Instancia Base de Datos" type="text" value="{{ vInstanciaDataBase }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vNameDataBase" label="Nombre BD" placeholder="Nombre Base de Datos" type="text" value="{{ vNameDataBase }}"></mt-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoFactura" label="Cod Factura" placeholder="Codigo factura" type="text" value="{{ vCodigoTipoFactura }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoBoleta" label="Cod Boleta" placeholder="Codigo boleta" type="text" value="{{ vCodigoTipoBoleta }}"></mt-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <label style="color: black;margin: 6px;">Inventario</label>
+          <hr style="background-color: black;margin: 6px;">
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <mt-input (afterChange)="onChangeInput($event)" id="vPropertyStock" label="Propiedad Stock" placeholder="Propiedad stock" type="text" value="{{ vPropertyStock }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAsuntoEmailStock" label="Asunto email stock" placeholder="Escriba el asunto" type="text" value="{{ vAsuntoEmailStock }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <mt-input (afterChange)="onChangeInput($event)" id="vNameExcelStock" label="Nombre Excel export" placeholder="Escriba el nombre" type="text" value="{{ vNameExcelStock }}"></mt-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <label style="color: black;margin: 6px;">Plugins</label>
+          <hr style="background-color: black;margin: 6px;">
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadAgente" label="Ruta install agente" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadAgente }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadSunat" label="Ruta install sunat" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadSunat }}"></mt-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <button  id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onRegistrarCaja()">
+            Registrar Caja
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div id="content" class="full-center">
+      <div class="card-content">
+        <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
+          <mat-tab label="Plugin">
+            <div class="example-small-box mat-elevation-z4 boy-tap" style="padding-top: 20px;">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <!--
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div class="card-content-configuration">
                       <ion-row>
                         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                           <div class="content-view">
-                            <ion-row>
-                              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                                <mt-select id="cboTipo" placeHolder="Plugin" [optionList]="onListPlugin"
-                                (changeSelected)="onChangeSelect($event)"></mt-select>
-                              </ion-col>
-                              <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                                <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar</button>
+                            <ion-row class="border-bottom-title">
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                <span class="title card-title">Configuracion servidor de correo</span>
                               </ion-col>
                             </ion-row>
                             <ion-row>
-                              <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
-                                <ol class="list-group">
-                                  <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
-                                    <div class="ms-2 me-auto">
-                                      <div class="fw-bold">{{tienda.value}}</div>
-                                    </div>
-                                    <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i class="fa fa-check" aria-hidden="true"></i></span>
-                                    <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
-                                  </li>
-                                </ol>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                <span class="card-subtitle">Servicio de envio</span>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                                <mt-input
+                                id="userEmailService"
+                                label="Usuario"
+                                placeholder="Correo electronico"
+                                type="text"
+                                value="{{ userEmailService }}"
+                                (afterChange)="onChangeInput($event)"
+                              ></mt-input>
+                              </ion-col>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                                <mt-input
+                                id="passEmailService"
+                                label="Password"
+                                placeholder="Password"
+                                type="text"
+                                value="{{ passEmailService }}"
+                                (afterChange)="onChangeInput($event)"
+                              ></mt-input>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                <span class="card-subtitle">Correo a enviar</span>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="10" sizeSm="10" sizeMd="6" sizeLg="6">
+                                <mt-input
+                                id="emailSend"
+                                label="Email"
+                                placeholder="Correo electronico"
+                                value="{{ emailSend }}"
+                                (afterChange)="onChangeInput($event)"
+                                type="text"
+                              ></mt-input>
+                              </ion-col>
+                              <ion-col sizeXs="2" sizeSm="2" sizeMd="4" sizeLg="4" class="aling-left">
+                                <button (click)="onAddEmailList()" type="button" class="btn btn-outline-primary btn-sm" style="margin-right: 5px !important;"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                <button *ngIf="isEmailDelete" (click)="onDeleteEmail()" type="button" class="btn btn-outline-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                                <div class="list-group full-width">
+                                  <span (click)="onSelectEmail(email.name)" class="list-group-item list-group-item-action list-group-item-dark" *ngFor="let email of emailList">{{ email.name }}</span>
+                                </div>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                                <button (click)="onSaveConfiguration()" type="button" class="btn btn-primary btn-sm save"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                                <button (click)="onSendTestEmail()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-envelope-o" aria-hidden="true"></i> Enviar correo de prueba</button>
                               </ion-col>
                             </ion-row>
                           </div>
                         </ion-col>
                       </ion-row>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-        
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <div class="card-content-configuration">
-                    <ion-row>
-                      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                        <div class="content-view">
-                          <ion-row class="border-bottom-title">
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                              <span class="title card-title">Clientes a eliminar o descatalogar</span>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                              <button type="button" (click)="onSaveClientes()" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
-                            </ion-col>
-                          </ion-row>
-                          <ion-row>
-                            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                                <textarea id="vListaClientes" class="form-control" rows="3" (change)="onValueChange($event)" [value]="vListaClientes"></textarea>
-                            </ion-col>
-                          </ion-row>
-                        </div>
-                      </ion-col>
-                    </ion-row>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-        
-            </ion-row>
-
-          </div>
-        </mat-tab>
-        <mat-tab label="Session">
-          <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <div class="mat-elevation-z8" *ngIf="isSession">
-                  <table mat-table [dataSource]="dataSourceSession">
-                      <ng-container matColumnDef="id_session">
-                        <th mat-header-cell *matHeaderCellDef> ID Session </th>
-                        <td mat-cell *matCellDef="let element"> {{element.ID_SESSION}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef> Email </th>
-                        <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
-                      </ng-container>
-    
-                      <ng-container matColumnDef="ip">
-                        <th mat-header-cell *matHeaderCellDef> IP </th>
-                        <td mat-cell *matCellDef="let element"> {{element.IP}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="divice">
-                        <th mat-header-cell *matHeaderCellDef> Divice </th>
-                        <td mat-cell *matCellDef="let element"> {{element.DIVICE}} </td>
-                      </ng-container>
-    
-                      <tr mat-header-row *matHeaderRowDef="displayedColumnsSession"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsSession;"></tr>
-                  </table>
-                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
-                    aria-label="Select page of periodic elements">
-                  </mat-paginator>
-                </div>
-              </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <div class="mat-elevation-z8" *ngIf="isSession">
-                  <table mat-table [dataSource]="dataSourceAuthSession">
-                      <ng-container matColumnDef="id_auth_session">
-                        <th mat-header-cell *matHeaderCellDef> ID Auth Session </th>
-                        <td mat-cell *matCellDef="let element"> {{element.ID_AUTH_SESSION}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef> Email </th>
-                        <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
-                      </ng-container>
-    
-                      <ng-container matColumnDef="codigo">
-                        <th mat-header-cell *matHeaderCellDef> Codigo </th>
-                        <td mat-cell *matCellDef="let element"> {{element.CODIGO}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="accion">
-                        <th mat-header-cell *matHeaderCellDef> Accion </th>
-                        <td mat-cell *matCellDef="let element" style="text-align: center;"> 
-                          <button matTooltip="Eliminar Codigo" (click)="onDeleteAuth(element.ID_AUTH_SESSION)" id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                          </button>
-                        </td>
-                      </ng-container>
-    
-                      <tr mat-header-row *matHeaderRowDef="displayedColumnsAuthSession"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsAuthSession;"></tr>
-                  </table>
-                </div>
-              </ion-col>
-            </ion-row>
-          </div>
-        </mat-tab>
-        <mat-tab label="Usuario Sistema">
-          <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <button  id="searchProducto" type="button" class="btn btn-primary btn-sm">
-                      Crear Usuario
-                    </button>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input id="vUsuario" label="Usuario" placeholder="Usuario" type="text" value="{{ vUsuario }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input id="vPassword" label="Password" placeholder="Password" type="text" value="{{ vPassword }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-select
-                    id="pageDefault"
-                    placeHolder="Paginas Default"
-                    [optionList]="onListPageDefault"
-                    ></mt-select>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-select
-                    id="tipoCuenta"
-                    placeHolder="Tipo Cuenta"
-                    [optionList]="onListTipoCuenta"
-                    ></mt-select>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input id="vEmail" label="Email" placeholder="Email" type="text" value="{{ vEmail }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <mt-input id="vUsuario" (keyup)="applyFilter($event)" label="Filtro" placeholder="Filtro" type="text" value="{{ vUsuario }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <div class="mat-elevation-z8" *ngIf="isUsers">
-                  <table mat-table [dataSource]="dataSourceUser">
-                      <ng-container matColumnDef="usuario">
-                        <th mat-header-cell *matHeaderCellDef> Usuario </th>
-                        <td mat-cell *matCellDef="let element"> {{element.USUARIO}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="password">
-                        <th mat-header-cell *matHeaderCellDef> Password </th>
-                        <td mat-cell *matCellDef="let element"> {{element.PASSWORD}} </td>
-                      </ng-container>
-    
-                      <ng-container matColumnDef="page_default">
-                        <th mat-header-cell *matHeaderCellDef> Page Default </th>
-                        <td mat-cell *matCellDef="let element"> {{element.DEFAULT_PAGE}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef> Email </th>
-                        <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="nivel">
-                        <th mat-header-cell *matHeaderCellDef> Nivel </th>
-                        <td mat-cell *matCellDef="let element"> {{element.NIVEL}} </td>
-                      </ng-container>
-    
-                      <tr mat-header-row *matHeaderRowDef="displayedColumnsUsers"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsUsers;"></tr>
-                  </table>
-                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
-                    aria-label="Select page of periodic elements">
-                  </mat-paginator>
-                </div>
-              </ion-col>
-            </ion-row>
-          </div>
-        </mat-tab>
-        <mat-tab label="Registro Tiendas">
-          <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
-
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <label style="color: black;margin: 6px;">Informacion</label>
-                    <hr style="background-color: black;margin: 6px;">
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vSerieTienda" label="Serie Tienda" placeholder="Serie tienda" type="text" value="{{ vSerieTienda }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vNumeroCaja" label="Caja" placeholder="Numero caja" type="text" value="{{ vNumeroCaja }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vMac" label="Mac" placeholder="Mac" type="text" value="{{ vMac }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <label style="color: black;margin: 6px;">Base de datos</label>
-                    <hr style="background-color: black;margin: 6px;">
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vInstanciaDataBase" label="Instancia BD" placeholder="Instancia Base de Datos" type="text" value="{{ vInstanciaDataBase }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vNameDataBase" label="Nombre BD" placeholder="Nombre Base de Datos" type="text" value="{{ vNameDataBase }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoFactura" label="Cod Factura" placeholder="Codigo factura" type="text" value="{{ vCodigoTipoFactura }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoBoleta" label="Cod Boleta" placeholder="Codigo boleta" type="text" value="{{ vCodigoTipoBoleta }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <label style="color: black;margin: 6px;">Inventario</label>
-                    <hr style="background-color: black;margin: 6px;">
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vPropertyStock" label="Propiedad Stock" placeholder="Propiedad stock" type="text" value="{{ vPropertyStock }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vAsuntoEmailStock" label="Asunto email stock" placeholder="Escriba el asunto" type="text" value="{{ vAsuntoEmailStock }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vNameExcelStock" label="Nombre Excel export" placeholder="Escriba el nombre" type="text" value="{{ vNameExcelStock }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <label style="color: black;margin: 6px;">Plugins</label>
-                    <hr style="background-color: black;margin: 6px;">
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadAgente" label="Ruta install agente" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadAgente }}"></mt-input>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadSunat" label="Ruta install sunat" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadSunat }}"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <button  id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onRegistrarCaja()">
-                      Registrar Caja
-                    </button>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-                    <mt-input id="filterTienda" label="Filtro" placeholder="Filtro" type="text" value="{{ filterTienda }}"
-                      (keyup)="applyFilterPapeleta($event)"></mt-input>
-                  </ion-col>
-                </ion-row>
-                <div class="mat-elevation-z8" *ngIf="isCajas">
-                  <table mat-table [dataSource]="dataSourceCajas">
-                      <ng-container matColumnDef="nro_caja">
-                        <th mat-header-cell *matHeaderCellDef> Nro caja </th>
-                        <td mat-cell *matCellDef="let element"> {{element.NUM_CAJA}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="mac">
-                        <th mat-header-cell *matHeaderCellDef> MAC </th>
-                        <td mat-cell *matCellDef="let element"> {{element.MAC}} </td>
-                      </ng-container>
-    
-                      <ng-container matColumnDef="serie_tienda">
-                        <th mat-header-cell *matHeaderCellDef> Serie tienda </th>
-                        <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="database_instance">
-                        <th mat-header-cell *matHeaderCellDef> Database instance </th>
-                        <td mat-cell *matCellDef="let element"> {{element.DATABASE_INSTANCE}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="database_name">
-                        <th mat-header-cell *matHeaderCellDef> Database name </th>
-                        <td mat-cell *matCellDef="let element"> {{element.DATABASE_NAME}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="cod_tipo_factura">
-                        <th mat-header-cell *matHeaderCellDef> Cod tipo factura </th>
-                        <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_FAC}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="cod_tipo_boleta">
-                        <th mat-header-cell *matHeaderCellDef> Cod tipo boleta </th>
-                        <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_BOL}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="property_stock">
-                        <th mat-header-cell *matHeaderCellDef> Property stock </th>
-                        <td mat-cell *matCellDef="let element"> {{element.PROPERTY_STOCK}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="asunto_email_stock">
-                        <th mat-header-cell *matHeaderCellDef> Asunto email stock </th>
-                        <td mat-cell *matCellDef="let element"> {{element.ASUNTO_EMAIL_REPORT_STOCK}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="name_excel_stock">
-                        <th mat-header-cell *matHeaderCellDef> Name excel stock </th>
-                        <td mat-cell *matCellDef="let element"> {{element.NAME_EXCEL_REPORT_STOCK}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="ruta_download_agente">
-                        <th mat-header-cell *matHeaderCellDef> Ruta download agente </th>
-                        <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_PY}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="ruta_download_sunat">
-                        <th mat-header-cell *matHeaderCellDef> Ruta download sunat </th>
-                        <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_SUNAT}} </td>
-                      </ng-container>
-    
-                      <tr mat-header-row *matHeaderRowDef="displayedColumnsCajas"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsCajas;"></tr>
-                  </table>
-                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
-                    aria-label="Select page of periodic elements">
-                  </mat-paginator>
-                </div>
-              </ion-col>
-            </ion-row>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+          -->
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div class="card-content-configuration">
+                        <ion-row>
+                          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                            <div class="content-view">
+                              <ion-row>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                                  <mt-select id="cboTipo" placeHolder="Plugin" [optionList]="onListPlugin"
+                                  (changeSelected)="onChangeSelect($event)"></mt-select>
+                                </ion-col>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
+                                  <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm" disabled><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar</button>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row>
+                                <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                                  <ol class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
+                                      <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{tienda.value}}</div>
+                                      </div>
+                                      <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                      <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
+                                    </li>
+                                  </ol>
+                                </ion-col>
+                              </ion-row>
+                            </div>
+                          </ion-col>
+                        </ion-row>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+          
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div class="card-content-configuration">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div class="content-view">
+                            <ion-row class="border-bottom-title">
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                <span class="title card-title">Clientes a eliminar o descatalogar</span>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                                <button type="button" (click)="onSaveClientes()" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row>
+                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                  <textarea id="vListaClientes" class="form-control" rows="3" (change)="onValueChange($event)" [value]="vListaClientes"></textarea>
+                              </ion-col>
+                            </ion-row>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+          
+              </ion-row>
+  
+            </div>
+          </mat-tab>
+          <mat-tab label="Session">
+            <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div class="mat-elevation-z8" *ngIf="isSession">
+                    <table mat-table [dataSource]="dataSourceSession">
+                        <ng-container matColumnDef="id_session">
+                          <th mat-header-cell *matHeaderCellDef> ID Session </th>
+                          <td mat-cell *matCellDef="let element"> {{element.ID_SESSION}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="email">
+                          <th mat-header-cell *matHeaderCellDef> Email </th>
+                          <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
+                        </ng-container>
+      
+                        <ng-container matColumnDef="ip">
+                          <th mat-header-cell *matHeaderCellDef> IP </th>
+                          <td mat-cell *matCellDef="let element"> {{element.IP}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="divice">
+                          <th mat-header-cell *matHeaderCellDef> Divice </th>
+                          <td mat-cell *matCellDef="let element"> {{element.DIVICE}} </td>
+                        </ng-container>
+      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsSession"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsSession;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                      aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <div class="mat-elevation-z8" *ngIf="isSession">
+                    <table mat-table [dataSource]="dataSourceAuthSession">
+                        <ng-container matColumnDef="id_auth_session">
+                          <th mat-header-cell *matHeaderCellDef> ID Auth Session </th>
+                          <td mat-cell *matCellDef="let element"> {{element.ID_AUTH_SESSION}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="email">
+                          <th mat-header-cell *matHeaderCellDef> Email </th>
+                          <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
+                        </ng-container>
+      
+                        <ng-container matColumnDef="codigo">
+                          <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                          <td mat-cell *matCellDef="let element"> {{element.CODIGO}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="accion">
+                          <th mat-header-cell *matHeaderCellDef> Accion </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                            <button matTooltip="Eliminar Codigo" (click)="onDeleteAuth(element.ID_AUTH_SESSION)" id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                              <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </button>
+                          </td>
+                        </ng-container>
+      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsAuthSession"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsAuthSession;"></tr>
+                    </table>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </mat-tab>
+          <mat-tab label="Usuario Sistema">
+            <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <button  id="searchProducto" type="button" class="btn btn-primary btn-sm">
+                        Crear Usuario
+                      </button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-input id="vUsuario" label="Usuario" placeholder="Usuario" type="text" value="{{ vUsuario }}"></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-input id="vPassword" label="Password" placeholder="Password" type="text" value="{{ vPassword }}"></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-select
+                      id="pageDefault"
+                      placeHolder="Paginas Default"
+                      [optionList]="onListPageDefault"
+                      ></mt-select>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-select
+                      id="tipoCuenta"
+                      placeHolder="Tipo Cuenta"
+                      [optionList]="onListTipoCuenta"
+                      ></mt-select>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <mt-input id="vEmail" label="Email" placeholder="Email" type="text" value="{{ vEmail }}"></mt-input>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <mt-input id="vUsuario" (keyup)="applyFilter($event)" label="Filtro" placeholder="Filtro" type="text" value="{{ vUsuario }}"></mt-input>
+                    </ion-col>
+                  </ion-row>
+                  <div class="mat-elevation-z8" *ngIf="isUsers">
+                    <table mat-table [dataSource]="dataSourceUser">
+                        <ng-container matColumnDef="usuario">
+                          <th mat-header-cell *matHeaderCellDef> Usuario </th>
+                          <td mat-cell *matCellDef="let element"> {{element.USUARIO}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="password">
+                          <th mat-header-cell *matHeaderCellDef> Password </th>
+                          <td mat-cell *matCellDef="let element"> {{element.PASSWORD}} </td>
+                        </ng-container>
+      
+                        <ng-container matColumnDef="page_default">
+                          <th mat-header-cell *matHeaderCellDef> Page Default </th>
+                          <td mat-cell *matCellDef="let element"> {{element.DEFAULT_PAGE}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="email">
+                          <th mat-header-cell *matHeaderCellDef> Email </th>
+                          <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="nivel">
+                          <th mat-header-cell *matHeaderCellDef> Nivel </th>
+                          <td mat-cell *matCellDef="let element"> {{element.NIVEL}} </td>
+                        </ng-container>
+      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsUsers"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsUsers;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                      aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </mat-tab>
+          <mat-tab label="Registro Tiendas">
+            <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+                      <mt-input id="filterTienda" label="Filtro" placeholder="Filtro" type="text" value="{{ filterTienda }}"
+                        (keyup)="applyFilterPapeleta($event)"></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+                      <div style="align-items: center;height: 100%;display: flex;">
+                        <button style="margin-left: 8px;" (click)="drawer.toggle()" matTooltip="Registrar Tienda" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
+                          Registrar caja
+                        </button>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <div class="mat-elevation-z8" *ngIf="isCajas">
+                    <table mat-table [dataSource]="dataSourceCajas" multiTemplateDataRows>
+                        <ng-container matColumnDef="nro_caja">
+                          <th mat-header-cell *matHeaderCellDef> Caja </th>
+                          <td mat-cell *matCellDef="let element"> {{element.NUM_CAJA}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="mac">
+                          <th mat-header-cell *matHeaderCellDef> MAC </th>
+                          <td mat-cell *matCellDef="let element"> {{element.MAC}} </td>
+                        </ng-container>
+      
+                        <ng-container matColumnDef="serie_tienda">
+                          <th mat-header-cell *matHeaderCellDef> Serie </th>
+                          <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="database_instance">
+                          <th mat-header-cell *matHeaderCellDef> Database instance </th>
+                          <td mat-cell *matCellDef="let element"> {{element.DATABASE_INSTANCE}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="database_name">
+                          <th mat-header-cell *matHeaderCellDef> Database name </th>
+                          <td mat-cell *matCellDef="let element"> {{element.DATABASE_NAME}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="cod_tipo_factura">
+                          <th mat-header-cell *matHeaderCellDef> Factura </th>
+                          <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_FAC}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="cod_tipo_boleta">
+                          <th mat-header-cell *matHeaderCellDef> Boleta </th>
+                          <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_BOL}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="property_stock">
+                          <th mat-header-cell *matHeaderCellDef> Property stock </th>
+                          <td mat-cell *matCellDef="let element"> {{element.PROPERTY_STOCK}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="name_excel_stock">
+                          <th mat-header-cell *matHeaderCellDef> Name excel stock </th>
+                          <td mat-cell *matCellDef="let element"> {{element.NAME_EXCEL_REPORT_STOCK}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="ruta_download_agente">
+                          <th mat-header-cell *matHeaderCellDef> Ruta download agente </th>
+                          <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_PY}} </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="ruta_download_sunat">
+                          <th mat-header-cell *matHeaderCellDef> Ruta download sunat </th>
+                          <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_SUNAT}} </td>
+                        </ng-container>
+      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsCajas"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsCajas;"></tr>
+                        
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                      aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </div>
-  </div>
-</ion-content>
+  </mat-drawer-content>
+</mat-drawer-container>

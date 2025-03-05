@@ -20,7 +20,7 @@ export class MtConfiguracionComponent implements OnInit {
   displayedColumnsSession: string[] = ['id_session', 'email', 'ip', 'divice'];
   displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo', 'accion'];
   displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel'];
-  displayedColumnsCajas: string[] = ['nro_caja', 'mac', 'serie_tienda', 'database_instance', 'database_name', 'cod_tipo_factura', 'cod_tipo_boleta', 'property_stock', 'asunto_email_stock', 'name_excel_stock', 'ruta_download_agente', 'ruta_download_sunat'];
+  displayedColumnsCajas: string[] = ['nro_caja', 'mac', 'serie_tienda', 'database_instance', 'database_name', 'cod_tipo_factura', 'cod_tipo_boleta', 'property_stock', 'name_excel_stock', 'ruta_download_agente', 'ruta_download_sunat'];
   dataViewSession: Array<any> = [];
   dataViewAuthSession: Array<any> = [];
   dataViewUser: Array<any> = [];
@@ -50,8 +50,12 @@ export class MtConfiguracionComponent implements OnInit {
   emailList: Array<any> = [];
   emailSend: string = "";
   isEmailDelete: boolean = false;
+  isAddTienda: boolean = false;
   userEmailService: string = "";
   passEmailService: string = "";
+  vAddSerieTienda: string = "";
+  vAddNombreTienda: string = "";
+  cboTienda: string = "";
   vEmail: string = "";
   cboTipo: string = "";
   tipoCuenta: string = "";
@@ -59,6 +63,7 @@ export class MtConfiguracionComponent implements OnInit {
   dataEmailListSend: Array<any> = [];
   onListPageDefault: Array<any> = [];
   onListTipoCuenta: Array<any> = [];
+  cboListTienda: Array<any> = [];
   selectOption: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
@@ -86,28 +91,7 @@ export class MtConfiguracionComponent implements OnInit {
   ];
   selectNivel: any = {};
   selectedHashNivel: string = "";
-  tiendasList: Array<any> = [
-    { key: '7A', value: 'BBW JOCKEY', progress: -1 },
-    { key: "9N", value: "VSBA MALL AVENTURA", progress: -1 },
-    { key: "7J", value: "BBW MALL AVENTURA", progress: -1 },
-    { key: '7E', value: 'BBW LA RAMBLA', progress: -1 },
-    { key: '9D', value: 'VS LA RAMBLA', progress: -1 },
-    { key: '9B', value: 'VS PLAZA NORTE', progress: -1 },
-    { key: '7C', value: 'BBW SAN MIGUEL', progress: -1 },
-    { key: '9C', value: 'VS SAN MIGUEL', progress: -1 },
-    { key: '7D', value: 'BBW SALAVERRY', progress: -1 },
-    { key: '9I', value: 'VS SALAVERRY', progress: -1 },
-    { key: '9G', value: 'VS MALL DEL SUR', progress: -1 },
-    { key: '9H', value: 'VS PURUCHUCO', progress: -1 },
-    { key: '9M', value: 'VS ECOMMERCE', progress: -1 },
-    { key: '7F', value: 'BBW ECOMMERCE', progress: -1 },
-    { key: '9K', value: 'VS MEGA PLAZA', progress: -1 },
-    { key: '9L', value: 'VS MINKA', progress: -1 },
-    { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1 },
-    { key: '7A7', value: 'BBW ASIA', progress: -1 },
-    { key: '9P', value: 'VS MALL PLAZA', progress: -1 },
-    { key: '7I', value: 'BBW MALL PLAZA', progress: -1 }
-  ];
+  tiendasList: Array<any> = [];
 
   vSerieTienda: String = "";
   vNumeroCaja: String = "";
@@ -143,6 +127,7 @@ export class MtConfiguracionComponent implements OnInit {
      this.onListConfiguration();
      this.onListMenu();
      this.onListRoles();*/
+    this.onListTienda();
     this.socket.on('update:file:status', (status) => {
       let index = this.tiendasList.findIndex((tienda) => tienda.key == status.serie);
       (this.tiendasList[index] || {})['progress'] = (status || {}).status == 100 ? 0 : (status || {}).progress;
@@ -319,8 +304,8 @@ export class MtConfiguracionComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
-    console.log(data);
-    if (index != "cboTipo") {
+
+    if (index != "cboTipo" && index != 'cboTienda') {
       this.onListMenuUsuario().then((menu: Array<any>) => {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
@@ -336,6 +321,10 @@ export class MtConfiguracionComponent implements OnInit {
         this.optionMenuUserList = [];
         this.notOptionMenuUserList = [...this.menuAllList];
       });
+    }
+
+    if (index == 'cboTienda') {
+      this.vSerieTienda = this[index];
     }
 
   }
@@ -411,6 +400,31 @@ export class MtConfiguracionComponent implements OnInit {
     });
   }
 
+  onListTienda() {
+    const self = this;
+    let parms = {
+      url: '/security/lista/registro/tiendas'
+    };
+
+    this.service.get(parms).then((response) => {
+      let tiendaList = (response || {}).data || [];
+      this.cboListTienda = [];
+      this.tiendasList = [];
+
+      (tiendaList || []).filter((tienda) => {
+
+        this.cboListTienda.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
+
+        this.tiendasList.push(
+          { key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION, progress: -1 });
+      });
+    });
+  }
+
+  onAddTiendaView() {
+    this.isAddTienda = true;
+  }
+
   onListConfiguration() {
     let parms = {
       url: '/settings/service/email/sendList'
@@ -430,6 +444,22 @@ export class MtConfiguracionComponent implements OnInit {
       });
 
 
+    });
+  }
+
+  onRegistrarTienda() {
+    let parms = {
+      url: '/security/add/registro/tiendas',
+      body: [{
+        serie_tienda: this.vAddSerieTienda || "",
+        nombre_tienda: this.vAddNombreTienda || ""
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.onListTienda();
+      this.vAddSerieTienda = "";
+      this.vAddNombreTienda = "";
+      this.service.toastSuccess("Registrado con exito...!!", "Tienda");
     });
   }
 
@@ -610,7 +640,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
     console.log(parms);
     this.service.post(parms).then((response) => {
-      console.log(response);
+      this.service.toastSuccess("Registrado con exito...!!", "Caja");
     });
   }
 
