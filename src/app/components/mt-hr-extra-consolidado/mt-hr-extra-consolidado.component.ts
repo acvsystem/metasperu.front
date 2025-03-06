@@ -459,52 +459,53 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       body: dataVerificar
     };
 
-    this.service.post(parms).then(async (response) => {
-      const ascDates = response.sort((a, b) => {
-        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
-      });
-      this.bodyList = [];
-      this.copyBodyList = [];
-      this.bodyList = ascDates;
-      this.hroAcumulada = "";
-      this.hroAcumuladaTotal = "";
-      this.arHoraExtra = [];
-      this.bodyList.filter((dt, i) => {
-        this.bodyList[i]['hrx_solicitado'] = "00:00";
+    if ((dataVerificar || []).length) {
+      this.service.post(parms).then(async (response) => {
+        const ascDates = response.sort((a, b) => {
+          return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+        });
+        this.bodyList = [];
+        this.copyBodyList = [];
+        this.bodyList = ascDates;
+        this.hroAcumulada = "";
+        this.hroAcumuladaTotal = "";
+        this.arHoraExtra = [];
+        this.bodyList.filter((dt, i) => {
+          this.bodyList[i]['hrx_solicitado'] = "00:00";
 
-        let sobrante = dt.hrx_sobrante.split(':');
-        let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
+          let sobrante = dt.hrx_sobrante.split(':');
+          let hSobrante = parseInt(sobrante[0]) * 60 + parseInt(sobrante[1]);
 
-        if (hSobrante > 0) {
-          this.bodyList[i]['extra'] = dt.hrx_sobrante;
-        }
-        this.bodyList[i]['aprobado'] = dt.aprobado;
-        this.bodyList[i]['estado'] = dt.estado;
+          if (hSobrante > 0) {
+            this.bodyList[i]['extra'] = dt.hrx_sobrante;
+          }
+          this.bodyList[i]['aprobado'] = dt.aprobado;
+          this.bodyList[i]['estado'] = dt.estado;
 
-        if (!dt.seleccionado && dt.aprobado && !dt.verify) {
+          if (!dt.seleccionado && dt.aprobado && !dt.verify) {
 
-          if (!this.arHoraExtra.length && dt.estado != "utilizado" && dt.estado != "rechazado") {
-            this.arHoraExtra = [dt.extra];
-          } else {
-            if ((dt.estado == "correcto" || dt.estado == "aprobado") && dt.estado != "rechazado") {
-              this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+            if (!this.arHoraExtra.length && dt.estado != "utilizado" && dt.estado != "rechazado") {
+              this.arHoraExtra = [dt.extra];
+            } else {
+              if ((dt.estado == "correcto" || dt.estado == "aprobado") && dt.estado != "rechazado") {
+                this.arHoraExtra[0] = this.obtenerHorasTrabajadas(dt.extra, this.arHoraExtra[0]);
+              }
             }
           }
-        }
 
-        if (this.bodyList.length - 1 == i) {
+          if (this.bodyList.length - 1 == i) {
 
-          this.hroAcumulada = this.arHoraExtra[0];
-          this.hroAcumuladaTotal = this.arHoraExtra[0];
+            this.hroAcumulada = this.arHoraExtra[0];
+            this.hroAcumuladaTotal = this.arHoraExtra[0];
 
-          let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
-          this.parseEJB[index]['hroAcumulada'] = this.hroAcumulada;
-          //this.store.removeStore('mt-hrExtra');
-          //this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
-        }
+            let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
+            this.parseEJB[index]['hroAcumulada'] = this.hroAcumulada;
+            //this.store.removeStore('mt-hrExtra');
+            //this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
+          }
+        });
       });
-    });
-
+    }
   }
 
   obtenerMinutos(hora_1, hora_2) {
