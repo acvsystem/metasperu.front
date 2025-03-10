@@ -307,7 +307,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let hrxSalida = (defaultHT).split(':');
               let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-              let newAcumulado = llegada - salida;
+              let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
 
               const ToTime = (num) => {
                 var minutos: any = Math.floor((num / 60) % 60);
@@ -329,7 +329,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                 if (parseInt(hr[1]) >= 30 || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
 
-                  this.onDataTemp[indexData]['hr_extra'] = process;//23:59
+                  this.onDataTemp[indexData]['hr_extra'] = process;//23:59cc
 
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
                   let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
@@ -381,7 +381,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let hrxSalida = (defaultHT).split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-            let newAcumulado = llegada - salida;
+            let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
 
             const ToTime = (num) => {
               var minutos: any = Math.floor((num / 60) % 60);
@@ -956,7 +956,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 let hrxSalida = (defaultHT).split(':');
                 let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-                let newAcumulado = llegada - salida;
+                let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
 
                 const ToTime = (num) => {
                   var minutos: any = Math.floor((num / 60) % 60);
@@ -1032,7 +1032,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let hrxSalida = (defaultHT).split(':');
               let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
 
-              let newAcumulado = llegada - salida;
+              let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
 
               const ToTime = (num) => {
                 var minutos: any = Math.floor((num / 60) % 60);
@@ -1279,7 +1279,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           if (salida <= 480) {
             if (llegada > salida || llegada == salida) {
               this.onCalcHorasSolicitadas();
-              let newAcumulado = llegada - salida;
+              let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
 
               const ToTime = (num) => {
                 var minutos: any = Math.floor((num / 60) % 60);
