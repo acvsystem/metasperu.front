@@ -90,6 +90,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   arListaDiaTrab: Array<any> = [];
   profileUser: any = {};
+  dataViewPermiso: Array<any> = [];
 
   private _snackBar = inject(MatSnackBar);
 
@@ -170,10 +171,12 @@ export class MtHorarioTiendaComponent implements OnInit {
             this.dataHorario[index]['dias'][i]['isExpired'] = false;
           }
 
-          //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
-          /*if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
-            this.dataHorario[index]['dias'][i]['isExpired'] = false;
-          }*/
+          (this.dataViewPermiso || []).filter((tienda) => {
+            //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+            if (this.codeTienda == (tienda || {}).SERIE_TIENDA && (tienda || {}).IS_FREE_HORARIO) {
+              this.dataHorario[index]['dias'][i]['isExpired'] = false;
+            }
+          });
 
           let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
@@ -284,8 +287,18 @@ export class MtHorarioTiendaComponent implements OnInit {
       });
 
     });
+
+    this.onPermisosTienda();
   }
 
+  onPermisosTienda() {
+    let parms = {
+      url: '/security/configuracion/permisos/hp'
+    };
+    this.service.get(parms).then((response) => {
+      this.dataViewPermiso = response || [];
+    });
+  }
 
 
   async onChangeSelect(data: any) {
@@ -416,10 +429,14 @@ export class MtHorarioTiendaComponent implements OnInit {
         } else {
           this.dataHorario[index]['dias'][i]['isExpired'] = false;
         }
-        //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
-        /* if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
-           this.dataHorario[index]['dias'][i]['isExpired'] = false;
-         }*/
+
+        (this.dataViewPermiso || []).filter((tienda) => {
+          //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+          if (this.codeTienda == (tienda || {}).SERIE_TIENDA && (tienda || {}).IS_FREE_HORARIO) {
+            this.dataHorario[index]['dias'][i]['isExpired'] = false;
+          }
+        });
+
 
         let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
@@ -833,10 +850,13 @@ export class MtHorarioTiendaComponent implements OnInit {
               } else {
                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
               }
-              //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
-              /* if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
-                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
-               }*/
+
+              (this.dataViewPermiso || []).filter((tienda) => {
+                //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+                if (this.codeTienda == (tienda || {}).SERIE_TIENDA && (tienda || {}).IS_FREE_HORARIO) {
+                  this.dataHorario[index]['dias'][i]['isExpired'] = false;
+                }
+              });
 
               let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
 
@@ -1251,10 +1271,13 @@ export class MtHorarioTiendaComponent implements OnInit {
             } else {
               this.dataHorario[index]['dias'][i]['isExpired'] = false;
             }
-            //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
-            /*  if (this.codeTienda == '7D' || this.codeTienda == '9I' || this.codeTienda == '9H') {
+
+            (this.dataViewPermiso || []).filter((tienda) => {
+              //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+              if (this.codeTienda == (tienda || {}).SERIE_TIENDA && (tienda || {}).IS_FREE_HORARIO) {
                 this.dataHorario[index]['dias'][i]['isExpired'] = false;
-              }*/
+              }
+            });
 
 
             let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
