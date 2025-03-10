@@ -530,33 +530,35 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         if ((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice || pt.indice == 6) {
 
-
-          let hrxLlegada = count.split(':');
-          let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
-
-          let hrxSalida = ("24:00").split(':');
-          let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-
-          let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
-
-          const ToTime = (num) => {
-            var minutos: any = Math.floor((num / 60) % 60);
-            minutos = minutos < 10 ? '0' + minutos : minutos;
-            var segundos: any = num % 60;
-            segundos = segundos < 10 ? '0' + segundos : segundos;
-            return minutos + ':' + segundos;
-          };
-
-          let process = ToTime(newAcumulado);
+          
+ 
       
-          console.log(hora, count);
+          
           count = this.obtenerHorasTrabajadas(hora, count);
 
-          console.log(hora, count);
           if (((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice) || pt.indice == 6) {
             
             this.arPartTimeFech[index]["hrTrabajadas"] = count;
 
+            let hrxLlegada = count.split(':');
+     
+            let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+  
+            let hrxSalida = ("24:00").split(':');
+            let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+  
+            let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
+  
+            const ToTime = (num) => {
+              var minutos: any = Math.floor((num / 60) % 60);
+              minutos = minutos < 10 ? '0' + minutos : minutos;
+              var segundos: any = num % 60;
+              segundos = segundos < 10 ? '0' + segundos : segundos;
+              return minutos + ':' + segundos;
+            };
+  
+            let process = ToTime(newAcumulado);
+            
             arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
 
             if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) >= 24) {

@@ -25,10 +25,12 @@ export class MtConfiguracionComponent implements OnInit {
   dataViewAuthSession: Array<any> = [];
   dataViewUser: Array<any> = [];
   dataViewCaja: Array<any> = [];
+  dataViewPermiso: Array<any> = [];
   dataSourceSession = new MatTableDataSource<any>(this.dataViewSession);
   dataSourceAuthSession = new MatTableDataSource<any>(this.dataViewAuthSession);
   dataSourceUser = new MatTableDataSource<any>(this.dataViewUser);
   dataSourceCajas = new MatTableDataSource<any>(this.dataViewCaja);
+  dataSourcePermiso = new MatTableDataSource<any>(this.dataViewPermiso);
 
   menuAllList: Array<any> = [];
   menuUserList: Array<any> = [];
@@ -241,6 +243,14 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataSourceCajas = new MatTableDataSource<any>([]);
       this.dataSourceCajas.paginator = this.paginator_caja;
       this.dataSourceCajas.sort = this.sort_caja;
+    }
+    if (ev.tab.textLabel == "Horario y papeletas") {
+      this.isSession = false;
+      this.isUsers = false;
+      this.isCajas = false;
+      this.onPermisosTienda();
+
+      this.dataSourcePermiso = new MatTableDataSource<any>([]);
     }
 
   }
@@ -460,6 +470,16 @@ export class MtConfiguracionComponent implements OnInit {
       this.vAddSerieTienda = "";
       this.vAddNombreTienda = "";
       this.service.toastSuccess("Registrado con exito...!!", "Tienda");
+    });
+  }
+
+  onPermisosTienda() {
+    let parms = {
+      url: '/security/configuracion/permisos/hp'
+    };
+    this.service.get(parms).then((response) => {
+      this.dataViewPermiso = response || [];
+      this.dataSourcePermiso = new MatTableDataSource(this.dataViewPermiso);
     });
   }
 
