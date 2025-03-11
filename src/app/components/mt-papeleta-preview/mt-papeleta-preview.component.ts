@@ -57,8 +57,8 @@ export class MtPapeletaPreviewComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
-      this.dataPap = response;
-
+      this.dataPap = [response[0]];
+      console.log(this.dataPap);
       if (this.dataPap.length) {
 
         (this.dataPap || []).filter((dt, i) => {
