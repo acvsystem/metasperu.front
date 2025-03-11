@@ -33,7 +33,6 @@ export class MtAprobarHorasComponent implements OnInit {
   }
 
   onChangeInput(data: any) {
-    console.log(data);
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";

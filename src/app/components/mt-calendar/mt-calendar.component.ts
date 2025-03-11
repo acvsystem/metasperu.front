@@ -123,7 +123,6 @@ export class MtCalendarComponent implements OnInit {
     }
 
     if (this.isMultiSelect && this.model.length >= 1 && this.model.length <= 3) {
-      console.log("isMultiSelect", this.model);
       this.afterChange.emit({ isMultiSelect: true, value: this.model });
     }
 
@@ -132,7 +131,6 @@ export class MtCalendarComponent implements OnInit {
     }
 
     if (this.isTime) {
-      console.log({ isTime: true, value: `${this.vTimer}`, id: this.id });
       this.afterChange.emit({ isTime: true, value: `${this.vTimer}`, id: this.id });
     }
 
@@ -140,7 +138,6 @@ export class MtCalendarComponent implements OnInit {
       let ar = [];
       let dateStart = `${moment(this.range.value.start).format('YYYY/MM/DD')}`;
       let dateEnd = `${moment(this.range.value.end).format('YYYY/MM/DD')}`;
-      console.log(`${moment(this.range.value.start).format('YYYY/MM/DD')}`, `${moment(this.range.value.end).format('YYYY/MM/DD')}`);
       ar = [`${moment(this.range.value.start).format('YYYY/MM/DD')}`, `${moment(this.range.value.end).format('YYYY/MM/DD')}`];
       if ((dateStart != 'Invalid date' && dateEnd != 'Invalid date') && (dateStart != null && dateEnd != null)) {
         this.afterChange.emit({ isRange: true, value: ar });
@@ -208,13 +205,11 @@ export class MtCalendarComponent implements OnInit {
   }
 
   setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
-    console.log(normalizedMonthAndYear);
     const ctrlValue = this.date.value ?? moment();
     ctrlValue.month(normalizedMonthAndYear.month());
     ctrlValue.year(normalizedMonthAndYear.year());
 
     this.date.setValue(ctrlValue);
-    console.log(datepicker);
     datepicker.close();
   }
 
@@ -224,7 +219,6 @@ export class MtCalendarComponent implements OnInit {
     const ctrlValue = this.date.value;
     ctrlValue.year(normalizedYear.year());
     this.date.setValue(ctrlValue);
-    console.log(this.date);
   }
 
   chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {

@@ -248,17 +248,7 @@ export class AppComponent {
     var myOwnListOfBrowsers = [
       [/(mybrowser)\/([\w\.]+)/i], [UAParser.BROWSER.NAME, UAParser.BROWSER.VERSION]
     ];
-    /*var myParser = new UAParser({ browser: myOwnListOfBrowsers });
-      console.log(myParser.getBrowser()); // {}
-      console.log(myParser.getOS()); // {}
-      console.log(myParser.getUA()); // {}
-      console.log(myParser.getEngine()); // {}
-      console.log(myParser.getResult()); // {}
-      console.log(myParser);*/
-    /*  let pathActual: any = {};
-      pathActual = {
-        value: this.store.getStore('pathURL') || location.pathname.split('/')[1]
-      };*/
+    
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });

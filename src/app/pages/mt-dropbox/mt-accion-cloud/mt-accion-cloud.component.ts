@@ -32,7 +32,6 @@ export class MtAccionCloudComponent implements OnInit {
   constructor(private service: ShareService, @Inject(MAT_DIALOG_DATA) public data: { path: string }) { }
 
   ngOnInit() {
-    console.log(this.data.path);
   }
 
   onCancel(): void {
@@ -56,7 +55,6 @@ export class MtAccionCloudComponent implements OnInit {
   }
 
   onChangeInput(data: any) {
-    console.log(data);
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";

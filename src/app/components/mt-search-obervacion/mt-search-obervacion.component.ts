@@ -45,7 +45,7 @@ export class MtSearchObervacionComponent implements OnInit {
   constructor(private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
-    console.log(this.data);
+
     if ((this.data || []).length) {
       this.isLoading = true;
       this.onSearchCalendario(`${(this.data || [])[0]['rango_1']} ${(this.data || [])[0]['rango_2']}`, (this.data || [])[0]['code']);

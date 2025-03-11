@@ -77,7 +77,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
     this.profileUser = this.store.getStore('mt-profile');
 
-    console.log(this.profileUser);
+
 
     this.socket.on('lista_solicitudes', async (response) => {
       let dataResponse = response;
@@ -244,7 +244,6 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
           this.hroAcumuladaTotal = this.arHoraExtra[0];
         }
       });
-      console.log(this.bodyList);
 
     });
 

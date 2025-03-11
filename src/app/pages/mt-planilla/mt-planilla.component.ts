@@ -54,7 +54,7 @@ export class MtPlanillaComponent implements OnInit {
   ngOnInit() {
     this.onDataPlanilla();
     this.socket.on('reporteQuincena', async (response) => {
-      console.log(response);
+
       this.onDataView = [];
       let data = (response || {}).data || [];
 
@@ -174,7 +174,7 @@ export class MtPlanillaComponent implements OnInit {
     if (codigoList.length) {
 
       await codigoList.filter(async (codigo, i) => {
-        console.log(codigo);
+
         if (i <= 9) {
           dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
           this.text = "";
@@ -427,7 +427,7 @@ export class MtPlanillaComponent implements OnInit {
       tipo_planilla: this.cboReporte,
       date: this.vCalendar
     };
-    console.log(option);
+
     this.socket.emit('consultaPlanilla', option);
   }
 
@@ -458,11 +458,11 @@ export class MtPlanillaComponent implements OnInit {
   })();
 
   onCaledar($event) {
-    console.log($event);
+
     if ($event.isPeriodo) {
       let data = $event.value;
       this.vCalendar = `${data[0]}${data[1]}`;
-      console.log(this.vCalendar);
+
     }
 
   }
@@ -584,7 +584,7 @@ export class MtPlanillaComponent implements OnInit {
             this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
 
             if (dataTemp.length - 1 == i) {
-              console.log(this.text);
+
               this.dyanmicDownloadByHtmlTag();
               dataTemp = [];
               this.text = "";
@@ -635,7 +635,7 @@ export class MtPlanillaComponent implements OnInit {
               this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
 
               if (dataTemp.length - 1 == i) {
-                console.log(this.text);
+
                 this.dyanmicDownloadByHtmlTag();
                 dataTemp = [];
                 this.text = "";
@@ -687,7 +687,7 @@ export class MtPlanillaComponent implements OnInit {
               this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
 
               if (dataTemp.length - 1 == i) {
-                console.log(this.text);
+  
                 this.dyanmicDownloadByHtmlTag();
                 dataTemp = [];
                 this.text = "";

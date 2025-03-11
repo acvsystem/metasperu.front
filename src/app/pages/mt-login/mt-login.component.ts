@@ -30,13 +30,6 @@ export class MtLoginComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    console.log(await publicIpv4());
-    /* document.addEventListener('keydown', (event) => {
-       var keyValue = event.key;
-       if (keyValue == "Enter") {
-         this.onLogin();
-       }
-     }, false);*/
   }
 
 
@@ -44,7 +37,6 @@ export class MtLoginComponent implements OnInit {
     const { browser, cpu, device, os } = UAParser();
     let publicIP = await publicIpv4();
 
-    console.log();
     if (this.userName == "BBW" || this.userName == "VSBA") {
       this.shrService.createToken(this.userName, this.password).then((token) => {
         if (token) {

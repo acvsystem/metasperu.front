@@ -26,12 +26,12 @@ export class MtFrmAddPostulantComponent implements OnInit {
   ngOnInit() { }
 
   onSaveOrUpdate(ev: any) {
-    console.log(ev);
+  
   }
 
   onAddDocument() {
     this.bodyList.push({ codigo: '03', documento: '471623968' });
-    console.log(this.bodyList);
+
   }
 
 }

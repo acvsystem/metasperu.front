@@ -81,7 +81,6 @@ export class MtObservacionHorarioComponent implements OnInit {
     this.dataTrabajadores.filter((trb) => {
       this.onListEmpleado.push({ key: trb.nombre_completo, value: trb.nombre_completo },);
     });
-    console.log(this.isViewObservacion);
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
   }

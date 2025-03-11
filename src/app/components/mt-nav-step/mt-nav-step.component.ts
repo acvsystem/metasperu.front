@@ -46,7 +46,6 @@ export class MtNavStepComponent implements OnInit {
   }
 
   onSelectedStep(ev:any) {
-    console.log(ev);
   }
 
 }

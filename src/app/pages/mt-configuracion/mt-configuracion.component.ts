@@ -194,9 +194,9 @@ export class MtConfiguracionComponent implements OnInit {
       url: '/security/service/cliente/list/delete',
       body: [{ cliente: this.vListaClientes }]
     };
-    console.log(parms);
+
     this.service.post(parms).then((response) => {
-      console.log(response);
+    
     });
   }
 
@@ -264,7 +264,6 @@ export class MtConfiguracionComponent implements OnInit {
     };
     this.service.get(parms).then((response) => {
       this.vListaClientes = response.toString();
-      console.log(response.toString());
     });
   }
 
@@ -408,7 +407,7 @@ export class MtConfiguracionComponent implements OnInit {
         self.optionNivelList.push(
           { key: (rol || {}).id_rol, value: (rol || {}).nom_rol });
       });
-      console.log(self.optionNivelList);
+
       // self.cdr.detectChanges();
     });
   }
@@ -482,7 +481,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
     this.service.get(parms).then((response) => {
       this.dataViewPermiso = response || [];
-      console.log(this.dataViewPermiso);
+
       this.dataSourcePermiso = new MatTableDataSource(this.dataViewPermiso);
     });
   }
@@ -662,7 +661,7 @@ export class MtConfiguracionComponent implements OnInit {
         ruta_download_sunat: this.vRutaDownloadSunat || ""
       }]
     };
-    console.log(parms);
+
     this.service.post(parms).then((response) => {
       this.service.toastSuccess("Registrado con exito...!!", "Caja");
     });

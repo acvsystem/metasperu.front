@@ -397,7 +397,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   vIdSelectH: number = 0;
   vIdPosition: number = 0;
   onSelectDataDia(id_horario?, id_dia?, dataDia?, idSelectH?, idPosicion?) {
-    console.log(id_horario, id_dia, dataDia, idSelectH, idPosicion);
+
     this.vSelectHorario = id_horario;
     this.vDataDiaSelected = dataDia;
     this.vIdSelectH = idSelectH;
@@ -503,7 +503,7 @@ export class MtHorarioTiendaComponent implements OnInit {
                           let exist = classList.indexOf('agregado');
 
                           if (exist == -1) {
-                            console.log(registro);
+
                             elemntButtonAdd[0]['disabled'] = true
                             elementButtonDL[0]['innerHTML'] = '<i class="fa fa-calendar-times-o" aria-hidden="true"></i>';
                             elementButtonDL[0]['className'] = 'btn btn-danger btn-sm agregado';
@@ -560,7 +560,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
   onRevidarDataTrabajador(data) {
-    console.log(data);
+
   }
 
   onAddDTrabajo(data) {
@@ -581,10 +581,10 @@ export class MtHorarioTiendaComponent implements OnInit {
         });
       });
 
-      console.log(arDias);
+
       this.dataHorario.filter((dth, i) => {
         let exist = this.dataHorario[i]['dias_libres'].find((dl) => dl.nombre_completo == (data || {}).nombre_completo && dl.id_dia == (data || {}).id_dia);
-        console.log(arDias, (exist || {}).id_dia, (data || {}).id_dia);
+
 
         if (Object.keys(exist || {}).length && isContinue) {
           isContinue = false;
@@ -679,7 +679,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onAddDLTrabajo(data, id) {
     let isContinue = true;
-    console.log(data);
+
     let elemntButtonAdd = document.getElementsByName('addHorario-' + id);
 
     let elementButtonDL = document.getElementsByName('addDL-' + id);
@@ -951,7 +951,6 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
       );
 
-      //this.onSearchCalendario();
     });
 
     this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
@@ -960,70 +959,6 @@ export class MtHorarioTiendaComponent implements OnInit {
       url: '/calendario/generar',
       body: listCargoTienda
     };
-    /*
-            this.service.post(parms).then(async (response) => {
-                let dataRes = response;
-    
-                if ((dataRes || []).length) {
-                    this.onListCargo = [];
-    
-                    this.dataHorario = [];
-                    this.store.removeStore("mt-horario");
-                    let listCargo = [
-                        { value: 'Asesores' },
-                        { value: 'Gerentes' },
-                        { value: 'Cajeros' },
-                        { value: 'Almaceneros' }
-                    ];
-    
-                    for (var dia = 1; dia <= diasMes; dia++) {
-    
-                        var indice = new Date(año, mes - 1, dia).getDay();
-    
-                        if (indice == parseInt(day[0]) && diasSemana[indice] == "Lunes") {
-                            dias.push({ id: dias.length + 1, dia: diasSemana[indice], fecha: `${diasSemana[indice]}-${arMes[mes]}`, fecha_calendar: '', isExpired: false });
-                        }
-    
-                    }
-    
-                    await listCargo.filter((cargo) => {
-    
-                        this.dataHorario.push(
-                            {
-                                id: this.dataHorario.length + 1,
-                                cargo: cargo.value,
-                                codigo_tienda: this.codeTienda,
-                                rg_hora: [],
-                                dias: this.arListDia,
-                                dias_trabajo: [],
-                                dias_libres: [],
-                                arListTrabajador: [],
-                                observacion: []
-                            }
-                        );
-    
-                        console.log("onGenerarCalendario", this.dataHorario);
-                        //this.onSearchCalendario();
-                    });
-    
-    
-    
-                    dataRes.filter((rs) => {
-                        let index = this.dataHorario.findIndex((dh) => dh.cargo == rs.cargo);
-                        if (index != -1) {
-                            this.dataHorario[index]['id'] = rs.id;
-                        }
-                        this.onListCargo.push({ key: rs.id, value: rs.cargo });
-    
-                    });
-                } else {
-                    this.openSnackBar((dataRes || {}).msj);
-                }
-    
-    
-    
-            });
-    */
   }
 
   onModal(value) {
@@ -1078,25 +1013,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
     let horarioSelect = this.dataHorario[index]['rg_hora'].filter((rg) => rg.id == id);
 
-    //console.log(this.cboCargo, id, horarioSelect);
-
-    /*
-    if (this.vSelectHorario > 0) {
-        let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
- 
-        if (index != -1) {
-            let horarioSelect = this.dataHorario[index]['rg_hora'].filter((rg) => rg.id == this.vSelectHorario);
-            if (horarioSelect.length > 0) {
-                this.isRangoEdit = true;
-                this.isStartEditRg = false;
-                //this.dataHorario[index]['rg_hora']['isEdit'] = true;
-            }
-        }
-047
-        // this.socket.emit('actualizarHorario', this.dataHorario);
-        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-    }
-        */
 
   }
 
@@ -1155,7 +1071,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onOpenObservacion(data?, diaData?) {
-    console.log(data, diaData);
+
     let idCargo = Object.keys((data || {})).length ? (data || {}).id : this.cboCargo;
     let idDia = Object.keys((diaData || {})).length ? (diaData || {}).id : this.vSelectDia;
 
@@ -1163,7 +1079,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     if (index != -1) {
       this.dataObservation = this.dataHorario[index]['observacion'].filter((obs) => obs.id_dia == idDia);
     }
-    console.log(this.dataObservation);
+
     this.isObservacion = true;
     this.isOpenModal = true;
   }

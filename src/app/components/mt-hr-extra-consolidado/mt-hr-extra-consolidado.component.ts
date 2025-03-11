@@ -131,7 +131,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
                 let exist = (this.onListEmpleado || []).findIndex((pr) => (pr || {}).key == ((ejb || {}).nro_documento).trim());
                 if (exist == -1) {
-                  console.log(exist);
                   (this.onListEmpleado || []).push({ key: ((ejb || {}).nro_documento).trim(), value: (ejb || {}).nombre_completo });
                   (this.parseEJB || []).push({
                     nombre_completo: (ejb || {}).nombre_completo,
@@ -160,7 +159,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
 
         if (dataEmpleado.length - 1 == index) {
-          console.log(this.parseEJB);
           this.afterChange.emit(response);
           this.parseEJB.filter((arEmp) => {
 
@@ -179,7 +177,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
               nro_documento: arEmp.documento
             }];
             //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
-            console.log("this.socket.emit('consultaHorasTrab', configuracion);");
             this.socket.emit('consultaHorasTrab', configuracion);
           });
 

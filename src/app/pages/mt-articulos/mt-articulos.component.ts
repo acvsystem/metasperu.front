@@ -113,11 +113,11 @@ export class MtArticulosComponent implements OnInit {
     });
 
     this.socket.on('responseAsistencia', (configuracion) => {
-      console.log(configuracion);
+      
     });
 
     this.socket.on('sessionConnect', (listaSession) => {
-      console.log(this.conxOnline);
+
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {
@@ -209,7 +209,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-      console.log("dataStockParse",data);
+
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -252,7 +252,7 @@ export class MtArticulosComponent implements OnInit {
     self.onDataView = [];
 
     self.onDataView = self.onReporteList;
-    console.log(self.onDataView);
+
     this.dataSource = new MatTableDataSource(this.onDataView);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -615,7 +615,7 @@ export class MtArticulosComponent implements OnInit {
         let undServicio = "";
 
         let indexVS = (codeTiendasVs || []).find((tienda) => tienda.code == (profileUser || {}).code);
-      console.log(indexVS);
+
         if (Object.keys(indexVS || {}).length) {
           undServicio = 'VICTORIA SECRET';
         }
@@ -626,12 +626,12 @@ export class MtArticulosComponent implements OnInit {
           undServicio = 'BATH AND BODY WORKS';
         }
 
-        console.log(undServicio);
+
         this.onProcessPetition(undServicio);
       }
 
       if ((this.barcode || "").length) {
-        console.log(this.barcode);
+
         this.socket.emit('comunicationStockTable', this.tiendasPetition, this.barcode);
       } else {
         this.socket.emit('comunicationStockTable', this.tiendasPetition, "");

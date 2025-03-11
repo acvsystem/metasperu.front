@@ -44,7 +44,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   async ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.hasOwnProperty('codigoPap')) {
-      console.log(this.codigoPap);
+
       await this.onListTipoPapeleta();
       this.onSearchPap(this.codigoPap);
     }
@@ -58,7 +58,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
     this.service.post(parms).then(async (response) => {
       this.dataPap = [response[0]];
-      console.log(this.dataPap);
+
       if (this.dataPap.length) {
 
         (this.dataPap || []).filter((dt, i) => {
@@ -96,7 +96,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
       },
       jsPDF: { unit: 'in', format: 'a4', orientation: 'p' }
     };
-    console.log(element);
+
     await html2pdf().from(element[0]).set(opt).save();
   }
 

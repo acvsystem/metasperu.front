@@ -47,19 +47,7 @@ export class MtDropboxComponent implements OnInit {
 
   ngOnInit() {
     this.onDirFile();
-    /*
-        var myButton = document.getElementById('myButton');
-        myButton.addEventListener('contextmenu', function(event) {
-          // Prevenir el comportamiento por defecto del navegador al hacer clic derecho
-          event.preventDefault();
-          // Limpiar consola
-          console.clear();
-          // Mostrar un mensaje en la consola cuando se simula un clic derecho
-          console.log('Clic derecho simulado');
-          // Mostrar el menú contextual cambiando su estilo para que sea visible
-    
-      });
-    */
+  
   }
 
 
@@ -187,7 +175,7 @@ export class MtDropboxComponent implements OnInit {
       };
 
       this.service.getBlob(parms).then((response) => {
-        console.log(validDownload);
+
         const link = document.createElement('a');
         link.href = response.url;
         link.download = validDownload;
@@ -213,7 +201,6 @@ export class MtDropboxComponent implements OnInit {
           let tamañoFile = (dir.size / (1024 * 1024)).toFixed(2);
           let isMega = dir.size >= 1000000 ? true : false;
           let nomenclatura = isMega ? ' MB' : ' KB';
-          console.log(dir.size >= 1000000 ? tamañoFile : (dir.size / 1024).toFixed(2) + nomenclatura);
 
           this.arDirectorios.push(
             {
@@ -287,7 +274,6 @@ export class MtDropboxComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.arDirectorios);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    console.log(this.dataSource);
 
   }
 
@@ -295,7 +281,6 @@ export class MtDropboxComponent implements OnInit {
     event.preventDefault();
 
     if (event?.dataTransfer?.files) {
-      console.log(event.dataTransfer.files);
       this.uploadFiles(event.dataTransfer.files);
     }
   }
@@ -329,18 +314,15 @@ export class MtDropboxComponent implements OnInit {
   }
 
   getFileDetails(e) {
-    //console.log (e.target.files);
     for (var i = 0; i < e.target.files.length; i++) {
       this.myFiles.push(e.target.files[i]);
     }
-    console.log(this.myFiles)
   }
 
   uploadSuccess: boolean = false;
   percentDone: any = 0;
 
   uploadAndProgress(files: FormData) {
-    console.log(files)
 
     //Array.from(files).forEach(f => formData.append('file', f))
 

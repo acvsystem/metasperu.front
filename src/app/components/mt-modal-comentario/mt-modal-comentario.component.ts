@@ -31,7 +31,6 @@ export class MtModalComentarioComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.isViewcomentario.value);
    }
 
   onChangeTextArea(data: any) {
