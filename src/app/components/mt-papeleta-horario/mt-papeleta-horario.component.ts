@@ -52,6 +52,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   arHoraTomadaCalc: Array<any> = [];
   arCopiHoraExtra: Array<any> = [];
   bodyList: Array<any> = [];
+  dataViewPermiso: Array<any> = [];
   vObservacion: string = "";
   nameTienda: string = "";
   cboEmpleado: string = "";
@@ -81,6 +82,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   isDataServer: boolean = false;
   isEJB: boolean = false;
   isServer: boolean = false;
+  isPapPermiso: boolean = false;
   unidServicio: string = "";
   cboCargo: string = "";
   idCboTipoPap: number = 0;
@@ -442,6 +444,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.onGenerarCodigoPapeleta();
       this.onListTipoPapeleta();
       this.onListPapeleta();
+      this.onPermisosTienda();
     }
   }
 
@@ -525,25 +528,25 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         if ((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice || pt.indice == 6) {
 
-          
- 
-      
-          
+
+
+
+
           count = this.obtenerHorasTrabajadas(hora, count);
 
           if (((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice) || pt.indice == 6) {
-            
+
             this.arPartTimeFech[index]["hrTrabajadas"] = count;
 
             let hrxLlegada = count.split(':');
-     
+
             let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
-  
+
             let hrxSalida = ("24:00").split(':');
             let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
-  
+
             let newAcumulado = llegada > salida ? llegada - salida : salida - llegada;
-  
+
             const ToTime = (num) => {
               var minutos: any = Math.floor((num / 60) % 60);
               minutos = minutos < 10 ? '0' + minutos : minutos;
@@ -551,9 +554,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
               segundos = segundos < 10 ? '0' + segundos : segundos;
               return minutos + ':' + segundos;
             };
-  
+
             let process = ToTime(newAcumulado);
-            
+
             arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
 
             if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) >= 24) {
@@ -566,14 +569,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
           }
 
-          
+
           count = "00:00";
           arFechas = [];
 
 
         } else {
           arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
-          
+
           count = this.obtenerHorasTrabajadas(hora, count);
         }
 
@@ -1254,12 +1257,25 @@ export class MtPapeletaHorarioComponent implements OnInit {
       return response;
     }
   */
+
+  onPermisosTienda() {
+    let parms = {
+      url: '/security/configuracion/permisos/hp'
+    };
+    this.service.get(parms).then((response) => {
+      this.dataViewPermiso = response || [];
+      //this.isPapPermiso = response || [];
+    });
+  }
+
   onCaledar(ev) {
 
     if (ev.isTime) {
       this[ev.id] = ev.value;
 
       if (this.horaSalida.length && this.horaLlegada.length && this.cboCasos == 'Compensacion de horas trabajadas') {
+
+
         this.isLoaderHrx = true;
         setTimeout(() => {
           this.diffHoraPap = "00:00";
@@ -1294,8 +1310,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
             this.service.toastError("solo puede solicitar 8 horas por papeleta..!!", "Papeleta");
           }
         }, 1500);
+
+
+
       }
     }
+
     /*
         if (ev.isDefault) { //VERIFICACION DE FECHA ANTERIOR PAPELETA
           let dateNow = new Date();
@@ -1311,17 +1331,37 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
         }
     */
+
     if (ev.isDefault) {
       let date = new Date(ev.value).toLocaleDateString().split('/');
       this[ev.id] = `${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`;
 
-      if (this.vFechaDesde.length && this.vFechaHasta.length && this.cboCasos == 'Compensacion de horas trabajadas') {
-        if (this.vFechaDesde != this.vFechaHasta) {
-          this.service.toastError("Las fechas de salida y entrada deben ser iguales..!!", "Papeleta");
+      let dateNow = new Date();
+
+      let day = new Date(dateNow).toLocaleDateString().split('/');
+
+      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
+      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
+
+      (this.dataViewPermiso || []).filter((tienda) => {
+        //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+        if (this.codeTienda == (tienda || {}).SERIE_TIENDA) {
+          console.log((f1.getTime(), f2.getTime()), (tienda || {}).IS_FREE_PAPELETA);
+          if ((f1.getTime() < f2.getTime()) && !(tienda || {}).IS_FREE_PAPELETA) {
+
+            this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
+          } else {
+            if (this.vFechaDesde.length && this.vFechaHasta.length && this.cboCasos == 'Compensacion de horas trabajadas') {
+              if (this.vFechaDesde != this.vFechaHasta) {
+                this.service.toastError("Las fechas de salida y entrada deben ser iguales..!!", "Papeleta");
+              }
+            }
+          }
         }
-      }
+      });
     }
   }
+
 
   onCalcHorasSolicitadas() {
     this.diffHoraPap = "00:00";
@@ -1566,7 +1606,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         descripcion: this.vObservacion,
         horas_extras: this.bodyList || []
       });
- 
+
       await (dataPapeleta || []).filter((pap, i) => {
         Object.keys(pap).filter((property) => {
           if (this.cboCasos == "Compensacion de horas trabajadas") {
@@ -1616,6 +1656,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
               isErrorHSolicitada = false;
               arVerify.push(true);
             }
+
+            (this.dataViewPermiso || []).filter((tienda) => {
+              //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+              if (this.codeTienda == (tienda || {}).SERIE_TIENDA && (tienda || {}).IS_FREE_PAPELETA) {
+                arVerify.push(true);
+              } else {
+                this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
+                arVerify.push(false);
+              }
+            });
           }
         });
 
