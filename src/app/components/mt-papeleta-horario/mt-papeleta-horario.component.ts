@@ -1659,12 +1659,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             (this.dataViewPermiso || []).filter((tienda) => {
               //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
-              if (this.codeTienda == (tienda || {}).SERIE_TIENDA && (tienda || {}).IS_FREE_PAPELETA) {
-                arVerify.push(true);
-              } else {
-                this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
-                arVerify.push(false);
+              if (this.codeTienda == (tienda || {}).SERIE_TIENDA) {
+                if ((tienda || {}).IS_FREE_PAPELETA) {
+                  arVerify.push(true);
+                } else {
+                  this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
+                  arVerify.push(false);
+                }
               }
+
             });
           }
         });
@@ -1679,7 +1682,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               url: '/recursos_humanos/pap/registrar',
               body: dataPapeleta
             };
-
+/*
             this.service.post(parms).then(async (response) => {
               if ((response || {}).success) {
                 this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
@@ -1724,7 +1727,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               }
             });
-
+*/
           } else {
             if (!isErrorHSolicitada) {
               this.service.toastError("Complete todos los campos..!!", "Papeleta");
@@ -1732,12 +1735,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
           /*
           VALIDACION CON FECHA ANTERIOR NO SE PUEDE CREAR PAPELETA
-   
+     
           let dateNow = new Date();
           let day = new Date(dateNow).toLocaleDateString().split('/');
           let date1 = new Date(dataPapeleta[0]['fecha_desde']).toLocaleDateString().split('/');
           let date2 = new Date(dataPapeleta[0]['fecha_hasta']).toLocaleDateString().split('/');
-   
+     
           var f1 = new Date(parseInt(date1[2]), parseInt(date1[1]), parseInt(date1[0]));
           var f2 = new Date(parseInt(date2[2]), parseInt(date2[1]), parseInt(date2[0]));
           var f3 = new Date(parseInt(day[2]) - 1, parseInt(day[1]), parseInt(day[0]));
@@ -1745,7 +1748,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           if ((f1.getTime() < f3.getTime()) || (f2.getTime() < f3.getTime())) {
             this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
           } else {
-   
+     
           }
           */
         }
