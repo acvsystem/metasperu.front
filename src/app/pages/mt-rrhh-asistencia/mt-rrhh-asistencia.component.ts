@@ -34,7 +34,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
   parseEJB: Array<any> = [];
@@ -77,7 +77,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   listTipoGraffic: Array<any> = [
     { key: 'Jornada incompleta', value: 'Jornada incompleta' },
-    { key: 'Brake incompleta', value: 'Brake incompleta' }
+    { key: 'Brake incompleta', value: 'Brake incompleta' },
+    { key: 'Tardanzas', value: 'Tardanzas' }
   ];
 
   onListTiendas: Array<any> = [
@@ -240,6 +241,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   hr_ingreso_1: (huellero || {}).hr_ingreso,
                   hr_salida_1: (huellero || {}).hr_salida,
                   rango_horario: (huellero || {}).rango_horario,
+                  isNullRango: !((huellero || {}).rango_horario || "").length ? true : false,
                   isTardanza: isTardanza,
                   hr_brake: "",
                   hr_ingreso_2: "",
@@ -309,6 +311,17 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
                 }
               }
+
+              if (dt.isTardanza && !dt.isNullRango && this.cboTipoGraffic == "Tardanzas") {
+                if (indexData == -1) {
+                  this.arrDataGrafic.push({
+                    tienda: dt.tienda,
+                    cantidad: 1
+                  });
+                } else {
+                  this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+                }
+              }
             }
           });
 
@@ -344,6 +357,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onGenerarGraffic() {
     this.arrDataGrafic = [];
+    console.log("onGenerarGraffic", this.onDataTemp);
     this.onDataTemp.filter((dt) => {
       if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
         let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
@@ -360,6 +374,17 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         }
 
         if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
+          if (indexData == -1) {
+            this.arrDataGrafic.push({
+              tienda: dt.tienda,
+              cantidad: 1
+            });
+          } else {
+            this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+          }
+        }
+
+        if (dt.isTardanza && this.cboTipoGraffic == "Tardanzas") {
           if (indexData == -1) {
             this.arrDataGrafic.push({
               tienda: dt.tienda,
@@ -473,7 +498,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewFeriados = false;
       this.isDetallado = false;
       this.isGrafica = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
     }
 
     if ((selectData || {}).key == "Feriados") {
@@ -491,7 +516,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewDefault = false;
       this.isDetallado = true;
       this.isGrafica = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
     }
 
   }
@@ -762,7 +787,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onViewGrafic() {
 
-    console.log("onViewGrafic");
+    console.log("onViewGrafic", this.cboTipoGraffic);
     let arrLabels = [];
     let data = [];
 
@@ -783,7 +808,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       data: {
         labels: arrLabels,
         datasets: [{
-          label: (this.cboTipoGraffic == 'Jornada incompleta') ? '# Horas trabajadas incompletas' : '# Tiempo Brake Sobre la hora',
+          label: this.cboTipoGraffic == 'Tardanzas' ? 'Tardanzas Asesores' : (this.cboTipoGraffic == 'Jornada incompleta') ? '# Horas trabajadas incompletas' : '# Tiempo Brake Sobre la hora',
           data: data,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
