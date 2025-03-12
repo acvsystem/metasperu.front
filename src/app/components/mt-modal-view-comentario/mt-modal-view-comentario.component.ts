@@ -17,12 +17,12 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'mt-modal-comentario',
-  templateUrl: './mt-modal-comentario.component.html',
-  styleUrls: ['./mt-modal-comentario.component.scss'],
+  selector: 'mt-modal-view-comentario',
+  templateUrl: './mt-modal-view-comentario.component.html',
+  styleUrls: ['./mt-modal-view-comentario.component.scss'],
 })
-export class MtModalComentarioComponent implements OnInit {
-  readonly dialogRef = inject(MatDialogRef<MtModalComentarioComponent>);
+export class MtModalViewComentarioComponent implements OnInit {
+  readonly dialogRef = inject(MatDialogRef<MtModalViewComentarioComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   readonly comentario = model(this.data.comentario);
   readonly isViewComentarioModal = model(this.data.isViewComentario);
@@ -32,21 +32,20 @@ export class MtModalComentarioComponent implements OnInit {
   isRechazar: any = this.isRechazarModal;
   constructor() { }
 
-  ngOnInit() {
-   }
+  ngOnInit() {}
 
-  onChangeTextArea(data: any) {
-    let id = data.target.id;
-    let inputData = $(`#${id}`).val();
-    this[id] = inputData || "";
-  }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onOk(): void {
-    this.dialogRef.close(this.vComentario);
-  }
-
+   onChangeTextArea(data: any) {
+      let id = data.target.id;
+      let inputData = $(`#${id}`).val();
+      this[id] = inputData || "";
+    }
+  
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+  
+    onOk(): void {
+      this.dialogRef.close(this.vComentario);
+    }
 }

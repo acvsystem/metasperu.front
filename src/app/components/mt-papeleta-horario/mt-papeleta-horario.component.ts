@@ -16,6 +16,7 @@ import { MatSort } from '@angular/material/sort';
 import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 import { ModalController } from '@ionic/angular';
 import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
+import { MtModalViewComentarioComponent } from '../../components/mt-modal-view-comentario/mt-modal-view-comentario.component';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -1759,7 +1760,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   async onViewComentario(row) {
-    const dialogRef = this.dialog.open(MtModalComentarioComponent, {
+    const dialogRef = this.dialog.open(MtModalViewComentarioComponent, {
       data: { comentario: (row || {}).comentario, isViewComentario: true },
       width: '500px'
 
