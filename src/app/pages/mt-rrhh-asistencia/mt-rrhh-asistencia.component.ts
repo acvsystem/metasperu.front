@@ -34,7 +34,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
   parseEJB: Array<any> = [];
@@ -183,7 +183,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             hr_trabajadas: (huellero || {}).hrWorking,
             caja: (huellero || {}).caja,
             papeletas: (huellero || {}).papeleta,
-            isPapeleta: ((huellero || {}).papeleta || []).length ? true : false
+            isPapeleta: ((huellero || {}).papeleta || []).length ? true : false,
+            rango_horario: (huellero || {}).rango_horario
           });
         });
 
@@ -216,6 +217,15 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             if ((dataEJB || {}).codigoEJB != null) {
 
               if (indexData == -1) {
+
+                let defaultHT = (huellero || {}).rango_horario.split(" ")[0];
+                let ingreso = (huellero || {}).hr_ingreso.split(':');
+                let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+                let ingresoHorario = (defaultHT).split(':');
+                let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+
+                let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
+
                 this.onDataTemp.push({
                   tienda: (selectedLocal || {})["name"],
                   codigoEJB: (dataEJB || {}).codigoEJB,
@@ -229,6 +239,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   dia: (huellero || {}).dia,
                   hr_ingreso_1: (huellero || {}).hr_ingreso,
                   hr_salida_1: (huellero || {}).hr_salida,
+                  rango_horario: (huellero || {}).rango_horario,
+                  isTardanza: isTardanza,
                   hr_brake: "",
                   hr_ingreso_2: "",
                   hr_salida_2: "",
