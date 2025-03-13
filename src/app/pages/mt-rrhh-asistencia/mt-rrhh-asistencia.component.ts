@@ -224,7 +224,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
                 let ingresoHorario = (defaultHT).split(':');
                 let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-                console.log();
+               
                 let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
 
                 this.onDataTemp.push({
