@@ -98,7 +98,7 @@
     <div id="content" class="full-center">
       <div class="card-content">
         <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
-          <mat-tab label="Plugin">
+          <mat-tab label="Sistema">
             <div class="example-small-box mat-elevation-z4 boy-tap" style="padding-top: 20px;">
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
@@ -243,6 +243,66 @@
                           </div>
                         </ion-col>
                       </ion-row>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div class="card-content-configuration">
+                        <ion-row>
+                          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                            <div class="content-view">
+                              <ion-row class="border-bottom-title">
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                  <span class="title card-title">Tiempo de tolerancia</span>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+                                  <mt-input
+                                  id="vReferencia"
+                                  label="Referencia"
+                                  placeholder="Referencia"
+                                  type="text"
+                                  value="{{ vReferencia }}"
+                                  (afterChange)="onChangeInput($event)"
+                                ></mt-input>
+                                </ion-col>
+                                <ion-col sizeXs="1" sizeSm="1" sizeMd="3" sizeLg="3" >
+                                <mt-calendar 
+                                [selected] = vTiempoTolerancia
+                                id="vTiempoTolerancia"
+                                [isTime]="true" 
+                                [isReset]="isResetCalendar"
+                                placeholder="Tiempo de tolerancia"
+                                name="horaLlegada"
+                                (afterChange)="onCaledar($event)">
+                              </mt-calendar>
+                                </ion-col>
+                                <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" style="display: flex;justify-content: center;align-items: center;">
+                                  <button type="button" (click)="onRegTiempoTolerancia()" matTooltip="Guardar Registro" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row>
+                                <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
+                                  <ol class="list-group">
+                                    <li class="list-group-item" *ngFor="let data of dataViewTolerancia">
+                                      <ion-row>
+                                        <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+                                          {{data.REFERENCIA}}
+                                        </ion-col>
+                                        <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
+                                          {{data.TIEMPO_TOLERANCIA}}
+                                        </ion-col>
+                                      </ion-row>
+                                    </li>
+                                  </ol>
+                                </ion-col>
+                              </ion-row>
+                            </div>
+                          </ion-col>
+                        </ion-row>
                       </div>
                     </ion-col>
                   </ion-row>

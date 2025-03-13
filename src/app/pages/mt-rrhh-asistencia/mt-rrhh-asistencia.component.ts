@@ -23,6 +23,7 @@ import {
 import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-registro.component';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
+import { ShareService } from 'src/app/services/shareService';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -46,6 +47,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   onDataParse: Array<any> = [];
   vCalendar: Array<any> = [];
   vMultiSelect: Array<any> = [];
+  dataViewTolerancia: Array<any> = [];
   vCalendarDefault: Array<any> = [];
   vDetallado: Array<any> = [];
   isViewDefault: boolean = true;
@@ -113,9 +115,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer, private service: ShareService) { }
 
   ngOnInit() {
+
+    this.onTiempoTolerancia();
 
     this.socket.on('reporteHuellero', async (configuracion) => {
       console.log("servGeneral new", configuracion);
@@ -194,7 +198,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
       if (this.isDataEJB && this.isDataServer) {
         this.onDataTemp = [];
-        console.log(this.parseHuellero);
         await (this.parseHuellero || []).filter(async (huellero) => {
 
           if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
@@ -219,12 +222,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               if (indexData == -1) {
 
-                let defaultHT = this.obtenerHorasTrabajadas((huellero || {}).rango_horario.split(" ")[0], "00:06"); //TOLERANCIA HORA ENTRADA
+                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'tardanza');
+
+                let defaultHT = this.obtenerHorasTrabajadas((huellero || {}).rango_horario.split(" ")[0], (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA ENTRADA
                 let ingreso = (huellero || {}).hr_ingreso.split(':');
                 let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
                 let ingresoHorario = (defaultHT).split(':');
                 let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-               
+
                 let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
 
                 this.onDataTemp.push({
@@ -264,14 +269,21 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
                 this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
                 let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-                //let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
-                if ((huellero || {}).nro_documento == '005360632' && (huellero || {}).dia == "2025-02-19") {
-                  console.log((huellero || {}).hr_ingreso, (huellero || {}).hr_salida, this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1, this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
-                }
-                console.log();
+
+                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'breake');
+
+                let defaultHT = this.obtenerHorasTrabajadas("01:00", (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA BREAKE
+                let ingresoHorario = (defaultHT).split(':');
+                let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+
+                let ingreso = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso).split(':');
+                let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+
+                let isBrakeComplete =  ingresoInt > ingresoHorarioInt ? false : true;
+
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
                 this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
-                this.onDataTemp[indexData]['isBrakeComplete'] = this.onVerficacionBrake(this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso));
+                this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
                 this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : "CORRECTO";
@@ -343,6 +355,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     });
   }
+
 
   sinDiacriticos = (function () {
     let de = 'ÁÃÀÄÂÉËÈÊÍÏÌÎÓÖÒÔÚÜÙÛÑÇáãàäâéëèêíïìîóöòôúüùûñç',
@@ -764,7 +777,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   onVerficacionBrake(hr) {
     let hora_pr = hr.split(":");
     let isCorrect = false;
-    if (hora_pr[0] <= 1 && hora_pr[1] <= 3) {
+    let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'breake');
+
+    if (hora_pr[0] <= 1 && hora_pr[1] <= (tolerancia || {}).TIEMPO_TOLERANCIA || "00:00") {
       isCorrect = true;
     } else if (hora_pr[0] == 0) {
       isCorrect = true;
@@ -890,6 +905,15 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.dialog.open(MtViewRegistroComponent, {
       data: ev,
       panelClass: 'full-screen-modal'
+    });
+  }
+
+  onTiempoTolerancia() {
+    let parms = {
+      url: '/security/configuracion/tiempo/tolerancia'
+    };
+    this.service.get(parms).then((response) => {
+      this.dataViewTolerancia = response;
     });
   }
 

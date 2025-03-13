@@ -27,6 +27,7 @@ export class MtConfiguracionComponent implements OnInit {
   dataViewUser: Array<any> = [];
   dataViewCaja: Array<any> = [];
   dataViewPermiso: Array<any> = [];
+  dataViewTolerancia: Array<any> = [];
   dataSourceSession = new MatTableDataSource<any>(this.dataViewSession);
   dataSourceAuthSession = new MatTableDataSource<any>(this.dataViewAuthSession);
   dataSourceUser = new MatTableDataSource<any>(this.dataViewUser);
@@ -49,11 +50,13 @@ export class MtConfiguracionComponent implements OnInit {
 
   lstRol: string = "";
   filterTienda: string = "";
-
+  vReferencia: string = "";
+  vTiempoTolerancia: string = "";
   emailList: Array<any> = [];
   emailSend: string = "";
   isEmailDelete: boolean = false;
   isAddTienda: boolean = false;
+  isResetCalendar: boolean = false;
   userEmailService: string = "";
   passEmailService: string = "";
   vAddSerieTienda: string = "";
@@ -138,7 +141,7 @@ export class MtConfiguracionComponent implements OnInit {
     });
 
     this.onListClient();
-
+    this.onTiempoTolerancia();
 
     this.socket.on('refreshSessionView', (status) => {
       this.onListSession();
@@ -196,7 +199,7 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-    
+
     });
   }
 
@@ -698,5 +701,37 @@ export class MtConfiguracionComponent implements OnInit {
       this.service.toastSuccess("Actualizado con exito...!!", "Permisos");
     });
 
+  }
+
+  onTiempoTolerancia() {
+    let parms = {
+      url: '/security/configuracion/tiempo/tolerancia'
+    };
+    this.service.get(parms).then((response) => {
+      this.dataViewTolerancia = response;
+    });
+  }
+
+  onRegTiempoTolerancia() {
+    let parms = {
+      url: '/security/configuracion/tiempo/tolerancia',
+      body: [{
+        referencia: this.vReferencia,
+        tiempo_tolerancia: this.vTiempoTolerancia,
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.onTiempoTolerancia();
+      this.vReferencia = "";
+      this.vTiempoTolerancia = "";
+      this.isResetCalendar = true;
+      this.service.toastSuccess("Registrado con exito...!!", "Tiempo tolerancia");
+    });
+  }
+
+  onCaledar(ev) {
+    if (ev.isTime) {
+      this[ev.id] = ev.value;
+    }
   }
 }
