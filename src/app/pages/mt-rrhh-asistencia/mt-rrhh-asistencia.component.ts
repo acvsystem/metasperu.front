@@ -219,12 +219,12 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               if (indexData == -1) {
 
-                let defaultHT = (huellero || {}).rango_horario.split(" ")[0];
+                let defaultHT = this.obtenerHorasTrabajadas((huellero || {}).rango_horario.split(" ")[0], "00:06"); //TOLERANCIA HORA ENTRADA
                 let ingreso = (huellero || {}).hr_ingreso.split(':');
                 let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
                 let ingresoHorario = (defaultHT).split(':');
                 let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-
+                console.log();
                 let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
 
                 this.onDataTemp.push({
