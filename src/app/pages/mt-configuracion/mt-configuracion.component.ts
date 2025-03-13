@@ -734,4 +734,8 @@ export class MtConfiguracionComponent implements OnInit {
       this[ev.id] = ev.value;
     }
   }
+
+  onSelectTolerancia(data) {
+    this.vReferencia = (data || {}).REFERENCIA;
+  }
 }

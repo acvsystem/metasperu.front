@@ -287,7 +287,7 @@
                               <ion-row>
                                 <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
                                   <ol class="list-group">
-                                    <li class="list-group-item" *ngFor="let data of dataViewTolerancia">
+                                    <li class="list-group-item item-tolerancia" *ngFor="let data of dataViewTolerancia" (click)="onSelectTolerancia(data)">
                                       <ion-row>
                                         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
                                           {{data.REFERENCIA}}
