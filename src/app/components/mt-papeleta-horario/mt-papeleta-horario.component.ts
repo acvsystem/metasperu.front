@@ -332,7 +332,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 let hr = process.split(":");
 
                 //CONTEO HORA EXTRA
-                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'papeleta default');
+                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra default');
 
                 if (parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
 
@@ -409,7 +409,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let hr = process.split(":");
               //CONTEO HORA EXTRA
 
-              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'papeleta default');
+              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra default');
 
               if (parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
                 this.onDataTemp[indexData]['hr_extra'] = process;//23:59
@@ -534,7 +534,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.arPartTimeFech.filter((pt, index) => {
 
         let hr = (pt.hr_trabajadas || "").split(":");
-        let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'papeleta part time');
+        let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
 
         let hora = parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) ? `${hr[0]}:${hr[1]}` : `${hr[0]}:00`; //LIMITIE DE HORA VALIDA
 
@@ -575,7 +575,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               this.arPartTimeFech[index]["fechas"] = arFechas;
               this.arPartTimeFech[index]["hrExtra"] = process;
 
-              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'papeleta part time');
+              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
 
               // LIMITE HORA PART TIME
               if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
@@ -991,7 +991,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                   //CONTEO HORA EXTRA
 
-                  let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'papeleta default');
+                  let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra default');
 
 
                   if (parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
@@ -1070,7 +1070,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 let hr = process.split(":");
 
                 //CONTEO HORA EXTRA
-                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'papeleta default');
+                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra default');
                 if (parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
                   this.onDataTemp[indexData]['hr_extra'] = process;//23:59
                   let hrxSalida = this.onDataTemp[indexData]['hr_extra'].split(':');
