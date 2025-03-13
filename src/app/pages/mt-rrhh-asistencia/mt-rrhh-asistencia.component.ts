@@ -252,6 +252,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   isBrakeComplete: false,
                   isRegistroMax: false,
                   statusRegistro: 'CORRECTO',
+                  statusTardanza: isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
                   dataRegistro: [huellero],
                   papeletas: (huellero || {}).papeletas || [],
                   isPapeleta: (huellero || {}).isPapeleta,
