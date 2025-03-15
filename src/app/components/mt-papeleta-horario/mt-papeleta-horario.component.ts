@@ -1827,4 +1827,39 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.dataViewTolerancia = response;
     });
   }
+
+  onRecal(row){
+    let parms = {
+      url: '/recursos_humanos/pap/horas_extras/recalcular',
+      body: [
+        {
+          id_hora_extra: (row ||{}).id_hora_extra
+        }
+      ]
+    };
+    this.service.post(parms).then((response) => {
+      let dateNow = new Date();
+
+        var año = dateNow.getFullYear();
+        var mes = (dateNow.getMonth() + 1);
+        let dayNow = dateNow.getDay();
+        let day = new Date(dateNow).toLocaleDateString().split('/');
+        let añoIn = año;
+        let mesIn = mes > 1 ? mes - 1 : mes;
+        let diaR = mes == 1 ? 1 : day[0];
+        let configuracion = [{
+          fechain: `${añoIn}-${mesIn}-${1}`,
+          fechaend: `${año}-${mes}-${day[0]}`,
+          nro_documento: this.cboEmpleado
+        }];
+
+
+        let cantidadPap = this.listaPapeletas.filter((pap) => (pap || {}).documento == this.cboEmpleado);
+
+        this.cantidadPapeletas = (cantidadPap || []).length;
+        //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
+        this.socket.emit('consultaHorasTrab', configuracion);
+      this.service.toastSuccess("Recalculo finalizado.", "Hora Extra");
+    });
+  }
 }

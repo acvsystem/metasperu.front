@@ -201,6 +201,7 @@
                           <th class="columHead">Estado</th>
                           <th class="columHead">Aprobar</th>
                           <th class="columHead">Seleccionado</th>
+                          <th class="columHead" *ngIf="isConsulting">Accion</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -248,6 +249,11 @@
                                 <span *ngIf="columBody.checked" style="color: green;"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
                               }
                             </div>
+                          </td>
+                          <td class="columBody">
+                            <button *ngIf="isConsulting" matTooltip="Recalcular" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onRecal(columBody)">
+                              <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </button>
                           </td>
                         </tr>
                       </tbody>
