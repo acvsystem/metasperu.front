@@ -346,6 +346,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   }
 
+  onClearColaUpdate(){
+    this.socket.emit('cleanColaFront');
+  }
   onTranferirCola() {
     if (Object.keys(this.vDataTransferencia[0]['dataOne']).length && Object.keys(this.vDataTransferencia[0]['dataTwo']).length) {
       console.log(this.vDataTransferencia);
