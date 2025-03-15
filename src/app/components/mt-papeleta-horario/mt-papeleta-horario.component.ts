@@ -1581,6 +1581,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
       codigo_tienda: this.codeTienda
     };
     this.socket.emit('solicitar_aprobacion_hrx', parse);
+
+    this.service.toastSuccess("Solicitud enviada.", "Hora Extra");
   }
 
   onGenerarCodigoPapeleta() { //GENERAR CODIGO DE LA PAPELETA
