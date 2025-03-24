@@ -276,11 +276,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
             if ((huellero || {}).isException) { //UNA SOLA MARCACION TRABAJO MADRUGADA
-               
+
               let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
               if (huellero.tpAsociado != "**") { //DEFAULT
-              
+
                 let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
 
                 let defaultHT = "00:00";
@@ -345,7 +345,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                     if (indexData2 == -1) {
                       let obj = { documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: this.onDataTemp[indexData]['hr_extra'], extra: this.onDataTemp[indexData]['hr_extra'], estado: estado, aprobado: aprobado, seleccionado: false };
                       (this.dataVerify || []).push(obj);
-                    } 
+                    }
 
                     (this.arCopiHoraExtra || []).push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
 
@@ -510,7 +510,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                 let aprobado = estado == "correcto" ? true : false;
 
-                (this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
+                if (indexData == -1) {
+                  (this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: process, extra: process, estado: estado, aprobado: aprobado, seleccionado: false });
+                }
 
                 (this.arCopiHoraExtra || []).push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
 
@@ -1024,11 +1026,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
               if ((huellero || {}).isException) { //UNA SOLA MARCACION TRABAJO MADRUGADA
-               
+
                 let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
                 if (huellero.tpAsociado != "**") { //DEFAULT
-                
+
                   let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
 
                   let defaultHT = "00:00";
@@ -1093,7 +1095,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                       if (indexData2 == -1) {
                         let obj = { documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: this.onDataTemp[indexData]['hr_extra'], extra: this.onDataTemp[indexData]['hr_extra'], estado: estado, aprobado: aprobado, seleccionado: false };
                         (this.dataVerify || []).push(obj);
-                      } 
+                      }
 
                       (this.arCopiHoraExtra || []).push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
 
@@ -1257,7 +1259,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                   let aprobado = estado == "correcto" ? true : false;
 
-                  
+
                   let indexData2 = (this.dataVerify || []).findIndex((data) => ((data || {}).fecha == this.onDataTemp[indexData]['dia']));
 
                   if (indexData2 == -1) {
