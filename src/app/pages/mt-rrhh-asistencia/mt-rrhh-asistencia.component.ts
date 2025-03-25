@@ -36,12 +36,15 @@ const EXCEL_EXTENSION = '.xlsx';
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
+  displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'view_registre', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
   parseEJB: Array<any> = [];
   parseHuellero: Array<any> = [];
   onDataView: Array<any> = [];
+  onDataViewOf: Array<any> = [];
   dataSource = new MatTableDataSource<PeriodicElement>(this.onDataView);
+  dataSourceOf = new MatTableDataSource<PeriodicElement>(this.onDataViewOf);
   onDataExport: Array<any> = [];
   onDataTemp: Array<any> = [];
   onDataParse: Array<any> = [];
@@ -59,10 +62,13 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isErrorFecha: boolean = false;
   filterEmpleado: string = "";
   fileName: string = "";
+  sedeReporte: string = "oficina";
   text: string = "";
+  vTipoReporte: string = "";
   cboTipoGraffic: string = "Jornada incompleta";
   exportFeriado: Array<any> = [];
   arrDataGrafic: Array<any> = [];
+  arrMarcacionOf: Array<any> = [];
   myGraffic: any;
   dialog = inject(MatDialog);
   private setting = {
@@ -118,6 +124,32 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer, private service: ShareService) { }
 
   ngOnInit() {
+    this.socket.emit('marcacion_of', []);
+
+    this.socket.on('marcacionOficina', async (response) => {
+      let data = (response || {}).data;
+      (data || []).filter((mc, i) => {
+
+        if (mc.name != 'JOHNNY') {
+          let date = mc.checkinout.split(' ');
+          this.arrMarcacionOf.push({
+            nombre: mc.name + ' ' + mc.lastsname,
+            fecha: date[0],
+            hora: date[1]
+          });
+        }
+
+      });
+
+      if (this.arrMarcacionOf.length) {
+        this.onDataViewOf = [...this.arrMarcacionOf];
+        this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
+        this.dataSourceOf.paginator = this.paginator;
+        this.dataSourceOf.sort = this.sort;
+      }
+
+
+    });
 
     this.onTiempoTolerancia();
 
@@ -279,7 +311,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 let ingreso = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso).split(':');
                 let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
 
-                let isBrakeComplete =  ingresoInt > ingresoHorarioInt ? false : true;
+                let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
 
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
                 this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
@@ -357,6 +389,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
 
+  radioChange(ev) {
+    this.sedeReporte = (ev || {}).value;
+  }
+
   sinDiacriticos = (function () {
     let de = 'ÁÃÀÄÂÉËÈÊÍÏÌÎÓÖÒÔÚÜÙÛÑÇáãàäâéëèêíïìîóöòôúüùûñç',
       a = 'AAAAAEEEEIIIIOOOOUUUUNCaaaaaeeeeiiiioooouuuunc',
@@ -417,67 +453,77 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   async onConsultarAsistencia() {
 
     if (!this.isErrorFecha) {
-      let arVerif = [];
+      if (this.sedeReporte == 'tienda') {
+        let arVerif = [];
 
-      await (this.vMultiSelect || []).filter((dt) => {
+        await (this.vMultiSelect || []).filter((dt) => {
 
-        let date = dt.split('/');
-        console.log(dt, this.vCalendar);
-        if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
-          arVerif.push(true);
+          let date = dt.split('/');
+          console.log(dt, this.vCalendar);
+          if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
+            arVerif.push(true);
+          } else {
+            arVerif.push(false);
+          }
+        });
+
+        if (arVerif.includes(false) && this.isViewFeriados) {
+          this.openSnackBar("Fechas seleccionadas no son correcta..!!");
+          this.isLoading = false;
         } else {
-          arVerif.push(false);
-        }
-      });
+          if (this.vCalendarDefault.length || this.vDetallado.length >= 2) {
 
-      if (arVerif.includes(false) && this.isViewFeriados) {
-        this.openSnackBar("Fechas seleccionadas no son correcta..!!");
-        this.isLoading = false;
+            var configuracion = {
+              isDefault: this.isViewDefault,
+              isFeriados: this.isViewFeriados,
+              isDetallado: this.isDetallado,
+              centroCosto: '',
+              dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
+            };
+
+
+
+            if (this.isViewFeriados) {
+              if (this.vCalendar.length && this.vMultiSelect.length) {
+                this.isLoading = true;
+                this.socket.emit('consultaMarcacion', configuracion);
+              } else {
+                this.openSnackBar("Seleccione una fecha.");
+              }
+
+            }
+
+            if (this.isDetallado) {
+              if (this.vDetallado.length >= 2) {
+                this.isLoading = true;
+                this.socket.emit('consultaMarcacion', configuracion);
+              } else {
+                this.openSnackBar("Seleccione una fecha.");
+              }
+            }
+
+            if (this.isViewDefault) {
+              if (this.vCalendarDefault) {
+                this.isLoading = true;
+                this.socket.emit('consultaMarcacion', configuracion);
+              } else {
+                this.openSnackBar("Seleccione una fecha.");
+              }
+            }
+
+          }
+
+        }
       } else {
-        console.log(this.vCalendarDefault, this.vCalendar, this.vMultiSelect, this.vDetallado);
-        if (this.vCalendarDefault.length || this.vDetallado.length >= 2) {
-
-          var configuracion = {
-            isDefault: this.isViewDefault,
-            isFeriados: this.isViewFeriados,
-            isDetallado: this.isDetallado,
-            centroCosto: '',
-            dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
-          };
-
-
-
-          if (this.isViewFeriados) {
-            if (this.vCalendar.length && this.vMultiSelect.length) {
-              this.isLoading = true;
-              this.socket.emit('consultaMarcacion', configuracion);
-            } else {
-              this.openSnackBar("Seleccione una fecha.");
-            }
-
-          }
-
-          if (this.isDetallado) {
-            if (this.vDetallado.length >= 2) {
-              this.isLoading = true;
-              this.socket.emit('consultaMarcacion', configuracion);
-            } else {
-              this.openSnackBar("Seleccione una fecha.");
-            }
-          }
-
-          if (this.isViewDefault) {
-            if (this.vCalendarDefault) {
-              this.isLoading = true;
-              this.socket.emit('consultaMarcacion', configuracion);
-            } else {
-              this.openSnackBar("Seleccione una fecha.");
-            }
-          }
-
-        }
-
+        let date = ((this.vCalendarDefault || [])[0] || "").split('/');
+        let dataTemp = this.arrMarcacionOf.filter((mc)=>mc.fecha == `${date[1]}/${date[2]}/${date[0]}`);
+        console.log(`${date[1]}/${date[2]}/${date[0]}`);
+        this.onDataViewOf = dataTemp;
+        this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
+        this.dataSourceOf.paginator = this.paginator;
+        this.dataSourceOf.sort = this.sort;
       }
+
     } else {
       this.openSnackBar("La fecha seleccionada no puede ser posterior a la fecha actual.");
     }
