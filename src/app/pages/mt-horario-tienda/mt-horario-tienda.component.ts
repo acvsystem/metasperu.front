@@ -114,7 +114,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.profileUser = this.store.getStore('mt-profile');
 
-    if ((this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+    if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (this.profileUser || {}).mt_name_1,
         "mt_nivel": (this.profileUser || {}).mt_nivel,
@@ -142,12 +142,22 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     }
 
-    this.onListCargo = [
-      { key: 1, value: "Gerentes" },
-      { key: 2, value: "Cajeros" },
-      { key: 3, value: "Asesores" },
-      { key: 4, value: "Almaceneros" }
-    ];
+
+    if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+      this.onListCargo = [
+        { key: 1, value: "Recursos Humanos" },
+        { key: 2, value: "Contabilidad" },
+        { key: 3, value: "Sistemas" }
+      ];
+    } else {
+      this.onListCargo = [
+        { key: 1, value: "Gerentes" },
+        { key: 2, value: "Cajeros" },
+        { key: 3, value: "Asesores" },
+        { key: 4, value: "Almaceneros" }
+      ];
+    }
+
 
     if (this.dataHorario.length) {
       this.onListCargo = [];
@@ -796,6 +806,10 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.onListCargo = [];
           let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
 
+          if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas"];
+          }
+
           (lsOrden || []).filter((orden, i) => {
             let row = data.find((rs) => rs.cargo == orden);
             this.dataHorario.push(row);
@@ -892,6 +906,20 @@ export class MtHorarioTiendaComponent implements OnInit {
       { value: 'Asesores' },
       { value: 'Almaceneros' }
     ];
+
+    if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+      listCargoTienda = [
+        { cargo: 'Recursos Humanos', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+        { cargo: 'Contabilidad', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+        { cargo: 'Sistemas', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia }
+      ];
+
+      listCargo = [
+        { value: 'Recursos Humanos' },
+        { value: 'Contabilidad' },
+        { value: 'Sistemas' }
+      ];
+    }
 
     for (var dia = 1; dia <= diasMes; dia++) {
 
@@ -1129,6 +1157,10 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
         let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
+
+        if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas'];
+        }
 
         (lsOrden || []).filter((orden, i) => {
           let row = response.find((rs) => rs.cargo == orden);
