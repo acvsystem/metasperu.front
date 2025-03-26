@@ -79,6 +79,11 @@ export class AppComponent {
           },
           {
             ISVISIBLE: true,
+            nombre_menu: "HORARIO",
+            ruta: "horario"
+          },
+          {
+            ISVISIBLE: true,
             nombre_menu: "PANEL HORARIOS",
             ruta: "panel-horario"
           }
@@ -127,11 +132,6 @@ export class AppComponent {
             ISVISIBLE: true,
             nombre_menu: "ASISTENCIA",
             ruta: "asistencia"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "HORARIO",
-            ruta: "horario"
           },
           {
             ISVISIBLE: true,
