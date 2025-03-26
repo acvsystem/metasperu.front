@@ -62,7 +62,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isErrorFecha: boolean = false;
   filterEmpleado: string = "";
   fileName: string = "";
-  sedeReporte: string = "oficina";
+  sedeReporte: string = "tienda";
   text: string = "";
   vTipoReporte: string = "";
   cboTipoGraffic: string = "Jornada incompleta";
