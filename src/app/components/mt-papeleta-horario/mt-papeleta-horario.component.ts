@@ -130,7 +130,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { code_uns: '0008', uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code_uns: '0001', uns: 'ADMINISTRACION', code: 'OF', name: 'ADMINISTRACION', procesar: 0, procesado: -1 }
   ];
 
   cboListCargo: Array<any> = [
@@ -153,7 +154,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { key: '9F', value: 'VSFA JOCKEY FULL' },
     { key: '7A7', value: 'BBW ASIA' },
     { key: '9P', value: 'VS MALL PLAZA TRU' },
-    { key: '7I', value: 'BBW MALL PLAZA TRU' }
+    { key: '7I', value: 'BBW MALL PLAZA TRU' },
+    { key: 'OF', value: 'ADMINISTRACION' }
   ];
 
   displayedColumns: string[] = ['codigo_papeleta', 'Fecha', 'tipo_papeleta', 'nombre_completo', 'Accion'];

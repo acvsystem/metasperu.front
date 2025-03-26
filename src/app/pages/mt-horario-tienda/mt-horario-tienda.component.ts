@@ -83,7 +83,8 @@ export class MtHorarioTiendaComponent implements OnInit {
     { code_uns: '0008', uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code_uns: '0001', uns: 'ADMINISTRACION', code: 'OF', name: 'ADMINISTRACION', procesar: 0, procesado: -1 }
   ];
 
   isRangoEdit: boolean = false;
@@ -117,7 +118,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (this.profileUser || {}).mt_name_1,
         "mt_nivel": (this.profileUser || {}).mt_nivel,
-        "code": ""
+        "code": "OF"
       }));
     }
 
@@ -223,6 +224,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
       let dataEmpleado = (response || {}).data;
+      console.log(dataEmpleado);
       let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
       dataEmpleado.filter((emp) => {
@@ -254,38 +256,8 @@ export class MtHorarioTiendaComponent implements OnInit {
               }
             }
           });
-          /*
-                    this.arDataServer.filter(async (ds) => {
-                      if (ds.nroDocumento != '001763881' && ds.nroDocumento != '75946420' && ds.nroDocumento != '81433419' && ds.nroDocumento != '003755453' && ds.nroDocumento != '002217530' && ds.nroDocumento != '002190263' && ds.nroDocumento != '70276451') {
-                        let registro = this.arDataEJB.find((ejb) => ds.nroDocumento == ejb.nro_documento);
-                        let index = this.arDataEJB.findIndex((ejb) => ds.nroDocumento == ejb.nro_documento);
-          
-                        if (index != -1) {
-                          var codigo = (ds || {}).caja.substr(0, 2);
-          
-                          if ((ds || {}).caja.substr(2, 2) == 7) {
-                            codigo = (ds || {}).caja;
-                          } else {
-                            codigo.substr(0, 1)
-                          }
-          
-                          let exist = this.arListTrabajador.findIndex((pr) => pr.documento == registro.nro_documento);
-          
-                          if (codigo == this.codeTienda && exist == -1) {
-          
-                            let arNombre = registro.nombre_completo.split(' ');
-                            this.arListTrabajador.push(
-                              { id: this.arListTrabajador.length + 1, rg: 1, id_dia: 1, id_cargo: 1, nombre_completo: arNombre[2] + ' ' + arNombre[0].substr(0, 1) + '.' + arNombre[1].substr(0, 1), documento: registro.nro_documento }
-                            );
-                          }
-                        }
-                      }
-                    });*/
         }
-
-
       });
-
     });
 
     this.onPermisosTienda();
