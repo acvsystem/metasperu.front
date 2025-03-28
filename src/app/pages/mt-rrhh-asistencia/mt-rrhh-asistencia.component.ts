@@ -721,7 +721,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     const self = this;
     self.isLoading = true;
     if (!isFeriado) {
-      this.exportAsExcelFile(this.onDataView, "Reporte_huellero");
+      let data = this.sedeReporte == 'oficina' ? this.onDataViewOf : this.onDataView;
+      this.exportAsExcelFile(data, "Reporte_huellero");
     } else if (isFeriado) {
       this.exportAsExcelFile(this.onDataExport, "Reporte_Feriados");
     }
@@ -910,7 +911,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.sedeReporte == 'oficina') {
+      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
   }
 
   openSnackBar(msj) {
