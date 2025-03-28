@@ -24,6 +24,7 @@ import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-r
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { ShareService } from 'src/app/services/shareService';
+import { StorageService } from 'src/app/utils/storage';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -36,7 +37,7 @@ const EXCEL_EXTENSION = '.xlsx';
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
-  displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'view_registre', 'rango_horario', 'isTardanza'];
+  displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
   parseEJB: Array<any> = [];
@@ -65,6 +66,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   sedeReporte: string = "tienda";
   text: string = "";
   vTipoReporte: string = "";
+  nivelUsuario: string = "";
   cboTipoGraffic: string = "Jornada incompleta";
   exportFeriado: Array<any> = [];
   arrDataGrafic: Array<any> = [];
@@ -121,34 +123,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private sanitizer: DomSanitizer, private service: ShareService) { }
+  constructor(private sanitizer: DomSanitizer, private service: ShareService, private store: StorageService,) { }
 
   ngOnInit() {
-    this.socket.emit('marcacion_of', []);
-
+    let profileUser = this.store.getStore('mt-profile');
+    this.nivelUsuario = (profileUser || {}).mt_nivel;
     this.socket.on('marcacionOficina', async (response) => {
       let data = (response || {}).data;
-      (data || []).filter((mc, i) => {
-
-        if (mc.name != 'JOHNNY') {
-          let date = mc.checkinout.split(' ');
-          this.arrMarcacionOf.push({
-            nombre: mc.name + ' ' + mc.lastsname,
-            fecha: date[0],
-            hora: date[1]
-          });
-        }
-
-      });
-
-      if (this.arrMarcacionOf.length) {
-        this.onDataViewOf = [...this.arrMarcacionOf];
-        this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
-        this.dataSourceOf.paginator = this.paginator;
-        this.dataSourceOf.sort = this.sort;
-      }
-
-
+      this.onProcesarAsistenciaOf(data);
     });
 
     this.onTiempoTolerancia();
@@ -325,7 +307,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         });
 
         if (this.isViewDefault || this.isDetallado) {
-          console.log(this.onDataTemp);
+
           this.onDataView = this.onDataTemp;
           this.dataSource = new MatTableDataSource(this.onDataView);
           this.dataSource.paginator = this.paginator;
@@ -388,9 +370,101 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
   }
 
+  onProcesarAsistenciaOf(dataProcesar) {
+    this.isLoading = false;
+    //console.log(dataProcesar);
+
+    const ascDates = dataProcesar.sort((a, b) => {
+      return new Date(a.logid).getTime() - new Date(b.logid).getTime();
+    });
+
+    (ascDates || []).filter((mc, i) => {
+      let date = mc.checkinout.split(' ');
+
+      if (mc.name != 'JOHNNY') {
+        let date = mc.checkinout.split(' ');
+
+        let nombre = mc.name + ' ' + mc.lastsname;
+        let indexData = this.arrMarcacionOf.findIndex((data) => (data || {}).nombre == nombre && ((data || {}).fecha == date[0]));
+
+        if (indexData == -1) {
+
+          //PROCESO TARDANZA
+          let isTardanza = false;
+
+          if ((mc.rango_horario || "").length) {
+
+            let defaultHT = this.obtenerHorasTrabajadas(mc.rango_horario.split(" ")[0], "00:05"); //TOLERANCIA HORA ENTRADA
+
+            let ingresoHorario = (defaultHT).split(':');
+            let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+
+            let ingreso = date[1].split(':');
+            let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+
+            isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
+
+          }
+
+          this.arrMarcacionOf.push({
+            nombre: mc.name + ' ' + mc.lastsname,
+            fecha: date[0],
+            hr_ingreso: date[1],
+            hr_in_break: '',
+            hr_out_break: '',
+            hr_break: 0,
+            hr_salida: '',
+            hr_trabajadas: 0,
+            rango_horario: mc.rango_horario,
+            isTardanza: isTardanza
+          });
+        } else {
+
+          //PROCESO INICIO BRREAK
+
+          if (this.arrMarcacionOf[indexData]['hr_in_break'].length && !this.arrMarcacionOf[indexData]['hr_out_break'].length) {
+            this.arrMarcacionOf[indexData]['hr_out_break'] = date[1];
+          }
+
+          if (!this.arrMarcacionOf[indexData]['hr_in_break'].length) {
+            this.arrMarcacionOf[indexData]['hr_in_break'] = date[1];
+          }
+
+          if (this.arrMarcacionOf[indexData]['hr_in_break'].length && this.arrMarcacionOf[indexData]['hr_out_break'].length) {
+            this.arrMarcacionOf[indexData]['hr_break'] = this.obtenerDiferenciaHora(this.arrMarcacionOf[indexData]['hr_in_break'], this.arrMarcacionOf[indexData]['hr_out_break']);
+          }
+
+          //PROCESO HORA SALIDA DE TRABAJO
+
+          if (this.arrMarcacionOf[indexData]['hr_ingreso'].length && this.arrMarcacionOf[indexData]['hr_in_break'].length && this.arrMarcacionOf[indexData]['hr_out_break'].length) {
+            this.arrMarcacionOf[indexData]['hr_salida'] = date[1];
+          }
+
+          //PROCESO HORA TRABAJADAS
+
+          if (this.arrMarcacionOf[indexData]['hr_ingreso'].length && this.arrMarcacionOf[indexData]['hr_salida'].length) {
+            this.arrMarcacionOf[indexData]['hr_trabajadas'] = this.obtenerDiferenciaHora(this.arrMarcacionOf[indexData]['hr_ingreso'], this.arrMarcacionOf[indexData]['hr_salida']);
+          }
+        }
+      }
+    });
+
+    if (this.arrMarcacionOf.length) {
+      this.onDataViewOf = [...this.arrMarcacionOf];
+      this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
+      this.dataSourceOf.paginator = this.paginator;
+      this.dataSourceOf.sort = this.sort;
+    }
+
+  }
+
 
   radioChange(ev) {
     this.sedeReporte = (ev || {}).value;
+    if ((ev || {}).value == 'oficina') {
+      this.isLoading = true;
+      this.socket.emit('marcacion_of', []);
+    }
   }
 
   sinDiacriticos = (function () {
@@ -516,7 +590,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         }
       } else {
         let date = ((this.vCalendarDefault || [])[0] || "").split('/');
-        let dataTemp = this.arrMarcacionOf.filter((mc)=>mc.fecha == `${date[1]}/${date[2]}/${date[0]}`);
+        let dataTemp = this.arrMarcacionOf.filter((mc) => mc.fecha == `${date[1]}/${date[2]}/${date[0]}`);
         console.log(`${date[1]}/${date[2]}/${date[0]}`);
         this.onDataViewOf = dataTemp;
         this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);

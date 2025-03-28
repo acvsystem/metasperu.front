@@ -236,10 +236,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
         }
 
         if (codigo == this.codeTienda) {
+          //COMPROBAR SI EXISTE EL REGISTRO POR DIA
           let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
-          if (indexData == -1) {
+          //PROCESO SI NO ESTA REGISTRADO EL DIA
+          if (indexData == -1) { 
 
+            //HORAS TRABAJDAS CON O SIN PAPELETA
             let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
 
             if (((huellero || {})['papeleta'] || []).length) {
@@ -329,7 +332,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                   let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra default');
 
-
                   if (parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
 
                     this.onDataTemp[indexData]['hr_extra'] = process;//23:59
@@ -374,7 +376,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
               this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
               this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
               let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
-              //let hora_trb_2 = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_ingreso_2'], this.onDataTemp[indexData]['hr_salida_2']);
 
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
 
@@ -464,7 +465,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
         }
       });
-
+      console.log(this.dataVerify);
       if ((this.dataVerify || []).length && !this.isPartTime) {
 
         this.onDataTemp.filter((dt, indexData) => {
