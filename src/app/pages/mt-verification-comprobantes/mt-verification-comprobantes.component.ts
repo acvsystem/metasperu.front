@@ -28,9 +28,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
   headListSunat: Array<any> = [];
   bodyList: Array<any> = [];
   bodyListSunat: Array<any> = [];
+  bodyListBD: Array<any> = [];
   actionButton: boolean = true;
   isConnectServer: string = 'false';
   isVisibleStatus: boolean = false;
+  isVerificarBd: boolean = false;
   statusServerList: any = [];
   countClientes: any = 0;
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
@@ -285,6 +287,19 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.emit('comunicationFront', 'angular');
   }
 
+  onVerificarDataBase() {
+    this.isVerificarBd = true;
+    let parms = {
+      url: '/comparacion/bdTienda',
+      body: []
+    };
+    this.service.post(parms).then((response) => {
+      this.isVerificarBd = false;
+      this.bodyListBD = (response || []).data;
+      console.log(response);
+    });
+  }
+
   onTransacciones() {
     this.isShowLoading = true;
     this.contadorCliente = 0;
@@ -346,7 +361,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   }
 
-  onClearColaUpdate(){
+  onClearColaUpdate() {
     this.socket.emit('cleanColaFront');
     this.onTransacciones();
   }

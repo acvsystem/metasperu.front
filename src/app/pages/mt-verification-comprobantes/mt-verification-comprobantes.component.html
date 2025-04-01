@@ -1,307 +1,382 @@
-<ion-progress-bar 
-  class="{{ isShowLoading ? 'show' : 'hide' }}" 
-  type="indeterminate" 
-  style="z-index: 1000;">
-</ion-progress-bar>
 
-<ion-content *ngIf="isViewPage">
-  <div id="content" class="full-center">
-    <div class="card-content">
+
+@if(isShowLoading){
+  <div class="console-loading">
+  </div>
+  <div style="display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      position: fixed;
+      text-align: center;
+      width: 100%;
+      z-index: 9999999;">
+    <div class="loader">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"></path></svg>
+      <span></span>
+    </div>
+  </div>
+}
+
+<mat-drawer-container [hasBackdrop]="true" style="height: 100%;">
+  <mat-drawer #drawer [mode]="'over'" position="end">
+    @if(isVerificarBd){
+      <div class="console-loading">
+      </div>
+      <div style="display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          position: fixed;
+          text-align: center;
+          width: 30%;
+          z-index: 9999999;">
+        <div class="loader">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"></path></svg>
+          <span></span>
+        </div>
+      </div>
+    }
+
+
+    <div class="full-center-page">
       <ion-row>
-        <ion-col sizeXs="5" sizeSm="5" sizeMd="7" sizeLg="7">
-          <div class="content-button">
-            <div class="content-button-comp">
-              <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
-              <button (click)="onTransacciones()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> Transacciones</button>
-            </div>
-            <div class="content-button-comp">
-              <button (click)="onListClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-search" aria-hidden="true"></i>Consultar Clientes</button>
-              <button (click)="onClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash" aria-hidden="true"></i>Limpiar Clientes</button>
-            </div>
-            <div class="content-button-comp">
-              <button (click)="onClearColaUpdate()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash-o" aria-hidden="true"></i>Limpiar Cola panama</button>
-            </div>
-          </div>
-        </ion-col>
-        <ion-col sizeXs="7" sizeSm="7" sizeMd="5" sizeLg="5" class="aling-right content-btn-fact">
-          <div class="content-status-server" *ngFor="let status of statusServerList">
-            <div class="status-conect">
-              <div [ngClass]="[isConnectServer == 'true' ? 'blob blue': 'blob red']"></div>
-            </div>
-            <div class="status-stadistic">
-              <div>
-                 <p>{{status.hostname}}</p>
-                 <p class="progress-status"><span>cpu: {{status.cpu | number:'1.0-0'}} %</span><progress id="cpu" max="100" value="{{status.cpu}}">{{status.cpu | number:'1.0-0'}}</progress></p>
-                 <p class="progress-status"><span>ram: {{status.xram | number:'1.0-0'}} %</span><progress id="ram" max="100" value="{{status.xram}}">{{status.xram | number:'1.0-0'}}</progress></p>
-               </div>
-             </div>
-             <div class="active-hardward">
-              <p>{{status.ip}}</p>
-              <div class="usb-status">
-                <span>usb</span>
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'true'" checked>
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'false'">
-                </div>
-              </div>
-             </div>
+        <ion-col>
+          <div style="text-align: center;">
+            <span style="font-weight: 500;">Verificacion entre bases de datos</span>
           </div>
         </ion-col>
       </ion-row>
-
-      <table mat-table [dataSource]="dataSource" multiTemplateDataRows
-       class="mat-elevation-z8">
-       @for (column of columnsToDisplay; track column) {
-         <ng-container matColumnDef="{{column}}">
-           <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-           <td mat-cell *matCellDef="let element"> 
-            @if(column != "isVerification" && column != "cant_comprobantes" && column != "transacciones" && column != "clientes_null" && column != "online" && column != "conexICG"){
-              {{element[column]}} 
-            }
-            @if(column == "isVerification") {
-              <span class="badge bg-success-comprobantes" *ngIf="element.isVerification == 1">ready</span>
-              <span class="badge bg-danger" *ngIf="element.isVerification == 0">not ready</span>
-            }
-            @if(column == "cant_comprobantes"){
-              <span class="badge bg-success-comprobantes"
-              *ngIf="element.cant_comprobantes == 0">{{element.cant_comprobantes}}</span>
-            <span class="badge bg-danger"
-              *ngIf="element.cant_comprobantes != 0">{{element.cant_comprobantes}}</span>
-            }
-            @if(column == "transacciones"){
-              <span class="badge bg-success-comprobantes"
-              *ngIf="element.transacciones == 0">0</span>
-              <span class="badge bg-danger"
-              *ngIf="element.transacciones != 0">{{element.transacciones}}</span>
-            }
-            @if(column == "clientes_null"){
-              <span class="badge bg-success-comprobantes"
-              *ngIf="element.clientes_null == 0">0</span>
-              <span class="badge bg-danger"
-              *ngIf="element.clientes_null != 0">{{element.clientes_null}}</span>
-            }
-            @if(column == "online"){
-              <div [ngClass]="[element.online == 1 ? 'blob blue': 'blob red']"></div>
-            }
-            @if(column == "conexICG"){
-              <div [ngClass]="[element.conexICG == 1 ? 'blob blue': 'blob red']"></div>
-            }
-          </td>
-         </ng-container>
-       }
-       <ng-container matColumnDef="expand">
-         <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
-         <td mat-cell *matCellDef="let element">
-           <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
-             @if (expandedElement === element) {
-               <mat-icon>keyboard_arrow_up</mat-icon>
-             } @else {
-               <mat-icon>keyboard_arrow_down</mat-icon>
-             }
-           </button>
-         </td>
-       </ng-container>
-     
-       <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-       <ng-container matColumnDef="expandedDetail">
-         <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
-           <div class="example-element-detail"
-                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-             <div style="width: 100%;">
-              <ion-row>
-                <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
-                  <div style="text-align: center;">
-                    <div style="color: black;
-            
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding: 10px;
-                    border: 1px solid;
-                    border-radius: 5px;
-                    margin-bottom: 10px;
-                    margin-left: 5px;
-                    border-color: #CCCCCC;">
-                      Origen
-                    </div>
-                  </div>
-                  <ul class="list-group">
-                    @for(terminal of element.dataTerminales; track terminal;let idx = $index){
-                      <li id="{{idx}}-origen-{{terminal.CODIGO}}" name="origen" class="origen list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="onSelectedTranferencia($event,terminal,'')">
-                        {{terminal.NOM_TERMINAL}}
-                        <span *ngIf="terminal.CANTIDAD == 0" class="badge bg-success-comprobantes badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
-                        <span *ngIf="terminal.CANTIDAD > 0" class="badge bg-danger badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
-                      </li>
-                    }
-                  </ul>
-                </ion-col>
-                <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
-                  <div style="height: 100%;display: flex;justify-content: center;align-items: center;">
-                    <button (click)="onTranferirCola()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-rocket" aria-hidden="true"></i></button>
-                  </div>
-                </ion-col>
-                <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
-                  <div style="text-align: center;">
-                    <div style="color: black;
-            
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding: 10px;
-                    border: 1px solid;
-                    border-radius: 5px;
-                    margin-bottom: 10px;
-                    margin-left: 5px;
-                    border-color: #CCCCCC;">
-                      Destino
-                    </div>
-                  </div>
-                  <ul class="list-group">
-                    @for(terminal of element.dataTerminales; track terminal;let idx = $index){
-                      <li id="{{idx}}-destino-{{terminal.CODIGO}}" class="destino list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="onSelectedTranferencia($event,'',terminal)">
-                        {{terminal.NOM_TERMINAL}}
-                        <span *ngIf="terminal.CANTIDAD == 0" class="badge bg-success-comprobantes badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
-                        <span *ngIf="terminal.CANTIDAD > 0" class="badge bg-danger badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
-                      </li>
-                    }
-                  </ul>
-                </ion-col>
-              </ion-row>
-            </div>
-           </div>
-         </td>
-       </ng-container>
-     
-       <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-       <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
-           class="example-element-row"
-           [class.example-expanded-row]="expandedElement === element"
-           (click)="expandedElement = expandedElement === element ? null : element">
-       </tr>
-       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-      </table>
-
-<!--
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-              <table class="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let columBody of bodyList;let index = index">
-                    <td class="columBody">{{index + 1}}</td>
-                    <td class="columBody">{{columBody.codigo}}</td>
-                    <td class="columBody">{{columBody.Tienda}}</td>
-                    <td class="columBody">
-                      <span class="badge bg-success-comprobantes" *ngIf="columBody.isVerification == 1">ready</span>
-                      <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
-                    </td>
-                    <td class="columBody">
-                      <span class="badge bg-success-comprobantes"
-                        *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
-                      <span class="badge bg-danger"
-                        *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
-                    </td>
-                    <td class="columBody">
-                      <span class="badge bg-success-comprobantes"
-                      *ngIf="columBody.transacciones == 0">0</span>
-                      <span class="badge bg-danger"
-                      *ngIf="columBody.transacciones != 0">{{columBody.transacciones}}</span>
-                    </td>
-                    <td class="columBody">
-                      <span class="badge bg-success-comprobantes"
-                      *ngIf="columBody.clientes_null == 0">0</span>
-                      <span class="badge bg-danger"
-                      *ngIf="columBody.clientes_null != 0">{{columBody.clientes_null}}</span>
-                    </td>
-                    <td class="columBody">
-                      <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
-                    </td>
-                    <td class="columBody">
-                      <div [ngClass]="[columBody.conexICG == 1 ? 'blob blue': 'blob red']"></div>
-                    </td>
-                    <td class="columBody">
-                      <button (click)="toolCaja(columBody)" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-eye" aria-hidden="true"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral only-mobil">
-              <ion-row *ngFor="let columBody of bodyList">
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-                  <ion-item class="item-mobile">
-                    <ion-avatar slot="start" class="full-center">
-                      {{columBody.codigo}}
-                      <span
-                        class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status"
-                        *ngIf="columBody.online == 1">
-                        <span class="visually-hidden">New alerts</span>
-                      </span>
-                      <span
-                        class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status"
-                        *ngIf="columBody.online == 0">
-                        <span class="visually-hidden">New alerts</span>
-                      </span>
-                    </ion-avatar>
-                    <div class="body">
-                      <div class="content-title">
-                        <span class="title">{{columBody.Tienda}}</span>
-                        <span class="status"><i class="fa fa-check-circle" aria-hidden="true"
-                            *ngIf="columBody.isVerification == 1"></i></span>
-                        <span class="status"><i class="fa fa-times" aria-hidden="true"
-                            *ngIf="columBody.isVerification == 0"></i></span>
-                      </div>
-                    </div>
-                    <div slot="end" class="estados">
-                      <span class="badge rounded-pill bg-success"
-                        *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
-                      <span class="badge rounded-pill bg-danger"
-                        *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
-                    </div>
-                  </ion-item>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-          </ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <button (click)="onVerificarDataBase()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> verificar</button>
         </ion-col>
       </ion-row>
--->
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-          <ion-row class="scroll-y">
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <table class="table table-bordered table-sunat">
-                <thead>
-                  <tr>
-                    <th class="columHead" *ngFor="let columHead of headListSunat;let i = index">{{columHead}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let columBody of bodyListSunat;let index = index">
-                    <td class="columBody">{{index + 1}}</td>
-                    <td class="columBody">{{columBody.cod_documento}}</td>
-                    <td class="columBody">{{columBody.nro_correlativo}}</td>
-                    <td class="columBody">{{columBody.nom_aquiriente}}</td>
-                    <td class="columBody">{{columBody.nro_documento}}</td>
-                    <td class="columBody">{{columBody.observacion}}</td>
-                    <td class="columBody">{{columBody.estado_sunat}}</td>
-                    <td class="columBody">{{columBody.estado_comprobante}}</td>
-                    <td class="columBody">{{ columBody.fecha_emision | date: 'yyyy-MM-dd' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </ion-col>
-          </ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="columHead">Documento</th>
+                <th class="columHead">Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let columBody of bodyListBD;let index = index">
+                <td class="columBody">{{columBody.CORRELATIVO}}</td>
+                <td class="columBody">{{columBody.FECHA}}</td>
+              </tr>
+            </tbody>
+          </table>
         </ion-col>
       </ion-row>
     </div>
-  </div>
-</ion-content>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ion-content *ngIf="isViewPage">
+      <div id="content" class="full-center">
+        <div class="card-content">
+          <ion-row>
+            <ion-col sizeXs="5" sizeSm="5" sizeMd="7" sizeLg="7">
+              <div class="content-button">
+                <div class="content-button-comp">
+                  <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
+                  <button (click)="onTransacciones()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i> Transacciones</button>
+                </div>
+                <div class="content-button-comp">
+                  <button (click)="onListClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-search" aria-hidden="true"></i>Consultar Clientes</button>
+                  <button (click)="onClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash" aria-hidden="true"></i>Limpiar Clientes</button>
+                </div>
+                <div class="content-button-comp">
+                  <button (click)="onClearColaUpdate()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash-o" aria-hidden="true"></i>Limpiar Cola panama</button>
+                  <button (click)="drawer.toggle()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash-o" aria-hidden="true"></i>Servidor bd</button>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="7" sizeSm="7" sizeMd="5" sizeLg="5" class="aling-right content-btn-fact">
+              <div class="content-status-server" *ngFor="let status of statusServerList">
+                <div class="status-conect">
+                  <div [ngClass]="[isConnectServer == 'true' ? 'blob blue': 'blob red']"></div>
+                </div>
+                <div class="status-stadistic">
+                  <div>
+                     <p>{{status.hostname}}</p>
+                     <p class="progress-status"><span>cpu: {{status.cpu | number:'1.0-0'}} %</span><progress id="cpu" max="100" value="{{status.cpu}}">{{status.cpu | number:'1.0-0'}}</progress></p>
+                     <p class="progress-status"><span>ram: {{status.xram | number:'1.0-0'}} %</span><progress id="ram" max="100" value="{{status.xram}}">{{status.xram | number:'1.0-0'}}</progress></p>
+                   </div>
+                 </div>
+                 <div class="active-hardward">
+                  <p>{{status.ip}}</p>
+                  <div class="usb-status">
+                    <span>usb</span>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'true'" checked>
+                      <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" *ngIf="status.usb == 'false'">
+                    </div>
+                  </div>
+                 </div>
+              </div>
+            </ion-col>
+          </ion-row>
+    
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows
+           class="mat-elevation-z8">
+           @for (column of columnsToDisplay; track column) {
+             <ng-container matColumnDef="{{column}}">
+               <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+               <td mat-cell *matCellDef="let element"> 
+                @if(column != "isVerification" && column != "cant_comprobantes" && column != "transacciones" && column != "clientes_null" && column != "online" && column != "conexICG"){
+                  {{element[column]}} 
+                }
+                @if(column == "isVerification") {
+                  <span class="badge bg-success-comprobantes" *ngIf="element.isVerification == 1">ready</span>
+                  <span class="badge bg-danger" *ngIf="element.isVerification == 0">not ready</span>
+                }
+                @if(column == "cant_comprobantes"){
+                  <span class="badge bg-success-comprobantes"
+                  *ngIf="element.cant_comprobantes == 0">{{element.cant_comprobantes}}</span>
+                <span class="badge bg-danger"
+                  *ngIf="element.cant_comprobantes != 0">{{element.cant_comprobantes}}</span>
+                }
+                @if(column == "transacciones"){
+                  <span class="badge bg-success-comprobantes"
+                  *ngIf="element.transacciones == 0">0</span>
+                  <span class="badge bg-danger"
+                  *ngIf="element.transacciones != 0">{{element.transacciones}}</span>
+                }
+                @if(column == "clientes_null"){
+                  <span class="badge bg-success-comprobantes"
+                  *ngIf="element.clientes_null == 0">0</span>
+                  <span class="badge bg-danger"
+                  *ngIf="element.clientes_null != 0">{{element.clientes_null}}</span>
+                }
+                @if(column == "online"){
+                  <div [ngClass]="[element.online == 1 ? 'blob blue': 'blob red']"></div>
+                }
+                @if(column == "conexICG"){
+                  <div [ngClass]="[element.conexICG == 1 ? 'blob blue': 'blob red']"></div>
+                }
+              </td>
+             </ng-container>
+           }
+           <ng-container matColumnDef="expand">
+             <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+             <td mat-cell *matCellDef="let element">
+               <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                 @if (expandedElement === element) {
+                   <mat-icon>keyboard_arrow_up</mat-icon>
+                 } @else {
+                   <mat-icon>keyboard_arrow_down</mat-icon>
+                 }
+               </button>
+             </td>
+           </ng-container>
+         
+           <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+           <ng-container matColumnDef="expandedDetail">
+             <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+               <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                 <div style="width: 100%;">
+                  <ion-row>
+                    <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
+                      <div style="text-align: center;">
+                        <div style="color: black;
+                
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px;
+                        border: 1px solid;
+                        border-radius: 5px;
+                        margin-bottom: 10px;
+                        margin-left: 5px;
+                        border-color: #CCCCCC;">
+                          Origen
+                        </div>
+                      </div>
+                      <ul class="list-group">
+                        @for(terminal of element.dataTerminales; track terminal;let idx = $index){
+                          <li id="{{idx}}-origen-{{terminal.CODIGO}}" name="origen" class="origen list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="onSelectedTranferencia($event,terminal,'')">
+                            {{terminal.NOM_TERMINAL}}
+                            <span *ngIf="terminal.CANTIDAD == 0" class="badge bg-success-comprobantes badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
+                            <span *ngIf="terminal.CANTIDAD > 0" class="badge bg-danger badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
+                          </li>
+                        }
+                      </ul>
+                    </ion-col>
+                    <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1">
+                      <div style="height: 100%;display: flex;justify-content: center;align-items: center;">
+                        <button (click)="onTranferirCola()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-rocket" aria-hidden="true"></i></button>
+                      </div>
+                    </ion-col>
+                    <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3">
+                      <div style="text-align: center;">
+                        <div style="color: black;
+                
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px;
+                        border: 1px solid;
+                        border-radius: 5px;
+                        margin-bottom: 10px;
+                        margin-left: 5px;
+                        border-color: #CCCCCC;">
+                          Destino
+                        </div>
+                      </div>
+                      <ul class="list-group">
+                        @for(terminal of element.dataTerminales; track terminal;let idx = $index){
+                          <li id="{{idx}}-destino-{{terminal.CODIGO}}" class="destino list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="onSelectedTranferencia($event,'',terminal)">
+                            {{terminal.NOM_TERMINAL}}
+                            <span *ngIf="terminal.CANTIDAD == 0" class="badge bg-success-comprobantes badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
+                            <span *ngIf="terminal.CANTIDAD > 0" class="badge bg-danger badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
+                          </li>
+                        }
+                      </ul>
+                    </ion-col>
+                  </ion-row>
+                </div>
+               </div>
+             </td>
+           </ng-container>
+         
+           <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+           <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+               class="example-element-row"
+               [class.example-expanded-row]="expandedElement === element"
+               (click)="expandedElement = expandedElement === element ? null : element">
+           </tr>
+           <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+          </table>
+    
+    <!--
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let columBody of bodyList;let index = index">
+                        <td class="columBody">{{index + 1}}</td>
+                        <td class="columBody">{{columBody.codigo}}</td>
+                        <td class="columBody">{{columBody.Tienda}}</td>
+                        <td class="columBody">
+                          <span class="badge bg-success-comprobantes" *ngIf="columBody.isVerification == 1">ready</span>
+                          <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
+                        </td>
+                        <td class="columBody">
+                          <span class="badge bg-success-comprobantes"
+                            *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                          <span class="badge bg-danger"
+                            *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+                        </td>
+                        <td class="columBody">
+                          <span class="badge bg-success-comprobantes"
+                          *ngIf="columBody.transacciones == 0">0</span>
+                          <span class="badge bg-danger"
+                          *ngIf="columBody.transacciones != 0">{{columBody.transacciones}}</span>
+                        </td>
+                        <td class="columBody">
+                          <span class="badge bg-success-comprobantes"
+                          *ngIf="columBody.clientes_null == 0">0</span>
+                          <span class="badge bg-danger"
+                          *ngIf="columBody.clientes_null != 0">{{columBody.clientes_null}}</span>
+                        </td>
+                        <td class="columBody">
+                          <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
+                        </td>
+                        <td class="columBody">
+                          <div [ngClass]="[columBody.conexICG == 1 ? 'blob blue': 'blob red']"></div>
+                        </td>
+                        <td class="columBody">
+                          <button (click)="toolCaja(columBody)" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral only-mobil">
+                  <ion-row *ngFor="let columBody of bodyList">
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+                      <ion-item class="item-mobile">
+                        <ion-avatar slot="start" class="full-center">
+                          {{columBody.codigo}}
+                          <span
+                            class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status"
+                            *ngIf="columBody.online == 1">
+                            <span class="visually-hidden">New alerts</span>
+                          </span>
+                          <span
+                            class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status"
+                            *ngIf="columBody.online == 0">
+                            <span class="visually-hidden">New alerts</span>
+                          </span>
+                        </ion-avatar>
+                        <div class="body">
+                          <div class="content-title">
+                            <span class="title">{{columBody.Tienda}}</span>
+                            <span class="status"><i class="fa fa-check-circle" aria-hidden="true"
+                                *ngIf="columBody.isVerification == 1"></i></span>
+                            <span class="status"><i class="fa fa-times" aria-hidden="true"
+                                *ngIf="columBody.isVerification == 0"></i></span>
+                          </div>
+                        </div>
+                        <div slot="end" class="estados">
+                          <span class="badge rounded-pill bg-success"
+                            *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
+                          <span class="badge rounded-pill bg-danger"
+                            *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
+                        </div>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+    -->
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+              <ion-row class="scroll-y">
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <table class="table table-bordered table-sunat">
+                    <thead>
+                      <tr>
+                        <th class="columHead" *ngFor="let columHead of headListSunat;let i = index">{{columHead}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let columBody of bodyListSunat;let index = index">
+                        <td class="columBody">{{index + 1}}</td>
+                        <td class="columBody">{{columBody.cod_documento}}</td>
+                        <td class="columBody">{{columBody.nro_correlativo}}</td>
+                        <td class="columBody">{{columBody.nom_aquiriente}}</td>
+                        <td class="columBody">{{columBody.nro_documento}}</td>
+                        <td class="columBody">{{columBody.observacion}}</td>
+                        <td class="columBody">{{columBody.estado_sunat}}</td>
+                        <td class="columBody">{{columBody.estado_comprobante}}</td>
+                        <td class="columBody">{{ columBody.fecha_emision | date: 'yyyy-MM-dd' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+    </ion-content>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
+
 
 
