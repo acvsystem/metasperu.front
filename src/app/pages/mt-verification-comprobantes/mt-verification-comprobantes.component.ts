@@ -297,6 +297,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.service.post(parms).then((response) => {
       this.isVerificarBd = false;
       this.bodyListBD = (response || []).data;
+      if (!this.bodyListBD.length) {
+        this.service.toastSuccess("Servidor", "No hay diferencias entre las bases de datos.");
+      }
     }).catch((err) => {
       this.service.toastError("Algo salio mal..!!", "Refresque la pagina y vuelva a inentar.");
     });
