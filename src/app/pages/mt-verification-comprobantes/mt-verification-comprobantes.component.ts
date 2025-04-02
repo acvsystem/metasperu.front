@@ -37,6 +37,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   countClientes: any = 0;
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   isShowLoading: boolean = false;
+  isErrorVerificacion: boolean = false;
   contadorCliente: any = 0;
   contadorCajaOnline: any = 0;
   isViewPage: boolean = false;
@@ -296,7 +297,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.service.post(parms).then((response) => {
       this.isVerificarBd = false;
       this.bodyListBD = (response || []).data;
-      console.log(response);
+    }).catch((err) => {
+      this.service.toastError("Algo salio mal..!!", "Refresque la pagina y vuelva a inentar.");
     });
   }
 
