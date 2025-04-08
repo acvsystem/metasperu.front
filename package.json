@@ -32,6 +32,8 @@
     "@ionic/angular": "^6.1.9",
     "@types/ip-address": "^6.0.0",
     "@types/ua-parser-js": "^0.7.39",
+    "ag-grid-angular": "^33.2.1",
+    "ag-grid-community": "^33.2.1",
     "bootstrap": "^5.2.3",
     "chart.js": "^4.4.4",
     "file-saver": "^2.0.5",

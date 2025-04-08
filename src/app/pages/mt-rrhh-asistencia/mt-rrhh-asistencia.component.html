@@ -96,12 +96,27 @@
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="sedeReporte == 'tienda'">
                   @if(isViewDefault || isDetallado) {
+
+                    <ag-grid-angular
+                    style="width: 100%; height: 500px;"
+                    [rowData]="onDataView"
+                    [pagination]="true"
+                    [columnDefs]="colDefs"
+                    [defaultColDef]="defaultColDef"
+                  />
+                  <!--
                   <div class="mat-elevation-z8">
                     <table mat-table [dataSource]="dataSource">
     
                       <ng-container matColumnDef="tienda">
-                        <th mat-header-cell *matHeaderCellDef> Tienda </th>
-                        <td mat-cell *matCellDef="let element"> {{element.tienda}} </td>
+                        <th mat-header-cell *matHeaderCellDef>
+                          <div style="align-items: center;display: flex;"> 
+                            Tienda 
+                          </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> 
+                          {{element.tienda}} 
+                        </td>
                       </ng-container>
     
                       <ng-container matColumnDef="codigoEJB">
@@ -172,16 +187,30 @@
                       </ng-container>
 
                       <ng-container matColumnDef="isTardanza">
-                        <th mat-header-cell *matHeaderCellDef> Tardanza </th>
+                        <th mat-header-cell *matHeaderCellDef> 
+                          <div style="align-items: center;display: flex;"> 
+                            Tardanza 
+                            <div class="botton-filter-table">
+                              <i class="fa fa-filter" aria-hidden="true"></i>
+                            </div>
+                          </div>
+                        </th>
                         <td mat-cell *matCellDef="let element"> 
                           <h6 *ngIf="element.isNullRango == true" style="margin: 0;"><span class="badge bg-secondary" style="font-weight: 100;">sin rango</span></h6>
                           <h6 *ngIf="element.isTardanza == false && !element.isNullRango" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
-                          <h6 *ngIf="element.isTardanza == true && !element.isNullRango" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: red !important;">tardanza</span></h6>
+                          <h6 *ngIf="element.isTardanza == true && !element.isNullRango" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;background-color: red !important;">tardanza</span></h6>
                         </td>
                       </ng-container>
     
                       <ng-container matColumnDef="maximo_registro">
-                        <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                        <th mat-header-cell *matHeaderCellDef> 
+                          <div style="align-items: center;display: flex;"> 
+                            Estatus 
+                            <div class="botton-filter-table">
+                              <i class="fa fa-filter" aria-hidden="true"></i>
+                            </div>
+                          </div>
+                        </th>
                         <td mat-cell *matCellDef="let element">
                           @if(element.isRegistroMax) {
                             <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: rgb(253 159 13) !important;">revisar</span></h6>
@@ -213,7 +242,7 @@
                     <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
                       aria-label="Select page of periodic elements">
                     </mat-paginator>
-                  </div>
+                  </div>-->
                   }
     
                   @if(isViewFeriados) {
@@ -268,6 +297,7 @@
                 </ion-col>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="sedeReporte == 'oficina'">
                   @if(isViewDefault || isDetallado) {
+                    
                   <div class="mat-elevation-z8">
                     <table mat-table [dataSource]="dataSourceOf">
         

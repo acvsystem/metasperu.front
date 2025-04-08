@@ -90,6 +90,10 @@ import { MtHrExtraConsolidadoComponent } from './components/mt-hr-extra-consolid
 import { MtSearchObervacionComponent } from './components/mt-search-obervacion/mt-search-obervacion.component';
 import { MtModalComentarioComponent } from './components/mt-modal-comentario/mt-modal-comentario.component';
 import { MtModalViewComentarioComponent } from './components/mt-modal-view-comentario/mt-modal-view-comentario.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { statusRegistro } from './pages/mt-rrhh-asistencia/statusRegistro.component';
+import { CustomButtonComponent } from './pages/mt-rrhh-asistencia/buttonAccion.component';
+import { ButtonAccionComponent } from './pages/mt-panel-horario/buttonAccion.component';
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
@@ -127,7 +131,10 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtHrExtraConsolidadoComponent,
         MtSearchObervacionComponent,
         MtModalComentarioComponent,
-        MtModalViewComentarioComponent
+        MtModalViewComentarioComponent,
+        statusRegistro,
+        CustomButtonComponent,
+        ButtonAccionComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
@@ -179,6 +186,7 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MatFormFieldModule,
         ReactiveFormsModule,
         NgxMatTimepickerModule,
+        AgGridModule,
         IonicModule.forRoot(),
         AppRoutingModule,
         ToastrModule.forRoot(),

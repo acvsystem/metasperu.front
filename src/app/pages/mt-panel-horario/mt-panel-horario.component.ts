@@ -4,7 +4,23 @@ import { ShareService } from 'src/app/services/shareService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-
+import { ButtonAccionComponent } from './buttonAccion.component';
+import {
+  AllCommunityModule,
+  CellEditingStartedEvent,
+  CellEditingStoppedEvent,
+  ClientSideRowModelModule,
+  ColDef,
+  ColGroupDef,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  ICellRendererParams,
+  ModuleRegistry,
+  RowEditingStartedEvent,
+  RowEditingStoppedEvent,
+  ValidationModule,
+} from "ag-grid-community";
 
 @Component({
   selector: 'mt-panel-horario',
@@ -28,6 +44,46 @@ export class MtPanelHorarioComponent implements OnInit {
   onSelectedHorario: Array<any> = [];
   onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
+  defaultColDef: ColDef = {
+    flex: 1,
+  };
+  colDefs: ColDef<any>[] = [
+    {
+      headerName: "Codigo Papeleta",
+      field: "codigo_papeleta",
+      filter: "agTextColumnFilter"
+    },
+    {
+      field: "uns",
+      headerName: "Tienda",
+      filter: "agTextColumnFilter"
+    },
+    {
+      headerName: "Fecha",
+      field: "fecha_creacion"
+    },
+    {
+      headerName: "Tipo papeleta",
+      field: "tipo",
+      filter: "agTextColumnFilter"
+    },
+    {
+      headerName: "Nombre Completo",
+      field: "nombre_completo",
+      filter: "agTextColumnFilter"
+    },
+    {
+      headerName: "Accion",
+      field: "accion",
+      cellRenderer: ButtonAccionComponent,
+      cellRendererParams: {
+        miFuncionParaRegresarParametros: (parametros) => {
+          this.onViewPapeleta(parametros);
+        }
+      }
+    },
+  ];
+
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
