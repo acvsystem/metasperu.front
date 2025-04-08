@@ -25,32 +25,6 @@ import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
-import { AgGridAngular } from "ag-grid-angular";
-import {
-  AllCommunityModule,
-  CellEditingStartedEvent,
-  CellEditingStoppedEvent,
-  ClientSideRowModelModule,
-  ColDef,
-  ColGroupDef,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  ICellRendererParams,
-  ModuleRegistry,
-  RowEditingStartedEvent,
-  RowEditingStoppedEvent,
-  ValidationModule,
-} from "ag-grid-community";
-
-import { DatePipe } from '@angular/common';
-import { tardanzaStatus } from "./tardanzaStatus.component";
-import { statusRegistro } from "./statusRegistro.component";
-import { CustomButtonComponent } from './buttonAccion.component';
-import { statusPapeleta } from './statusPapeleta.component';
-import * as $ from 'jquery';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -58,11 +32,11 @@ const EXCEL_EXTENSION = '.xlsx';
 @Component({
   selector: 'app-mt-rrhh-asistencia',
   templateUrl: './mt-rrhh-asistencia.component.html',
-  styleUrls: ['./mt-rrhh-asistencia.component.scss']
+  styleUrls: ['./mt-rrhh-asistencia.component.scss'],
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'Estatus', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
   displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
@@ -87,7 +61,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isDataServer: boolean = false;
   isGrafica: boolean = false;
   isErrorFecha: boolean = false;
-  activeSelect: boolean = false;
   filterEmpleado: string = "";
   fileName: string = "";
   sedeReporte: string = "tienda";
@@ -141,138 +114,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
   fileUrl;
-
-  // Row Data: The data to be displayed.
-  rowData = [
-    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-    { make: "Mercedes", model: "EQA", price: 48890, electric: true },
-    { make: "Fiat", model: "500", price: 15774, electric: false },
-    { make: "Nissan", model: "Juke", price: 20675, electric: false },
-  ];
-
-  // Column Definitions: Defines & controls grid columns.
-  colDefs: ColDef<any>[] = [
-    {
-      headerName: "Tienda",
-      field: "tienda",
-      filter: "agTextColumnFilter",
-      maxWidth: 900,
-      resizable: true
-    },
-    {
-      field: "codigoEJB",
-      headerName: "EJB"
-    },
-    {
-      headerName: "Documento",
-      field: "nro_documento",
-      filter: "agTextColumnFilter"
-    },
-    {
-      headerName: "Nombre Completo",
-      field: "nombre_completo", filter: "agTextColumnFilter"
-    },
-    {
-      headerName: "Dia",
-      field: "dia",
-      filter: "agDateColumnFilter"
-    },
-    {
-      headerName: "Ingreso",
-      field: "hr_ingreso_1"
-    },
-    {
-      headerName: "In.Break",
-      field: "hr_salida_1"
-    },
-    {
-      headerName: "h.Break",
-      field: "hr_brake"
-    },
-    {
-      headerName: "Out.Break",
-      field: "hr_ingreso_2"
-    },
-    {
-      headerName: "Salida",
-      field: "hr_salida_2"
-    },
-    {
-      headerName: "H.Trabajadas",
-      field: "hr_trabajadas"
-    },
-    {
-      headerName: "Papeleta",
-      field: "estadoPapeleta",
-      filter: "agTextColumnFilter",
-      cellRendererSelector: (params: ICellRendererParams<any>) => {
-
-        const genderDetails = {
-          component: statusPapeleta,
-          params: { values: ["papeleta", "sin papeleta"] },
-        };
-        if (params.data) {
-          if (params.data.estadoPapeleta === "papeleta" || params.data.estadoPapeleta === "sin papeleta") return genderDetails;
-        }
-        return undefined;
-      }
-    },
-    {
-      headerName: "Estatus",
-      field: "statusRegistro",
-      filter: "agTextColumnFilter",
-      cellRendererSelector: (params: ICellRendererParams<any>) => {
-
-        const genderDetails = {
-          component: statusRegistro,
-          params: { values: ["correcto", "revisar"] },
-        };
-        if (params.data) {
-          if (params.data.statusRegistro === "correcto" || params.data.statusRegistro !== "correcto") return genderDetails;
-        }
-        return undefined;
-      }
-    },
-    {
-      headerName: "Accion",
-      field: "accion",
-      cellRenderer: CustomButtonComponent,
-      cellRendererParams: {
-        miFuncionParaRegresarParametros: (parametros) => {
-          this.openDialog(parametros);
-        },
-        papParaRegresarParametros: (parametros) => {
-          this.onViewPapeleta(parametros);
-        }
-      }
-    },
-    {
-      headerName: "Rango Horario",
-      field: "rango_horario"
-    },
-    {
-      headerName: "Tardanza",
-      field: "statusTardanza",
-      filter: "agTextColumnFilter",
-      cellRendererSelector: (params: ICellRendererParams<any>) => {
-
-        const genderDetails = {
-          component: tardanzaStatus,
-          params: { values: ["correcto", "tardanza", "sin rango"] },
-        };
-        if (params.data) {
-          if (params.data.statusTardanza === "correcto" || params.data.statusTardanza === "tardanza" || params.data.statusTardanza === "sin rango") return genderDetails;
-        }
-        return undefined;
-      }
-    }
-  ];
-
-  defaultColDef: ColDef = {
-    flex: 1,
-  };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -371,8 +212,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
       if (this.isDataEJB && this.isDataServer) {
         this.onDataTemp = [];
-        let isContinue = false;
-        await (this.parseHuellero || []).filter(async (huellero, i) => {
+        await (this.parseHuellero || []).filter(async (huellero) => {
 
           if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
 
@@ -430,14 +270,12 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   isJornadaCompleta: false,
                   isBrakeComplete: false,
                   isRegistroMax: false,
-                  statusRegistro: 'revisar',
+                  statusRegistro: 'CORRECTO',
                   statusTardanza: isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
                   dataRegistro: [huellero],
-                  accion: "",
                   papeletas: (huellero || {}).papeletas || [],
                   isPapeleta: (huellero || {}).isPapeleta,
-
-                  estadoPapeleta: (huellero || {}).isPapeleta ? 'papeleta' : 'sin papeleta'
+                  estadoPapeleta: (huellero || {}).isPapeleta ? 'papeleta' : ''
                 });
 
               } else {
@@ -462,17 +300,13 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
-                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "revisar" : "correcto";
+                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : "CORRECTO";
               }
             }
           }
-
-          if (this.parseHuellero.length - 1 == i) {
-            isContinue = true;
-          }
         });
 
-        if (this.isViewDefault || this.isDetallado && isContinue) {
+        if (this.isViewDefault || this.isDetallado) {
 
           this.onDataView = this.onDataTemp;
           this.dataSource = new MatTableDataSource(this.onDataView);
@@ -534,11 +368,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
 
     });
-  }
-
-  onOpenSelect() {
-    const self = this;
-    self.activeSelect = !self.activeSelect;
   }
 
   onProcesarAsistenciaOf(dataProcesar) {
