@@ -76,7 +76,6 @@ export class MtTableFilterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.dataTable);
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

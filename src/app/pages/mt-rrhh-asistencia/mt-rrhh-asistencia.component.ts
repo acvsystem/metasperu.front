@@ -378,15 +378,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           this.onFiltrarFeriado(this.vMultiSelect);
         }
       }
-
-
-
     });
-
   }
-
-
-
 
   onProcesarAsistenciaOf(dataProcesar) {
     this.isLoading = false;
