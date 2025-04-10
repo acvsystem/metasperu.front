@@ -420,3 +420,29 @@ tr.example-element-row:not(.example-expanded-row):active {
     width: 50% !important;
     border-radius: 0px !important;
 }
+
+.head-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .filter-content {
+        width: 100%;
+        display: flex;
+        justify-content: end;
+    }
+
+    .btn-filter {
+        cursor: pointer;
+        border-radius: 4px;
+        padding-right: 3px;
+        padding-left: 3px;
+    }
+
+    .btn-filter:hover {
+        background: #e7e7e7 !important;
+    }
+
+}
+
+

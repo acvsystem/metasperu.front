@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -13,7 +13,6 @@ import {
 import Chart from 'chart.js/auto'
 import { jsonToPlainText, Options } from "json-to-plain-text";
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable, of } from "rxjs";
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -25,6 +24,9 @@ import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { Subject, Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -36,7 +38,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro',  'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
   displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
@@ -62,6 +64,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isGrafica: boolean = false;
   isErrorFecha: boolean = false;
   filterEmpleado: string = "";
+  filterTardanzaStatus: string = "";
+  filterEstatus: string = "";
+  filterEstatusPapeleta: string = "";
   fileName: string = "";
   sedeReporte: string = "tienda";
   text: string = "";
@@ -71,6 +76,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   exportFeriado: Array<any> = [];
   arrDataGrafic: Array<any> = [];
   arrMarcacionOf: Array<any> = [];
+  originalOnDataView: Array<any> = [];
   myGraffic: any;
   dialog = inject(MatDialog);
   private setting = {
@@ -117,7 +123,11 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  @ViewChild('filterMenu') searchMenu!: MatMenu;
+  @ViewChild('filterTardanza') searchTardanza!: MatMenu;
+  @ViewChild('filterStatus') searchStatus!: MatMenu;
+  @ViewChild('filterStatusPapeleta') searchStatusPapeleta!: MatMenu;
+  
   private _snackBar = inject(MatSnackBar);
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
@@ -301,6 +311,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
                 this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : "CORRECTO";
+
               }
             }
           }
@@ -309,6 +320,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         if (this.isViewDefault || this.isDetallado) {
 
           this.onDataView = this.onDataTemp;
+          this.originalOnDataView = [...this.onDataTemp];
           this.dataSource = new MatTableDataSource(this.onDataView);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -369,6 +381,40 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     });
   }
+
+
+
+  ngAfterViewInit() {
+    // Inject our custom logic of menu close
+    (this.searchMenu as any).closed = this.configureMenuClose(this.searchMenu.close);
+    (this.searchTardanza as any).closed = this.configureMenuClose(this.searchTardanza.close);
+    (this.searchStatus as any).closed = this.configureMenuClose(this.searchStatus.close);
+    (this.searchStatusPapeleta as any).closed = this.configureMenuClose(this.searchStatusPapeleta.close);
+  }
+
+  private configureMenuClose(old: MatMenu['close']): MatMenu['close'] {
+    const upd = new EventEmitter();
+    this.feed(upd.pipe(
+      filter(event => {
+        console.log(`menu.close(${JSON.stringify(event)})`);
+        if (event === 'click') {
+          // Ignore clicks inside the menu 
+          return false;
+        }
+        return true;
+      }),
+    ), old);
+    return upd;
+  }
+
+  feed<T>(from: Observable<T>, to: Subject<T>): Subscription {
+    return from.subscribe(
+      data => to.next(data),
+      err => to.error(err),
+      () => to.complete(),
+    );
+  }
+
 
   onProcesarAsistenciaOf(dataProcesar) {
     this.isLoading = false;
@@ -917,6 +963,128 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
   }
+  dataFilter: Array<any> = [];
+  arFiltro: Array<any> = [];
+  filteredValues: any = {
+    tienda: "",
+    codigoEJB: "",
+    nombre_completo: "",
+    nro_documento: "",
+    telefono: "",
+    email: "",
+    fec_nacimiento: "",
+    fec_ingreso: "",
+    status: "",
+    dia: "",
+    hr_ingreso_1: "",
+    hr_salida_1: "",
+    rango_horario: "",
+    isNullRango: "",
+    isTardanza: "",
+    hr_brake: "",
+    hr_ingreso_2: "",
+    hr_salida_2: "",
+    hr_trabajadas: "",
+    caja: "",
+    isJornadaCompleta: "",
+    isBrakeComplete: "",
+    isRegistroMax: "",
+    statusRegistro: "",
+    statusTardanza: "",
+    dataRegistro: "",
+    papeletas: "",
+    isPapeleta: "",
+    estadoPapeleta: ""
+  };
+  applyFilterTienda(event: Event) {
+
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    if (this.sedeReporte == 'oficina') {
+      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
+    } else {
+
+      this.filteredValues['tienda'] = filterValue.trim().toLowerCase();
+      this.dataSource.filter = JSON.stringify(this.filteredValues);
+      this.dataSource.filterPredicate = this.customFilterPredicate();
+
+    }
+  }
+
+  applyFilterEstatusPapeleta(event: Event) {
+
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    if (this.sedeReporte == 'oficina') {
+      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
+    } else {
+
+      this.filteredValues['estadoPapeleta'] = filterValue.trim().toLowerCase();
+      this.dataSource.filter = JSON.stringify(this.filteredValues);
+      this.dataSource.filterPredicate = this.customFilterPredicate();
+
+    }
+  }
+
+  customFilterPredicate() {
+    const myFilterPredicate = (
+      data: PeriodicElement,
+      filter: string
+    ): boolean => {
+      var globalMatch = !this.filterEmpleado;
+
+      if (this.filterEmpleado) {
+        // search all text fields
+        console.log();
+        globalMatch =
+          data.tienda
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.filterEmpleado.toLowerCase()) !== -1;
+      }
+
+      if (!globalMatch) {
+        return false;
+      }
+
+      let searchString = JSON.parse(filter);
+      //console.log(data.tienda.toLowerCase(), data.tienda.includes(searchString.tienda), searchString.tienda);
+      return (
+        data.tienda.toLowerCase().includes(searchString.tienda) &&
+        data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) &&
+        data.statusRegistro.toLowerCase().includes(searchString.statusRegistro) && 
+        data.estadoPapeleta.toLowerCase().includes(searchString.estadoPapeleta)
+      );
+
+    };
+    return myFilterPredicate;
+  }
+
+  applyFilterTardanza(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    if (this.sedeReporte == 'oficina') {
+      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.filteredValues['statusTardanza'] = filterValue.trim().toLowerCase();
+      this.dataSource.filter = JSON.stringify(this.filteredValues);
+      this.dataSource.filterPredicate = this.customFilterPredicate();
+    }
+  }
+
+  applyFilterEstatus(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    if (this.sedeReporte == 'oficina') {
+      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.filteredValues['statusRegistro'] = filterValue.trim().toLowerCase();
+      
+      this.dataSource.filter = JSON.stringify(this.filteredValues);
+      this.dataSource.filterPredicate = this.customFilterPredicate();
+    }
+  }
 
   openSnackBar(msj) {
     this._snackBar.open(msj, '', {
@@ -1057,9 +1225,21 @@ export interface PeriodicElement {
   dia: string,
   hr_ingreso_1: string,
   hr_salida_1: string,
+  rango_horario: string,
+  isNullRango: string,
+  isTardanza: string,
   hr_brake: string,
   hr_ingreso_2: string,
   hr_salida_2: string,
   hr_trabajadas: string,
-  caja: string
+  caja: string,
+  isJornadaCompleta: string,
+  isBrakeComplete: string,
+  isRegistroMax: string,
+  statusRegistro: string,
+  statusTardanza: string,
+  dataRegistro: string,
+  papeletas: string,
+  isPapeleta: string,
+  estadoPapeleta: string
 }

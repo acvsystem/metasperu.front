@@ -92,6 +92,12 @@
             </ion-col>
           </ion-row>
           <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-select id="cboReporte" placeHolder="Tienda" [optionList]="onListReporte"
+              (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="sedeReporte == 'tienda'">
@@ -100,8 +106,23 @@
                     <table mat-table [dataSource]="dataSource">
     
                       <ng-container matColumnDef="tienda">
-                        <th mat-header-cell *matHeaderCellDef> Tienda </th>
-                        <td mat-cell *matCellDef="let element"> {{element.tienda}} </td>
+                        <th mat-header-cell *matHeaderCellDef> 
+                          <div class="head-table">
+                            Tienda
+                            <div class="filter-content" slot="end">
+                              <div class="btn-filter" [matMenuTriggerFor]="filterMenu"> 
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <mat-menu #filterMenu="matMenu">
+                            <mt-input id="filterTienda" label="Filtro tienda" placeholder="Nombre tienda" type="text" value="{{ filterEmpleado }}"
+                            (keyup)="applyFilterTienda($event)"></mt-input>
+                          </mat-menu>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> 
+                          {{element.tienda}} 
+                        </td>
                       </ng-container>
     
                       <ng-container matColumnDef="codigoEJB">
@@ -172,7 +193,20 @@
                       </ng-container>
 
                       <ng-container matColumnDef="isTardanza">
-                        <th mat-header-cell *matHeaderCellDef> Tardanza </th>
+                        <th mat-header-cell *matHeaderCellDef>  
+                          <div class="head-table">
+                            Tardanza
+                            <div class="filter-content" slot="end">
+                              <div class="btn-filter" [matMenuTriggerFor]="filterTardanza"> 
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <mat-menu #filterTardanza="matMenu">
+                            <mt-input id="filterTardanza" label="Filtro tardanza" placeholder="Escriba estado" type="text" value="{{ filterTardanzaStatus }}"
+                            (keyup)="applyFilterTardanza($event)"></mt-input>
+                          </mat-menu>
+                        </th>
                         <td mat-cell *matCellDef="let element"> 
                           <h6 *ngIf="element.isNullRango == true" style="margin: 0;"><span class="badge bg-secondary" style="font-weight: 100;">sin rango</span></h6>
                           <h6 *ngIf="element.isTardanza == false && !element.isNullRango" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
@@ -181,16 +215,50 @@
                       </ng-container>
     
                       <ng-container matColumnDef="maximo_registro">
-                        <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                        <th mat-header-cell *matHeaderCellDef>  
+                          <div class="head-table">
+                            Estatus
+                            <div class="filter-content" slot="end">
+                              <div class="btn-filter" [matMenuTriggerFor]="filterStatus"> 
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <mat-menu #filterStatus="matMenu">
+                            <mt-input id="filterStatus" label="Filtro" placeholder="Filtro Estatus" type="text" value="{{ filterEstatus }}"
+                            (keyup)="applyFilterEstatus($event)"></mt-input>
+                          </mat-menu>
+                        </th>
                         <td mat-cell *matCellDef="let element">
                           @if(element.isRegistroMax) {
                             <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: rgb(253 159 13) !important;">revisar</span></h6>
                           } @else {
                             <h6 style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
                           }
+                        </td>
+                      </ng-container>
 
-                          <h6 style="margin: 0;" *ngIf="element.isPapeleta"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: orange !important;">papeleta</span></h6>
-
+                      <ng-container matColumnDef="estado_papeleta">
+                        <th mat-header-cell *matHeaderCellDef>  
+                          <div class="head-table">
+                            Estatus Papeleta
+                            <div class="filter-content" slot="end">
+                              <div class="btn-filter" [matMenuTriggerFor]="filterStatusPapeleta"> 
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <mat-menu #filterStatusPapeleta="matMenu">
+                            <mt-input id="filterStatusPapeleta" label="Filtro" placeholder="Filtro Papeleta" type="text" value="{{ filterEstatusPapeleta }}"
+                            (keyup)="applyFilterEstatusPapeleta($event)"></mt-input>
+                          </mat-menu>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          @if(element.isPapeleta) {
+                            <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: orange !important;">papeleta</span></h6>
+                          } @else {
+                            <h6 style="margin: 0;"><span class="badge bg-secondary" style="font-weight: 100;">sin papeleta</span></h6>
+                          }
                         </td>
                       </ng-container>
     
