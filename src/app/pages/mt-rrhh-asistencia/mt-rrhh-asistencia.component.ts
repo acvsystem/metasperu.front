@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, SimpleChanges, ViewChild, NgZone } from '@angular/core';
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -38,7 +38,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro',  'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
+  displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
   displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
   fechaInicio: string = "";
@@ -67,6 +67,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   filterTardanzaStatus: string = "";
   filterEstatus: string = "";
   filterEstatusPapeleta: string = "";
+  filterNombreEmpleado: string = "";
   fileName: string = "";
   sedeReporte: string = "tienda";
   text: string = "";
@@ -127,13 +128,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   @ViewChild('filterTardanza') searchTardanza!: MatMenu;
   @ViewChild('filterStatus') searchStatus!: MatMenu;
   @ViewChild('filterStatusPapeleta') searchStatusPapeleta!: MatMenu;
-  
+  @ViewChild('filterNombre') searchNombreEmpleado!: MatMenu;
+
   private _snackBar = inject(MatSnackBar);
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private sanitizer: DomSanitizer, private service: ShareService, private store: StorageService,) { }
+  constructor(private ngZone: NgZone, private sanitizer: DomSanitizer, private service: ShareService, private store: StorageService,) { }
 
   ngOnInit() {
     let profileUser = this.store.getStore('mt-profile');
@@ -380,40 +382,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
 
     });
+
   }
 
 
-
-  ngAfterViewInit() {
-    // Inject our custom logic of menu close
-    (this.searchMenu as any).closed = this.configureMenuClose(this.searchMenu.close);
-    (this.searchTardanza as any).closed = this.configureMenuClose(this.searchTardanza.close);
-    (this.searchStatus as any).closed = this.configureMenuClose(this.searchStatus.close);
-    (this.searchStatusPapeleta as any).closed = this.configureMenuClose(this.searchStatusPapeleta.close);
-  }
-
-  private configureMenuClose(old: MatMenu['close']): MatMenu['close'] {
-    const upd = new EventEmitter();
-    this.feed(upd.pipe(
-      filter(event => {
-        console.log(`menu.close(${JSON.stringify(event)})`);
-        if (event === 'click') {
-          // Ignore clicks inside the menu 
-          return false;
-        }
-        return true;
-      }),
-    ), old);
-    return upd;
-  }
-
-  feed<T>(from: Observable<T>, to: Subject<T>): Subscription {
-    return from.subscribe(
-      data => to.next(data),
-      err => to.error(err),
-      () => to.complete(),
-    );
-  }
 
 
   onProcesarAsistenciaOf(dataProcesar) {
@@ -509,6 +481,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.sedeReporte = (ev || {}).value;
     if ((ev || {}).value == 'oficina') {
       this.isLoading = true;
+      this.onDataView = [];
       this.socket.emit('marcacion_of', []);
     }
   }
@@ -658,6 +631,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onChangeSelect(data: any) {
+    const self = this;
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
@@ -678,7 +652,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       this.isViewFeriados = false;
       this.isDetallado = false;
       this.isGrafica = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
     }
 
     if ((selectData || {}).key == "Feriados") {
@@ -691,12 +665,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     }
 
     if ((selectData || {}).key == "Detallado") {
+      
+      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
+      this.isDetallado = true;
       this.backOption = "isDetallado";
       this.isViewFeriados = false;
       this.isViewDefault = false;
-      this.isDetallado = true;
+
       this.isGrafica = false;
-      this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'view_registre', 'rango_horario', 'isTardanza'];
     }
 
   }
@@ -995,96 +971,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     papeletas: "",
     isPapeleta: "",
     estadoPapeleta: ""
-  };
-  applyFilterTienda(event: Event) {
-
-    const filterValue = (event.target as HTMLInputElement).value;
-
-    if (this.sedeReporte == 'oficina') {
-      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
-    } else {
-
-      this.filteredValues['tienda'] = filterValue.trim().toLowerCase();
-      this.dataSource.filter = JSON.stringify(this.filteredValues);
-      this.dataSource.filterPredicate = this.customFilterPredicate();
-
-    }
-  }
-
-  applyFilterEstatusPapeleta(event: Event) {
-
-    const filterValue = (event.target as HTMLInputElement).value;
-
-    if (this.sedeReporte == 'oficina') {
-      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
-    } else {
-
-      this.filteredValues['estadoPapeleta'] = filterValue.trim().toLowerCase();
-      this.dataSource.filter = JSON.stringify(this.filteredValues);
-      this.dataSource.filterPredicate = this.customFilterPredicate();
-
-    }
-  }
-
-  customFilterPredicate() {
-    const myFilterPredicate = (
-      data: PeriodicElement,
-      filter: string
-    ): boolean => {
-      var globalMatch = !this.filterEmpleado;
-
-      if (this.filterEmpleado) {
-        // search all text fields
-        console.log();
-        globalMatch =
-          data.tienda
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.filterEmpleado.toLowerCase()) !== -1;
-      }
-
-      if (!globalMatch) {
-        return false;
-      }
-
-      let searchString = JSON.parse(filter);
-      //console.log(data.tienda.toLowerCase(), data.tienda.includes(searchString.tienda), searchString.tienda);
-      return (
-        data.tienda.toLowerCase().includes(searchString.tienda) &&
-        data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) &&
-        data.statusRegistro.toLowerCase().includes(searchString.statusRegistro) && 
-        data.estadoPapeleta.toLowerCase().includes(searchString.estadoPapeleta)
-      );
-
-    };
-    return myFilterPredicate;
-  }
-
-  applyFilterTardanza(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-
-    if (this.sedeReporte == 'oficina') {
-      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
-    } else {
-      this.filteredValues['statusTardanza'] = filterValue.trim().toLowerCase();
-      this.dataSource.filter = JSON.stringify(this.filteredValues);
-      this.dataSource.filterPredicate = this.customFilterPredicate();
-    }
-  }
-
-  applyFilterEstatus(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-
-    if (this.sedeReporte == 'oficina') {
-      this.dataSourceOf.filter = filterValue.trim().toLowerCase();
-    } else {
-      this.filteredValues['statusRegistro'] = filterValue.trim().toLowerCase();
-      
-      this.dataSource.filter = JSON.stringify(this.filteredValues);
-      this.dataSource.filterPredicate = this.customFilterPredicate();
-    }
-  }
+  };  
 
   openSnackBar(msj) {
     this._snackBar.open(msj, '', {
