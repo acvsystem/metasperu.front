@@ -334,31 +334,40 @@ export class MtHorarioTiendaComponent implements OnInit {
     if (index != -1 && this.horaInit.length && this.horaEnd.length) {
       let exist = this.dataHorario[index]['rg_hora'].findIndex((rgh) => rgh.rg == `${this.horaInit} a ${this.horaEnd}`);
       if (exist == -1) {
-        if (this.isSearch) {
-          let parms = {
-            url: '/horario/insert/rangoHorario',
-            body: {
-              codigo_tienda: this.codeTienda,
-              rg: `${this.horaInit} a ${this.horaEnd}`,
-              id: this.dataHorario[index]['id']
-            }
-          };
 
-          this.service.post(parms).then(async (response) => {
-            if ((response || {}).success) {
-              this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
-              this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+        let hora = this.obtenerDiferenciaHora(this.horaInit, this.horaEnd);
+        let confirmHora = (hora || "").split(":");
+        if (parseInt(confirmHora[0]) <= 9) {
+          if (this.isSearch) {
+            let parms = {
+              url: '/horario/insert/rangoHorario',
+              body: {
+                codigo_tienda: this.codeTienda,
+                rg: `${this.horaInit} a ${this.horaEnd}`,
+                id: this.dataHorario[index]['id']
+              }
+            };
 
-              this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
-            } else {
-              this.service.toastError("Algo salio mal..!!", "Rango horario");
-            }
+            this.service.post(parms).then(async (response) => {
+              if ((response || {}).success) {
+                this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
+                this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
-          });
+                this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
+              } else {
+                this.service.toastError("Algo salio mal..!!", "Rango horario");
+              }
+
+            });
+          } else {
+            this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
+            this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+          }
         } else {
-          this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
-          this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+          this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
         }
+
+
       } else {
         this.service.toastError('Rango de hora ya existe..!!', "Horario");
       }
@@ -543,6 +552,78 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onRevidarDataTrabajador(data) {
 
+
+
+  }
+
+  obtenerHoras(hora) {
+    let hora_pr = hora.split(":");
+    return parseInt(hora_pr[0]) * 60;
+  }
+
+  obtenerMinutos(hora_1, hora_2) {
+
+    let hora_1_pr = hora_1.split(":");
+    let hora_2_pr = hora_2.split(":");
+    let residuo_1 = 0;
+    let minutos = 0;
+    let hora = 0;
+
+    if (hora_1_pr[1] > 0 || hora_1_pr[1] == 0) {
+
+      if (hora_1_pr[0] == hora_2_pr[0]) {
+        residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
+        minutos = residuo_1 - 60;
+
+      } else {
+        residuo_1 = (60 - parseInt(hora_1_pr[1])) + parseInt(hora_2_pr[1]);
+
+        if (residuo_1 > 59) {
+          minutos = residuo_1 - 60;
+          hora = 1;
+
+        } else {
+          minutos = residuo_1;
+        }
+      }
+
+    }
+
+    return [hora, minutos];
+  }
+
+  obtenerDiferenciaHora(hr1, hr2) {
+
+    let diferencia = 0;
+    let hora_1 = this.obtenerHoras(hr1);
+    let hora_2 = this.obtenerHoras(hr2);
+    let minutos = this.obtenerMinutos(hr1, hr2);
+    let hrExtr = (minutos[0] > 0) ? minutos[0] : 0;
+
+
+
+    let hrxLlegada = hr1.split(':');
+    let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
+    let hrxSalida = hr2.split(':');
+    let salida = parseInt(hrxSalida[0]) * 60 + parseInt(hrxSalida[1]);
+
+    if (hora_1 > hora_2) {
+      diferencia = llegada - salida;
+    } else {
+      diferencia = salida - llegada;
+    }
+
+    const ToTime = (num) => {
+      var minutos: any = Math.floor((num / 60) % 60);
+      minutos = minutos < 10 ? '0' + minutos : minutos;
+      var segundos: any = num % 60;
+      segundos = segundos < 10 ? '0' + segundos : segundos;
+      return minutos + ':' + segundos;
+    }
+
+    let horaResult = ToTime(diferencia);
+
+    return horaResult;
   }
 
   onAddDTrabajo(data) {
@@ -805,7 +886,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.store.setStore("mt-isSearch", true);
           this.onListCargo = [];
           let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
-          
+
           if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
             lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas"];
           }
@@ -1156,7 +1237,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
         let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
-       
+
         if (!this.isSearch && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
           lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas'];
         }
@@ -1285,6 +1366,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     await html2pdf().from(element[0]).set(opt).save();
     this.isLoading = false;
   }
+
 
 
 
