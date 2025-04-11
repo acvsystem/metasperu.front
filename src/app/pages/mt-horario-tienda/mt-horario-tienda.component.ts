@@ -120,6 +120,12 @@ export class MtHorarioTiendaComponent implements OnInit {
         "mt_nivel": (this.profileUser || {}).mt_nivel,
         "code": "OF"
       }));
+
+      console.log({
+        "mt_name_1": (this.profileUser || {}).mt_name_1,
+        "mt_nivel": (this.profileUser || {}).mt_nivel,
+        "code": "OF"
+      });
     }
 
     this.getScreenSize();
@@ -1237,8 +1243,8 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
         let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
-
-        if (!this.isSearch && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
+        console.log(codigo);
+        if ((codigo == 'OF' || (this.codeTienda == "OF" && typeof codigo == 'undefined')) && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
           lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas'];
         }
 

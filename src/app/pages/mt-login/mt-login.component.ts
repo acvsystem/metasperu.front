@@ -13,7 +13,7 @@ import { io } from 'socket.io-client';
 })
 export class MtLoginComponent implements OnInit {
   socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
-  
+
   userName: string = "";
   password: string = "";
   codigo_auth: string = "";
@@ -92,6 +92,18 @@ export class MtLoginComponent implements OnInit {
     if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code) {
       this.nav.navigateRoot('inventario');
     } else if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
+      this.store.setStore('mt-profile', JSON.stringify({
+        "mt_name_1": (profileUser || {}).mt_name_1,
+        "mt_nivel": (profileUser || {}).mt_nivel,
+        "code": "OF"
+      }));
+
+      console.log({
+        "mt_name_1": (profileUser || {}).mt_name_1,
+        "mt_nivel": (profileUser || {}).mt_nivel,
+        "code": "OF"
+      });
+      
       let path = this.store.getStore("pathResolve");
       if ((path || {}).value == "auth-hora-extra") {
         this.nav.navigateRoot('auth-hora-extra');
@@ -100,10 +112,23 @@ export class MtLoginComponent implements OnInit {
       }
 
     } else if ((profileUser || {}).mt_nivel == "RRHH") {
+      this.store.setStore('mt-profile', JSON.stringify({
+        "mt_name_1": (profileUser || {}).mt_name_1,
+        "mt_nivel": (profileUser || {}).mt_nivel,
+        "code": "OF"
+      }));
+
+      console.log({
+        "mt_name_1": (profileUser || {}).mt_name_1,
+        "mt_nivel": (profileUser || {}).mt_nivel,
+        "code": "OF"
+      });
+
+
       this.nav.navigateRoot('asistencia');
     } else if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno" || (profileUser || {}).mt_nivel == "nduran" || (profileUser || {}).mt_nivel == "aseijo") {
       this.nav.navigateRoot('asistencia');
-    }else if ((profileUser || {}).mt_nivel == "acarbajal") {
+    } else if ((profileUser || {}).mt_nivel == "acarbajal") {
       this.nav.navigateRoot('inventario');
     }
 

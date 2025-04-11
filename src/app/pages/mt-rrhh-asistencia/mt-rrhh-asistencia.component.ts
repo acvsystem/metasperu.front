@@ -257,7 +257,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
 
                 let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
-
+                
+                let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
+          
                 this.onDataTemp.push({
                   tienda: (selectedLocal || {})["name"],
                   codigoEJB: (dataEJB || {}).codigoEJB,
@@ -277,7 +279,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   hr_brake: "",
                   hr_ingreso_2: "",
                   hr_salida_2: "",
-                  hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida),
+                  hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : this.obtenerHorasTrabajadas(hrt, (((huellero || {}).papeletas || [])[0] || {})['HORA_SOLICITADA']),
                   caja: (huellero || {}).caja,
                   isJornadaCompleta: false,
                   isBrakeComplete: false,
@@ -313,6 +315,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
                 this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : "CORRECTO";
+                
+                
+                //this.onDataTemp[indexData]['isIncompleto'] = 
 
               }
             }
@@ -542,7 +547,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     // parts[2] es año
     // parts[1] el mes
     // parts[0] el día
-   
+
     return new Date(parts[0], parts[1], parts[2]).getTime();
   }
 
