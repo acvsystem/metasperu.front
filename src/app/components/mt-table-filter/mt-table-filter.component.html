@@ -24,9 +24,14 @@
             <div class="head-table">
               Tienda
               <div class="filter-content" slot="end">
-                <div class="btn-filter" [matMenuTriggerFor]="filterMenu"> 
-                  <i class="fa fa-filter" aria-hidden="true"></i> 
-                </div>
+                
+                  <div class="btn-filter" [matMenuTriggerFor]="filterMenu"> 
+                    @if(isFilterT){
+                      <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                    }
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                  </div>
+                
               </div>
             </div>
             <mat-menu #filterMenu="matMenu">
@@ -55,6 +60,9 @@
               Nombre Completo
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterNombre"> 
+                  @if(isFilterNM){
+                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
               </div>
@@ -125,6 +133,9 @@
               Tardanza
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterTardanza"> 
+                  @if(isFilterTR){
+                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
               </div>
@@ -147,6 +158,9 @@
               Estatus
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterStatus"> 
+                  @if(isFilterST){
+                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
               </div>
@@ -174,7 +188,10 @@
             <div class="head-table">
               Estatus Papeleta
               <div class="filter-content" slot="end">
-                <div class="btn-filter" [matMenuTriggerFor]="filterStatusPapeleta"> 
+                <div class="btn-filter" [matMenuTriggerFor]="filterStatusPapeleta">
+                  @if(isFilterPAP){
+                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  } 
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
               </div>

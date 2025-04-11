@@ -33,6 +33,10 @@ export class MtTableFilterComponent implements OnInit {
   codigoPap: string = "";
   isViewPapeleta: boolean = true;
   isFilterT: boolean = false;
+  isFilterNM: boolean = false;
+  isFilterTR: boolean = false;
+  isFilterST: boolean = false;
+  isFilterPAP: boolean = false;
   dataFilter: Array<any> = [];
   arFiltro: Array<any> = [];
   dialog = inject(MatDialog);
@@ -128,6 +132,12 @@ export class MtTableFilterComponent implements OnInit {
   applyFilterEstatusPapeleta(event: Event) {
 
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterPAP = true;
+    } else {
+      this.isFilterPAP = false;
+    }
+    
     this.filteredValues['estadoPapeleta'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
@@ -135,6 +145,12 @@ export class MtTableFilterComponent implements OnInit {
 
   applyFilterNombreEmpleado(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterNM = true;
+    } else {
+      this.isFilterNM = false;
+    }
+
     this.filteredValues['nombre_completo'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
@@ -142,6 +158,12 @@ export class MtTableFilterComponent implements OnInit {
 
   applyFilterTardanza(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterTR = true;
+    } else {
+      this.isFilterTR = false;
+    }
+    
     this.filteredValues['statusTardanza'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
@@ -150,6 +172,12 @@ export class MtTableFilterComponent implements OnInit {
 
   applyFilterEstatus(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterST = true;
+    } else {
+      this.isFilterST = false;
+    }
+    
     this.filteredValues['statusRegistro'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();

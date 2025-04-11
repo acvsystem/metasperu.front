@@ -21,6 +21,10 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   filterTiendaUnid: string = "";
   filterTipoPapv: string = "";
   filterNombreCompletov: string = "";
+  isFilterCP: boolean = false;
+  isFilterNM: boolean = false;
+  isFilterT: boolean = false;
+  isFilterTP: boolean = false;
   filteredValues: any = {
     cargo_empleado: "",
     codigo_papeleta: "",
@@ -94,6 +98,12 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   applyFilterCodigo(event: Event) {
 
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterCP = true;
+    } else {
+      this.isFilterCP = false;
+    }
+
     this.filteredValues['codigo_papeleta'] = filterValue.trim().toLowerCase();
     this.dataSourcePap.filter = JSON.stringify(this.filteredValues);
     this.dataSourcePap.filterPredicate = this.customFilterPredicate();
@@ -102,6 +112,11 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   applyFilterNombreCompleto(event: Event) {
 
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterNM = true;
+    } else {
+      this.isFilterNM = false;
+    }
     this.filteredValues['nombre_completo'] = filterValue.trim().toLowerCase();
     this.dataSourcePap.filter = JSON.stringify(this.filteredValues);
     this.dataSourcePap.filterPredicate = this.customFilterPredicate();
@@ -110,6 +125,11 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   applyFilterTienda(event: Event) {
 
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterT = true;
+    } else {
+      this.isFilterT = false;
+    }
     this.filteredValues['uns'] = filterValue.trim().toLowerCase();
     this.dataSourcePap.filter = JSON.stringify(this.filteredValues);
     this.dataSourcePap.filterPredicate = this.customFilterPredicate();
@@ -118,6 +138,11 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   applyFilterTipoPap(event: Event) {
 
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterTP = true;
+    } else {
+      this.isFilterTP = false;
+    }
     this.filteredValues['tipo'] = filterValue.trim().toLowerCase();
     this.dataSourcePap.filter = JSON.stringify(this.filteredValues);
     this.dataSourcePap.filterPredicate = this.customFilterPredicate();

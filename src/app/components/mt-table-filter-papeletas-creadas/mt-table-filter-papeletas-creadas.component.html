@@ -7,6 +7,9 @@
             Codigo Papeleta
             <div class="filter-content" slot="end">
               <div class="btn-filter" [matMenuTriggerFor]="filterCodigo">
+                @if(isFilterCP){
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                } 
                 <i class="fa fa-filter" aria-hidden="true"></i>
               </div>
             </div>
@@ -27,6 +30,9 @@
             Tienda
             <div class="filter-content" slot="end">
               <div class="btn-filter" [matMenuTriggerFor]="filterTienda">
+                @if(isFilterT){
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                } 
                 <i class="fa fa-filter" aria-hidden="true"></i>
               </div>
             </div>
@@ -54,6 +60,9 @@
             Tipo papeleta
             <div class="filter-content" slot="end">
               <div class="btn-filter" [matMenuTriggerFor]="filterTipoPap">
+                @if(isFilterTP){
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                }
                 <i class="fa fa-filter" aria-hidden="true"></i>
               </div>
             </div>
@@ -74,6 +83,9 @@
             Nombre Completo
             <div class="filter-content" slot="end">
               <div class="btn-filter" [matMenuTriggerFor]="filterNombreCompleto">
+                @if(isFilterNM){
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                }
                 <i class="fa fa-filter" aria-hidden="true"></i>
               </div>
             </div>
