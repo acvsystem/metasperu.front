@@ -536,6 +536,26 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.onViewGrafic();
   }
 
+  timeMoments(dateStr) {
+    // desarmamos el string por los '-' los descartamos y lo transformamos en un array
+    let parts = (dateStr || "").split("/");
+    // parts[2] es año
+    // parts[1] el mes
+    // parts[0] el día
+   
+    return new Date(parts[0], parts[1], parts[2]).getTime();
+  }
+
+  timeMoments2(dateStr) {
+    // desarmamos el string por los '-' los descartamos y lo transformamos en un array
+    let parts = (dateStr || "").split("/");
+    // parts[2] es año
+    // parts[1] el mes
+    // parts[0] el día
+
+    return new Date(parts[2], parts[0], parts[1]).getTime();
+  }
+
   async onConsultarAsistencia() {
 
     if (!this.isErrorFecha) {
@@ -601,9 +621,27 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         }
       } else {
+        console.log(this.vDetallado);
         let date = ((this.vCalendarDefault || [])[0] || "").split('/');
-        let dataTemp = this.arrMarcacionOf.filter((mc) => mc.fecha == `${date[1]}/${date[2]}/${date[0]}`);
-        console.log(`${date[1]}/${date[2]}/${date[0]}`);
+        let dataTemp = [];
+        this.onDataViewOf = [];
+
+        this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
+        this.dataSourceOf.paginator = this.paginator;
+        this.dataSourceOf.sort = this.sort;
+
+        if ((this.vDetallado || "").length) {
+          let preDate = this.timeMoments(this.vDetallado[0]);
+          let postDate = this.timeMoments(this.vDetallado[1]);
+          dataTemp = this.arrMarcacionOf.filter((account) => {
+
+            return this.timeMoments2(account.fecha) >= preDate && this.timeMoments2(account.fecha) <= postDate
+          });
+        } else {
+          dataTemp = this.arrMarcacionOf.filter((mc) => mc.fecha == `${date[1]}/${date[2]}/${date[0]}`);
+        }
+
+
         this.onDataViewOf = dataTemp;
         this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
         this.dataSourceOf.paginator = this.paginator;
@@ -615,6 +653,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     }
 
   }
+
+
 
   onChangeInput(data: any) {
     const self = this;
@@ -658,7 +698,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     }
 
     if ((selectData || {}).key == "Detallado") {
-      
+
       this.displayedColumns = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
       this.isDetallado = true;
       this.backOption = "isDetallado";
@@ -775,6 +815,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     if ($event.isDefault) {
       this.vCalendarDefault = [];
+      this.vDetallado = [];
       let dateNow = new Date();
 
       let day = new Date(dateNow).toLocaleDateString().split('/');
@@ -964,7 +1005,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     papeletas: "",
     isPapeleta: "",
     estadoPapeleta: ""
-  };  
+  };
 
   openSnackBar(msj) {
     this._snackBar.open(msj, '', {

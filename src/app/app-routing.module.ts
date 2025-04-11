@@ -12,6 +12,7 @@ import { MtPanelHorarioComponent } from './pages/mt-panel-horario/mt-panel-horar
 import { MtPlanillaComponent } from './pages/mt-planilla/mt-planilla.component';
 import { MtDetailCajaComponent } from './pages/mt-verification-comprobantes/mt-detail-caja/mt-detail-caja.component';
 import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
+import { MtKardexContabilidadComponent } from './pages/mt-kardex-contabilidad/mt-kardex-contabilidad.component';
 
 const routes: Routes = [
   {
@@ -70,6 +71,11 @@ const routes: Routes = [
   {
     path: 'drive-cloud',
     component: MtDropboxComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'kardex',
+    component: MtKardexContabilidadComponent,
     canActivate: [authGuard]
   }
 ];

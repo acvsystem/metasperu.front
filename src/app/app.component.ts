@@ -207,6 +207,11 @@ export class AppComponent {
           ISVISIBLE: true,
           nombre_menu: "DRIVE CLOUD",
           ruta: "drive-cloud"
+        },
+        {
+          ISVISIBLE: true,
+          nombre_menu: "KARDEX",
+          ruta: "kardex"
         }
 
         ];

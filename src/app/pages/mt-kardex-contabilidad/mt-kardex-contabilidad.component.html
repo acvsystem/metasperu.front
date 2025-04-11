@@ -1,0 +1,38 @@
+<ion-content>
+  <div id="content" class="full-center">
+    <div class="card-content">
+      <ion-row style="border: 1px solid #d1d1d1;border-radius: 7px;">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="border-right: 1px solid #d1d1d1;">
+          <ion-row style="border-bottom: 1px solid #d1d1d1;">
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
+              <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="false" [isRange]="true"
+              placeholder="Seleccione fechas" (afterChange)="onCaledar($event)"></mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="display: flex;justify-content: center;align-items: center;">
+                <button id="searchProducto" type="button" class="btn btn-primary btn-sm">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <form [formGroup]="form" style="width: 100%;">
+                <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
+                  @for (shoe of shoes; track shoe) {
+                    <mat-list-option [value]="shoe.value">{{shoe.name}}</mat-list-option>
+                  }
+                </mat-selection-list>
+                <p>
+                   Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
+                </p>
+              </form>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
+          content
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>
