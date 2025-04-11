@@ -10,6 +10,8 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MtViewRegistroComponent } from 'src/app/pages/mt-rrhh-asistencia/components/mt-view-registro/mt-view-registro.component';
 
 @Component({
   selector: 'mt-table-filter',
@@ -28,8 +30,11 @@ export class MtTableFilterComponent implements OnInit {
   filterEstatus: string = "";
   filterEstatusPapeleta: string = "";
   filterNombreEmpleado: string = "";
+  codigoPap: string = "";
+  isViewPapeleta: boolean = true;
   dataFilter: Array<any> = [];
   arFiltro: Array<any> = [];
+  dialog = inject(MatDialog);
   filteredValues: any = {
     tienda: "",
     codigoEJB: "",
@@ -192,6 +197,20 @@ export class MtTableFilterComponent implements OnInit {
     return myFilterPredicate;
   }
 
+
+  openDialog(ev) {
+    this.dialog.open(MtViewRegistroComponent, {
+      data: ev,
+      panelClass: 'full-screen-modal'
+    });
+  }
+
+  onViewPapeleta(ev) {
+    console.log(ev);
+    this.codigoPap = "";
+    this.codigoPap = (ev || [])[0].CODIGO_PAPELETA;
+    this.isViewPapeleta = true;
+  }
 }
 
 export interface PeriodicElement {
