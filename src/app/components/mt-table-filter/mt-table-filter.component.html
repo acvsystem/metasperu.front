@@ -34,7 +34,7 @@
               (keyup)="applyFilterTienda($event)"></mt-input>
             </mat-menu>
           </th>
-          <td mat-cell *matCellDef="let element"> 
+          <td mat-cell *matCellDef="let element" style="padding: 11px;"> 
             {{element.tienda}} 
           </td>
         </ng-container>
@@ -69,7 +69,7 @@
     
         <ng-container matColumnDef="dia">
           <th mat-header-cell *matHeaderCellDef> Dia </th>
-          <td mat-cell *matCellDef="let element"> {{element.dia}} </td>
+          <td mat-cell *matCellDef="let element" style="padding: 11px;"> {{element.dia}} </td>
         </ng-container>
     
         <ng-container matColumnDef="hr_ingreso_1">
@@ -116,7 +116,7 @@
     
         <ng-container matColumnDef="rango_horario">
           <th mat-header-cell *matHeaderCellDef> Rango Horario </th>
-          <td mat-cell *matCellDef="let element"> {{element.rango_horario}} </td>
+          <td mat-cell *matCellDef="let element" style="padding: 11px;"> {{element.rango_horario}} </td>
         </ng-container>
     
         <ng-container matColumnDef="isTardanza">
@@ -157,10 +157,14 @@
             </mat-menu>
           </th>
           <td mat-cell *matCellDef="let element">
-            @if(element.isRegistroMax) {
-              <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 61.36px;font-weight: 100;background-color: rgb(253 159 13) !important;">revisar</span></h6>
+            @if(element.isRegistroMax || element.isIncompleto) {
+              @if(element.isIncompleto){
+                <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 73.36px;font-weight: 100;background-color: red !important;">incompleto</span></h6>
+              } @else {
+                <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 73.36px;font-weight: 100;background-color: rgb(253 159 13) !important;">revisar</span></h6>
+              }
             } @else {
-              <h6 style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+              <h6 style="margin: 0;"><span class="badge bg-primary" style="width: 73.36px;font-weight: 100;">correcto</span></h6>
             }
           </td>
         </ng-container>
@@ -191,7 +195,7 @@
     
         <ng-container matColumnDef="view_registre">
           <th mat-header-cell *matHeaderCellDef> Accion </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" style="padding: 11px;">
             <button matTooltip="Ver registro" id="searchProducto"  (click)="openDialog(element.dataRegistro)" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
               <i class="fa fa-eye" aria-hidden="true"></i>
             </button>

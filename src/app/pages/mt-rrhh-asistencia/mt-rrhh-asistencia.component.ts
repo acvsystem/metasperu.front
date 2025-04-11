@@ -259,7 +259,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
                 
                 let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-          
+                
                 this.onDataTemp.push({
                   tienda: (selectedLocal || {})["name"],
                   codigoEJB: (dataEJB || {}).codigoEJB,
@@ -314,10 +314,17 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
-                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : "CORRECTO";
                 
-                
-                //this.onDataTemp[indexData]['isIncompleto'] = 
+                let defaultHTT = "07:55";
+                let ingresoHorario2 = (defaultHTT).split(':');
+                let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
+
+                let ingreso2 = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
+                let ingresoInt2 = parseInt(ingreso2[0]) * 60 + parseInt(ingreso2[1]);
+
+                this.onDataTemp[indexData]['isIncompleto'] = ingresoInt2 > ingresoHorarioInt2 ? false : true;
+
+                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO":"CORRECTO";
 
               }
             }
