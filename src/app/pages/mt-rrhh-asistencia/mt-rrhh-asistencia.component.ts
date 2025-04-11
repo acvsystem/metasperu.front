@@ -315,7 +315,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
                 
-                let defaultHTT = "07:55";
+                let defaultHTT = "07:50";
                 let ingresoHorario2 = (defaultHTT).split(':');
                 let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
 

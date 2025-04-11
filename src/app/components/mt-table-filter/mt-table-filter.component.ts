@@ -32,6 +32,7 @@ export class MtTableFilterComponent implements OnInit {
   filterNombreEmpleado: string = "";
   codigoPap: string = "";
   isViewPapeleta: boolean = true;
+  isFilterT: boolean = false;
   dataFilter: Array<any> = [];
   arFiltro: Array<any> = [];
   dialog = inject(MatDialog);
@@ -156,6 +157,11 @@ export class MtTableFilterComponent implements OnInit {
 
   applyFilterTienda(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterT = true;
+    } else {
+      this.isFilterT = false;
+    }
     this.filteredValues['tienda'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
