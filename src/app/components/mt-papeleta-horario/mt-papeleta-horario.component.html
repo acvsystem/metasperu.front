@@ -251,7 +251,7 @@
                             </div>
                           </td>
                           <td class="columBody">
-                            <button *ngIf="isConsulting" matTooltip="Recalcular" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onRecal(columBody)">
+                            <button *ngIf="isConsulting && columBody.estado == 'aprobar'" matTooltip="Recalcular" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onRecal(columBody)">
                               <i class="fa fa-refresh" aria-hidden="true"></i>
                             </button>
                           </td>
