@@ -33,9 +33,181 @@
           </ion-row>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
-          content
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
+              <mt-input id="vSerieDoc" label="Serie" placeholder="Serie documento" type="text" value="{{ vSerieDoc }}"></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-input id="vNumeroDoc" label="Numero" placeholder="Numero documento" type="text" value="{{ vNumeroDoc }}"></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-input id="vFechaDoc" label="Fecha" placeholder="Fecha documento" type="text" value="{{ vFechaDoc }}"></mt-input>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-input id="vHoraDoc" label="Hora" placeholder="Hora documento" type="text" value="{{ vHoraDoc }}"></mt-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="referencia">
+                      <th mat-header-cell *matHeaderCellDef> Referencia </th>
+                      <td mat-cell *matCellDef="let element"> {{element.referencia}} </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="talla">
+                      <th mat-header-cell *matHeaderCellDef> Talla </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.talla}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="color">
+                      <th mat-header-cell *matHeaderCellDef> Color </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.color}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="descripcion">
+                      <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.descripcion}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="unid">
+                      <th mat-header-cell *matHeaderCellDef> Unid </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.unid}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="precio">
+                      <th mat-header-cell *matHeaderCellDef> Precio </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.precio}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="descuento">
+                      <th mat-header-cell *matHeaderCellDef> Descuento </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.descuento}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="total">
+                      <th mat-header-cell *matHeaderCellDef> Total </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.total}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="almacen">
+                      <th mat-header-cell *matHeaderCellDef> Almacen </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.almacen}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                  aria-label="Select page of periodic elements">
+                </mat-paginator>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+             <div style="padding-top: 30px;">
+              <span style="color: black;font-weight: 500;">Vencimiento</span>
+             </div>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSourceVenc">
+                    <ng-container matColumnDef="forma_pago">
+                      <th mat-header-cell *matHeaderCellDef> Forma de pago </th>
+                      <td mat-cell *matCellDef="let element"> {{element.forma_pago}} </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="importe">
+                      <th mat-header-cell *matHeaderCellDef> Importe </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.importe}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="medio_pago">
+                      <th mat-header-cell *matHeaderCellDef> Medio de pago </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.medio_pago}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="estado">
+                      <th mat-header-cell *matHeaderCellDef> Estado </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.estado}}</span>
+                      </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="fecha_cobro">
+                      <th mat-header-cell *matHeaderCellDef> Fecha de cobro </th>
+                      <td mat-cell *matCellDef="let element"> 
+                        <span>{{element.fecha_cobro}}</span>
+                      </td>
+                    </ng-container>
+        
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsVenc"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsVenc;"></tr>
+                </table>
+              </div>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                    <span style="color: black;padding-right: 20px;">Total bruto - USD</span>
+                    <mt-input id="vHoraDoc" label="Total bruto" placeholder="Total bruto" type="text" value="{{ vHoraDoc }}"></mt-input>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                    <span style="color: black;padding-right: 20px;">Total Cargos/Dtos - USD</span>
+                    <mt-input id="vHoraDoc" label="Total Cargos/Dtos" placeholder="Total Cargos/Dtos" type="text" value="{{ vHoraDoc }}"></mt-input>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                    <span style="color: black;padding-right: 20px;">Base imponible - USD</span>
+                    <mt-input id="vHoraDoc" label="Base imponible" placeholder="Base imponible" type="text" value="{{ vHoraDoc }}"></mt-input>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                    <span style="color: black;padding-right: 20px;">Impuestos - USD</span>
+                    <mt-input id="vHoraDoc" label="Impuestos" placeholder="Impuestos" type="text" value="{{ vHoraDoc }}"></mt-input>
+                  </div>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                  <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                    <span style="color: black;padding-right: 20px;">Total bruto - USD</span>
+                    <mt-input id="vHoraDoc" label="Total neto" placeholder="Total neto" type="text" value="{{ vHoraDoc }}"></mt-input>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
         </ion-col>
       </ion-row>
+
     </div>
   </div>
 </ion-content>
