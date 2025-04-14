@@ -285,7 +285,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onVerify() {
     this.isShowLoading = true;
     this.contadorCliente = 0;
-    this.socket.emit('comunicationFront', 'angular');
+    this.socket.emit('servidor:getComprobantes', 'angular');
   }
 
   onVerificarDataBase() {

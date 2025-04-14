@@ -240,7 +240,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
           //PROCESO SI NO ESTA REGISTRADO EL DIA
-          if (indexData == -1) { 
+          if (indexData == -1) {
 
             //HORAS TRABAJDAS CON O SIN PAPELETA
             let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
@@ -266,6 +266,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             if (huellero.tpAsociado == "**") { //PART TIME
               this.isPartTime = true;
+
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -598,7 +599,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
   }
 
-  onProcesarPartTime(length, index, row) {
+  onProcesarPartTime(length, index, row, isUpdate?) {
     this.dataVerify = [];
 
     let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
@@ -610,12 +611,18 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let estado = row.dataRegistro.length >= 3 ? 'aprobar' : 'correcto';
     let aprobado = estado == "correcto" ? true : false;
 
-    this.arPartTimeFech.push({
-      dia: row.dia, diaNom: dias[indice], hr_trabajadas: row.hr_trabajadas, indice: indice
-    });
+    if (!isUpdate) {
+      this.arPartTimeFech.push({
+        dia: row.dia, diaNom: dias[indice], hr_trabajadas: row.hr_trabajadas, indice: indice
+      });
+    } else {
+      let indexData = (this.arPartTimeFech || []).findIndex((data) => ((data || {}).dia == (row || {}).dia));
+
+      this.arPartTimeFech[indexData]['hr_trabajadas'] = row.hr_trabajadas;
+      console.log(this.arPartTimeFech);
+    }
 
     if (length - 1 == index) {
-
       const ascDates = this.arPartTimeFech.sort((a, b) => {
         return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
       });
@@ -633,10 +640,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
         let hora = parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) ? `${hr[0]}:${hr[1]}` : `${hr[0]}:00`; //LIMITIE DE HORA VALIDA
 
         if ((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice || pt.indice == 6) {
-
-
-
-
 
           count = this.obtenerHorasTrabajadas(hora, count);
 
@@ -666,15 +669,22 @@ export class MtPapeletaHorarioComponent implements OnInit {
             arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
 
             if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) >= 24) {
+
               this.arPartTimeFech[index]["fechas"] = arFechas;
               this.arPartTimeFech[index]["hrExtra"] = process;
 
               let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
-
+              console.log(this.arPartTimeFech[index]["hrTrabajadas"]);
               // LIMITE HORA PART TIME
-              if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
+
+              if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) == 24) {
+                if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
+                  this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.arPartTimeFech[index]["hrTrabajadas"], fecha: this.arPartTimeFech[index]["fechas"][0]['dia'], hrx_acumulado: this.arPartTimeFech[index]["hrExtra"], extra: this.arPartTimeFech[index]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: this.arPartTimeFech[index]["fechas"] });
+                }
+              } else {
                 this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.arPartTimeFech[index]["hrTrabajadas"], fecha: this.arPartTimeFech[index]["fechas"][0]['dia'], hrx_acumulado: this.arPartTimeFech[index]["hrExtra"], extra: this.arPartTimeFech[index]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: this.arPartTimeFech[index]["fechas"] });
               }
+
             }
           }
 
@@ -689,12 +699,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
           count = this.obtenerHorasTrabajadas(hora, count);
         }
 
+
         if (this.arPartTimeFech.length - 1 == index) { // TERMINO DEL ARRAY
 
           this.onVerificarHrExtra(this.dataVerify);
         }
 
       });
+
     }
   }
 
@@ -988,6 +1000,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
           }
 
           if (codigo == this.codeTienda) {
+
             let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
             if (indexData == -1) {
@@ -995,24 +1008,25 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
 
               if (((huellero || {})['papeleta'] || []).length) {
-                htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
+               // htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
               }
 
-              (this.onDataTemp || []).push({
-                dia: (huellero || {}).dia,
-                hr_ingreso_1: (huellero || {}).hrIn,
-                hr_salida_1: (huellero || {}).hrOut,
-                hr_brake: "",
-                hr_ingreso_2: "",
-                hr_salida_2: "",
-                hr_trabajadas: htrb,
-                hr_extra: 0,
-                hr_faltante: 0,
-                isException: (huellero || {}).isException,
-                dataRegistro: [huellero]
-              });
-
               if (huellero.tpAsociado == "**") { //PART TIME
+                console.log((huellero || {}).dia);
+                (this.onDataTemp || []).push({
+                  dia: (huellero || {}).dia,
+                  hr_ingreso_1: (huellero || {}).hrIn,
+                  hr_salida_1: (huellero || {}).hrOut,
+                  hr_brake: "",
+                  hr_ingreso_2: "",
+                  hr_salida_2: "",
+                  hr_trabajadas: htrb,
+                  hr_extra: 0,
+                  hr_faltante: 0,
+                  isException: (huellero || {}).isException,
+                  dataRegistro: [huellero]
+                });
+
                 this.isPartTime = true;
                 this.onProcesarPartTime(this.parseHuellero.length, i, {
                   dia: (huellero || {}).dia,
@@ -1118,6 +1132,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
             } else {
+
+              if (huellero.tpAsociado == "**") { //PART TIME
+
+
+                let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
+
+                if (((huellero || {})['papeleta'] || []).length) {
+               //   htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
+                }
+
+                this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
+
+                this.onProcesarPartTime(this.parseHuellero.length, i, {
+                  dia: (huellero || {}).dia,
+                  hr_ingreso_1: (huellero || {}).hrIn,
+                  hr_salida_1: (huellero || {}).hrOut,
+                  hr_brake: "",
+                  hr_ingreso_2: "",
+                  hr_salida_2: "",
+                  hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'],
+                  hr_extra: 0,
+                  hr_faltante: 0,
+                  dataRegistro: [huellero]
+                }, true);
+              }
 
               if (huellero.tpAsociado != "**") { //DEFAULT
 
