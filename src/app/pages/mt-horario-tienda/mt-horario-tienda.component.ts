@@ -1350,32 +1350,12 @@ export class MtHorarioTiendaComponent implements OnInit {
     return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
   }
 
-
   async onPdf() {
     this.isLoading = true;
-    var element: any;
-    element = $('#content-pdf').clone();
-    var opt = {
-      filename: `HORARIO.pdf`,
-      margin: [0.1, 0.1, 0.2, 0.1],
-      image: {
-        type: 'png', quality: 0.99
-      },
-      html2canvas: {
-        dpi: 192,
-        useCORS: true,
-        scale: 2
-      },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'l' }
-    };
-
-    await html2pdf().from(element[0]).set(opt).save();
-    this.isLoading = false;
+    this.service.onGenPDF('#content-pdf', 'HORARIO').then(() => {
+      this.isLoading = false;
+    });
   }
-
-
-
-
 }
 
 

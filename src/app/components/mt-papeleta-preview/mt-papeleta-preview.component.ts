@@ -81,23 +81,8 @@ export class MtPapeletaPreviewComponent implements OnInit {
   }
 
   async onPdf() {
-    var element: any;
-    element = $('#papeleta-pdf').clone();
-    var opt = {
-      filename: `PAPELETA.pdf`,
-      margin: [0.1, 0.1, 0.2, 0.1],
-      image: {
-        type: 'jpg', quality: 0.99
-      },
-      html2canvas: {
-        dpi: 192,
-        useCORS: true,
-        scale: 2
-      },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'p' }
-    };
-
-    await html2pdf().from(element[0]).set(opt).save();
+    this.service.onGenPDF('#papeleta-pdf', 'PAPELETA').then(() => {
+    });
   }
 
   async onListTipoPapeleta() {

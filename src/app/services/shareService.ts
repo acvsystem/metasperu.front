@@ -4,6 +4,8 @@ import { IRequestParams } from '../const/IRequestParams';
 import { StorageService } from '../utils/storage';
 import { HttpService } from './httpService';
 import { ToastrService } from 'ngx-toastr';
+import * as html2pdf from 'html2pdf.js';
+import * as $ from 'jquery';
 
 @Injectable({
   providedIn: 'root'
@@ -221,6 +223,29 @@ export class ShareService {
     this.toastr.error(mensaje, titulo);
   }
 
+
+  async onGenPDF(htmlID, fileName): Promise<any> {
+    //this.isLoading = true;
+    var element: any;
+    element = $(htmlID).clone();
+    var opt = {
+      filename: `${fileName}.pdf`,
+      margin: [0.1, 0.1, 0.2, 0.1],
+      image: {
+        type: 'png', quality: 0.99
+      },
+      html2canvas: {
+        dpi: 192,
+        useCORS: true,
+        scale: 2
+      },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'l' }
+    };
+
+    await html2pdf().from(element[0]).set(opt).save();
+    //this.isLoading = false;
+    return Promise.resolve(true);
+  }
 
 
 }
