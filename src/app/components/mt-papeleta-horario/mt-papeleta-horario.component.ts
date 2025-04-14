@@ -371,6 +371,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
           } else {
 
+            if (huellero.tpAsociado == "**") { //PART TIME
+
+
+              let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
+
+              if (((huellero || {})['papeleta'] || []).length) {
+             //   htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
+              }
+
+              this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
+
+              this.onProcesarPartTime(this.parseHuellero.length, i, {
+                dia: (huellero || {}).dia,
+                hr_ingreso_1: (huellero || {}).hrIn,
+                hr_salida_1: (huellero || {}).hrOut,
+                hr_brake: "",
+                hr_ingreso_2: "",
+                hr_salida_2: "",
+                hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'],
+                hr_extra: 0,
+                hr_faltante: 0,
+                dataRegistro: [huellero]
+              }, true);
+            }
+            
             if (huellero.tpAsociado != "**") { //DEFAULT
 
               this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
