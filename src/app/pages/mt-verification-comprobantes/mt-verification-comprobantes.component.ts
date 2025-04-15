@@ -122,7 +122,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
     });
 
-    this.socket.on('toClientDataTerminales', (dataTerminal) => {
+    this.socket.on('terminales:get:cantidad:response', (dataTerminal) => {//CANTIDAD DE COMPROBANTES POR TERMINAL
       this.isShowLoading = false;
       let indexData = this.bodyList.findIndex((data) => (data.codigo == (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")));
       if (indexData != -1) {
@@ -140,8 +140,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
     });
 
-
-    this.socket.on('comprobantes:get:response', (listaSession) => {
+    this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
     
       let dataList = [];
       dataList = listaSession || [];
@@ -207,13 +206,13 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
-      // this.socket.emit('emitTerminalesFront', 'angular');
-      //this.socket.emit('emitDataTerminalesFront', 'angular');
+      this.socket.emit('terminales:get:name', 'angular');
+      this.socket.emit('terminales:get:cantidad', 'angular');
       this.dataSource = new MatTableDataSource(this.bodyList);
       this.isShowLoading = false;
     });
 
-    this.socket.on('dataTransaction', (dataSocket) => {
+    this.socket.on('transacciones:get:response', (dataSocket) => { //VERIFICACION DE TRANSACCIONES
       let codigo = (dataSocket || [])[0].code;
       this.contadorCliente += 1;
       if (this.contadorCliente == this.contadorCajaOnline) {
@@ -319,7 +318,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onTransacciones() {
     this.isShowLoading = true;
     this.contadorCliente = 0;
-    this.socket.emit('emitTransaction', 'angular');
+    this.socket.emit('transacciones:get', 'angular');
   }
 
   onListClientesNull() {
