@@ -68,7 +68,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   constructor(private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
-
+    this.onVerify();
     this.service.onViewPageAdmin.subscribe((view) => {
       this.isViewPage = view;
     });
@@ -88,7 +88,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.on('sendNotificationSunat', (sunat) => {
       let dataList = [];
       dataList = sunat || [];
-      console.log(sunat);
       this.bodyListSunat = [];
       (dataList || []).filter((dataSocket: any) => {
         const fechaDocumento = new Date((dataSocket || {}).FECHA_EMISION).toLocaleDateString('en-CA');
@@ -143,11 +142,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
     this.socket.on('comprobantes:get:response', (listaSession) => {
-      console.log(listaSession);
+    
       let dataList = [];
       dataList = listaSession || [];
-      if (dataList.length > 1) {
-        this.bodyList = [];
+      let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
+
+      if (dataList.length >= 1 && index == -1) {
+       // this.bodyList = [];
+
         (dataList || []).filter((dataSocket: any) => {
 
           if ((dataSocket || {}).ISONLINE == 1) {
