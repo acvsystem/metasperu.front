@@ -343,6 +343,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         let hora = this.obtenerDiferenciaHora(this.horaInit, this.horaEnd);
         let confirmHora = (hora || "").split(":");
+
         if (parseInt(confirmHora[0]) <= 9) {
           if (this.isSearch) {
             let parms = {
@@ -353,18 +354,19 @@ export class MtHorarioTiendaComponent implements OnInit {
                 id: this.dataHorario[index]['id']
               }
             };
-
-            this.service.post(parms).then(async (response) => {
-              if ((response || {}).success) {
-                this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
-                this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-
-                this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
-              } else {
-                this.service.toastError("Algo salio mal..!!", "Rango horario");
-              }
-
-            });
+            /*
+                        this.service.post(parms).then(async (response) => {
+                          if ((response || {}).success) {
+                            this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
+                            this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+            
+                            this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
+                          } else {
+                            this.service.toastError("Algo salio mal..!!", "Rango horario");
+                          }
+            
+                        });
+                     */
           } else {
             this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
             this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
@@ -1115,43 +1117,65 @@ export class MtHorarioTiendaComponent implements OnInit {
 
       if (exist == -1) {
 
-        this.dataHorario[index]['rg_hora'][indexHorario].rg = `${this.horaInit} a ${this.horaEnd}`;
-        this.dataHorario[index]['rg_hora'][indexHorario]['isEdit'] = true;
-        this.isRangoEdit = false;
-        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+        let hora = this.obtenerDiferenciaHora(this.horaInit, this.horaEnd);
+        let confirmHora = (hora || "").split(":");
 
-        if (this.isSearch) {
-          let parms = {
-            url: '/horario/update/rangoHorario',
-            body: {
-              id: id,
-              rg: `${this.horaInit} a ${this.horaEnd}`
-            }
-          };
+        if (parseInt(confirmHora[0]) <= 9) {
 
-          this.service.post(parms).then(async (response) => {
-            if ((response || {}).success) {
-              this.service.toastSuccess('Registrado con exito..!!', 'Rango horario');
-            } else {
-              this.service.toastError('Algo salio mal..!!', 'Rango horario');
-            }
-          });
+          this.dataHorario[index]['rg_hora'][indexHorario].rg = `${this.horaInit} a ${this.horaEnd}`;
+          this.dataHorario[index]['rg_hora'][indexHorario]['isEdit'] = true;
+          this.isRangoEdit = false;
+          this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+
+
+          if (this.isSearch) {
+            let parms = {
+              url: '/horario/update/rangoHorario',
+              body: {
+                id: id,
+                rg: `${this.horaInit} a ${this.horaEnd}`
+              }
+            };
+
+            this.service.post(parms).then(async (response) => {
+              if ((response || {}).success) {
+                this.service.toastSuccess('Registrado con exito..!!', 'Rango horario');
+              } else {
+                this.service.toastError('Algo salio mal..!!', 'Rango horario');
+              }
+            });
+          }
+        } else {
+          this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
+
         }
+
 
       } else {
 
-        if (this.dataHorario[index]['rg_hora'][indexHorario].rg == `${this.horaInit} a ${this.horaEnd}`) {
-          this.isRangoEdit = false;
-          //this.dataHorario[index]['rg_hora'][indexHorario]['isEdit'] = false;
-          this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+        let hora = this.obtenerDiferenciaHora(this.horaInit, this.horaEnd);
+        let confirmHora = (hora || "").split(":");
+
+        if (parseInt(confirmHora[0]) <= 9) {
+
+          if (this.dataHorario[index]['rg_hora'][indexHorario].rg == `${this.horaInit} a ${this.horaEnd}`) {
+            this.isRangoEdit = false;
+            //this.dataHorario[index]['rg_hora'][indexHorario]['isEdit'] = false;
+            this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+          } else {
+            this.service.toastError('Rango de hora ya existe..!!', "Rango horario");
+          }
         } else {
-          this.service.toastError('Rango de hora ya existe..!!', "Rango horario");
+          this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
+
         }
+
+        this.isStartEditRg = false;
+        this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
       }
 
-      this.isStartEditRg = false;
-      this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+
       //this.socket.emit('actualizarHorario', this.dataHorario);
       //this.onSearchCalendario();
     }

@@ -35,7 +35,14 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isVerificarBd: boolean = false;
   statusServerList: any = [];
   countClientes: any = 0;
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3200', {
+    query: { code: 'app' },
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    reconnectionAttempts: 99999
+  });
+
   isShowLoading: boolean = false;
   isErrorVerificacion: boolean = false;
   contadorCliente: any = 0;
@@ -61,6 +68,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   constructor(private service: ShareService, private store: StorageService) { }
 
   ngOnInit() {
+
     this.service.onViewPageAdmin.subscribe((view) => {
       this.isViewPage = view;
     });
@@ -134,8 +142,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
 
-    this.socket.on('sessionConnect', (listaSession) => {
-
+    this.socket.on('comprobantes:get:response', (listaSession) => {
+      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       if (dataList.length > 1) {
@@ -173,7 +181,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
           if ((dataSocket || {}).ISONLINE == 1) {
             let index = this.conxOnline.findIndex((conx) => conx == (dataSocket || {}).CODIGO_TERMINAL);
-            console.log(index);
+
             if (index == -1) {
               this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
             }
@@ -197,9 +205,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
-      this.socket.emit('emitTerminalesFront', 'angular');
-      this.socket.emit('emitDataTerminalesFront', 'angular');
+      // this.socket.emit('emitTerminalesFront', 'angular');
+      //this.socket.emit('emitDataTerminalesFront', 'angular');
       this.dataSource = new MatTableDataSource(this.bodyList);
+      this.isShowLoading = false;
     });
 
     this.socket.on('dataTransaction', (dataSocket) => {
@@ -285,7 +294,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onVerify() {
     this.isShowLoading = true;
     this.contadorCliente = 0;
-    this.socket.emit('comunicationFront', 'angular');
+    this.socket.emit('comprobantes:get', 'angular');
   }
 
   onVerificarDataBase() {
