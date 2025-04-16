@@ -285,6 +285,16 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
     });
 
+    this.socket.on('comparacion:get:bd:response', (response) => { // RECIBE COMPARACION ENTRE BASES DE DATOS COE_DATA
+      this.isShowLoading = false;
+      this.isVerificarBd = false;
+      this.bodyListBD = (response || []).data;
+      if (!this.bodyListBD.length) {
+        this.service.toastSuccess("Servidor", "No hay diferencias entre las bases de datos.");
+      }
+
+    });
+
     this.columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   }
 
@@ -301,21 +311,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.emit('transacciones:get', 'angular');
   }
 
-  onVerificarDataBase() {
-    this.isVerificarBd = true;
-    let parms = {
-      url: '/comparacion/bdTienda',
-      body: []
-    };
-    this.service.post(parms).then((response) => {
-      this.isVerificarBd = false;
-      this.bodyListBD = (response || []).data;
-      if (!this.bodyListBD.length) {
-        this.service.toastSuccess("Servidor", "No hay diferencias entre las bases de datos.");
-      }
-    }).catch((err) => {
-      this.service.toastError("Algo salio mal..!!", "Refresque la pagina y vuelva a inentar.");
-    });
+
+  onVerificarDataBase() { // ENVIO COMPARACION ENTRE BASES DE DATOS COE_DATA
+    this.isShowLoading = true;
+    this.socket.emit('comparacion:get:bd', 'angular');
   }
 
   onListClientesNull() {
