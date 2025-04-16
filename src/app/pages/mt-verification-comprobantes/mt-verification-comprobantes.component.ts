@@ -85,37 +85,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.columnsToDisplay = ['codigo', 'Tienda', 'isVerification', 'cant_comprobantes', 'transacciones', 'clientes_null', 'online', 'conexICG'];
     this.onTransacciones();
     this.onListClient();
-    this.socket.on('sendNotificationSunat', (sunat) => {
-      let dataList = [];
-      dataList = sunat || [];
-      this.bodyListSunat = [];
-      (dataList || []).filter((dataSocket: any) => {
-        const fechaDocumento = new Date((dataSocket || {}).FECHA_EMISION).toLocaleDateString('en-CA');
-        const fecha = new Date().toLocaleDateString('en-CA');
-        var fechaInicio = new Date(fechaDocumento).getTime();
-        var fechaFin = new Date(fecha).getTime();
 
-        var diff: any = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) || 0;
-
-        if (parseInt(diff) < 3) {
-          (this.bodyListSunat || []).push({
-            cod_documento: (dataSocket || {}).CODIGO_DOCUMENTO,
-            nro_correlativo: (dataSocket || {}).NRO_CORRELATIVO,
-            nom_aquiriente: (dataSocket || {}).NOM_ADQUIRIENTE,
-            nro_documento: (dataSocket || {}).NRO_DOCUMENTO,
-            tipo_doc_adquiriente: (dataSocket || {}).TIPO_DOCUMENTO_ADQUIRIENTE,
-            observacion: (dataSocket || {}).OBSERVACION,
-            estado_sunat: (dataSocket || {}).ESTADO_SUNAT,
-            estado_comprobante: (dataSocket || {}).ESTADO_COMPROBANTE,
-            codigo_sunat: (dataSocket || {}).CODIGO_ERROR_SUNAT,
-            fecha_emision: (dataSocket || {}).FECHA_EMISION
-          });
-        }
-
-      });
-    });
-
-    this.socket.on('toClientTerminales', (terminales) => {
+    this.socket.on('terminales:get:name:response', (terminales) => {//RECIBE NOMBRE DE LOS TERMINALES FRONT RETAIL
       let indexData = this.bodyList.findIndex((data) => (data.codigo == (terminales || [])[0].CODIGO_TIENDA));
       if (indexData != -1) {
         (this.bodyList || [])[indexData].terminales = terminales;
@@ -136,7 +107,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
             'CODIGO': (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")
           });
         })
-
       }
     });
 
@@ -147,7 +117,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
 
       if (dataList.length >= 1 && index == -1) {
-         //this.bodyList = [];
+        //this.bodyList = [];
 
         (dataList || []).filter((dataSocket: any) => {
           if ((dataSocket || {}).ISONLINE == 1) {
@@ -188,7 +158,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
           }
 
           if ((dataSocket || {}).ISONLINE == 0) {
-           // this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
+            // this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
           }
 
           let codigo = (dataSocket || {}).CODIGO_TERMINAL;
@@ -239,6 +209,36 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
     });
 
+    this.socket.on('sendNotificationSunat', (sunat) => {
+      let dataList = [];
+      dataList = sunat || [];
+      this.bodyListSunat = [];
+      (dataList || []).filter((dataSocket: any) => {
+        const fechaDocumento = new Date((dataSocket || {}).FECHA_EMISION).toLocaleDateString('en-CA');
+        const fecha = new Date().toLocaleDateString('en-CA');
+        var fechaInicio = new Date(fechaDocumento).getTime();
+        var fechaFin = new Date(fecha).getTime();
+
+        var diff: any = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) || 0;
+
+        if (parseInt(diff) < 3) {
+          (this.bodyListSunat || []).push({
+            cod_documento: (dataSocket || {}).CODIGO_DOCUMENTO,
+            nro_correlativo: (dataSocket || {}).NRO_CORRELATIVO,
+            nom_aquiriente: (dataSocket || {}).NOM_ADQUIRIENTE,
+            nro_documento: (dataSocket || {}).NRO_DOCUMENTO,
+            tipo_doc_adquiriente: (dataSocket || {}).TIPO_DOCUMENTO_ADQUIRIENTE,
+            observacion: (dataSocket || {}).OBSERVACION,
+            estado_sunat: (dataSocket || {}).ESTADO_SUNAT,
+            estado_comprobante: (dataSocket || {}).ESTADO_COMPROBANTE,
+            codigo_sunat: (dataSocket || {}).CODIGO_ERROR_SUNAT,
+            fecha_emision: (dataSocket || {}).FECHA_EMISION
+          });
+        }
+
+      });
+    });
+
     this.socket.on('conexion:serverICG:send', (conexion) => {
       let codigo = ((conexion || [])[0] || {}).code || '';
       let isConect = ((conexion || [])[0] || {}).isConect || 0;
@@ -254,7 +254,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
       let isConect = (status || {}).online || 'false';
       this.isConnectServer = isConect;
     });
-
 
     this.socket.on('sendDataClient', (dataSocket) => {
       console.log(dataSocket);
@@ -286,16 +285,20 @@ export class MtVerificationComprobantesComponent implements OnInit {
       }
     });
 
-
     this.columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
-
   }
 
 
-  onVerify() {
+  onVerify() { // ENVIO DE CONSULTA DE COMPROBANTES
     this.isShowLoading = true;
     this.contadorCliente = 0;
     this.socket.emit('comprobantes:get', 'angular');
+  }
+
+  onTransacciones() {// ENVIO DE CONSULTA DE TRANSACCIONES DE LOS FRONT RETAIL
+    this.isShowLoading = true;
+    this.contadorCliente = 0;
+    this.socket.emit('transacciones:get', 'angular');
   }
 
   onVerificarDataBase() {
@@ -313,12 +316,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     }).catch((err) => {
       this.service.toastError("Algo salio mal..!!", "Refresque la pagina y vuelva a inentar.");
     });
-  }
-
-  onTransacciones() {
-    this.isShowLoading = true;
-    this.contadorCliente = 0;
-    this.socket.emit('transacciones:get', 'angular');
   }
 
   onListClientesNull() {
@@ -340,11 +337,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.service.get(parms).then((response) => {
       this.vListaClientes = response.toString();
     });
-  }
-
-  onSessionList() {
-    // let lista = this.socket.listeners('sessionList');
-    //console.log(lista);
   }
 
   toolCaja(data) {
@@ -380,12 +372,12 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.emit('cleanColaFront');
     this.onTransacciones();
   }
+
   onTranferirCola() {
     if (Object.keys(this.vDataTransferencia[0]['dataOne']).length && Object.keys(this.vDataTransferencia[0]['dataTwo']).length) {
-      console.log(this.vDataTransferencia);
-      this.socket.emit('emitTranferenciaCajas', this.vDataTransferencia);
+      this.socket.emit('transacciones:post', this.vDataTransferencia);
       setTimeout(() => {
-        this.socket.emit('comunicationFront', 'angular');
+        this.onVerify();
       }, 1000);
     } else {
       this.openSnackBar('Seleccione el Origen y Destino.');
