@@ -141,16 +141,15 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
-    
+
       let dataList = [];
       dataList = listaSession || [];
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
 
       if (dataList.length >= 1 && index == -1) {
-       // this.bodyList = [];
+         //this.bodyList = [];
 
         (dataList || []).filter((dataSocket: any) => {
-
           if ((dataSocket || {}).ISONLINE == 1) {
             this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
           }
@@ -189,7 +188,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
           }
 
           if ((dataSocket || {}).ISONLINE == 0) {
-            this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
+           // this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
           }
 
           let codigo = (dataSocket || {}).CODIGO_TERMINAL;
@@ -204,6 +203,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
           }
         });
       }
+
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
       this.socket.emit('terminales:get:name', 'angular');
