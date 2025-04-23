@@ -33,6 +33,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   vNumeroDoc: String = "";
   vFechaDoc: String = "";
   vHoraDoc: String = "";
+  dataAlbaran: Array<any> = [];
   socket = io('http://38.187.8.22:3200', {
     query: { code: 'app' },
     reconnection: true,
@@ -41,7 +42,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     reconnectionAttempts: 99999
   });
 
-  shoes: Shoes[] = [ ];
+  shoes: Shoes[] = [];
 
   shoesControl = new FormControl();
 
@@ -63,10 +64,17 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.socket.on('kardex:get:comprobantes:response', (listaSession) => {
       let data = JSON.parse((listaSession || {}).data || []);
       (data || []).filter((cbz) => {
-        this.shoes.push({ value: cbz.cmpNumero, name: `${cbz.cmpSerie} | ${cbz.cmpNumero} | ${cbz.cmpSuAlbaran}` });
+        let indexEx = (this.dataAlbaran || []).findIndex((alb) => alb.cmpNumero == cbz.cmpNumero);
+        if (indexEx == -1) {
+          this.dataAlbaran.push(cbz);
+        } else {
+          this.dataAlbaran[indexEx]['value'] = cbz.cmpNumero;
+          this.dataAlbaran[indexEx]['name'] = `${cbz.cmpSerie} | ${cbz.cmpNumero} | ${cbz.cmpSuAlbaran}`;
+          (((this.dataAlbaran || [])[indexEx] || {})['detalle'] || []).push(cbz);
+        }
       });
 
-      console.log(data);
+      console.log(this.dataAlbaran);
     });
 
   }

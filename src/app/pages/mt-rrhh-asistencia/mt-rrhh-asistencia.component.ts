@@ -198,6 +198,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       }
 
       if (configuracion.id == "servGeneral") {
+        console.log("servGeneral", true);
         this.isDataServer = true;
 
         let dataServGeneral = [];
@@ -596,7 +597,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               isFeriados: this.isViewFeriados,
               isDetallado: this.isDetallado,
               centroCosto: '',
-              dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vCalendar : this.isDetallado ? this.vDetallado : []
+              dateList: (this.isViewDefault) ? this.vCalendarDefault : this.isViewFeriados ? this.vMultiSelect : this.isDetallado ? this.vDetallado : []
             };
 
 
