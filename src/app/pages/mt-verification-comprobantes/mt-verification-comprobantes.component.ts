@@ -31,6 +31,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
   bodyListBD: Array<any> = [];
   actionButton: boolean = true;
   isConnectServer: string = 'false';
+  vCoeData: string = '';
+  vManagerData: string = '';
   isVisibleStatus: boolean = false;
   isVerificarBd: boolean = false;
   statusServerList: any = [];
@@ -69,6 +71,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   ngOnInit() {
     this.onVerify();
+    this.onListTienda();
     this.service.onViewPageAdmin.subscribe((view) => {
       this.isViewPage = view;
     });
@@ -118,35 +121,38 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
       if (dataList.length >= 1 && index == -1) {
         //this.bodyList = [];
-
-        (dataList || []).filter((dataSocket: any) => {
-          if ((dataSocket || {}).ISONLINE == 1) {
-            this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
-          }
-
-
-          (this.bodyList || []).push({
-            codigo: (dataSocket || {}).CODIGO_TERMINAL,
-            Tienda: (dataSocket || {}).DESCRIPCION,
-            isVerification: (dataSocket || {}).VERIFICACION,
-            cant_comprobantes: (dataSocket || {}).CANT_COMPROBANTES,
-            transacciones: 0,
-            clientes_null: 0,
-            online: (dataSocket || {}).ISONLINE,
-            conexICG: 0,
-            terminales: [],
-            dataTerminales: []
-          });
-        });
-
-        (this.bodyList || []).filter((data: any) => {
-
-          if (data.online) {
-            this.contadorCajaOnline += 1;
-          }
-
-        });
+        /*
+                (dataList || []).filter((dataSocket: any) => {
+                  if ((dataSocket || {}).ISONLINE == 1) {
+                    this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+                  }
+        
+        
+                  (this.bodyList || []).push({
+                    codigo: (dataSocket || {}).CODIGO_TERMINAL,
+                    Tienda: (dataSocket || {}).DESCRIPCION,
+                    isVerification: (dataSocket || {}).VERIFICACION,
+                    cant_comprobantes: (dataSocket || {}).CANT_COMPROBANTES,
+                    transacciones: 0,
+                    clientes_null: 0,
+                    online: (dataSocket || {}).ISONLINE,
+                    conexICG: 0,
+                    terminales: [],
+                    dataTerminales: []
+                  });
+                });
+        
+                (this.bodyList || []).filter((data: any) => {
+        
+                  if (data.online) {
+                    this.contadorCajaOnline += 1;
+                  }
+        
+                });
+        */
       } else {
+
+        console.log(listaSession);
         (dataList || []).filter((dataSocket: any) => {
 
           if ((dataSocket || {}).ISONLINE == 1) {
@@ -289,7 +295,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.isShowLoading = false;
       this.isVerificarBd = false;
       this.bodyListBD = (response || []).data;
-      if (!this.bodyListBD.length) {
+      if (!this.bodyListBD.length || ((this.bodyListBD || [])[0] || {})['code_data'] == ((this.bodyListBD || [])[0] || {})['manager_data']) {
+        this.vCoeData = ((this.bodyListBD || [])[0] || {})['code_data'];
+        this.vManagerData = ((this.bodyListBD || [])[0] || {})['manager_data'];
         this.service.toastSuccess("Servidor", "No hay diferencias entre las bases de datos.");
       }
 
@@ -335,6 +343,38 @@ export class MtVerificationComprobantesComponent implements OnInit {
     };
     this.service.get(parms).then((response) => {
       this.vListaClientes = response.toString();
+    });
+  }
+
+  onListTienda() { //LISTA DE TIENDAS REGISTRADAS
+    const self = this;
+    let parms = {
+      url: '/security/lista/registro/tiendas'
+    };
+
+    this.service.get(parms).then((response) => {
+      let tiendaList = (response || {}).data || [];
+
+      (tiendaList || []).filter((tnd) => {
+
+        if ((tnd || {}).SERIE_TIENDA != '9Q') {
+          this.conxOnline.push((tnd || {}).SERIE_TIENDA);
+
+          (this.bodyList || []).push({
+            codigo: (tnd || {}).SERIE_TIENDA,
+            Tienda: (tnd || {}).DESCRIPCION,
+            isVerification: false,
+            cant_comprobantes: 0,
+            transacciones: 0,
+            clientes_null: 0,
+            online: false,
+            conexICG: 0,
+            terminales: [],
+            dataTerminales: []
+          });
+        }
+
+      });
     });
   }
 
