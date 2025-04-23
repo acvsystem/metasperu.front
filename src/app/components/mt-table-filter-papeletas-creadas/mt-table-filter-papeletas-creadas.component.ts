@@ -21,10 +21,12 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   filterTiendaUnid: string = "";
   filterTipoPapv: string = "";
   filterNombreCompletov: string = "";
+  codigoPap: string = "";
   isFilterCP: boolean = false;
   isFilterNM: boolean = false;
   isFilterT: boolean = false;
   isFilterTP: boolean = false;
+  isViewPapeleta: boolean = false;
   filteredValues: any = {
     cargo_empleado: "",
     codigo_papeleta: "",
@@ -108,6 +110,12 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
     this.dataSourcePap.filter = JSON.stringify(this.filteredValues);
     this.dataSourcePap.filterPredicate = this.customFilterPredicate();
   }
+
+  onViewPapeleta(ev) {
+    this.isViewPapeleta = true;
+    this.codigoPap = ev.codigo_papeleta;
+  }
+
 
   applyFilterNombreCompleto(event: Event) {
 

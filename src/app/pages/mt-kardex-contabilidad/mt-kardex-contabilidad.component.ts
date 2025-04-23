@@ -5,6 +5,7 @@ import { ShareService } from 'src/app/services/shareService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { io } from "socket.io-client";
 
 interface Shoes {
   value: string;
@@ -23,8 +24,8 @@ export class MtKardexContabilidadComponent implements OnInit {
   tiendasList: Array<any> = [];
   dataView: Array<any> = [];
   dataViewVenc: Array<any> = [];
-  displayedColumns: string[] = ['referencia', 'talla', 'color', 'descripcion','unid','precio','descuento','total','almacen'];
-  displayedColumnsVenc: string[] = ['forma_pago','importe','medio_pago','estado','fecha_cobro'];
+  displayedColumns: string[] = ['referencia', 'talla', 'color', 'descripcion', 'unid', 'precio', 'descuento', 'total', 'almacen'];
+  displayedColumnsVenc: string[] = ['forma_pago', 'importe', 'medio_pago', 'estado', 'fecha_cobro'];
   dataSource = new MatTableDataSource<any>(this.dataView);
   dataSourceVenc = new MatTableDataSource<any>(this.dataViewVenc);
   cboTiendaConsulting: String = "";
@@ -32,14 +33,16 @@ export class MtKardexContabilidadComponent implements OnInit {
   vNumeroDoc: String = "";
   vFechaDoc: String = "";
   vHoraDoc: String = "";
+  socket = io('http://38.187.8.22:3200', {
+    query: { code: 'app' },
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    reconnectionAttempts: 99999
+  });
 
-  shoes: Shoes[] = [
-    { value: 'boots', name: 'Boots' },
-    { value: 'clogs', name: 'Clogs' },
-    { value: 'loafers', name: 'Loafers' },
-    { value: 'moccasins', name: 'Moccasins' },
-    { value: 'sneakers', name: 'Sneakers' },
-  ];
+  shoes: Shoes[] = [ ];
+
   shoesControl = new FormControl();
 
   constructor(private service: ShareService) {
@@ -51,6 +54,21 @@ export class MtKardexContabilidadComponent implements OnInit {
   ngOnInit() {
     console.log(this.shoesControl);
     this.onListTienda();
+    this.socket.emit('kardex:get:comprobantes', {
+      init: '2025-04-01',
+      end: '2025-04-23',
+      code: '9F'
+    });
+
+    this.socket.on('kardex:get:comprobantes:response', (listaSession) => {
+      let data = JSON.parse((listaSession || {}).data || []);
+      (data || []).filter((cbz) => {
+        this.shoes.push({ value: cbz.cmpNumero, name: `${cbz.cmpSerie} | ${cbz.cmpNumero} | ${cbz.cmpSuAlbaran}` });
+      });
+
+      console.log(data);
+    });
+
   }
 
   onCaledar($event) {
