@@ -354,19 +354,19 @@ export class MtHorarioTiendaComponent implements OnInit {
                 id: this.dataHorario[index]['id']
               }
             };
-            /*
-                        this.service.post(parms).then(async (response) => {
-                          if ((response || {}).success) {
-                            this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
-                            this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-            
-                            this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
-                          } else {
-                            this.service.toastError("Algo salio mal..!!", "Rango horario");
-                          }
-            
-                        });
-                     */
+
+            this.service.post(parms).then(async (response) => {
+              if ((response || {}).success) {
+                this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
+                this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+
+                this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
+              } else {
+                this.service.toastError("Algo salio mal..!!", "Rango horario");
+              }
+
+            });
+
           } else {
             this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
             this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
