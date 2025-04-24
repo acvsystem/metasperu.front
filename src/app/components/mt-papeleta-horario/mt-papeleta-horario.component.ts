@@ -217,8 +217,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
 
       let data = (response || {}).data || [];
-
+     
       this.parseHuellero = data;
+      console.log(this.parseHuellero);
       this.onDataTemp = [];
       this.bodyList = [];
       this.dataVerify = [];
@@ -1009,6 +1010,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         let data = (response || {}).data || [];
 
         this.parseHuellero = data;
+        
         this.onDataTemp = [];
         this.bodyList = [];
         this.dataVerify = [];
@@ -1080,7 +1082,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
 
                   let defaultHT = "00:00";
-
+                  
                   if (tipoAsc.length == 2) { //LACTANCIA
 
                     let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
@@ -1932,7 +1934,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               isErrorHSolicitada = false;
               arVerify.push(true);
             }
-
+            console.log(this.dataViewPermiso);
             (this.dataViewPermiso || []).filter((tienda) => {
               //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
               if (this.codeTienda == (tienda || {}).SERIE_TIENDA) {

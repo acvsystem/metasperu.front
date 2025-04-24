@@ -226,7 +226,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       if (this.isDataEJB && this.isDataServer) {
         this.onDataTemp = [];
         await (this.parseHuellero || []).filter(async (huellero) => {
-
+        
           if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
 
             var codigo = (huellero || {}).caja.substr(0, 2);

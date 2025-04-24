@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { ShareService } from 'src/app/services/shareService';
@@ -6,6 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { io } from "socket.io-client";
+import * as _moment from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
+
+const moment = _rollupMoment || _moment;
 
 interface Shoes {
   value: string;
@@ -29,10 +33,18 @@ export class MtKardexContabilidadComponent implements OnInit {
   dataSource = new MatTableDataSource<any>(this.dataView);
   dataSourceVenc = new MatTableDataSource<any>(this.dataViewVenc);
   cboTiendaConsulting: String = "";
-  vSerieDoc: String = "9N1A";
+  vSerieDoc: String = "";
   vNumeroDoc: String = "";
   vFechaDoc: String = "";
   vHoraDoc: String = "";
+  vAlbaran: String = "";
+  vBruto: number = 0;
+  vDescuentos: number = 0;
+  vImponible: number = 0;
+  vImpuestos: number = 0;
+  vTBruto: number = 0;
+  codeTienda: String = "";
+  isLoading: boolean = false;
   dataAlbaran: Array<any> = [];
   socket = io('http://38.187.8.22:3200', {
     query: { code: 'app' },
@@ -46,6 +58,9 @@ export class MtKardexContabilidadComponent implements OnInit {
 
   shoesControl = new FormControl();
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   constructor(private service: ShareService) {
     this.form = new FormGroup({
       clothes: this.shoesControl,
@@ -55,17 +70,14 @@ export class MtKardexContabilidadComponent implements OnInit {
   ngOnInit() {
     console.log(this.shoesControl);
     this.onListTienda();
-    this.socket.emit('kardex:get:comprobantes', {
-      init: '2025-04-01',
-      end: '2025-04-23',
-      code: '9F'
-    });
-
     this.socket.on('kardex:get:comprobantes:response', (listaSession) => {
       let data = JSON.parse((listaSession || {}).data || []);
       (data || []).filter((cbz) => {
-        let indexEx = (this.dataAlbaran || []).findIndex((alb) => alb.cmpNumero == cbz.cmpNumero);
+
+        let indexEx = (this.dataAlbaran || []).findIndex((alb) => alb.cmpNumero == cbz.cmpNumero && alb.cmpSerie == cbz.cmpSerie);
+
         if (indexEx == -1) {
+          (cbz['detalle'] || []).push(cbz);
           this.dataAlbaran.push(cbz);
         } else {
           this.dataAlbaran[indexEx]['value'] = cbz.cmpNumero;
@@ -73,7 +85,7 @@ export class MtKardexContabilidadComponent implements OnInit {
           (((this.dataAlbaran || [])[indexEx] || {})['detalle'] || []).push(cbz);
         }
       });
-
+      this.isLoading = false;
       console.log(this.dataAlbaran);
     });
 
@@ -88,6 +100,39 @@ export class MtKardexContabilidadComponent implements OnInit {
         this.vDetallado = range;
       }
     }
+  }
+
+  onSelectAlbaran(ev) {
+    console.log(ev);
+    const self = this;
+    self.vSerieDoc = (ev || {}).cmpSerie;
+    self.vNumeroDoc = (ev || {}).cmpNumero;
+
+    let startDayLetter = moment((ev || {}).cmpFechaAlbaran).format('YYYY-MM-DD');
+    self.vFechaDoc = startDayLetter;
+    self.vHoraDoc = moment((ev || {}).cmpFechaAlbaran).format('hh:mm:ss');
+    self.vAlbaran = (ev || {}).cmpSuAlbaran;
+    self.vBruto = (ev || {}).dtBruto;
+    self.vDescuentos = (ev || {}).dtTDescuento;
+    self.vImponible = (ev || {}).dtBaseImponible;
+    self.vImpuestos = (ev || {}).dtImpuesto;
+    self.vTBruto = (ev || {}).dtTotalBruto;
+
+    this.dataSource = new MatTableDataSource(ev.detalle);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  onSearch() {
+    this.isLoading = true;
+    let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
+    this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
+
+    this.socket.emit('kardex:get:comprobantes', {
+      init: date[0].replace('/', '-'),
+      end: date[1].replace('/', '-'),
+      code: this.codeTienda
+    });
   }
 
   onListTienda() {
@@ -114,6 +159,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   async onChangeSelect(data: any) {
     const self = this;
     let selectData = data || {};
+    this.codeTienda = (selectData || {}).key;
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).value || "";
   }
