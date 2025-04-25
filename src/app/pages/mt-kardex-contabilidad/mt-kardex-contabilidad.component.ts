@@ -27,9 +27,41 @@ export class MtKardexContabilidadComponent implements OnInit {
   cboListTienda: Array<any> = [];
   tiendasList: Array<any> = [];
   dataView: Array<any> = [];
+  optionDefault: Array<any> = [];
+  optionDefaultTD: Array<any> = [];
   dataViewVenc: Array<any> = [];
   displayedColumns: string[] = ['referencia', 'talla', 'color', 'descripcion', 'unid', 'precio', 'descuento', 'total', 'almacen'];
   displayedColumnsVenc: string[] = ['forma_pago', 'importe', 'medio_pago', 'estado', 'fecha_cobro'];
+  cboMotivo: string = "";
+  cboTipoDoc: string = "";
+  cboMotivoList: Array<any> = [
+    { key: '02-COMPRA', value: '02-COMPRA' },
+    { key: '06-DEVOLUCIÓN', value: '06-DEVOLUCIÓN' },
+    { key: '09-DONACIÓN', value: '09-DONACIÓN' },
+    { key: '11-SALIDA TRASP', value: '11-SALIDA TRASP' },
+    { key: '12-RETIRO', value: '12-RETIRO' },
+    { key: '13-MERMAS', value: '13-MERMAS' },
+    { key: '15-DESTRUCCIÓN', value: '15-DESTRUCCIÓN' },
+    { key: '18-IMPORTACIÓN', value: '18-IMPORTACIÓN' },
+    { key: '21-ENTRADA TRASP', value: '21-ENTRADA TRASP' },
+    { key: '99-OTROS', value: '99-OTROS' }
+  ];
+  cboTipoDocList: Array<any> = [
+    { key: '11 Registro civil', value: '11 Registro civil' },
+    { key: '12 Tarjeta de identidad', value: '12 Tarjeta de identidad' },
+    { key: '13 Cédula de ciudadanía', value: '13 Cédula de ciudadanía' },
+    { key: '21 Tarjeta de extranjería', value: '21 Tarjeta de extranjería' },
+    { key: '22 Cédula de extrajería', value: '22 Cédula de extrajería' },
+    { key: '31 NIT', value: '31 NIT' },
+    { key: '41 Pasaporte', value: '41 Pasaporte' },
+    { key: '42 Documento de identificación extranjero', value: '42 Documento de identificación extranjero' },
+    { key: '00-OTROS', value: '00-OTROS' },
+    { key: '01-FACTURA', value: '01-FACTURA' },
+    { key: '07-NOTA DE CREDITO', value: '07-NOTA DE CREDITO' },
+    { key: '09-GUIA DE REMISION-REMITENTE', value: '09-GUIA DE REMISION-REMITENTE' },
+    { key: '31-GUIA DE RENISION-TRANSPORTISTA', value: '31-GUIA DE RENISION-TRANSPORTISTA' },
+    { key: '50-DECLARACIÓN UNICA DE ADUANA DUA/DAM', value: '50-DECLARACIÓN UNICA DE ADUANA DUA/DAM' }
+  ];
   dataSource = new MatTableDataSource<any>(this.dataView);
   dataSourceVenc = new MatTableDataSource<any>(this.dataViewVenc);
   cboTiendaConsulting: String = "";
@@ -38,6 +70,14 @@ export class MtKardexContabilidadComponent implements OnInit {
   vFechaDoc: String = "";
   vHoraDoc: String = "";
   vAlbaran: String = "";
+  vDespacho: String = "";
+  vContenedor: String = "";
+  vTasaCambio: String = "";
+  vTotalGastos: String = "";
+  vFleteAcarreo: String = "";
+  vRegistroSanitario: String = "";
+  vNumeroSerie: String = "";
+  vObservacion: String = "";
   vBruto: number = 0;
   vDescuentos: number = 0;
   vImponible: number = 0;
@@ -118,6 +158,17 @@ export class MtKardexContabilidadComponent implements OnInit {
     self.vImpuestos = (ev || {}).dtImpuesto;
     self.vTBruto = (ev || {}).dtTotalBruto;
 
+    self.vDespacho = (ev || {}).clDespacho;
+    self.vContenedor = (ev || {}).clContenedor;
+    self.vTasaCambio = (ev || {}).clTasaCambio;
+    self.vTotalGastos = (ev || {}).clTotalGasto;
+    self.vFleteAcarreo = (ev || {}).clFleteAcarreo;
+    self.vRegistroSanitario = (ev || {}).clRegistroSanitario;
+    self.vNumeroSerie = (ev || {}).clNSerieDocuento;
+    self.vObservacion = (ev || {}).clObservacion;
+
+    this.optionDefault = [{ key: (ev || {}).clMotivo, value: (ev || {}).clMotivo }];
+    this.optionDefaultTD  = [{ key: (ev || {}).clTipoDocumento, value: (ev || {}).clTipoDocumento }];
     this.dataSource = new MatTableDataSource(ev.detalle);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -127,7 +178,11 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.isLoading = true;
     let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
     this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
-
+    console.log({
+      init: date[0].replace('/', '-'),
+      end: date[1].replace('/', '-'),
+      code: this.codeTienda
+    });
     this.socket.emit('kardex:get:comprobantes', {
       init: date[0].replace('/', '-'),
       end: date[1].replace('/', '-'),
@@ -162,6 +217,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.codeTienda = (selectData || {}).key;
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).value || "";
+    
   }
 
 }

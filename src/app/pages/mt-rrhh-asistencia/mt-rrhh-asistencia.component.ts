@@ -290,7 +290,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                   dataRegistro: [huellero],
                   papeletas: (huellero || {}).papeletas || [],
                   isPapeleta: (huellero || {}).isPapeleta,
-                  estadoPapeleta: (huellero || {}).isPapeleta ? 'papeleta' : 'sin papeleta'
+                  estadoPapeleta: (huellero || {}).isPapeleta ? 'con papeleta' : 'sin papeleta'
                 });
 
               } else {

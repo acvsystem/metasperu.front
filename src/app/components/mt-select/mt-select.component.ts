@@ -48,7 +48,7 @@ export class MtSelectComponent implements OnInit {
 
     if (changes && changes.hasOwnProperty('optionDefault')) {
       if (Object.keys(this.optionDefault).length) {
-        this.onSelectedOption(this.optionDefault);
+        this.onSelectedOption(this.optionDefault[0]);
       }
     }
 
