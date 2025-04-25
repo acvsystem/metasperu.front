@@ -397,11 +397,19 @@
             <table [ngClass]="[isOpenModal && !isPapeleta ? 'table table-bordered table-sm table-hover': 'table table-bordered table-sm table-hover']" [ngStyle]="{'max-width.px':screenWith}" style="background-color: white;margin: 0;border-color: black;">
               <thead>
                 <tr>
-                  <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
-                    <div style="display: flex;justify-content: center;align-items: center;height: 50px;min-width: 131.59px;">
-                      {{data.cargo}}
-                    </div>
-                  </th>
+                  @if(data.cargo == "Vacaciones"){
+                    <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #fd7556;">
+                      <div style="display: flex;justify-content: center;align-items: center;height: 50px;min-width: 131.59px;">
+                        {{data.cargo}}
+                      </div>
+                    </th>
+                  }@else{
+                    <th scope="col" rowspan="2" style="width: 150px !important;text-align: center; background-color: #88c9ff;">
+                      <div style="display: flex;justify-content: center;align-items: center;height: 50px;min-width: 131.59px;">
+                        {{data.cargo}}
+                      </div>
+                    </th>
+                  }
                   <th scope="col" *ngFor="let dia of data.dias" style="text-align: center;background-color: #bbd6df;width: calc(100% - 233px) !important;">
                     {{dia.fecha}}
                   </th>
@@ -419,42 +427,57 @@
               </thead>
               <tbody>
                 <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
+                  @if(data.cargo != "Vacaciones"){
                   <th scope="row" style="background-color: #97b3fd;">
                     {{rango.rg}}
                   </th>
-        
+                  }
                   @for (dia of data.dias; track dia.id) {
                   <th scope="row">
                     @for (trb of data.dias_trabajo; track trb) {
-                      <div  style="font-size: 13px;
-                      border: 1px solid #288b26;
-                      background: #a5f1a4;
-                      border-radius: 5px;
-                      margin-bottom: 5px;
-                      text-overflow: ellipsis;
-                      overflow: hidden;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}}</div>
-                     <!-- <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>-->
+                      @if(data.cargo == "Vacaciones"){
+                        <div  style="font-size: 13px;
+                        border: 1px solid #fc6240;
+                        background: #f38c75;
+                        border-radius: 5px;
+                        margin-bottom: 5px;
+                        text-overflow: ellipsis;
+                        overflow: hidden;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}}</div>
+                       <!-- <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>-->
+                      }@else{
+                        <div  style="font-size: 13px;
+                        border: 1px solid #288b26;
+                        background: #a5f1a4;
+                        border-radius: 5px;
+                        margin-bottom: 5px;
+                        text-overflow: ellipsis;
+                        overflow: hidden;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}}</div>
+                       <!-- <span style="font-size: 14px;" *ngIf="rango.id == trb.rg && dia.id == trb.id_dia">{{trb.nombre_completo}} / </span>-->
+                      }
+
                     }
                   </th>
                   }
                 </tr>
-                <tr style="text-align: center;">
-                  <th scope="row" style="background-color: #FFD865;">DIAS LIBRES</th>
-                  
-                  @for (dia of data.dias; track dia.id) {
-                  <th scope="row">
-                    @for (trb of data.dias_libres; track trb) {
-                      <div style="font-size: 13px;
-                      border: 1px solid #e5c422;
-                      background: #fff0a7;
-                      border-radius: 5px;
-                      margin-bottom: 5px;
-                      text-overflow: ellipsis;
-                      overflow: hidden;" *ngIf="dia.id == trb.id_dia">{{trb.nombre_completo}}</div>
+                @if(data.cargo != "Vacaciones") {
+                  <tr style="text-align: center;">
+                    <th scope="row" style="background-color: #FFD865;">DIAS LIBRES</th>
+                    
+                    @for (dia of data.dias; track dia.id) {
+                    <th scope="row">
+                      @for (trb of data.dias_libres; track trb) {
+                        <div style="font-size: 13px;
+                        border: 1px solid #e5c422;
+                        background: #fff0a7;
+                        border-radius: 5px;
+                        margin-bottom: 5px;
+                        text-overflow: ellipsis;
+                        overflow: hidden;" *ngIf="dia.id == trb.id_dia">{{trb.nombre_completo}}</div>
+                      }
+                    </th>
                     }
-                  </th>
-                  }
-                </tr>
+                  </tr>
+                }
                 
               </tbody>
             </table>
