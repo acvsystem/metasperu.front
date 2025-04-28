@@ -21,7 +21,7 @@
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="display: flex;align-items: center;">
         <div style="padding: 15px;width: 100%;border-bottom: 1px solid #d1d1d1;">
-          <button id="searchProducto" type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;">
+          <button id="searchProducto" (click)="onSaveKardex()" type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;">
             Guardar
           </button>
           <button id="searchProducto" type="button" class="btn btn-success btn-sm">
@@ -32,37 +32,37 @@
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <mt-input id="vDespacho" label="Despacho PO" placeholder="Despacho PO" type="text" value="{{ vDespacho }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vDespacho" label="Despacho PO" placeholder="Despacho PO" type="text" value="{{ vDespacho }}"></mt-input>
       </ion-col>
     </ion-row>
       <ion-row>
     <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <mt-input id="vNumeroDoc" label="Size" placeholder="Size" type="text" value="{{ vNumeroDoc }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vSize" label="Size" placeholder="Size" type="text" value="{{ vSize }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7">
-        <mt-input id="vContenedor" label="Contenedor" placeholder="Contenedor" type="text" value="{{ vContenedor }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vContenedor" label="Contenedor" placeholder="Contenedor" type="text" value="{{ vContenedor }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input id="vTasaCambio" label="Tasa de cambio" placeholder="Tasa de cambio" type="text" value="{{ vTasaCambio }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vTasaCambio" label="Tasa de cambio" placeholder="Tasa de cambio" type="text" value="{{ vTasaCambio }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input id="vTotalGastos" label="Total de gastos (En soles)" placeholder="Total de gastos (En soles)" type="text" value="{{ vTotalGastos }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vTotalGastos" label="Total de gastos (En soles)" placeholder="Total de gastos (En soles)" type="text" value="{{ vTotalGastos }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input id="vFleteAcarreo" label="Flete y acarreo (En soles)" placeholder="Flete y acarreo (En soles)" type="text" value="{{ vFleteAcarreo }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vFleteAcarreo" label="Flete y acarreo (En soles)" placeholder="Flete y acarreo (En soles)" type="text" value="{{ vFleteAcarreo }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input id="vRegistroSanitario" label="Registro sanitario (En soles)" placeholder="Registro sanitario (En soles)" type="text" value="{{ vRegistroSanitario }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vRegistroSanitario" label="Registro sanitario (En soles)" placeholder="Registro sanitario (En soles)" type="text" value="{{ vRegistroSanitario }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -77,12 +77,12 @@
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input id="vNumeroSerie" label="Numero serie documento" placeholder="Numero serie documento" type="text" value="{{ vNumeroSerie }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vNumeroSerie" label="Numero serie documento" placeholder="Numero serie documento" type="text" value="{{ vNumeroSerie }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-        <mt-input id="vObservacion" label="Observacion" placeholder="Observacion" type="text" value="{{ vObservacion }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vObservacion" label="Observacion" placeholder="Observacion" type="text" value="{{ vObservacion }}"></mt-input>
       </ion-col>
     </ion-row>
   </mat-drawer>

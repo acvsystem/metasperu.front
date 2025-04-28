@@ -78,6 +78,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   vRegistroSanitario: String = "";
   vNumeroSerie: String = "";
   vObservacion: String = "";
+  vSize: String = "";
   vBruto: number = 0;
   vDescuentos: number = 0;
   vImponible: number = 0;
@@ -168,7 +169,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     self.vObservacion = (ev || {}).clObservacion;
 
     this.optionDefault = [{ key: (ev || {}).clMotivo, value: (ev || {}).clMotivo }];
-    this.optionDefaultTD  = [{ key: (ev || {}).clTipoDocumento, value: (ev || {}).clTipoDocumento }];
+    this.optionDefaultTD = [{ key: (ev || {}).clTipoDocumento, value: (ev || {}).clTipoDocumento }];
     this.dataSource = new MatTableDataSource(ev.detalle);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -188,6 +189,31 @@ export class MtKardexContabilidadComponent implements OnInit {
       end: date[1].replace('/', '-'),
       code: this.codeTienda
     });
+  }
+
+  onSaveKardex() {
+    let data = {
+      code: this.codeTienda,
+      num_albaran: this.vAlbaran,
+      num_serie: this.vSerieDoc,
+      n: "",
+      numero_despacho: this.vDespacho,
+      tasa_cambio: this.vTasaCambio,
+      total_gastos: this.vTotalGastos,
+      flete_acarreo: this.vFleteAcarreo,
+      registro_sanitario: this.vRegistroSanitario,
+      motivo: this.cboMotivo,
+      tipo_documento: this.cboTipoDoc,
+      numero_serie: this.vNumeroSerie
+    };
+
+    console.log(data);
+  }
+
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
   }
 
   onListTienda() {
@@ -217,7 +243,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.codeTienda = (selectData || {}).key;
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).value || "";
-    
+
   }
 
 }

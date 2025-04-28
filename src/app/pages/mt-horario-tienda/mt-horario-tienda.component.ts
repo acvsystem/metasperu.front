@@ -1274,16 +1274,21 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.isSearch = true;
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
+        let isOficina = false;
         let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Vacaciones'];
 
         if ((codigo == 'OF' || (this.codeTienda == "OF" && typeof codigo == 'undefined')) && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
+          isOficina = true;
           lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas', 'Vacaciones'];
+        }
+
+        if (response.length == 4 && !isOficina) {
+          lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
         }
 
         (lsOrden || []).filter((orden, i) => {
           let row = response.find((rs) => rs.cargo == orden);
           this.dataHorario.push(row);
-
         });
 
 
