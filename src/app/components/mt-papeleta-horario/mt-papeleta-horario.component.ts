@@ -250,7 +250,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
             }
 
-
+            
             (this.onDataTemp || []).push({
               dia: (huellero || {}).dia,
               hr_ingreso_1: (huellero || {}).hrIn,
@@ -1040,7 +1040,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               if (((huellero || {})['papeleta'] || []).length) {
                 htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
               }
-
+            
 
               (this.onDataTemp || []).push({
                 dia: (huellero || {}).dia,
@@ -1142,6 +1142,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                       if (indexData2 == -1) {
                         let obj = { documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: this.onDataTemp[indexData]['hr_extra'], extra: this.onDataTemp[indexData]['hr_extra'], estado: estado, aprobado: aprobado, seleccionado: false };
                         (this.dataVerify || []).push(obj);
+                       
                       }
 
                       (this.arCopiHoraExtra || []).push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
@@ -1243,7 +1244,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                   //CONTEO HORA EXTRA
                   let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra default');
-
                   if (parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) || parseInt(hr[0]) > 0 || this.onDataTemp[indexData].isException) {
 
                     this.onDataTemp[indexData]['hr_extra'] = process;//23:59

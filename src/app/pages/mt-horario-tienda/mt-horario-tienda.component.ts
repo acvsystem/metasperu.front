@@ -153,14 +153,16 @@ export class MtHorarioTiendaComponent implements OnInit {
       this.onListCargo = [
         { key: 1, value: "Recursos Humanos" },
         { key: 2, value: "Contabilidad" },
-        { key: 3, value: "Sistemas" }
+        { key: 3, value: "Sistemas" },
+        { key: 4, value: "Vacaciones" }
       ];
     } else {
       this.onListCargo = [
         { key: 1, value: "Gerentes" },
         { key: 2, value: "Cajeros" },
         { key: 3, value: "Asesores" },
-        { key: 4, value: "Almaceneros" }
+        { key: 4, value: "Almaceneros" },
+        { key: 5, value: "Vacaciones" }
       ];
     }
 
@@ -893,10 +895,10 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.dataHorario = [];
           this.store.setStore("mt-isSearch", true);
           this.onListCargo = [];
-          let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
+          let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros','Vacaciones'];
 
           if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
-            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas"];
+            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas","Vacaciones"];
           }
 
           (lsOrden || []).filter((orden, i) => {
@@ -985,7 +987,8 @@ export class MtHorarioTiendaComponent implements OnInit {
       { cargo: 'Gerentes', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
-      { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia }
+      { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+      { cargo: 'Vacaciones', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia }
     ];
 
 
@@ -993,20 +996,23 @@ export class MtHorarioTiendaComponent implements OnInit {
       { value: 'Gerentes' },
       { value: 'Cajeros' },
       { value: 'Asesores' },
-      { value: 'Almaceneros' }
+      { value: 'Almaceneros' },
+      { value: 'Vacaciones' }
     ];
 
     if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
       listCargoTienda = [
         { cargo: 'Recursos Humanos', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
         { cargo: 'Contabilidad', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
-        { cargo: 'Sistemas', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia }
+        { cargo: 'Sistemas', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+        { cargo: 'Vacaciones', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       ];
 
       listCargo = [
         { value: 'Recursos Humanos' },
         { value: 'Contabilidad' },
-        { value: 'Sistemas' }
+        { value: 'Sistemas' },
+        { value: 'Vacaciones' }
       ];
     }
 
@@ -1266,10 +1272,10 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.isSearch = true;
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
-        let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
+        let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros','Vacaciones'];
         console.log(codigo);
         if ((codigo == 'OF' || (this.codeTienda == "OF" && typeof codigo == 'undefined')) && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
-          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas'];
+          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas','Vacaciones'];
         }
 
         (lsOrden || []).filter((orden, i) => {
