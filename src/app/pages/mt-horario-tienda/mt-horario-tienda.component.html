@@ -427,11 +427,11 @@
               </thead>
               <tbody>
                 <tr *ngFor="let rango of data.rg_hora" style="text-align: center;">
-                  @if(data.cargo != "Vacaciones"){
+                  
                   <th scope="row" style="background-color: #97b3fd;">
                     {{rango.rg}}
                   </th>
-                  }
+                  
                   @for (dia of data.dias; track dia.id) {
                   <th scope="row">
                     @for (trb of data.dias_trabajo; track trb) {

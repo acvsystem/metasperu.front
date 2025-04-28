@@ -219,6 +219,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         });
 
         this.onListCargo.push({ key: dt.id, value: dt.cargo });
+
       });
     }
 
@@ -895,10 +896,10 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.dataHorario = [];
           this.store.setStore("mt-isSearch", true);
           this.onListCargo = [];
-          let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros','Vacaciones'];
+          let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Vacaciones'];
 
           if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
-            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas","Vacaciones"];
+            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas", "Vacaciones"];
           }
 
           (lsOrden || []).filter((orden, i) => {
@@ -1267,15 +1268,16 @@ export class MtHorarioTiendaComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
+      console.log(response);
       if ((response || []).length) {
         this.dataHorario = [];
         this.isSearch = true;
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
-        let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros','Vacaciones'];
-        console.log(codigo);
+        let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Vacaciones'];
+
         if ((codigo == 'OF' || (this.codeTienda == "OF" && typeof codigo == 'undefined')) && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
-          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas','Vacaciones'];
+          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas', 'Vacaciones'];
         }
 
         (lsOrden || []).filter((orden, i) => {
