@@ -264,10 +264,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
               isException: (huellero || {}).isException,
               dataRegistro: [huellero]
             });
-
+            console.log(huellero);
             if (huellero.tpAsociado == "**") { //PART TIME
               this.isPartTime = true;
-
+              
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -371,7 +371,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
           } else {
-
+            console.log(huellero);
             if (huellero.tpAsociado == "**") { //PART TIME
 
 
@@ -382,7 +382,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
-
+              
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -628,7 +628,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   onProcesarPartTime(length, index, row, isUpdate?) {
     this.dataVerify = [];
-
+    console.log(row);
     let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
 
     var dias = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
@@ -1055,10 +1055,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 isException: (huellero || {}).isException,
                 dataRegistro: [huellero]
               });
-
+              console.log(huellero);
               if (huellero.tpAsociado == "**") { //PART TIME
                 this.isPartTime = true;
-
+                
                 this.onProcesarPartTime(this.parseHuellero.length, i, {
                   dia: (huellero || {}).dia,
                   hr_ingreso_1: (huellero || {}).hrIn,
@@ -1163,7 +1163,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
             } else {
-
+              console.log(huellero);
               if (huellero.tpAsociado == "**") { //PART TIME
 
 
@@ -1174,7 +1174,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 }
 
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
-
+                
                 this.onProcesarPartTime(this.parseHuellero.length, i, {
                   dia: (huellero || {}).dia,
                   hr_ingreso_1: (huellero || {}).hrIn,

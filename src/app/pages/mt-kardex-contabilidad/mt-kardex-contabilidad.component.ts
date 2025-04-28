@@ -66,6 +66,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   dataSourceVenc = new MatTableDataSource<any>(this.dataViewVenc);
   cboTiendaConsulting: String = "";
   vSerieDoc: String = "";
+  vN: String = "";
   vNumeroDoc: String = "";
   vFechaDoc: String = "";
   vHoraDoc: String = "";
@@ -79,6 +80,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   vNumeroSerie: String = "";
   vObservacion: String = "";
   vSize: String = "";
+  vCode: String = "";
   vBruto: number = 0;
   vDescuentos: number = 0;
   vImponible: number = 0;
@@ -109,9 +111,26 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.shoesControl);
     this.onListTienda();
+    this.socket.on('kardex:post:camposlibres:response', (refresh) => {
+
+      let data = JSON.parse((refresh || {}).data || []);
+      let index = this.dataAlbaran.findIndex((alb) => (alb || {}).cmpNumero == ((data || [])[0] || {}).cmpNumero && (alb || {}).cmpN == ((data || [])[0] || {}).cmpN && (alb || {}).cmpSerie == ((data || [])[0] || {}).cmpSerie);
+
+      this.dataAlbaran[index]['clDespacho'] = ((data || [])[0] || {}).clDespacho;
+      this.dataAlbaran[index]['clContenedor'] = ((data || [])[0] || {}).clContenedor;
+      this.dataAlbaran[index]['clTasaCambio'] = ((data || [])[0] || {}).clTasaCambio;
+      this.dataAlbaran[index]['clTotalGasto'] = ((data || [])[0] || {}).clTotalGasto;
+      this.dataAlbaran[index]['clFleteAcarreo'] = ((data || [])[0] || {}).clFleteAcarreo;
+      this.dataAlbaran[index]['clRegistroSanitario'] = ((data || [])[0] || {}).clRegistroSanitario;
+      this.dataAlbaran[index]['clNSerieDocuento'] = ((data || [])[0] || {}).clNSerieDocuento;
+      this.dataAlbaran[index]['clObservacion'] = ((data || [])[0] || {}).clObservacion;
+      this.isLoading = false;
+      this.service.toastSuccess('Registrado con exito..!!', 'Kardex');
+    });
+
     this.socket.on('kardex:get:comprobantes:response', (listaSession) => {
+    
       let data = JSON.parse((listaSession || {}).data || []);
       (data || []).filter((cbz) => {
 
@@ -121,19 +140,18 @@ export class MtKardexContabilidadComponent implements OnInit {
           (cbz['detalle'] || []).push(cbz);
           this.dataAlbaran.push(cbz);
         } else {
+          this.vN = cbz.cmpN
           this.dataAlbaran[indexEx]['value'] = cbz.cmpNumero;
           this.dataAlbaran[indexEx]['name'] = `${cbz.cmpSerie} | ${cbz.cmpNumero} | ${cbz.cmpSuAlbaran}`;
           (((this.dataAlbaran || [])[indexEx] || {})['detalle'] || []).push(cbz);
         }
       });
       this.isLoading = false;
-      console.log(this.dataAlbaran);
     });
 
   }
 
   onCaledar($event) {
-    console.log("onCaledar", $event);
     if ($event.isRange) {
       this.vDetallado = [];
       let range = $event.value;
@@ -179,11 +197,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.isLoading = true;
     let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
     this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
-    console.log({
-      init: date[0].replace('/', '-'),
-      end: date[1].replace('/', '-'),
-      code: this.codeTienda
-    });
+
     this.socket.emit('kardex:get:comprobantes', {
       init: date[0].replace('/', '-'),
       end: date[1].replace('/', '-'),
@@ -192,11 +206,12 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   onSaveKardex() {
+    this.isLoading = true;
     let data = {
-      code: this.codeTienda,
-      num_albaran: this.vAlbaran,
+      code: this.vCode,
+      num_albaran: this.vNumeroDoc,
       num_serie: this.vSerieDoc,
-      n: "",
+      n: this.vN,
       numero_despacho: this.vDespacho,
       tasa_cambio: this.vTasaCambio,
       total_gastos: this.vTotalGastos,
@@ -206,8 +221,7 @@ export class MtKardexContabilidadComponent implements OnInit {
       tipo_documento: this.cboTipoDoc,
       numero_serie: this.vNumeroSerie
     };
-
-    console.log(data);
+    this.socket.emit('kardex:post:camposlibres', data);
   }
 
   onChangeInput(data: any) {
@@ -240,6 +254,11 @@ export class MtKardexContabilidadComponent implements OnInit {
   async onChangeSelect(data: any) {
     const self = this;
     let selectData = data || {};
+
+    if ((selectData || {}).selectId == "cboTiendaConsulting") {
+      this.vCode = (selectData || {}).key;
+    }
+
     this.codeTienda = (selectData || {}).key;
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).value || "";
