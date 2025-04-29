@@ -81,11 +81,11 @@ export class MtKardexContabilidadComponent implements OnInit {
   vObservacion: String = "";
   vSize: String = "";
   vCode: String = "";
-  vBruto: number = 0;
-  vDescuentos: number = 0;
-  vImponible: number = 0;
-  vImpuestos: number = 0;
-  vTBruto: number = 0;
+  vBruto: String = "";
+  vDescuentos: String = "";
+  vImponible: String = "";
+  vImpuestos: String = "";
+  vTBruto: String = "";
   codeTienda: String = "";
   isLoading: boolean = false;
   dataAlbaran: Array<any> = [];
@@ -130,22 +130,13 @@ export class MtKardexContabilidadComponent implements OnInit {
     });
 
     this.socket.on('kardex:get:comprobantes:response', (listaSession) => {
-    
+      this.dataAlbaran = [];
       let data = JSON.parse((listaSession || {}).data || []);
+      console.log(data);
       (data || []).filter((cbz) => {
-
-        let indexEx = (this.dataAlbaran || []).findIndex((alb) => alb.cmpNumero == cbz.cmpNumero && alb.cmpSerie == cbz.cmpSerie);
-
-        if (indexEx == -1) {
-          (cbz['detalle'] || []).push(cbz);
-          this.dataAlbaran.push(cbz);
-        } else {
-          this.vN = cbz.cmpN
-          this.dataAlbaran[indexEx]['value'] = cbz.cmpNumero;
-          this.dataAlbaran[indexEx]['name'] = `${cbz.cmpSerie} | ${cbz.cmpNumero} | ${cbz.cmpSuAlbaran}`;
-          (((this.dataAlbaran || [])[indexEx] || {})['detalle'] || []).push(cbz);
-        }
+        this.dataAlbaran.push(cbz);
       });
+
       this.isLoading = false;
     });
 
@@ -185,7 +176,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     self.vRegistroSanitario = (ev || {}).clRegistroSanitario;
     self.vNumeroSerie = (ev || {}).clNSerieDocuento;
     self.vObservacion = (ev || {}).clObservacion;
-
+    this.vN = ev.cmpN
     this.optionDefault = [{ key: (ev || {}).clMotivo, value: (ev || {}).clMotivo }];
     this.optionDefaultTD = [{ key: (ev || {}).clTipoDocumento, value: (ev || {}).clTipoDocumento }];
     this.dataSource = new MatTableDataSource(ev.detalle);
@@ -201,7 +192,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.socket.emit('kardex:get:comprobantes', {
       init: date[0].replace('/', '-'),
       end: date[1].replace('/', '-'),
-      code: this.codeTienda
+      code: this.vCode
     });
   }
 
@@ -219,8 +210,12 @@ export class MtKardexContabilidadComponent implements OnInit {
       registro_sanitario: this.vRegistroSanitario,
       motivo: this.cboMotivo,
       tipo_documento: this.cboTipoDoc,
-      numero_serie: this.vNumeroSerie
+      numero_serie: this.vNumeroSerie,
+      observacion: this.vObservacion,
+      contenedor: this.vContenedor
     };
+
+    console.log(data);
     this.socket.emit('kardex:post:camposlibres', data);
   }
 
@@ -229,6 +224,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
   }
+
 
   onListTienda() {
     const self = this;
@@ -256,6 +252,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     let selectData = data || {};
 
     if ((selectData || {}).selectId == "cboTiendaConsulting") {
+
       this.vCode = (selectData || {}).key;
     }
 

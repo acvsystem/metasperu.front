@@ -24,45 +24,37 @@
           <button id="searchProducto" (click)="onSaveKardex()" type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;">
             Guardar
           </button>
-          <button id="searchProducto" type="button" class="btn btn-success btn-sm">
-            Limpiar
-          </button>
         </div>
     </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <mt-input (afterChange)="onChangeInput($event)" id="vDespacho" label="Despacho PO" placeholder="Despacho PO" type="text" value="{{ vDespacho }}"></mt-input>
-      </ion-col>
-    </ion-row>
-      <ion-row>
-    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <mt-input (afterChange)="onChangeInput($event)" id="vSize" label="Size" placeholder="Size" type="text" value="{{ vSize }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" type="number" id="vDespacho" label="Despacho PO" placeholder="Despacho PO"  value="{{ vDespacho }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7">
-        <mt-input (afterChange)="onChangeInput($event)" id="vContenedor" label="Contenedor" placeholder="Contenedor" type="text" value="{{ vContenedor }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vContenedor" label="Contenedor" placeholder="Contenedor" type="number" value="{{ vContenedor }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input (afterChange)="onChangeInput($event)" id="vTasaCambio" label="Tasa de cambio" placeholder="Tasa de cambio" type="text" value="{{ vTasaCambio }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vTasaCambio" label="Tasa de cambio" placeholder="Tasa de cambio" type="number" value="{{ vTasaCambio }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input (afterChange)="onChangeInput($event)" id="vTotalGastos" label="Total de gastos (En soles)" placeholder="Total de gastos (En soles)" type="text" value="{{ vTotalGastos }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vTotalGastos" label="Total de gastos (En soles)" placeholder="Total de gastos (En soles)" type="number" value="{{ vTotalGastos }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input (afterChange)="onChangeInput($event)" id="vFleteAcarreo" label="Flete y acarreo (En soles)" placeholder="Flete y acarreo (En soles)" type="text" value="{{ vFleteAcarreo }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vFleteAcarreo" label="Flete y acarreo (En soles)" placeholder="Flete y acarreo (En soles)" type="number" value="{{ vFleteAcarreo }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <mt-input (afterChange)="onChangeInput($event)" id="vRegistroSanitario" label="Registro sanitario (En soles)" placeholder="Registro sanitario (En soles)" type="text" value="{{ vRegistroSanitario }}"></mt-input>
+        <mt-input (afterChange)="onChangeInput($event)" id="vRegistroSanitario" label="Registro sanitario (En soles)" placeholder="Registro sanitario (En soles)" type="number" value="{{ vRegistroSanitario }}"></mt-input>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -111,10 +103,10 @@
             <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="border-right: 1px solid #d1d1d1;">
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                  <form [formGroup]="form" style="width: 100%;">
+                  <form [formGroup]="form" style="width: 100%;overflow: auto;max-height: 500px;">
                     <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
                       @for (shoe of dataAlbaran; track shoe) {
-                        <mat-list-option [value]="shoe.value" (click)="onSelectAlbaran(shoe)">{{shoe.name}}</mat-list-option>
+                        <mat-list-option [value]="shoe.cmpNumero" (click)="onSelectAlbaran(shoe)">{{shoe.cmpSerie}} | {{shoe.cmpNumero}} | {{shoe.cmpSuAlbaran}}</mat-list-option>
                       }
                     </mat-selection-list>
                     <p>

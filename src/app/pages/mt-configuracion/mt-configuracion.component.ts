@@ -156,7 +156,8 @@ export class MtConfiguracionComponent implements OnInit {
       { key: 'horario', value: 'horario' },
       { key: 'auth-hora-extra', value: 'auth-hora-extra' },
       { key: 'panel-horario', value: 'panel-horario' },
-      { key: 'planilla', value: 'planilla' }
+      { key: 'planilla', value: 'planilla' },
+      { key: 'kardex', value: 'kardex' }
     ];
 
     this.onListTipoCuenta = [
@@ -165,6 +166,7 @@ export class MtConfiguracionComponent implements OnInit {
       { key: 'RRHH', value: 'RRHH' },
       { key: 'TIENDA', value: 'TIENDA' },
       { key: 'GERENCIA', value: 'GERENCIA' },
+      { key: 'CONTABILIDAD', value: 'CONTABILIDAD' }
     ];
   }
 

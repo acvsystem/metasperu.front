@@ -160,6 +160,18 @@ export class AppComponent {
         this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
       }
 
+      if ((profileUser || {}).mt_nivel == "contabilidad",(profileUser || {}).mt_nivel == "contabilidad5",(profileUser || {}).mt_nivel == "contabilidad4",(profileUser || {}).mt_nivel == "contabilidad3",(profileUser || {}).mt_nivel == "contabilidad2",(profileUser || {}).mt_nivel == "contabilidad1") {
+        self.menuUser = [
+          {
+            ISVISIBLE: true,
+            nombre_menu: "KARDEX",
+            ruta: "kardex"
+          }
+        ];
+
+        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+      }
+
       if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
         self.menuUser = [{
           ISVISIBLE: true,

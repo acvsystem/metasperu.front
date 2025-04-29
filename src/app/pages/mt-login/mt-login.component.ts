@@ -130,6 +130,8 @@ export class MtLoginComponent implements OnInit {
       this.nav.navigateRoot('asistencia');
     } else if ((profileUser || {}).mt_nivel == "acarbajal") {
       this.nav.navigateRoot('inventario');
+    }else if ((profileUser || {}).mt_nivel == "contabilidad",(profileUser || {}).mt_nivel == "contabilidad5",(profileUser || {}).mt_nivel == "contabilidad4",(profileUser || {}).mt_nivel == "contabilidad3",(profileUser || {}).mt_nivel == "contabilidad2",(profileUser || {}).mt_nivel == "contabilidad1") {
+      this.nav.navigateRoot('kardex');
     }
 
   }
