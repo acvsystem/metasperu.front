@@ -22,3 +22,19 @@ mat-grid-list {
     border-radius: 0px !important;
 }
 
+
+.col {
+    --highlight-background: #ffffff !important;
+    border: 1px solid #d9d9d9;
+    height: 30px !important;
+    border-radius: 4px !important;
+    display: flex;
+    align-items: center;
+}
+
+.col:focus-visible {
+    border: 1px solid #40a9ff !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 2px #1890ff33 !important;
+    border-radius: 4px !important;
+}

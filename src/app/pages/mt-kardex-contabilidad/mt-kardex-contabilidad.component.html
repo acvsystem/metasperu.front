@@ -80,178 +80,260 @@
   </mat-drawer>
   <mat-drawer-content>
     <ion-content>
+      
       <div id="content" class="full-center">
         <div class="card-content">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-              <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListTienda"></mt-select>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-              <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="false" [isRange]="true"
-              placeholder="Seleccione fechas" (afterChange)="onCaledar($event)"></mt-calendar>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
-                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onSearch()">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-                <button id="searchProducto" (click)="drawer.toggle()" type="button" class="btn btn-success btn-sm">
-                  Campos libres
-                </button>
-            </ion-col>
-          </ion-row>
-          <ion-row style="border: 1px solid #d1d1d1;border-radius: 7px;">
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="border-right: 1px solid #d1d1d1;">
+        <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
+          <mat-tab label="Kardex">
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                  <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListTienda"></mt-select>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                  <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="false" [isRange]="true"
+                  placeholder="Seleccione fechas" (afterChange)="onCaledar($event)"></mt-calendar>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
+                    <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onSearch()">
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                    <button id="searchProducto" (click)="drawer.toggle()" type="button" class="btn btn-success btn-sm">
+                      Campos libres
+                    </button>
+                </ion-col>
+              </ion-row>
+              <ion-row style="border: 1px solid #d1d1d1;border-radius: 7px;">
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" style="border-right: 1px solid #d1d1d1;">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <form [formGroup]="form" style="width: 100%;overflow: auto;max-height: 500px;">
+                        <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
+                          @for (shoe of dataAlbaran; track shoe) {
+                            <mat-list-option [value]="shoe.cmpNumero" (click)="onSelectAlbaran(shoe)">{{shoe.cmpSerie}} | {{shoe.cmpNumero}} | {{shoe.cmpSuAlbaran}}</mat-list-option>
+                          }
+                        </mat-selection-list>
+                        <p>
+                           Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
+                        </p>
+                      </form>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
+                      <mt-input id="vSerieDoc" label="Serie" placeholder="Serie documento" type="text" value="{{ vSerieDoc }}"></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                      <mt-input id="vNumeroDoc" label="Numero" placeholder="Numero documento" type="text" value="{{ vNumeroDoc }}"></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                      <mt-input id="vAlbaran" label="Albaran" placeholder="Numero albaran" type="text" value="{{ vAlbaran }}"></mt-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                      <mt-input id="vFechaDoc" label="Fecha" placeholder="Fecha documento" type="text" value="{{ vFechaDoc }}"></mt-input>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                      <mt-input id="vHoraDoc" label="Hora" placeholder="Hora documento" type="text" value="{{ vHoraDoc }}"></mt-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSource">
+                            <ng-container matColumnDef="referencia">
+                              <th mat-header-cell *matHeaderCellDef> Referencia </th>
+                              <td mat-cell *matCellDef="let element"> {{element.dtReferencia}} </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="talla">
+                              <th mat-header-cell *matHeaderCellDef> Talla </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtTallav}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="color">
+                              <th mat-header-cell *matHeaderCellDef> Color </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtColor}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="descripcion">
+                              <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtDescripcion}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="unid">
+                              <th mat-header-cell *matHeaderCellDef> Unid </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtUnidades}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="precio">
+                              <th mat-header-cell *matHeaderCellDef> Precio </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtPrecio}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="descuento">
+                              <th mat-header-cell *matHeaderCellDef> Descuento </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtDescuento}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="total">
+                              <th mat-header-cell *matHeaderCellDef> Total </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtTotal}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="almacen">
+                              <th mat-header-cell *matHeaderCellDef> Almacen </th>
+                              <td mat-cell *matCellDef="let element"> 
+                                <span>{{element.dtAlmacen}}</span>
+                              </td>
+                            </ng-container>
+            
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                            <span style="color: black;padding-right: 20px;">Total bruto - USD</span>
+                            <mt-input id="vBruto" label="Total bruto" placeholder="Total bruto" type="text" value="{{ vBruto }}"></mt-input>
+                          </div>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                            <span style="color: black;padding-right: 20px;">Total Cargos/Dtos - USD</span>
+                            <mt-input id="vDescuentos" label="Total Cargos/Dtos" placeholder="Total Cargos/Dtos" type="text" value="{{ vDescuentos }}"></mt-input>
+                          </div>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                            <span style="color: black;padding-right: 20px;">Base imponible - USD</span>
+                            <mt-input id="vImponible" label="Base imponible" placeholder="Base imponible" type="text" value="{{ vImponible }}"></mt-input>
+                          </div>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                            <span style="color: black;padding-right: 20px;">Impuestos - USD</span>
+                            <mt-input id="vImpuestos" label="Impuestos" placeholder="Impuestos" type="text" value="{{ vImpuestos }}"></mt-input>
+                          </div>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
+                            <span style="color: black;padding-right: 20px;">Total bruto - USD</span>
+                            <mt-input id="vTBruto" label="Total neto" placeholder="Total neto" type="text" value="{{ vTBruto }}"></mt-input>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+          </mat-tab>
+          <mat-tab label="CUO">
+            <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;margin-bottom: 75px;">
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                  <form [formGroup]="form" style="width: 100%;overflow: auto;max-height: 500px;">
-                    <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
-                      @for (shoe of dataAlbaran; track shoe) {
-                        <mat-list-option [value]="shoe.cmpNumero" (click)="onSelectAlbaran(shoe)">{{shoe.cmpSerie}} | {{shoe.cmpNumero}} | {{shoe.cmpSuAlbaran}}</mat-list-option>
-                      }
-                    </mat-selection-list>
-                    <p>
-                       Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
-                    </p>
-                  </form>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="9" sizeLg="9">
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
-                  <mt-input id="vSerieDoc" label="Serie" placeholder="Serie documento" type="text" value="{{ vSerieDoc }}"></mt-input>
-                </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-                  <mt-input id="vNumeroDoc" label="Numero" placeholder="Numero documento" type="text" value="{{ vNumeroDoc }}"></mt-input>
-                </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-                  <mt-input id="vAlbaran" label="Albaran" placeholder="Numero albaran" type="text" value="{{ vAlbaran }}"></mt-input>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-                  <mt-input id="vFechaDoc" label="Fecha" placeholder="Fecha documento" type="text" value="{{ vFechaDoc }}"></mt-input>
-                </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-                  <mt-input id="vHoraDoc" label="Hora" placeholder="Hora documento" type="text" value="{{ vHoraDoc }}"></mt-input>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                      <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListTienda"></mt-select>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                      <mt-calendar [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="false" [isRange]="true"
+                      placeholder="Seleccione fechas" (afterChange)="onCaledar($event)"></mt-calendar>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
+                        <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onSearchCuo()">
+                          <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </ion-col>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="display: flex;align-items: center;">
+                    </ion-col>
+                  </ion-row>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                   <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="dataSource">
-                        <ng-container matColumnDef="referencia">
-                          <th mat-header-cell *matHeaderCellDef> Referencia </th>
-                          <td mat-cell *matCellDef="let element"> {{element.dtReferencia}} </td>
+                    <table mat-table [dataSource]="dataSourceCUO">
+                        <ng-container matColumnDef="tabla">
+                          <th mat-header-cell *matHeaderCellDef> Tabla </th>
+                          <td mat-cell *matCellDef="let element"> {{element.dtTabla}} </td>
                         </ng-container>
         
-                        <ng-container matColumnDef="talla">
-                          <th mat-header-cell *matHeaderCellDef> Talla </th>
+                        <ng-container matColumnDef="documento">
+                          <th mat-header-cell *matHeaderCellDef> Documento </th>
                           <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtTallav}}</span>
+                            <span>{{element.dtDocumento}}</span>
                           </td>
                         </ng-container>
         
-                        <ng-container matColumnDef="color">
-                          <th mat-header-cell *matHeaderCellDef> Color </th>
+                        <ng-container matColumnDef="fecha">
+                          <th mat-header-cell *matHeaderCellDef> Fecha </th>
                           <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtColor}}</span>
+                            <span>{{element.dtFecha}}</span>
                           </td>
                         </ng-container>
         
-                        <ng-container matColumnDef="descripcion">
-                          <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                        <ng-container matColumnDef="comentario">
+                          <th mat-header-cell *matHeaderCellDef> Comentario </th>
                           <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtDescripcion}}</span>
+                            <span>{{element.dtComentario}}</span>
                           </td>
                         </ng-container>
         
-                        <ng-container matColumnDef="unid">
-                          <th mat-header-cell *matHeaderCellDef> Unid </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtUnidades}}</span>
+                        <ng-container matColumnDef="cuo">
+                          <th mat-header-cell *matHeaderCellDef> Cuo </th>
+                          <td mat-cell *matCellDef="let element; let i = index" style="max-width: 82px;"> 
+                            <div style="width: 100%;display: flex;align-items: center;">
+                              <div style="width: 80%;">
+                                <div contenteditable="" id="cuoEdit{{i}}" class="col" (input)="sum($event, 'dtCuoEdit', i)">{{element.dtCuo}}</div>
+                              </div>
+                              <div style="width: 20%;margin-left: 10px;">
+                                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onSaveCuo(element,$event,'dtCuo', i)">
+                                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                </button>
+                              </div>
+                            </div>     
+
                           </td>
                         </ng-container>
         
-                        <ng-container matColumnDef="precio">
-                          <th mat-header-cell *matHeaderCellDef> Precio </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtPrecio}}</span>
-                          </td>
-                        </ng-container>
-        
-                        <ng-container matColumnDef="descuento">
-                          <th mat-header-cell *matHeaderCellDef> Descuento </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtDescuento}}</span>
-                          </td>
-                        </ng-container>
-        
-                        <ng-container matColumnDef="total">
-                          <th mat-header-cell *matHeaderCellDef> Total </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtTotal}}</span>
-                          </td>
-                        </ng-container>
-        
-                        <ng-container matColumnDef="almacen">
-                          <th mat-header-cell *matHeaderCellDef> Almacen </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <span>{{element.dtAlmacen}}</span>
-                          </td>
-                        </ng-container>
-        
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsCuo"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsCuo;"></tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20, 30]" showFirstLastButtons
-                      aria-label="Select page of periodic elements">
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                    aria-label="Select page of periodic elements">
                     </mat-paginator>
                   </div>
                 </ion-col>
               </ion-row>
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
-                        <span style="color: black;padding-right: 20px;">Total bruto - USD</span>
-                        <mt-input id="vBruto" label="Total bruto" placeholder="Total bruto" type="text" value="{{ vBruto }}"></mt-input>
-                      </div>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
-                        <span style="color: black;padding-right: 20px;">Total Cargos/Dtos - USD</span>
-                        <mt-input id="vDescuentos" label="Total Cargos/Dtos" placeholder="Total Cargos/Dtos" type="text" value="{{ vDescuentos }}"></mt-input>
-                      </div>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
-                        <span style="color: black;padding-right: 20px;">Base imponible - USD</span>
-                        <mt-input id="vImponible" label="Base imponible" placeholder="Base imponible" type="text" value="{{ vImponible }}"></mt-input>
-                      </div>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
-                        <span style="color: black;padding-right: 20px;">Impuestos - USD</span>
-                        <mt-input id="vImpuestos" label="Impuestos" placeholder="Impuestos" type="text" value="{{ vImpuestos }}"></mt-input>
-                      </div>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <div style="display: inline-flex;justify-content: end; align-items: center;width: 100%;">
-                        <span style="color: black;padding-right: 20px;">Total bruto - USD</span>
-                        <mt-input id="vTBruto" label="Total neto" placeholder="Total neto" type="text" value="{{ vTBruto }}"></mt-input>
-                      </div>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-          </ion-row>
-        </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
       </div>
+    </div>
     </ion-content>
   </mat-drawer-content>
 </mat-drawer-container>

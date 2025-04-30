@@ -33,11 +33,11 @@ export class AppComponent {
     private service: ShareService,
     private menu: MenuController
   ) {
-/*
-    setInterval(() => {
-      this.socket.emit('comunicationEnlace', 'RECONECT');
-    }, 10000)
-*/
+    /*
+        setInterval(() => {
+          this.socket.emit('comunicationEnlace', 'RECONECT');
+        }, 10000)
+    */
     this.httpService.eventShowLoading.subscribe((response) => {
       setTimeout(() => {
         this.isShowLoading = response;
@@ -160,7 +160,7 @@ export class AppComponent {
         this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
       }
 
-      if ((profileUser || {}).mt_nivel == "contabilidad",(profileUser || {}).mt_nivel == "contabilidad5",(profileUser || {}).mt_nivel == "contabilidad4",(profileUser || {}).mt_nivel == "contabilidad3",(profileUser || {}).mt_nivel == "contabilidad2",(profileUser || {}).mt_nivel == "contabilidad1") {
+      if ((profileUser || {}).mt_nivel == "contabilidad" || (profileUser || {}).mt_nivel == "contabilidad5" || (profileUser || {}).mt_nivel == "contabilidad4" || (profileUser || {}).mt_nivel == "contabilidad3" || (profileUser || {}).mt_nivel == "contabilidad2" || (profileUser || {}).mt_nivel == "contabilidad1") {
         self.menuUser = [
           {
             ISVISIBLE: true,
@@ -270,7 +270,7 @@ export class AppComponent {
     var myOwnListOfBrowsers = [
       [/(mybrowser)\/([\w\.]+)/i], [UAParser.BROWSER.NAME, UAParser.BROWSER.VERSION]
     ];
-    
+
     this.service.eventIsLoggedIn.subscribe((isLogin) => {
       this.renderNavBar = isLogin;
     });

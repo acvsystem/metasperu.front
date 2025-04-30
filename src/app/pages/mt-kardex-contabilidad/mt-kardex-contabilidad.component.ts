@@ -8,6 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { io } from "socket.io-client";
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
+import * as $ from 'jquery';
 
 const moment = _rollupMoment || _moment;
 
@@ -29,9 +30,10 @@ export class MtKardexContabilidadComponent implements OnInit {
   dataView: Array<any> = [];
   optionDefault: Array<any> = [];
   optionDefaultTD: Array<any> = [];
-  dataViewVenc: Array<any> = [];
+  dataViewCuo: Array<any> = [];
   displayedColumns: string[] = ['referencia', 'talla', 'color', 'descripcion', 'unid', 'precio', 'descuento', 'total', 'almacen'];
   displayedColumnsVenc: string[] = ['forma_pago', 'importe', 'medio_pago', 'estado', 'fecha_cobro'];
+  displayedColumnsCuo: string[] = ['tabla', 'documento', 'fecha', 'comentario', 'cuo']
   cboMotivo: string = "";
   cboTipoDoc: string = "";
   cboMotivoList: Array<any> = [
@@ -63,7 +65,8 @@ export class MtKardexContabilidadComponent implements OnInit {
     { key: '50-DECLARACIÓN UNICA DE ADUANA DUA/DAM', value: '50-DECLARACIÓN UNICA DE ADUANA DUA/DAM' }
   ];
   dataSource = new MatTableDataSource<any>(this.dataView);
-  dataSourceVenc = new MatTableDataSource<any>(this.dataViewVenc);
+  dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+
   cboTiendaConsulting: String = "";
   vSerieDoc: String = "";
   vN: String = "";
@@ -87,6 +90,8 @@ export class MtKardexContabilidadComponent implements OnInit {
   vImpuestos: String = "";
   vTBruto: String = "";
   codeTienda: String = "";
+  vCuo: String = "";
+  vCuoEdit: String = "";
   isLoading: boolean = false;
   dataAlbaran: Array<any> = [];
   socket = io('http://38.187.8.22:3200', {
@@ -112,6 +117,30 @@ export class MtKardexContabilidadComponent implements OnInit {
 
   ngOnInit() {
     this.onListTienda();
+
+    this.socket.on('kardex:post:cuo:response', (dataCuo) => {
+
+      this.isLoading = false;
+      let data = JSON.parse((dataCuo || {}).data || []);
+      this.dataViewCuo = data;
+      this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+      this.dataSourceCUO.paginator = this.paginator;
+      this.dataSourceCUO.sort = this.sort;
+
+      this.service.toastSuccess('Registrado con exito..!!', 'CUO');
+    });
+
+
+    this.socket.on('kardex:get:cuo:response', (dataCuo) => {
+      let data = JSON.parse((dataCuo || {}).data || []);
+      console.log(data);
+      this.dataViewCuo = data;
+      this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+      this.dataSourceCUO.paginator = this.paginator;
+      this.dataSourceCUO.sort = this.sort;
+      this.isLoading = false;
+    });
+
     this.socket.on('kardex:post:camposlibres:response', (refresh) => {
 
       let data = JSON.parse((refresh || {}).data || []);
@@ -179,9 +208,6 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.vN = ev.cmpN
     this.optionDefault = [{ key: (ev || {}).clMotivo, value: (ev || {}).clMotivo }];
     this.optionDefaultTD = [{ key: (ev || {}).clTipoDocumento, value: (ev || {}).clTipoDocumento }];
-    this.dataSource = new MatTableDataSource(ev.detalle);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   onSearch() {
@@ -190,6 +216,19 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
 
     this.socket.emit('kardex:get:comprobantes', {
+      init: date[0].replace('/', '-'),
+      end: date[1].replace('/', '-'),
+      code: this.vCode
+    });
+  }
+
+
+  onSearchCuo() {
+    this.isLoading = true;
+    let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
+    this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
+
+    this.socket.emit('kardex:get:cuo', {
       init: date[0].replace('/', '-'),
       end: date[1].replace('/', '-'),
       code: this.vCode
@@ -218,6 +257,49 @@ export class MtKardexContabilidadComponent implements OnInit {
     console.log(data);
     this.socket.emit('kardex:post:camposlibres', data);
   }
+
+  onSaveCuo(ev, el, col: string, rowIndex: number) {
+
+    let isUpdate = 'false';
+
+    $('#cuoEdit' + rowIndex)[0].innerText = this.vCuoEdit;
+    $('#cuoEdit' + rowIndex)[0].innerHtml = this.vCuoEdit;
+
+
+    this.vCuo = this.vCuoEdit;
+
+    isUpdate = this.dataViewCuo[rowIndex][col].length ? 'True' : 'False';
+
+    this.dataViewCuo[rowIndex][col] = this.vCuoEdit;
+
+    this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+    this.dataSourceCUO.paginator = this.paginator;
+    this.dataSourceCUO.sort = this.sort;
+
+    let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
+    this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
+
+    this.isLoading = true;
+
+    let data = {
+      code: this.vCode,
+      documento: ev.dtDocumento,
+      cuo: this.vCuo,
+      tabla: ev.dtTabla,
+      isUpdate: isUpdate,
+      valor: ev.dtDocumento,
+      init: date[0].replace('/', '-'),
+      end: date[1].replace('/', '-')
+    };
+
+    this.socket.emit('kardex:post:cuo', data);
+  }
+
+
+  sum(val: any, col: string, rowIndex: number) {
+    this.vCuoEdit = val.target.innerText;
+  }
+
 
   onChangeInput(data: any) {
     let inputData = data || {};
@@ -259,6 +341,15 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.codeTienda = (selectData || {}).key;
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).value || "";
+
+  }
+
+  onCall(ev) {
+    if (ev.tab.textLabel == "CUO") {
+      this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+      this.dataSourceCUO.paginator = this.paginator;
+      this.dataSourceCUO.sort = this.sort;
+    }
 
   }
 
