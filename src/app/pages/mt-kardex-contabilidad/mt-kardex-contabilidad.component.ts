@@ -31,6 +31,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   optionDefault: Array<any> = [];
   optionDefaultTD: Array<any> = [];
   dataViewCuo: Array<any> = [];
+  dataOriginal: Array<any> = [];
   displayedColumns: string[] = ['referencia', 'talla', 'color', 'descripcion', 'unid', 'precio', 'descuento', 'total', 'almacen'];
   displayedColumnsVenc: string[] = ['forma_pago', 'importe', 'medio_pago', 'estado', 'fecha_cobro'];
   displayedColumnsCuo: string[] = ['tabla', 'documento', 'fecha', 'comentario', 'cuo']
@@ -94,6 +95,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   vCuoEdit: String = "";
   isLoading: boolean = false;
   dataAlbaran: Array<any> = [];
+  dataSave: Array<any> = [];
   socket = io('http://38.187.8.22:3200', {
     query: { code: 'app' },
     reconnection: true,
@@ -122,19 +124,42 @@ export class MtKardexContabilidadComponent implements OnInit {
 
       this.isLoading = false;
       let data = JSON.parse((dataCuo || {}).data || []);
+      console.log(data);
       this.dataViewCuo = data;
+      /*
       this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
       this.dataSourceCUO.paginator = this.paginator;
       this.dataSourceCUO.sort = this.sort;
-
+*/
       this.service.toastSuccess('Registrado con exito..!!', 'CUO');
     });
 
 
     this.socket.on('kardex:get:cuo:response', (dataCuo) => {
+      this.dataSave = [];
+      let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
+      this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
+
       let data = JSON.parse((dataCuo || {}).data || []);
-      console.log(data);
+
+      this.dataOriginal = [...data];
       this.dataViewCuo = data;
+      console.log(this.dataViewCuo);
+
+      this.dataViewCuo.filter((cuo, i) => {
+        this.dataSave.push({
+          code: this.vCode,
+          documento: cuo.dtDocumento,
+          cuo: cuo.dtCuo,
+          tabla: cuo.dtTabla,
+          isUpdate: cuo.dtLenCuo > 0 ? 'True' : 'False',
+          valor: cuo.dtDocumento,
+          init: date[0].replace('/', '-'),
+          end: date[1].replace('/', '-')
+        });
+      });
+
+
       this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
       this.dataSourceCUO.paginator = this.paginator;
       this.dataSourceCUO.sort = this.sort;
@@ -242,62 +267,63 @@ export class MtKardexContabilidadComponent implements OnInit {
       num_albaran: this.vNumeroDoc,
       num_serie: this.vSerieDoc,
       n: this.vN,
-      numero_despacho: this.vDespacho,
-      tasa_cambio: this.vTasaCambio,
-      total_gastos: this.vTotalGastos,
-      flete_acarreo: this.vFleteAcarreo,
-      registro_sanitario: this.vRegistroSanitario,
-      motivo: this.cboMotivo,
-      tipo_documento: this.cboTipoDoc,
-      numero_serie: this.vNumeroSerie,
-      observacion: this.vObservacion,
-      contenedor: this.vContenedor
+      numero_despacho: this.vDespacho || "",
+      tasa_cambio: this.vTasaCambio || "",
+      total_gastos: this.vTotalGastos || "",
+      flete_acarreo: this.vFleteAcarreo || "",
+      registro_sanitario: this.vRegistroSanitario || "",
+      motivo: this.cboMotivo || "",
+      tipo_documento: this.cboTipoDoc || "",
+      numero_serie: this.vNumeroSerie || "",
+      observacion: this.vObservacion || "",
+      contenedor: this.vContenedor || ""
     };
 
     console.log(data);
     this.socket.emit('kardex:post:camposlibres', data);
   }
 
-  onSaveCuo(ev, el, col: string, rowIndex: number) {
-
-    let isUpdate = 'false';
-
-    $('#cuoEdit' + rowIndex)[0].innerText = this.vCuoEdit;
-    $('#cuoEdit' + rowIndex)[0].innerHtml = this.vCuoEdit;
+  onSaveCuo() {
 
 
-    this.vCuo = this.vCuoEdit;
+    // this.isLoading = true;
 
-    isUpdate = this.dataViewCuo[rowIndex][col].length ? 'True' : 'False';
-
-    this.dataViewCuo[rowIndex][col] = this.vCuoEdit;
-
-    this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
-    this.dataSourceCUO.paginator = this.paginator;
-    this.dataSourceCUO.sort = this.sort;
-
-    let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
-    this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
-
-    this.isLoading = true;
-
-    let data = {
-      code: this.vCode,
-      documento: ev.dtDocumento,
-      cuo: this.vCuo,
-      tabla: ev.dtTabla,
-      isUpdate: isUpdate,
-      valor: ev.dtDocumento,
-      init: date[0].replace('/', '-'),
-      end: date[1].replace('/', '-')
-    };
-
-    this.socket.emit('kardex:post:cuo', data);
+    console.log(this.dataSave);
+    this.socket.emit('kardex:post:cuo', this.dataSave);
   }
 
 
-  sum(val: any, col: string, rowIndex: number) {
+  sum(val: any, documento: string, rowIndex: number) {
     this.vCuoEdit = val.target.innerText;
+    const original = [...this.dataOriginal];
+
+    let index = this.dataSave.findIndex((coe) => coe.documento == documento);
+
+    let isUpdate = 'false';
+
+    isUpdate = original[index]['dtLenCuo'] > 0 ? 'True' : 'False';
+
+    this.dataSave[index]['cuo'] = val.target.innerText.trim();
+    this.dataSave[index]['isUpdate'] = isUpdate;
+
+    this.dataViewCuo[index]['dtCuo'] = val.target.innerText.trim();
+
+    $('#cuoEdit' + rowIndex)[0].innerText = val.target.innerText.trim();
+    $('#cuoEdit' + rowIndex)[0].innerHtml = val.target.innerText.trim();
+
+    console.log(this.dataSave);
+
+    this.dataSourceCUO = new MatTableDataSource<any>([]);
+    this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+    this.dataSourceCUO.paginator = this.paginator;
+    this.dataSourceCUO.sort = this.sort;
+  }
+
+  saveTable() {
+    this.dataSourceCUO = new MatTableDataSource<any>([]);
+    this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
+    this.dataSourceCUO.paginator = this.paginator;
+    this.dataSourceCUO.sort = this.sort;
   }
 
 

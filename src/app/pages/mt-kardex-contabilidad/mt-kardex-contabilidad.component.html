@@ -59,12 +59,12 @@
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-        <mt-select id="cboMotivo" (changeSelected)="onChangeSelect($event)" [optionDefault]="optionDefault" placeHolder="Seleccione Motivo" [optionList]="cboMotivoList"></mt-select>
+        <mt-select id="cboMotivo" [enableSearchInput]="true" (changeSelected)="onChangeSelect($event)" [optionDefault]="optionDefault" placeHolder="Seleccione Motivo" [optionList]="cboMotivoList"></mt-select>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7">
-        <mt-select id="cboTipoDoc" (changeSelected)="onChangeSelect($event)" [optionDefault]="optionDefaultTD" placeHolder="Seleccione Tipo Documento" [optionList]="cboTipoDocList"></mt-select>
+        <mt-select id="cboTipoDoc" [enableSearchInput]="true" (changeSelected)="onChangeSelect($event)" [optionDefault]="optionDefaultTD" placeHolder="Seleccione Tipo Documento" [optionList]="cboTipoDocList"></mt-select>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -267,6 +267,9 @@
                         <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onSearchCuo()">
                           <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
+                        <button id="searchProducto" (click)="onSaveCuo()" type="button" class="btn btn-success btn-sm">
+                          Guardar cuo
+                        </button>
                     </ion-col>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="display: flex;align-items: center;">
                     </ion-col>
@@ -308,22 +311,16 @@
                           <td mat-cell *matCellDef="let element; let i = index" style="max-width: 82px;"> 
                             <div style="width: 100%;display: flex;align-items: center;">
                               <div style="width: 80%;">
-                                <div contenteditable="" id="cuoEdit{{i}}" class="col" (input)="sum($event, 'dtCuoEdit', i)">{{element.dtCuo}}</div>
+                                <div contenteditable="" id="cuoEdit{{i}}" class="col" (input)="sum($event, element.dtDocumento, i)">{{element.dtCuo}}</div>
                               </div>
-                              <div style="width: 20%;margin-left: 10px;">
-                                <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onSaveCuo(element,$event,'dtCuo', i)">
-                                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                                </button>
-                              </div>
-                            </div>     
-
+                            </div>  
                           </td>
                         </ng-container>
         
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsCuo"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsCuo;"></tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons (click)="saveTable()"
                     aria-label="Select page of periodic elements">
                     </mat-paginator>
                   </div>
