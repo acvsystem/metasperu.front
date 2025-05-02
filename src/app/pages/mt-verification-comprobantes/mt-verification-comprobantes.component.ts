@@ -114,7 +114,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
-
+      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);

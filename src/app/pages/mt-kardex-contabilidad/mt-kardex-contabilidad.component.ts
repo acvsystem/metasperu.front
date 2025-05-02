@@ -9,6 +9,7 @@ import { io } from "socket.io-client";
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import * as $ from 'jquery';
+import { StorageService } from 'src/app/utils/storage';
 
 const moment = _rollupMoment || _moment;
 
@@ -94,7 +95,9 @@ export class MtKardexContabilidadComponent implements OnInit {
   vCuo: String = "";
   vCuoEdit: String = "";
   isLoading: boolean = false;
+  isOnlineTienda: boolean = false;
   dataAlbaran: Array<any> = [];
+  conxOnline: Array<any> = [];
   dataSave: Array<any> = [];
   socket = io('http://38.187.8.22:3200', {
     query: { code: 'app' },
@@ -111,31 +114,49 @@ export class MtKardexContabilidadComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private service: ShareService) {
+  constructor(private service: ShareService, private store: StorageService) {
     this.form = new FormGroup({
       clothes: this.shoesControl,
     });
   }
 
   ngOnInit() {
+    this.onVerify();
     this.onListTienda();
+    this.conxOnline = [];
+
+    this.socket.on('comprobantes:get:response', (listaSession) => {
+      let dataList = [];
+      dataList = listaSession || [];
+      (dataList || []).filter((dataSocket: any) => {
+
+        if ((dataSocket || {}).ISONLINE == 1) {
+          let index = this.conxOnline.findIndex((conx) => conx == (dataSocket || {}).CODIGO_TERMINAL);
+
+          if (index == -1) {
+            this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+          }
+        }
+
+        if ((dataSocket || {}).ISONLINE == 0) {
+          this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
+        }
+      });
+
+      this.store.removeStore("conx_online");
+      this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
+    });
 
     this.socket.on('kardex:post:cuo:response', (dataCuo) => {
-
       this.isLoading = false;
       let data = JSON.parse((dataCuo || {}).data || []);
-      console.log(data);
       this.dataViewCuo = data;
-      /*
-      this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
-      this.dataSourceCUO.paginator = this.paginator;
-      this.dataSourceCUO.sort = this.sort;
-*/
       this.service.toastSuccess('Registrado con exito..!!', 'CUO');
     });
 
 
     this.socket.on('kardex:get:cuo:response', (dataCuo) => {
+      this.isLoading = false;
       this.dataSave = [];
       let date = [this.vDetallado[0].replace('/', '-'), this.vDetallado[1].replace('/', '-')];
       this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
@@ -144,7 +165,6 @@ export class MtKardexContabilidadComponent implements OnInit {
 
       this.dataOriginal = [...data];
       this.dataViewCuo = data;
-      console.log(this.dataViewCuo);
 
       this.dataViewCuo.filter((cuo, i) => {
         this.dataSave.push({
@@ -167,7 +187,7 @@ export class MtKardexContabilidadComponent implements OnInit {
     });
 
     this.socket.on('kardex:post:camposlibres:response', (refresh) => {
-
+      this.isLoading = false;
       let data = JSON.parse((refresh || {}).data || []);
       let index = this.dataAlbaran.findIndex((alb) => (alb || {}).cmpNumero == ((data || [])[0] || {}).cmpNumero && (alb || {}).cmpN == ((data || [])[0] || {}).cmpN && (alb || {}).cmpSerie == ((data || [])[0] || {}).cmpSerie);
 
@@ -194,6 +214,10 @@ export class MtKardexContabilidadComponent implements OnInit {
       this.isLoading = false;
     });
 
+  }
+
+  onVerify() { // CONSULTA DE TIENDAS CONECTADAS
+    this.socket.emit('comprobantes:get', 'angular');
   }
 
   onCaledar($event) {
@@ -262,34 +286,46 @@ export class MtKardexContabilidadComponent implements OnInit {
 
   onSaveKardex() {
     this.isLoading = true;
-    let data = {
-      code: this.vCode,
-      num_albaran: this.vNumeroDoc,
-      num_serie: this.vSerieDoc,
-      n: this.vN,
-      numero_despacho: this.vDespacho || "",
-      tasa_cambio: this.vTasaCambio || "",
-      total_gastos: this.vTotalGastos || "",
-      flete_acarreo: this.vFleteAcarreo || "",
-      registro_sanitario: this.vRegistroSanitario || "",
-      motivo: this.cboMotivo || "",
-      tipo_documento: this.cboTipoDoc || "",
-      numero_serie: this.vNumeroSerie || "",
-      observacion: this.vObservacion || "",
-      contenedor: this.vContenedor || ""
-    };
+    let storeConxOnline = this.store.getStore('conx_online');
+    let index = storeConxOnline.findIndex((codeCnx) => codeCnx == this.vCode);
+    if (index > -1) {
+      this.isLoading = true;
+      let data = {
+        code: this.vCode,
+        num_albaran: this.vNumeroDoc,
+        num_serie: this.vSerieDoc,
+        n: this.vN,
+        numero_despacho: this.vDespacho || "",
+        tasa_cambio: this.vTasaCambio || "",
+        total_gastos: this.vTotalGastos || "",
+        flete_acarreo: this.vFleteAcarreo || "",
+        registro_sanitario: this.vRegistroSanitario || "",
+        motivo: this.cboMotivo || "",
+        tipo_documento: this.cboTipoDoc || "",
+        numero_serie: this.vNumeroSerie || "",
+        observacion: this.vObservacion || "",
+        contenedor: this.vContenedor || ""
+      };
 
-    console.log(data);
-    this.socket.emit('kardex:post:camposlibres', data);
+
+      this.socket.emit('kardex:post:camposlibres', data);
+    } else {
+      this.service.toastError('Caja sin conexion..!!', 'Kardex');
+    }
+
+
   }
 
   onSaveCuo() {
-
-
-    // this.isLoading = true;
-
-    console.log(this.dataSave);
-    this.socket.emit('kardex:post:cuo', this.dataSave);
+    this.isLoading = true;
+    let storeConxOnline = this.store.getStore('conx_online');
+    let index = storeConxOnline.findIndex((codeCnx) => codeCnx == this.vCode);
+    if (index > -1) {
+      this.isLoading = true;
+      this.socket.emit('kardex:post:cuo', this.dataSave);
+    } else {
+      this.service.toastError('Caja sin conexion..!!', 'CUO');
+    }
   }
 
 
@@ -360,8 +396,15 @@ export class MtKardexContabilidadComponent implements OnInit {
     let selectData = data || {};
 
     if ((selectData || {}).selectId == "cboTiendaConsulting") {
-
       this.vCode = (selectData || {}).key;
+      let storeConxOnline = this.store.getStore('conx_online');
+      let index = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
+      if (index > -1) {
+        this.isOnlineTienda = true;
+      } else {
+        this.isOnlineTienda = false;
+      }
+
     }
 
     this.codeTienda = (selectData || {}).key;
