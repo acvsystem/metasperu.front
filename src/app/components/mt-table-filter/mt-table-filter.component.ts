@@ -30,6 +30,7 @@ export class MtTableFilterComponent implements OnInit {
   filterEstatus: string = "";
   filterEstatusPapeleta: string = "";
   filterNombreEmpleado: string = "";
+  filterDiaData: string = "";
   codigoPap: string = "";
   isViewPapeleta: boolean = true;
   isFilterT: boolean = false;
@@ -37,6 +38,7 @@ export class MtTableFilterComponent implements OnInit {
   isFilterTR: boolean = false;
   isFilterST: boolean = false;
   isFilterPAP: boolean = false;
+  isFilterD: boolean = false;
   dataFilter: Array<any> = [];
   arFiltro: Array<any> = [];
   dialog = inject(MatDialog);
@@ -79,6 +81,7 @@ export class MtTableFilterComponent implements OnInit {
   @ViewChild('filterStatus') searchStatus!: MatMenu;
   @ViewChild('filterStatusPapeleta') searchStatusPapeleta!: MatMenu;
   @ViewChild('filterNombre') searchNombreEmpleado!: MatMenu;
+  @ViewChild('filterDia') searchDia!: MatMenu;
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
@@ -104,6 +107,7 @@ export class MtTableFilterComponent implements OnInit {
     (this.searchStatus as any).closed = this.configureMenuClose(this.searchStatus.close);
     (this.searchStatusPapeleta as any).closed = this.configureMenuClose(this.searchStatusPapeleta.close);
     (this.searchNombreEmpleado as any).closed = this.configureMenuClose(this.searchNombreEmpleado.close);
+    (this.searchDia as any).closed = this.configureMenuClose(this.searchDia.close);
   }
 
   private configureMenuClose(old: MatMenu['close']): MatMenu['close'] {
@@ -152,6 +156,19 @@ export class MtTableFilterComponent implements OnInit {
     }
 
     this.filteredValues['nombre_completo'] = filterValue.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
+    this.dataSource.filterPredicate = this.customFilterPredicate();
+  }
+
+  applyFilterDia(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterD = true;
+    } else {
+      this.isFilterD = false;
+    }
+
+    this.filteredValues['dia'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
   }
@@ -224,7 +241,8 @@ export class MtTableFilterComponent implements OnInit {
         data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) &&
         data.statusRegistro.toLowerCase().includes(searchString.statusRegistro) &&
         data.estadoPapeleta.toLowerCase().includes(searchString.estadoPapeleta) &&
-        data.nombre_completo.toLowerCase().includes(searchString.nombre_completo)
+        data.nombre_completo.toLowerCase().includes(searchString.nombre_completo) && 
+        data.dia.toLowerCase().includes(searchString.dia)
       );
 
     };
