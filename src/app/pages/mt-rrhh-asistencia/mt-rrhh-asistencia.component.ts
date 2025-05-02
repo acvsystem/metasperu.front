@@ -226,7 +226,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       if (this.isDataEJB && this.isDataServer) {
         this.onDataTemp = [];
         await (this.parseHuellero || []).filter(async (huellero) => {
-        
+
           if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
 
             var codigo = (huellero || {}).caja.substr(0, 2);
@@ -258,9 +258,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
 
                 let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
-                
+
                 let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-                
+
                 this.onDataTemp.push({
                   tienda: (selectedLocal || {})["name"],
                   codigoEJB: (dataEJB || {}).codigoEJB,
@@ -315,7 +315,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
                 this.onDataTemp[indexData]['dataRegistro'].push(huellero);
                 this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
-                
+
                 let defaultHTT = "07:50";
                 let ingresoHorario2 = (defaultHTT).split(':');
                 let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
@@ -325,7 +325,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
                 this.onDataTemp[indexData]['isIncompleto'] = ingresoInt2 > ingresoHorarioInt2 ? false : true;
 
-                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO":"CORRECTO";
+                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO" : "CORRECTO";
 
               }
             }
@@ -440,7 +440,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
             hr_salida: '',
             hr_trabajadas: 0,
             rango_horario: mc.rango_horario,
-            isTardanza: isTardanza
+            isTardanza: isTardanza,
+            statusTardanza: isTardanza ? 'tardanza' : 'correcto'
           });
         } else {
 

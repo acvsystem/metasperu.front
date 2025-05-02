@@ -27,7 +27,7 @@ import { MtCalendarComponent } from './components/mt-calendar/mt-calendar.compon
 import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-tienda.component';
 import { MtTableFilterComponent } from './components/mt-table-filter/mt-table-filter.component';
 import { MtTableFilterPapeletasCreadasComponent } from './components/mt-table-filter-papeletas-creadas/mt-table-filter-papeletas-creadas.component';
-
+import { MtTableOficinaComponent } from './components/mt-table-oficina/mt-table-oficina.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -134,7 +134,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtModalViewComentarioComponent,
         MtTableFilterComponent,
         MtTableFilterPapeletasCreadasComponent,
-        MtKardexContabilidadComponent
+        MtKardexContabilidadComponent,
+        MtTableOficinaComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
