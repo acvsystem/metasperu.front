@@ -217,7 +217,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
 
       let data = (response || {}).data || [];
-     
+
       this.parseHuellero = data;
       console.log(this.parseHuellero);
       this.onDataTemp = [];
@@ -250,7 +250,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
             }
 
-            
+
             (this.onDataTemp || []).push({
               dia: (huellero || {}).dia,
               hr_ingreso_1: (huellero || {}).hrIn,
@@ -267,7 +267,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             console.log(huellero);
             if (huellero.tpAsociado == "**") { //PART TIME
               this.isPartTime = true;
-              
+
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -382,7 +382,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
-              
+
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -1010,7 +1010,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         let data = (response || {}).data || [];
 
         this.parseHuellero = data;
-        
+
         this.onDataTemp = [];
         this.bodyList = [];
         this.dataVerify = [];
@@ -1040,7 +1040,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               if (((huellero || {})['papeleta'] || []).length) {
                 htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
               }
-            
+
 
               (this.onDataTemp || []).push({
                 dia: (huellero || {}).dia,
@@ -1058,7 +1058,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               console.log(huellero);
               if (huellero.tpAsociado == "**") { //PART TIME
                 this.isPartTime = true;
-                
+
                 this.onProcesarPartTime(this.parseHuellero.length, i, {
                   dia: (huellero || {}).dia,
                   hr_ingreso_1: (huellero || {}).hrIn,
@@ -1082,7 +1082,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
 
                   let defaultHT = "00:00";
-                  
+
                   if (tipoAsc.length == 2) { //LACTANCIA
 
                     let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
@@ -1142,7 +1142,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                       if (indexData2 == -1) {
                         let obj = { documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.onDataTemp[indexData]['hr_trabajadas'], fecha: this.onDataTemp[indexData]['dia'], hrx_acumulado: this.onDataTemp[indexData]['hr_extra'], extra: this.onDataTemp[indexData]['hr_extra'], estado: estado, aprobado: aprobado, seleccionado: false };
                         (this.dataVerify || []).push(obj);
-                       
+
                       }
 
                       (this.arCopiHoraExtra || []).push({ fecha: this.onDataTemp[indexData]['dia'], extra: process, estado: estado });
@@ -1174,7 +1174,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 }
 
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
-                
+
                 this.onProcesarPartTime(this.parseHuellero.length, i, {
                   dia: (huellero || {}).dia,
                   hr_ingreso_1: (huellero || {}).hrIn,
@@ -1941,8 +1941,18 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 if ((tienda || {}).IS_FREE_PAPELETA) {
                   arVerify.push(true);
                 } else {
-                  this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
-                  arVerify.push(false);
+
+                  let Factual = new Date(fechaActual).getTime();
+                  let fechaDesde = new Date(pap['fecha_desde']).getTime();
+                  let fechaHasta = new Date(pap['fecha_hasta']).getTime();
+
+                  if (Factual < fechaDesde && Factual < fechaHasta) {
+                    arVerify.push(true);
+                  } else {
+                    this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
+                    arVerify.push(false);
+                  }
+
                 }
               }
 
@@ -1960,52 +1970,52 @@ export class MtPapeletaHorarioComponent implements OnInit {
               url: '/recursos_humanos/pap/registrar',
               body: dataPapeleta
             };
-
-            this.service.post(parms).then(async (response) => {
-              if ((response || {}).success) {
-                this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
-                this.isResetCalendarComp = true;
-                this.isResetForm = true;
-                this.store.removeStore('mt-hrExtra');
-
-                this.cboCasos = "";
-                this.cboCargo = "";
-                //this.vFechaDesde = "";
-                //this.vFechaHasta = "";
-                this.horaSalida = "";
-                this.horaLlegada = "";
-                this.hroAcumuladaTotal = "";
-                this.hroTomada = "";
-                this.hroAcumulada = "";
-                this.bodyList = [];
-                this.vObservacion = "";
-                this.horaSalida = "";
-                this.horaLlegada = "";
-
-
-                this.onListPapeleta();
-                this.onGenerarCodigoPapeleta();
-
-
-
-                $('#horaLlegada input')[0].value = "";
-                $('#horaSalida input')[0].value = "";
-
-                this.horaSalida = "";
-                this.horaLlegada = "";
-                $('#horaLlegada input')[0].value = "";
-                $('#horaSalida input')[0].value = "";
-
-
-                this.cboEmpleado = "";
-                this.vNameOptionSelected = "";
-                $("#cboEmpleado span#cboEmpleado")[0].innerText = "Seleccione Empleado";
-                $("#cboCasos span#cboCasos")[0].innerText = "Tipo de caso";
-                $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
-
-              }
-            });
-
+            /*
+                        this.service.post(parms).then(async (response) => {
+                          if ((response || {}).success) {
+                            this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
+                            this.isResetCalendarComp = true;
+                            this.isResetForm = true;
+                            this.store.removeStore('mt-hrExtra');
+            
+                            this.cboCasos = "";
+                            this.cboCargo = "";
+                            //this.vFechaDesde = "";
+                            //this.vFechaHasta = "";
+                            this.horaSalida = "";
+                            this.horaLlegada = "";
+                            this.hroAcumuladaTotal = "";
+                            this.hroTomada = "";
+                            this.hroAcumulada = "";
+                            this.bodyList = [];
+                            this.vObservacion = "";
+                            this.horaSalida = "";
+                            this.horaLlegada = "";
+            
+            
+                            this.onListPapeleta();
+                            this.onGenerarCodigoPapeleta();
+            
+            
+            
+                            $('#horaLlegada input')[0].value = "";
+                            $('#horaSalida input')[0].value = "";
+            
+                            this.horaSalida = "";
+                            this.horaLlegada = "";
+                            $('#horaLlegada input')[0].value = "";
+                            $('#horaSalida input')[0].value = "";
+            
+            
+                            this.cboEmpleado = "";
+                            this.vNameOptionSelected = "";
+                            $("#cboEmpleado span#cboEmpleado")[0].innerText = "Seleccione Empleado";
+                            $("#cboCasos span#cboCasos")[0].innerText = "Tipo de caso";
+                            $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
+            
+                          }
+                        });
+            */
           } else {
             if (!isErrorHSolicitada) {
               this.service.toastError("Complete todos los campos..!!", "Papeleta");
