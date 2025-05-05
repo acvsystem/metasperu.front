@@ -1970,7 +1970,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
               url: '/recursos_humanos/pap/registrar',
               body: dataPapeleta
             };
-            /*
+            
                         this.service.post(parms).then(async (response) => {
                           if ((response || {}).success) {
                             this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
@@ -2015,7 +2015,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             
                           }
                         });
-            */
+            
           } else {
             if (!isErrorHSolicitada) {
               this.service.toastError("Complete todos los campos..!!", "Papeleta");
