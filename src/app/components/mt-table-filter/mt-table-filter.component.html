@@ -17,7 +17,7 @@
     }
   </mat-drawer>
   <mat-drawer-content>
-    <div class="mat-elevation-z8">
+    <div class="mat-elevation-z8" style="min-height: 600px !important;">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="tienda">
           <th mat-header-cell *matHeaderCellDef> 
@@ -68,7 +68,7 @@
               </div>
             </div>
             <mat-menu #filterNombre="matMenu">
-              <mt-input id="filterNombre" label="Filtro tardanza" placeholder="Escriba estado" type="text" value="{{ filterNombreEmpleado }}"
+              <mt-input id="filterNombre" label="Filtro nombre" placeholder="Escriba nombre" type="text" value="{{ filterNombreEmpleado }}"
               (keyup)="applyFilterNombreEmpleado($event)"></mt-input>
             </mat-menu>
           </th>
