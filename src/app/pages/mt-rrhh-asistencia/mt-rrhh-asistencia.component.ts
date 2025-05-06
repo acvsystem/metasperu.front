@@ -37,7 +37,10 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-rrhh-asistencia.component.scss'],
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://38.187.8.22:3200', {
+    query: { code: 'app' }
+  });
+
   displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
   displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isLoading: boolean = false;
@@ -78,7 +81,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   arrDataGrafic: Array<any> = [];
   arrMarcacionOf: Array<any> = [];
   originalOnDataView: Array<any> = [];
+  dataServGeneral: Array<any> = [];
+  dataRecipient: Array<any> = [];
   myGraffic: any;
+  countDataLength: number = 0;
   dialog = inject(MatDialog);
   private setting = {
     element: {
@@ -148,7 +154,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.onTiempoTolerancia();
 
     this.socket.on('reporteHuellero', async (configuracion) => {
-      console.log("servGeneral new", configuracion);
+
       if (configuracion.id == "EJB") {
         this.isDataEJB = true;
         let dateNow = new Date();
@@ -199,199 +205,209 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
       if (configuracion.id == "servGeneral") {
         console.log("servGeneral", true);
-        this.isDataServer = true;
 
-        let dataServGeneral = [];
-        this.parseHuellero = [];
-        dataServGeneral = (configuracion || {}).data || [];
+        this.countDataLength += ((configuracion || {}).data || []).length;
 
-        (dataServGeneral || []).filter((huellero) => {
-          this.parseHuellero.push({
-            nro_documento: (huellero || {}).nroDocumento,
-            nombre_completo: (huellero || {}).nombreCompleto,
-            dia: (huellero || {}).dia,
-            hr_ingreso: (huellero || {}).hrIn,
-            hr_salida: (huellero || {}).hrOut,
-            hr_trabajadas: (huellero || {}).hrWorking,
-            caja: (huellero || {}).caja,
-            papeletas: (huellero || {}).papeleta,
-            isPapeleta: ((huellero || {}).papeleta || []).length ? true : false,
-            rango_horario: (huellero || {}).rango_horario
-          });
+        (configuracion || {}).data.filter((dt) => {
+          this.dataServGeneral.push(dt);
         });
 
-      }
 
-
-      if (this.isDataEJB && this.isDataServer) {
-        this.onDataTemp = [];
-        await (this.parseHuellero || []).filter(async (huellero) => {
-
-          if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
-
-            var codigo = (huellero || {}).caja.substr(0, 2);
-            var selectedLocal = {};
-
-
-
-            if ((huellero || {}).caja.substr(2, 2) == 7) {
-              codigo = (huellero || {}).caja;
-            } else {
-              codigo.substr(0, 1)
-            }
-
-            selectedLocal = await this.onListTiendas.find((data) => data.code == codigo) || {};
-
-            let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia) && (data || {}).caja == (huellero || []).caja);
-            let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
-
-            if ((dataEJB || {}).codigoEJB != null) {
-
-              if (indexData == -1) {
-
-                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'tardanza');
-
-                let defaultHT = this.obtenerHorasTrabajadas((huellero || {}).rango_horario.split(" ")[0], (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA ENTRADA
-                let ingreso = (huellero || {}).hr_ingreso.split(':');
-                let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
-                let ingresoHorario = (defaultHT).split(':');
-                let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-
-                let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
-
-                let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-
-                this.onDataTemp.push({
-                  tienda: (selectedLocal || {})["name"],
-                  codigoEJB: (dataEJB || {}).codigoEJB,
-                  nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
-                  nro_documento: (huellero || {}).nro_documento,
-                  telefono: (dataEJB || {}).telefono,
-                  email: (dataEJB || {}).email,
-                  fec_nacimiento: (dataEJB || {}).fec_nacimiento,
-                  fec_ingreso: (dataEJB || {}).fec_ingreso,
-                  status: (dataEJB || {}).status,
-                  dia: (huellero || {}).dia,
-                  hr_ingreso_1: (huellero || {}).hr_ingreso,
-                  hr_salida_1: (huellero || {}).hr_salida,
-                  rango_horario: (huellero || {}).rango_horario,
-                  isNullRango: !((huellero || {}).rango_horario || "").length ? true : false,
-                  isTardanza: isTardanza,
-                  hr_brake: "",
-                  hr_ingreso_2: "",
-                  hr_salida_2: "",
-                  hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : this.obtenerHorasTrabajadas(hrt, (((huellero || {}).papeletas || [])[0] || {})['HORA_SOLICITADA']),
-                  caja: (huellero || {}).caja,
-                  isJornadaCompleta: false,
-                  isBrakeComplete: false,
-                  isRegistroMax: false,
-                  statusRegistro: 'CORRECTO',
-                  statusTardanza: isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
-                  dataRegistro: [huellero],
-                  papeletas: (huellero || {}).papeletas || [],
-                  isPapeleta: (huellero || {}).isPapeleta,
-                  estadoPapeleta: (huellero || {}).isPapeleta ? 'con papeleta' : 'sin papeleta'
-                });
-
-              } else {
-                this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
-                this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
-                this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
-                let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-
-                let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'breake');
-
-                let defaultHT = this.obtenerHorasTrabajadas("01:00", (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA BREAKE
-                let ingresoHorario = (defaultHT).split(':');
-                let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-
-                let ingreso = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso).split(':');
-                let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
-
-                let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
-
-                this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
-                this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
-                this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
-                this.onDataTemp[indexData]['dataRegistro'].push(huellero);
-                this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
-
-                let defaultHTT = "07:50";
-                let ingresoHorario2 = (defaultHTT).split(':');
-                let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
-
-                let ingreso2 = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
-                let ingresoInt2 = parseInt(ingreso2[0]) * 60 + parseInt(ingreso2[1]);
-
-                this.onDataTemp[indexData]['isIncompleto'] = ingresoInt2 > ingresoHorarioInt2 ? false : true;
-
-                this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO" : "CORRECTO";
-
-              }
-            }
-          }
-        });
-
-        if (this.isViewDefault || this.isDetallado) {
-
-          this.onDataView = this.onDataTemp;
-          this.originalOnDataView = [...this.onDataTemp];
-          this.dataSource = new MatTableDataSource(this.onDataView);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-
-          this.onDataTemp.filter((dt) => {
-            if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
-              let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
-
-              if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
-                if (indexData == -1) {
-                  this.arrDataGrafic.push({
-                    tienda: dt.tienda,
-                    cantidad: 1
-                  });
-                } else {
-                  this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
-                }
-              }
-
-              if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
-                if (indexData == -1) {
-                  this.arrDataGrafic.push({
-                    tienda: dt.tienda,
-                    cantidad: 1
-                  });
-                } else {
-                  this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
-                }
-              }
-
-              if (dt.isTardanza && !dt.isNullRango && this.cboTipoGraffic == "Tardanzas") {
-                if (indexData == -1) {
-                  this.arrDataGrafic.push({
-                    tienda: dt.tienda,
-                    cantidad: 1
-                  });
-                } else {
-                  this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
-                }
-              }
-            }
-          });
-
-          this.onViewGrafic();
-          console.log(this.onDataTemp);
-          if (this.onDataView.length) {
-            this.isLoading = false;
-          }
-
-        }
-
-        if (this.isViewFeriados) {
-          this.onFiltrarFeriado(this.vMultiSelect);
+        if (this.countDataLength == (configuracion || {}).length) {
+          console.log(this.countDataLength, (configuracion || {}).length);
+          this.countDataLength = 0;
+          this.onProcesarAsistencia();
         }
       }
     });
+  }
+
+  async onProcesarAsistencia() {
+    this.isDataServer = true;
+    this.parseHuellero = [];
+    (this.dataServGeneral || []).filter((huellero) => {
+      this.parseHuellero.push({
+        nro_documento: (huellero || {}).nroDocumento,
+        nombre_completo: (huellero || {}).nombreCompleto,
+        dia: (huellero || {}).dia,
+        hr_ingreso: (huellero || {}).hrIn,
+        hr_salida: (huellero || {}).hrOut,
+        hr_trabajadas: (huellero || {}).hrWorking,
+        caja: (huellero || {}).caja,
+        papeletas: (huellero || {}).papeleta,
+        isPapeleta: ((huellero || {}).papeleta || []).length ? true : false,
+        rango_horario: (huellero || {}).rango_horario
+      });
+    });
+
+    if (this.isDataEJB && this.isDataServer) {
+      this.onDataTemp = [];
+      await (this.parseHuellero || []).filter(async (huellero) => {
+
+        if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
+
+          var codigo = (huellero || {}).caja.substr(0, 2);
+          var selectedLocal = {};
+
+
+
+          if ((huellero || {}).caja.substr(2, 2) == 7) {
+            codigo = (huellero || {}).caja;
+          } else {
+            codigo.substr(0, 1)
+          }
+
+          selectedLocal = await this.onListTiendas.find((data) => data.code == codigo) || {};
+
+          let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia) && (data || {}).caja == (huellero || []).caja);
+          let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
+
+          if ((dataEJB || {}).codigoEJB != null) {
+
+            if (indexData == -1) {
+
+              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'tardanza');
+
+              let defaultHT = this.obtenerHorasTrabajadas(((huellero || {}).rango_horario || "").split(" ")[0], (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA ENTRADA
+              let ingreso = (huellero || {}).hr_ingreso.split(':');
+              let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+              let ingresoHorario = (defaultHT).split(':');
+              let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+
+              let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
+
+              let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
+
+              this.onDataTemp.push({
+                tienda: (selectedLocal || {})["name"],
+                codigoEJB: (dataEJB || {}).codigoEJB,
+                nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
+                nro_documento: (huellero || {}).nro_documento,
+                telefono: (dataEJB || {}).telefono,
+                email: (dataEJB || {}).email,
+                fec_nacimiento: (dataEJB || {}).fec_nacimiento,
+                fec_ingreso: (dataEJB || {}).fec_ingreso,
+                status: (dataEJB || {}).status,
+                dia: (huellero || {}).dia,
+                hr_ingreso_1: (huellero || {}).hr_ingreso,
+                hr_salida_1: (huellero || {}).hr_salida,
+                rango_horario: (huellero || {}).rango_horario,
+                isNullRango: !((huellero || {}).rango_horario || "").length ? true : false,
+                isTardanza: isTardanza,
+                hr_brake: "",
+                hr_ingreso_2: "",
+                hr_salida_2: "",
+                hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : this.obtenerHorasTrabajadas(hrt, (((huellero || {}).papeletas || [])[0] || {})['HORA_SOLICITADA']),
+                caja: (huellero || {}).caja,
+                isJornadaCompleta: false,
+                isBrakeComplete: false,
+                isRegistroMax: false,
+                statusRegistro: 'CORRECTO',
+                statusTardanza: isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
+                dataRegistro: [huellero],
+                papeletas: (huellero || {}).papeletas || [],
+                isPapeleta: (huellero || {}).isPapeleta,
+                estadoPapeleta: (huellero || {}).isPapeleta ? 'con papeleta' : 'sin papeleta'
+              });
+
+            } else {
+
+              this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
+              this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
+              this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
+              let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
+
+              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'breake');
+
+              let defaultHT = this.obtenerHorasTrabajadas("01:00", (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA BREAKE
+              let ingresoHorario = (defaultHT).split(':');
+              let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+
+              let ingreso = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso).split(':');
+              let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+
+              let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
+
+              this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
+              this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
+              this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
+              this.onDataTemp[indexData]['dataRegistro'].push(huellero);
+              this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
+
+              let defaultHTT = "07:50";
+              let ingresoHorario2 = (defaultHTT).split(':');
+              let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
+
+              let ingreso2 = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
+              let ingresoInt2 = parseInt(ingreso2[0]) * 60 + parseInt(ingreso2[1]);
+
+              this.onDataTemp[indexData]['isIncompleto'] = ingresoInt2 > ingresoHorarioInt2 ? false : true;
+
+              this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO" : "CORRECTO";
+
+            }
+          }
+        }
+      });
+
+      if (this.isViewDefault || this.isDetallado) {
+
+        this.onDataView = this.onDataTemp;
+        this.originalOnDataView = [...this.onDataTemp];
+        this.dataSource = new MatTableDataSource(this.onDataView);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.onDataTemp.filter((dt) => {
+          if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
+            let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
+
+            if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
+              if (indexData == -1) {
+                this.arrDataGrafic.push({
+                  tienda: dt.tienda,
+                  cantidad: 1
+                });
+              } else {
+                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+              }
+            }
+
+            if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
+              if (indexData == -1) {
+                this.arrDataGrafic.push({
+                  tienda: dt.tienda,
+                  cantidad: 1
+                });
+              } else {
+                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+              }
+            }
+
+            if (dt.isTardanza && !dt.isNullRango && this.cboTipoGraffic == "Tardanzas") {
+              if (indexData == -1) {
+                this.arrDataGrafic.push({
+                  tienda: dt.tienda,
+                  cantidad: 1
+                });
+              } else {
+                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+              }
+            }
+          }
+        });
+
+        this.onViewGrafic();
+        if (this.onDataView.length) {
+          this.isLoading = false;
+        }
+
+      }
+
+      if (this.isViewFeriados) {
+        this.onFiltrarFeriado(this.vMultiSelect);
+      }
+    }
   }
 
   onProcesarAsistenciaOf(dataProcesar) {
@@ -571,7 +587,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onConsultarAsistencia() {
-
+   
     if (!this.isErrorFecha) {
       if (this.sedeReporte == 'tienda') {
         let arVerif = [];
@@ -579,7 +595,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         await (this.vMultiSelect || []).filter((dt) => {
 
           let date = dt.split('/');
-          console.log(dt, this.vCalendar);
           if (date[1] == this.vCalendar[1] || date[1] == this.vCalendar[2]) {
             arVerif.push(true);
           } else {
@@ -592,6 +607,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           this.isLoading = false;
         } else {
           if (this.vCalendarDefault.length || this.vDetallado.length >= 2) {
+            this.dataServGeneral = [];
 
             var configuracion = {
               isDefault: this.isViewDefault,
