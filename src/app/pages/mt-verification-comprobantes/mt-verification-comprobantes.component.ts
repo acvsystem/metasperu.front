@@ -35,6 +35,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   vManagerData: string = '';
   isVisibleStatus: boolean = false;
   isVerificarBd: boolean = false;
+  isLoadingDB: boolean = false;
   statusServerList: any = [];
   countClientes: any = 0;
   socket = io('http://38.187.8.22:3200', {
@@ -292,7 +293,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comparacion:get:bd:response', (response) => { // RECIBE COMPARACION ENTRE BASES DE DATOS COE_DATA
-      this.isShowLoading = false;
+      this.isLoadingDB = false;
       this.isVerificarBd = false;
       this.bodyListBD = (response || []).data;
       if (!this.bodyListBD.length || ((this.bodyListBD || [])[0] || {})['code_data'] == ((this.bodyListBD || [])[0] || {})['manager_data']) {
@@ -321,7 +322,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
   onVerificarDataBase() { // ENVIO COMPARACION ENTRE BASES DE DATOS COE_DATA
-    this.isShowLoading = true;
+    this.isLoadingDB = true;
     this.socket.emit('comparacion:get:bd', 'angular');
   }
 
@@ -349,25 +350,26 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onListTienda() { //LISTA DE TIENDAS REGISTRADAS
     const self = this;
     let parms = {
-      url: '/security/lista/registro/tiendas'
+      url: '/comprobantes/session/lista'
     };
 
     this.service.get(parms).then((response) => {
-      let tiendaList = (response || {}).data || [];
+      
+     let tiendaList = (response || {}).data || [];
 
       (tiendaList || []).filter((tnd) => {
 
         if ((tnd || {}).SERIE_TIENDA != '9Q') {
-          this.conxOnline.push((tnd || {}).SERIE_TIENDA);
+          this.conxOnline.push((tnd || {}).CODIGO_TERMINAL);
 
           (this.bodyList || []).push({
-            codigo: (tnd || {}).SERIE_TIENDA,
+            codigo: (tnd || {}).CODIGO_TERMINAL,
             Tienda: (tnd || {}).DESCRIPCION,
-            isVerification: false,
-            cant_comprobantes: 0,
+            isVerification: (tnd || {}).VERIFICACION,
+            cant_comprobantes: (tnd || {}).CANT_COMPROBANTES,
             transacciones: 0,
             clientes_null: 0,
-            online: false,
+            online: (tnd || {}).ISONLINE,
             conexICG: 0,
             terminales: [],
             dataTerminales: []
@@ -375,6 +377,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
         }
 
       });
+
     });
   }
 
