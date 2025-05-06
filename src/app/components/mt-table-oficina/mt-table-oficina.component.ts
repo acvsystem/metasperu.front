@@ -18,9 +18,11 @@ export class MtTableOficinaComponent implements OnInit {
   displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
   isFilterNM: boolean = false;
   isFilterTR: boolean = false;
+  isFilterDia: boolean = false;
   filterEmpleado: string = "";
   filterNombreEmpleado: string = "";
   filterTardanzaStatus: string = "";
+  filterFecha: string = "";
   filteredValues: any = {
     nombre: "",
     fecha: "",
@@ -39,6 +41,7 @@ export class MtTableOficinaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterNombre') searchNombreEmpleado!: MatMenu;
   @ViewChild('filterTardanza') searchTardanza!: MatMenu;
+  @ViewChild('filterDia') searchDia!: MatMenu;
 
   constructor() { }
 
@@ -59,6 +62,7 @@ export class MtTableOficinaComponent implements OnInit {
     // Inject our custom logic of menu close
     (this.searchNombreEmpleado as any).closed = this.configureMenuClose(this.searchNombreEmpleado.close);
     (this.searchTardanza as any).closed = this.configureMenuClose(this.searchTardanza.close);
+    (this.searchDia as any).closed = this.configureMenuClose(this.searchDia.close);
   }
 
   private configureMenuClose(old: MatMenu['close']): MatMenu['close'] {
@@ -112,6 +116,20 @@ export class MtTableOficinaComponent implements OnInit {
 
   }
 
+  applyFilterDia(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue.length) {
+      this.isFilterDia = true;
+    } else {
+      this.isFilterDia = false;
+    }
+
+    this.filteredValues['fecha'] = filterValue.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
+    this.dataSource.filterPredicate = this.customFilterPredicate();
+
+  }
+
   customFilterPredicate() {
     const myFilterPredicate = (
       data: PeriodicElement,
@@ -136,7 +154,8 @@ export class MtTableOficinaComponent implements OnInit {
 
       return (
         data.nombre.toLowerCase().includes(searchString.nombre) &&
-        data.statusTardanza.toLowerCase().includes(searchString.statusTardanza)
+        data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) && 
+        data.fecha.toLowerCase().includes(searchString.fecha)
       );
 
     };
