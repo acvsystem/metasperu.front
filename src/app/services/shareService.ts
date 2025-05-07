@@ -204,7 +204,7 @@ export class ShareService {
         this.eventIsLoggedIn.emit(true);
         this.store.setStore('tn', token);
         this.onProfileUser.emit(((response || [])[0].profile || {}));
-        // this.onMenuUser.emit(((response || {}).menu || {}));
+        this.onMenuUser.emit(((response || [])[0].menu || {}));
         return token;
       } else {
         this.eventIsLoggedIn.emit(false);

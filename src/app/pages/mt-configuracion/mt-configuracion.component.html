@@ -385,38 +385,111 @@
             <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
               <ion-row>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                      <button  id="searchProducto" type="button" class="btn btn-primary btn-sm">
-                        Crear Usuario
-                      </button>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                      <mt-input id="vUsuario" label="Usuario" placeholder="Usuario" type="text" value="{{ vUsuario }}"></mt-input>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                      <mt-input id="vPassword" label="Password" placeholder="Password" type="text" value="{{ vPassword }}"></mt-input>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                      <mt-select
-                      id="pageDefault"
-                      placeHolder="Paginas Default"
-                      [optionList]="onListPageDefault"
-                      ></mt-select>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                      <mt-select
-                      id="tipoCuenta"
-                      placeHolder="Tipo Cuenta"
-                      [optionList]="onListTipoCuenta"
-                      ></mt-select>
-                    </ion-col>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                      <mt-input id="vEmail" label="Email" placeholder="Email" type="text" value="{{ vEmail }}"></mt-input>
-                    </ion-col>
-                  </ion-row>
+                  <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
+                    <mat-tab label="Creacion usuario">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <button  id="searchProducto" type="button" class="btn btn-primary btn-sm">
+                            Crear Usuario
+                          </button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <mt-input id="vUsuario" label="Usuario" placeholder="Usuario" type="text" value="{{ vUsuario }}"></mt-input>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <mt-input id="vPassword" label="Password" placeholder="Password" type="text" value="{{ vPassword }}"></mt-input>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <mt-select
+                          id="pageDefault"
+                          placeHolder="Paginas Default"
+                          [optionList]="onListPageDefault"
+                          ></mt-select>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <mt-select
+                          id="tipoCuenta"
+                          placeHolder="Tipo Cuenta"
+                          [optionList]="onListTipoCuenta"
+                          ></mt-select>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <mt-input id="vEmail" label="Email" placeholder="Email" type="text" value="{{ vEmail }}"></mt-input>
+                        </ion-col>
+                      </ion-row>
+                    </mat-tab>
+                    <mat-tab label="Niveles y permisos">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <div cdkDropListGroup style="display: flex;justify-content: center;">
+                            <div class="example-container">
+                              <ion-row>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
+                                  <mt-input id="vMenu" label="Menu" placeholder="Nombre del menu" type="text" value="{{ vMenu }}"></mt-input>
+                                </ion-col>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
+                                  <mt-input id="vRutaMenu" label="Ruta" placeholder="Nombre de ruta" type="text" value="{{ vRutaMenu }}"></mt-input>
+                                </ion-col>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
+                                  <button  id="searchProducto" type="button" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                  </button>
+                                </ion-col>
+                              </ion-row>
+                              <div style="align-items: center;display: inline-flex;width: 100%;">
+                                <h2>Menu</h2>
+                              </div>                             
+                        
+                              <div
+                                id="dropMenu"
+                                cdkDropList
+                                [cdkDropListData]="dataViewMenu"
+                                class="example-list"
+                                (cdkDropListDropped)="drop($event)">
+                                @for (item of dataViewMenu; track item) {
+                                  <div class="example-box" cdkDrag>{{item}}</div>
+                                }
+                              </div>
+                            </div>
+                          
+                            <div class="example-container" style="margin: 0px;">
+                              <ion-row>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="10" sizeLg="10">
+                                  <mt-input id="vNivel" label="Nivel" placeholder="Nombre del nivel" type="text" value="{{ vNivel }}"></mt-input>
+                                </ion-col>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1" style="display: flex;align-items: center;">
+                                  <button  id="searchProducto" type="button" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                  </button>
+                                </ion-col>
+                              </ion-row>
+                              <div style="align-items: center;display: inline-flex;width: 100%;">
+                                <h2 style="margin-right: 20px;">Niveles</h2>  <mt-select style="width: 100%;"
+                              id="cboNivel"
+                              placeHolder="Niveles sistema"
+                              [optionList]="dataNivelList"
+                              (changeSelected)="onChangeSelect($event)"
+                              ></mt-select>
+                              </div>
+
+                              <div
+                                id="dropNivel"
+                                cdkDropList
+                                [cdkDropListData]="dataNivelListOne"
+                                class="example-list"
+                                (cdkDropListDropped)="drop($event)">
+                                @for (item of dataNivelListOne; track item) {
+                                  <div class="example-box" cdkDrag>{{item}}</div>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </mat-tab>
+                  </mat-tab-group>
                 </ion-col>
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <ion-row>

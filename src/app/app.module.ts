@@ -94,6 +94,7 @@ import { MtModalComentarioComponent } from './components/mt-modal-comentario/mt-
 import { MtModalViewComentarioComponent } from './components/mt-modal-view-comentario/mt-modal-view-comentario.component';
 import { MtKardexContabilidadComponent } from './pages/mt-kardex-contabilidad/mt-kardex-contabilidad.component';
 
+
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({

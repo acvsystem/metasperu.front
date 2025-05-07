@@ -58,6 +58,7 @@ export class MtLoginComponent implements OnInit {
       };
 
       this.shrService.post(parms).then(async (response) => {
+        console.log(response);
         if ((response || {}).success) {
           this.isLogin = true;
           this.shrService.createToken(this.userName, this.password).then((token) => {

@@ -51,6 +51,19 @@ export class AppComponent {
 
     }
 
+    this.service.onMenuUser.subscribe((menuUser) => {
+      const self = this;
+      menuUser.filter((menu) => {
+        self.menuUser.push({
+          ISVISIBLE: true,
+          nombre_menu: (menu || "").NOMBRE_MENU,
+          ruta: (menu || "").RUTA
+        });
+      });
+
+      this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
+    });
+
     this.service.onProfileUser.subscribe((profile) => {
       const self = this;
       this.profileUser = [];
@@ -63,192 +76,6 @@ export class AppComponent {
       this.profileUser.push(newProfile);
       this.store.removeStore("mt-profile");
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
-      let profileUser = this.store.getStore('mt-profile');
-
-      if ((profileUser || {}).mt_nivel == "RRHH") {
-        self.menuUser = [
-          {
-            ISVISIBLE: true,
-            nombre_menu: "ASISTENCIA",
-            ruta: "asistencia"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "PLANILLA RRHH",
-            ruta: "planilla"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "HORARIO",
-            ruta: "horario"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "PANEL HORARIOS",
-            ruta: "panel-horario"
-          }
-
-        ];
-
-        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-      }
-
-      if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno") {
-        self.menuUser = [
-          {
-            ISVISIBLE: true,
-            nombre_menu: "INVENTARIO",
-            ruta: "inventario"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "ASISTENCIA",
-            ruta: "asistencia"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "PANEL HORARIOS",
-            ruta: "panel-horario"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "AUTORIZACION HORA EXTRA",
-            ruta: "auth-hora-extra"
-          }
-        ];
-
-        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-      }
-
-
-      if ((profileUser || {}).mt_nivel == "nduran" || (profileUser || {}).mt_nivel == "aseijo") {
-        self.menuUser = [
-          {
-            ISVISIBLE: true,
-            nombre_menu: "INVENTARIO",
-            ruta: "inventario"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "ASISTENCIA",
-            ruta: "asistencia"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "PANEL HORARIOS",
-            ruta: "panel-horario"
-          }
-        ];
-
-        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-      }
-
-      if ((profileUser || {}).mt_nivel == "acarbajal") {
-        self.menuUser = [
-          {
-            ISVISIBLE: true,
-            nombre_menu: "INVENTARIO",
-            ruta: "inventario"
-          },
-          {
-            ISVISIBLE: true,
-            nombre_menu: "PANEL HORARIOS",
-            ruta: "panel-horario"
-          }
-        ];
-
-        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-      }
-
-      if ((profileUser || {}).mt_nivel == "contabilidad" || (profileUser || {}).mt_nivel == "contabilidad5" || (profileUser || {}).mt_nivel == "contabilidad4" || (profileUser || {}).mt_nivel == "contabilidad3" || (profileUser || {}).mt_nivel == "contabilidad2" || (profileUser || {}).mt_nivel == "contabilidad1") {
-        self.menuUser = [
-          {
-            ISVISIBLE: true,
-            nombre_menu: "KARDEX",
-            ruta: "kardex"
-          }
-        ];
-
-        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-      }
-
-      if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
-        self.menuUser = [{
-          ISVISIBLE: true,
-          nombre_menu: "INVENTARIO",
-          ruta: "inventario"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "COMPROBANTES",
-          ruta: "comprobantes"
-        }
-          ,
-        {
-          ISVISIBLE: true,
-          nombre_menu: "CONFIGURACION",
-          ruta: "configuracion"
-        }
-          ,
-        {
-          ISVISIBLE: true,
-          nombre_menu: "ASISTENCIA",
-          ruta: "asistencia"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "HORARIO",
-          ruta: "horario"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "AUTORIZACION HORA EXTRA",
-          ruta: "auth-hora-extra"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "PANEL HORARIOS",
-          ruta: "panel-horario"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "PLANILLA RRHH",
-          ruta: "planilla"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "DRIVE CLOUD",
-          ruta: "drive-cloud"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "KARDEX",
-          ruta: "kardex"
-        }
-
-        ];
-
-        this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-      }
-
-      if ((profileUser || {}).code.length) {
-        self.menuUser = [{
-          ISVISIBLE: true,
-          nombre_menu: "INVENTARIO",
-          ruta: "inventario"
-        },
-        {
-          ISVISIBLE: true,
-          nombre_menu: "HORARIO",
-          ruta: "horario"
-        }
-        ];
-      }
-
-      this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
-
-
-
     });
 
     this.service.onMenuUser.subscribe((menu) => {

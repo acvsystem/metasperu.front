@@ -9,6 +9,14 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import {
+  CdkDragDrop,
+  CdkDrag,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'mt-configuracion',
@@ -16,6 +24,8 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./mt-configuracion.component.scss'],
 })
 export class MtConfiguracionComponent implements OnInit {
+  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
+  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
 
   displayedColumnsSession: string[] = ['id_session', 'email', 'ip', 'divice'];
   displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo', 'accion'];
@@ -61,6 +71,7 @@ export class MtConfiguracionComponent implements OnInit {
   passEmailService: string = "";
   vAddSerieTienda: string = "";
   vAddNombreTienda: string = "";
+  cboNivel: string = "";
   cboTienda: string = "";
   vEmail: string = "";
   cboTipo: string = "";
@@ -71,6 +82,11 @@ export class MtConfiguracionComponent implements OnInit {
   onListTipoCuenta: Array<any> = [];
   cboListTienda: Array<any> = [];
   selectOption: Array<any> = [];
+  dataMenuList: Array<any> = [];
+  dataViewMenu: Array<any> = [];
+  dataNivelList: Array<any> = [];
+  dataNivelListOne: Array<any> = [];
+  dataPermiso: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
   nombreMenu: string = "";
@@ -112,7 +128,9 @@ export class MtConfiguracionComponent implements OnInit {
   vRutaDownloadAgente: String = "";
   vRutaDownloadSunat: String = "";
   vNameExcelStock: String = "";
-
+  vNivel: String = "";
+  vMenu: String = "";
+  vRutaMenu: String = "";
   optionListRol: Array<any> = [];
   vListaClientes: String = "";
   socket = io('http://38.187.8.22:3200', { query: { code: 'app', token: this.token } });
@@ -134,6 +152,8 @@ export class MtConfiguracionComponent implements OnInit {
      this.onListConfiguration();
      this.onListMenu();
      this.onListRoles();*/
+    this.onMenuList();
+    this.onNivelesList();
     this.onListTienda();
     this.socket.on('update:file:status', (status) => {
       let index = this.tiendasList.findIndex((tienda) => tienda.key == status.serie);
@@ -322,7 +342,7 @@ export class MtConfiguracionComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
-    if (index != "cboTipo" && index != 'cboTienda') {
+    if (index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel') {
       this.onListMenuUsuario().then((menu: Array<any>) => {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
@@ -342,6 +362,10 @@ export class MtConfiguracionComponent implements OnInit {
 
     if (index == 'cboTienda') {
       this.vSerieTienda = this[index];
+    }
+
+    if (index = 'cboNivel') {
+      this.onConsultaMenuNivel((selectData || {}).key);
     }
 
   }
@@ -739,5 +763,114 @@ export class MtConfiguracionComponent implements OnInit {
 
   onSelectTolerancia(data) {
     this.vReferencia = (data || {}).REFERENCIA;
+  }
+
+  onMenuList() {
+    return new Promise((resolve, reject) => {
+      let parms = {
+        url: '/menu/sistema/lista'
+      };
+      this.service.get(parms).then((response) => {
+        this.dataMenuList = response;
+        this.dataViewMenu = [];
+        this.dataMenuList.filter((menu, i) => {
+          this.dataViewMenu.push((menu || {}).NOMBRE_MENU);
+
+          if (this.dataMenuList.length - 1 == i) {
+            resolve(this.dataViewMenu);
+          }
+        });
+
+
+      });
+    });
+  }
+
+
+  onNivelesList() {
+    let parms = {
+      url: '/menu/sistema/niveles'
+    };
+    this.service.get(parms).then((response) => {
+      response.filter((nivel) => {
+        this.dataNivelList.push({ key: nivel.NIVEL_DESCRIPCION, value: nivel.NIVEL_DESCRIPCION });
+      });
+    });
+  }
+
+  onConsultaMenuNivel(nivel) {
+    let parms = {
+      url: '/menu/sistema/consulta',
+      body: [{
+        nivel: nivel || ""
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.dataNivelListOne = [];
+      this.dataPermiso = response;
+      this.onMenuList().then((menuList: any) => {
+        (response || []).filter((nivel) => {
+          this.dataViewMenu = this.dataViewMenu.filter((menu) => menu != nivel.NOMBRE_MENU);
+
+          this.dataNivelListOne.push(nivel.NOMBRE_MENU);
+        });
+      });
+    });
+  }
+
+
+  onAddOpcionNivel(id_menu, nivel) {
+    let parms = {
+      url: '/menu/sistema/add/permisos',
+      body: [{
+        id_menu: id_menu,
+        nivel: nivel
+      }]
+    };
+    this.service.post(parms).then((response) => {
+     this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
+    });
+  }
+
+  onDeletepcionNivel(id_permiso) {
+    let parms = {
+      url: '/menu/sistema/delete/permisos',
+      body: [{
+        id_menu: id_permiso
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.service.toastSuccess('Opcion eliminada con exito..!!', 'Permisos');
+    });
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+
+    } else {
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+      if ((event || {})['container']['id'] == "dropMenu") {
+        let dataRecept = event.container.data;
+        let dataPermiso = this.dataPermiso.find((permiso) => permiso.NOMBRE_MENU == dataRecept[event.currentIndex]);
+        this.onDeletepcionNivel(dataPermiso.ID_PERMISO_USER);
+      }
+
+      if ((event || {})['container']['id'] == "dropNivel") {
+        let dataRecept = event.container.data;
+
+        let dataMenu = this.dataMenuList.find((menu) => menu.NOMBRE_MENU == dataRecept[event.currentIndex]);
+        this.onAddOpcionNivel(dataMenu.ID_MENU, this.cboNivel);
+      }
+
+    }
   }
 }
