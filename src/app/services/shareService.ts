@@ -203,7 +203,7 @@ export class ShareService {
       if (token) {
         this.eventIsLoggedIn.emit(true);
         this.store.setStore('tn', token);
-        this.onProfileUser.emit(((response || [])[0].profile || {}));
+        this.onProfileUser.emit(((response || [])[0] || {}));
         this.onMenuUser.emit(((response || [])[0].menu || {}));
         return token;
       } else {

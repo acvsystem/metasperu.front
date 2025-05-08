@@ -29,7 +29,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   displayedColumnsSession: string[] = ['id_session', 'email', 'ip', 'divice'];
   displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo', 'accion'];
-  displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel'];
+  displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel', 'accion'];
   displayedColumnsCajas: string[] = ['nro_caja', 'mac', 'serie_tienda', 'database_instance', 'database_name', 'cod_tipo_factura', 'cod_tipo_boleta', 'property_stock', 'name_excel_stock', 'ruta_download_agente', 'ruta_download_sunat'];
   displayedColumnsPermiso: string[] = ['codigo', 'tienda', 'horario_permiso', 'papeleta_permiso'];
   dataViewSession: Array<any> = [];
@@ -62,20 +62,26 @@ export class MtConfiguracionComponent implements OnInit {
   filterTienda: string = "";
   vReferencia: string = "";
   vTiempoTolerancia: string = "";
+  idEditUSer: string = "";
   emailList: Array<any> = [];
   emailSend: string = "";
   isEmailDelete: boolean = false;
   isAddTienda: boolean = false;
   isResetCalendar: boolean = false;
+  isEditUser: boolean = false;
   userEmailService: string = "";
   passEmailService: string = "";
   vAddSerieTienda: string = "";
   vAddNombreTienda: string = "";
+  optionDefaultPage: Array<any> = [];
+  optionDefaultNivel: Array<any> = [];
   cboNivel: string = "";
   cboTienda: string = "";
   vEmail: string = "";
   cboTipo: string = "";
   tipoCuenta: string = "";
+  cboPageDefault: string = "";
+  cboNivelUser: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
   onListPageDefault: Array<any> = [];
@@ -87,6 +93,7 @@ export class MtConfiguracionComponent implements OnInit {
   dataNivelList: Array<any> = [];
   dataNivelListOne: Array<any> = [];
   dataPermiso: Array<any> = [];
+  dataDeafultPage: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
   nombreMenu: string = "";
@@ -124,6 +131,7 @@ export class MtConfiguracionComponent implements OnInit {
   vCodigoTipoFactura: String = "";
   vCodigoTipoBoleta: String = "";
   vPropertyStock: String = "";
+  vUsuarioNew: String = "";
   vAsuntoEmailStock: String = "";
   vRutaDownloadAgente: String = "";
   vRutaDownloadSunat: String = "";
@@ -167,27 +175,6 @@ export class MtConfiguracionComponent implements OnInit {
       this.onListSession();
       this.onListAuthSession();
     });
-
-    this.onListPageDefault = [
-      { key: 'comprobantes', value: 'comprobantes' },
-      { key: 'inventario', value: 'inventario' },
-      { key: 'configuracion', value: 'configuracion' },
-      { key: 'asistencia', value: 'asistencia' },
-      { key: 'horario', value: 'horario' },
-      { key: 'auth-hora-extra', value: 'auth-hora-extra' },
-      { key: 'panel-horario', value: 'panel-horario' },
-      { key: 'planilla', value: 'planilla' },
-      { key: 'kardex', value: 'kardex' }
-    ];
-
-    this.onListTipoCuenta = [
-      { key: 'SISTEMAS', value: 'SISTEMAS' },
-      { key: 'INVENTARIO', value: 'INVENTARIO' },
-      { key: 'RRHH', value: 'RRHH' },
-      { key: 'TIENDA', value: 'TIENDA' },
-      { key: 'GERENCIA', value: 'GERENCIA' },
-      { key: 'CONTABILIDAD', value: 'CONTABILIDAD' }
-    ];
   }
 
   onListSession() {
@@ -342,7 +329,7 @@ export class MtConfiguracionComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
-    if (index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel') {
+    if (index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
       this.onListMenuUsuario().then((menu: Array<any>) => {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
@@ -773,9 +760,10 @@ export class MtConfiguracionComponent implements OnInit {
       this.service.get(parms).then((response) => {
         this.dataMenuList = response;
         this.dataViewMenu = [];
+        this.dataDeafultPage = [];
         this.dataMenuList.filter((menu, i) => {
           this.dataViewMenu.push((menu || {}).NOMBRE_MENU);
-
+          this.dataDeafultPage.push({ key: (menu || {}).RUTA, value: (menu || {}).RUTA });
           if (this.dataMenuList.length - 1 == i) {
             resolve(this.dataViewMenu);
           }
@@ -828,7 +816,34 @@ export class MtConfiguracionComponent implements OnInit {
       }]
     };
     this.service.post(parms).then((response) => {
-     this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
+      this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
+    });
+  }
+
+  onNewNivel() {
+    let parms = {
+      url: '/menu/sistema/niveles',
+      body: [{
+        nivel: this.vNivel
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.onNivelesList();
+      this.service.toastSuccess('Registrado con exito..!!', 'Nivel');
+    });
+  }
+
+  onNewMenu() {
+    let parms = {
+      url: '/menu/add/sistema',
+      body: [{
+        nombre_menu: this.vMenu,
+        ruta: this.vRutaMenu
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.onMenuList();
+      this.service.toastSuccess('Registrado con exito..!!', 'Menu');
     });
   }
 
@@ -842,6 +857,68 @@ export class MtConfiguracionComponent implements OnInit {
     this.service.post(parms).then((response) => {
       this.service.toastSuccess('Opcion eliminada con exito..!!', 'Permisos');
     });
+  }
+
+  onNewUser() {
+    let uri = !this.isEditUser ? '/usuario/registrar' : '/usuario/editar';
+
+    let parms = {
+      url: uri,
+      body: [{
+        id: this.idEditUSer,
+        usuario: this.vUsuarioNew,
+        password: this.vPassword,
+        default_page: this.cboPageDefault,
+        email: this.vEmail,
+        nivel: this.cboNivelUser
+      }]
+    };
+
+    this.service.post(parms).then((response) => {
+      this.onUserList();
+
+      this.idEditUSer = "";
+      this.vUsuarioNew = "";
+      this.vPassword = "";
+      this.cboPageDefault = "";
+      this.optionDefaultPage = [{ key: "", value: "" }];
+      this.vEmail = "";
+      this.cboNivelUser = "";
+      this.optionDefaultNivel = [{ key: "", value: "" }];
+
+      if (this.isEditUser) {
+        this.service.toastSuccess('Editado con exito..!!', 'Usuario');
+      } else {
+        this.service.toastSuccess('Registrado con exito..!!', 'Usuario');
+      }
+
+    });
+  }
+
+
+  onEditUser(element) {
+    this.isEditUser = true;
+    this.idEditUSer = element.ID_LOGIN;
+    this.vUsuarioNew = element.USUARIO;
+    this.vPassword = element.PASSWORD;
+    this.cboPageDefault = element.DEFAULT_PAGE;
+    this.optionDefaultPage = [{ key: element.DEFAULT_PAGE, value: element.DEFAULT_PAGE }];
+    this.vEmail = element.EMAIL;
+    this.cboNivelUser = element.NIVEL;
+    this.optionDefaultNivel = [{ key: element.NIVEL, value: element.NIVEL }];
+  }
+
+  onCancelarEdit() {
+    this.isEditUser = false;
+    this.idEditUSer = "";
+    this.vUsuarioNew = "";
+    this.vPassword = "";
+    this.cboPageDefault = "";
+    this.optionDefaultPage = [{ key: "", value: "" }];
+    this.vEmail = "";
+    this.cboNivelUser = "";
+    this.optionDefaultNivel = [{ key: "", value: "" }];
+
   }
 
   drop(event: CdkDragDrop<string[]>) {

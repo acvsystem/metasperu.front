@@ -90,51 +90,17 @@ export class MtLoginComponent implements OnInit {
   onRouteDefault() {
 
     let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).mt_nivel == "INVENTARIO" || (profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code) {
-      this.nav.navigateRoot('inventario');
-    } else if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY") {
+
+    if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY" || (profileUser || {}).mt_nivel == "RRHH") {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (profileUser || {}).mt_name_1,
         "mt_nivel": (profileUser || {}).mt_nivel,
-        "code": "OF"
+        "code": "OF",
+        "default": (profileUser || {}).default
       }));
-
-      console.log({
-        "mt_name_1": (profileUser || {}).mt_name_1,
-        "mt_nivel": (profileUser || {}).mt_nivel,
-        "code": "OF"
-      });
-
-      let path = this.store.getStore("pathResolve");
-      if ((path || {}).value == "auth-hora-extra") {
-        this.nav.navigateRoot('auth-hora-extra');
-      } else {
-        this.nav.navigateRoot('comprobantes');
-      }
-
-    } else if ((profileUser || {}).mt_nivel == "RRHH") {
-      this.store.setStore('mt-profile', JSON.stringify({
-        "mt_name_1": (profileUser || {}).mt_name_1,
-        "mt_nivel": (profileUser || {}).mt_nivel,
-        "code": "OF"
-      }));
-
-      console.log({
-        "mt_name_1": (profileUser || {}).mt_name_1,
-        "mt_nivel": (profileUser || {}).mt_nivel,
-        "code": "OF"
-      });
-
-
-      this.nav.navigateRoot('asistencia');
-    } else if ((profileUser || {}).mt_nivel == "cmoron" || (profileUser || {}).mt_nivel == "jcarreno" || (profileUser || {}).mt_nivel == "nduran" || (profileUser || {}).mt_nivel == "aseijo") {
-      this.nav.navigateRoot('asistencia');
-    } else if ((profileUser || {}).mt_nivel == "acarbajal") {
-      this.nav.navigateRoot('inventario');
-    } else if ((profileUser || {}).mt_nivel == "contabilidad" || (profileUser || {}).mt_nivel == "contabilidad5" || (profileUser || {}).mt_nivel == "contabilidad4" || (profileUser || {}).mt_nivel == "contabilidad3" || (profileUser || {}).mt_nivel == "contabilidad2" || (profileUser || {}).mt_nivel == "contabilidad1") {
-      this.nav.navigateRoot('kardex');
     }
-
+  
+    this.nav.navigateRoot((profileUser || {}).default);
   }
 
   async onValid() {

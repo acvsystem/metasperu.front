@@ -64,13 +64,15 @@ export class AppComponent {
       this.store.setStore("mt-menu", JSON.stringify(self.menuUser));
     });
 
-    this.service.onProfileUser.subscribe((profile) => {
+    this.service.onProfileUser.subscribe((user) => {
+      console.log(user);
       const self = this;
       this.profileUser = [];
       let newProfile = {
-        mt_name_1: profile.codigo.length ? profile.nameTienda.toUpperCase() : profile.name.split(' ')[0],
-        mt_nivel: profile.name.split(' ')[0],
-        code: profile.codigo
+        mt_name_1: user.profile.codigo.length ? user.profile.nameTienda.toUpperCase() : user.profile.name.split(' ')[0],
+        mt_nivel: user.profile.name.split(' ')[0],
+        code: user.profile.codigo,
+        default: user.page.default
       };
 
       this.profileUser.push(newProfile);
