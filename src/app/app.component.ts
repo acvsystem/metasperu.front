@@ -53,6 +53,9 @@ export class AppComponent {
 
     this.service.onMenuUser.subscribe((menuUser) => {
       const self = this;
+
+      self.menuUser = [];
+
       menuUser.filter((menu) => {
         self.menuUser.push({
           ISVISIBLE: true,
