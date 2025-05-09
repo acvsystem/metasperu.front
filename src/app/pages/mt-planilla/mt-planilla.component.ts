@@ -80,30 +80,50 @@ export class MtPlanillaComponent implements OnInit {
   }
 
   async onGenTxtTotal() {
-
     this.onDataView.filter(async (dt, i) => {
 
       let sueldo = dt['ADELANTO_QUINCENA'].split('.');
       let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
       let sueldoLength = 15 - parseSueldo.length;
       let concatSueldo = "01";
-      let colUlt = '';
+      let colUlt = "";
+
+      if (this.cboReporte == 'CTS') {
+        colUlt = '01';
+      }
+
       for (let i = 1; i <= sueldoLength; i++) {
         concatSueldo += '0';
       }
       concatSueldo += `${parseSueldo} `;
 
-      let col1Length = 50 - `0201${dt.NRO_DOCUMENTO}`.length;
-      let col1 = `0201${dt.NRO_DOCUMENTO}`;
+      let col1Length = 50 - `0201${dt.NRO_DOCUMENTO.trim()}`.length;
+      let col1 = `0201${dt.NRO_DOCUMENTO.trim()}`;
       for (let i = 0; i <= col1Length; i++) {
         col1 += ' ';
       }
 
-      let cuentaBanco = dt.BANCO == this.cboBanco ? dt.CUENTA_BANCO_HABERES : !dt.CUENTA_INTERBANCARIO.length ? 0 : dt.CUENTA_INTERBANCARIO;
+      let cuentaBanco = "";
+      let tipoCuenta = "";
 
-      let tipoCuenta = dt.BANCO == this.cboBanco ? '09' : '99';
-      let space = tipoCuenta == '99' ? `${tipoCuenta}00201   ` : `${tipoCuenta}00201`;
-      let col3Length = 29 - `${space}${cuentaBanco}`.length;
+      if (this.cboReporte == 'CTS') {
+        tipoCuenta = '007';
+        if (dt.BANCO == this.cboBanco) {
+          cuentaBanco = dt.CUENTA_BANCO_CTS.trim();
+        } else {
+          cuentaBanco = dt.CUENTA_INTERBANCARIO_CTS.trim();
+        }
+      } else {
+        tipoCuenta = '002';
+        cuentaBanco = dt.BANCO.trim() == this.cboBanco ? dt.CUENTA_BANCO_HABERES.trim() : !dt.CUENTA_INTERBANCARIO.trim().length ? 0 : dt.CUENTA_INTERBANCARIO.trim();
+      }
+
+      let tipoAbono = dt.BANCO.trim() == this.cboBanco ? '09' : '99';
+
+
+      let space = tipoAbono == '99' ? `${tipoAbono}${tipoCuenta}01   ` : `${tipoAbono}${tipoCuenta}01`;
+
+      let col3Length = 29 - `${space}${cuentaBanco.trim()}`.length;
       let col3 = `${space}${cuentaBanco}`;
       for (let i = 0; i <= col3Length; i++) {
         col3 += ' ';
@@ -111,25 +131,25 @@ export class MtPlanillaComponent implements OnInit {
 
       let tipoDocumento = (dt.NRO_DOCUMENTO).trim().length == 8 ? '01' : '03';
 
-      let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO}`.length;
-      let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO}`;
+      let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`.length;
+      let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`;
       for (let i = 0; i <= col4Length; i++) {
         col4 += ' ';
       }
 
-      let col5Length = 20 - `${dt.APELLIDO_PATERNO}`.length;
+      let col5Length = 19 - `${dt.APELLIDO_PATERNO.trim()}`.length;
       let col5 = `${this.sinDiacriticos(dt.APELLIDO_PATERNO)}`;
       for (let i = 0; i <= col5Length; i++) {
         col5 += ' ';
       }
 
-      let col6Length = 20 - `${dt.APELLIDO_MATERNO}`.length;
+      let col6Length = 19 - `${dt.APELLIDO_MATERNO.trim()}`.length;
       let col6 = `${this.sinDiacriticos(dt.APELLIDO_MATERNO)}`;
       for (let i = 0; i <= col6Length; i++) {
         col6 += ' ';
       }
 
-      let col7Length = 27 - `${dt.NOMBRE_COMPLETO}`.length;
+      let col7Length = 26 - `${dt.NOMBRE_COMPLETO}`.length;
       let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
       let col7 = `${nombre_completo}`;
       for (let i = 0; i <= col7Length - 7; i++) {
@@ -179,59 +199,80 @@ export class MtPlanillaComponent implements OnInit {
           dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
           this.text = "";
           dataTemp.filter(async (dt, i) => {
-            let colUlt = "";
             let sueldo = dt['ADELANTO_QUINCENA'].split('.');
             let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
             let sueldoLength = 15 - parseSueldo.length;
             let concatSueldo = "01";
+            let colUlt = "";
+      
+            if (this.cboReporte == 'CTS') {
+              colUlt = '01';
+            }
+      
             for (let i = 1; i <= sueldoLength; i++) {
               concatSueldo += '0';
             }
             concatSueldo += `${parseSueldo} `;
-
-            let col1Length = 50 - `0201${dt.NRO_DOCUMENTO}`.length;
-            let col1 = `0201${dt.NRO_DOCUMENTO}`;
+      
+            let col1Length = 50 - `0201${dt.NRO_DOCUMENTO.trim()}`.length;
+            let col1 = `0201${dt.NRO_DOCUMENTO.trim()}`;
             for (let i = 0; i <= col1Length; i++) {
               col1 += ' ';
             }
-
-            let cuentaBanco = dt.BANCO == this.cboBanco ? dt.CUENTA_BANCO_HABERES : !dt.CUENTA_INTERBANCARIO.length ? 0 : dt.CUENTA_INTERBANCARIO;
-
-            let tipoCuenta = dt.BANCO == this.cboBanco ? '09' : '99';
-            let space = tipoCuenta == '99' ? `${tipoCuenta}00201   ` : `${tipoCuenta}00201`;
-            let col3Length = 29 - `${space}${cuentaBanco}`.length;
+      
+            let cuentaBanco = "";
+            let tipoCuenta = "";
+      
+            if (this.cboReporte == 'CTS') {
+              tipoCuenta = '007';
+              if (dt.BANCO == this.cboBanco) {
+                cuentaBanco = dt.CUENTA_BANCO_CTS.trim();
+              } else {
+                cuentaBanco = dt.CUENTA_INTERBANCARIO_CTS.trim();
+              }
+            } else {
+              tipoCuenta = '002';
+              cuentaBanco = dt.BANCO.trim() == this.cboBanco ? dt.CUENTA_BANCO_HABERES.trim() : !dt.CUENTA_INTERBANCARIO.trim().length ? 0 : dt.CUENTA_INTERBANCARIO.trim();
+            }
+      
+            let tipoAbono = dt.BANCO.trim() == this.cboBanco ? '09' : '99';
+      
+      
+            let space = tipoAbono == '99' ? `${tipoAbono}${tipoCuenta}01   ` : `${tipoAbono}${tipoCuenta}01`;
+      
+            let col3Length = 29 - `${space}${cuentaBanco.trim()}`.length;
             let col3 = `${space}${cuentaBanco}`;
             for (let i = 0; i <= col3Length; i++) {
               col3 += ' ';
             }
-
+      
             let tipoDocumento = (dt.NRO_DOCUMENTO).trim().length == 8 ? '01' : '03';
-
-            let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO}`.length;
-            let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO}`;
+      
+            let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`.length;
+            let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`;
             for (let i = 0; i <= col4Length; i++) {
               col4 += ' ';
             }
-
-            let col5Length = 20 - `${dt.APELLIDO_PATERNO}`.length;
+      
+            let col5Length = 19 - `${dt.APELLIDO_PATERNO.trim()}`.length;
             let col5 = `${this.sinDiacriticos(dt.APELLIDO_PATERNO)}`;
             for (let i = 0; i <= col5Length; i++) {
               col5 += ' ';
             }
-
-            let col6Length = 20 - `${dt.APELLIDO_MATERNO}`.length;
+      
+            let col6Length = 19 - `${dt.APELLIDO_MATERNO.trim()}`.length;
             let col6 = `${this.sinDiacriticos(dt.APELLIDO_MATERNO)}`;
             for (let i = 0; i <= col6Length; i++) {
               col6 += ' ';
             }
-
-            let col7Length = 27 - `${dt.NOMBRE_COMPLETO}`.length;
+      
+            let col7Length = 26 - `${dt.NOMBRE_COMPLETO}`.length;
             let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
             let col7 = `${nombre_completo}`;
             for (let i = 0; i <= col7Length - 7; i++) {
               col7 += ' ';
             }
-
+      
             if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
               for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
                 colUlt += '0';
@@ -259,60 +300,81 @@ export class MtPlanillaComponent implements OnInit {
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
             this.text = "";
             dataTemp.filter(async (dt, i) => {
-              let colUlt = "";
+
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
               let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
               let sueldoLength = 15 - parseSueldo.length;
               let concatSueldo = "01";
+              let colUlt = "";
+        
+              if (this.cboReporte == 'CTS') {
+                colUlt = '01';
+              }
+        
               for (let i = 1; i <= sueldoLength; i++) {
                 concatSueldo += '0';
               }
               concatSueldo += `${parseSueldo} `;
-
-              let col1Length = 50 - `0201${dt.NRO_DOCUMENTO}`.length;
-              let col1 = `0201${dt.NRO_DOCUMENTO}`;
+        
+              let col1Length = 50 - `0201${dt.NRO_DOCUMENTO.trim()}`.length;
+              let col1 = `0201${dt.NRO_DOCUMENTO.trim()}`;
               for (let i = 0; i <= col1Length; i++) {
                 col1 += ' ';
               }
-
-              let cuentaBanco = dt.BANCO == this.cboBanco ? dt.CUENTA_BANCO_HABERES : !dt.CUENTA_INTERBANCARIO.length ? 0 : dt.CUENTA_INTERBANCARIO;
-
-              let tipoCuenta = dt.BANCO == this.cboBanco ? '09' : '99';
-              let space = tipoCuenta == '99' ? `${tipoCuenta}00201   ` : `${tipoCuenta}00201`;
-              let col3Length = 29 - `${space}${cuentaBanco}`.length;
+        
+              let cuentaBanco = "";
+              let tipoCuenta = "";
+        
+              if (this.cboReporte == 'CTS') {
+                tipoCuenta = '007';
+                if (dt.BANCO == this.cboBanco) {
+                  cuentaBanco = dt.CUENTA_BANCO_CTS.trim();
+                } else {
+                  cuentaBanco = dt.CUENTA_INTERBANCARIO_CTS.trim();
+                }
+              } else {
+                tipoCuenta = '002';
+                cuentaBanco = dt.BANCO.trim() == this.cboBanco ? dt.CUENTA_BANCO_HABERES.trim() : !dt.CUENTA_INTERBANCARIO.trim().length ? 0 : dt.CUENTA_INTERBANCARIO.trim();
+              }
+        
+              let tipoAbono = dt.BANCO.trim() == this.cboBanco ? '09' : '99';
+        
+        
+              let space = tipoAbono == '99' ? `${tipoAbono}${tipoCuenta}01   ` : `${tipoAbono}${tipoCuenta}01`;
+        
+              let col3Length = 29 - `${space}${cuentaBanco.trim()}`.length;
               let col3 = `${space}${cuentaBanco}`;
               for (let i = 0; i <= col3Length; i++) {
                 col3 += ' ';
               }
-
+        
               let tipoDocumento = (dt.NRO_DOCUMENTO).trim().length == 8 ? '01' : '03';
-
-              let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO}`.length;
-              let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO}`;
+        
+              let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`.length;
+              let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`;
               for (let i = 0; i <= col4Length; i++) {
                 col4 += ' ';
               }
-
-              let col5Length = 20 - `${dt.APELLIDO_PATERNO}`.length;
+        
+              let col5Length = 19 - `${dt.APELLIDO_PATERNO.trim()}`.length;
               let col5 = `${this.sinDiacriticos(dt.APELLIDO_PATERNO)}`;
               for (let i = 0; i <= col5Length; i++) {
                 col5 += ' ';
               }
-
-              let col6Length = 20 - `${dt.APELLIDO_MATERNO}`.length;
+        
+              let col6Length = 19 - `${dt.APELLIDO_MATERNO.trim()}`.length;
               let col6 = `${this.sinDiacriticos(dt.APELLIDO_MATERNO)}`;
               for (let i = 0; i <= col6Length; i++) {
                 col6 += ' ';
               }
-
-              let col7Length = 27 - `${dt.NOMBRE_COMPLETO}`.length;
+        
+              let col7Length = 26 - `${dt.NOMBRE_COMPLETO}`.length;
               let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
               let col7 = `${nombre_completo}`;
               for (let i = 0; i <= col7Length - 7; i++) {
                 col7 += ' ';
               }
-              this.fileName = dt['UNIDAD_SERVICIO'];
-
+        
               if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
                 for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
                   colUlt += '0';
@@ -321,6 +383,7 @@ export class MtPlanillaComponent implements OnInit {
                 colUlt += '000000000000000';
               }
 
+              this.fileName = dt['UNIDAD_SERVICIO'];
               this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
               if (dataTemp.length - 1 == i) {
@@ -342,60 +405,80 @@ export class MtPlanillaComponent implements OnInit {
             dataTemp = await data.filter((data) => data['CODIGO_UNID_SERVICIO'].trim() == codigo);
             this.text = "";
             await dataTemp.filter(async (dt, i) => {
-              let colUlt = "";
               let sueldo = dt['ADELANTO_QUINCENA'].split('.');
               let parseSueldo = `${sueldo[0]}${sueldo[1]}`;
               let sueldoLength = 15 - parseSueldo.length;
               let concatSueldo = "01";
+              let colUlt = "";
+        
+              if (this.cboReporte == 'CTS') {
+                colUlt = '01';
+              }
+        
               for (let i = 1; i <= sueldoLength; i++) {
                 concatSueldo += '0';
               }
               concatSueldo += `${parseSueldo} `;
-
-              let col1Length = 50 - `0201${dt.NRO_DOCUMENTO}`.length;
-              let col1 = `0201${dt.NRO_DOCUMENTO}`;
+        
+              let col1Length = 50 - `0201${dt.NRO_DOCUMENTO.trim()}`.length;
+              let col1 = `0201${dt.NRO_DOCUMENTO.trim()}`;
               for (let i = 0; i <= col1Length; i++) {
                 col1 += ' ';
               }
-
-              let cuentaBanco = dt.BANCO == this.cboBanco ? dt.CUENTA_BANCO_HABERES : !dt.CUENTA_INTERBANCARIO.length ? 0 : dt.CUENTA_INTERBANCARIO;
-
-              let tipoCuenta = dt.BANCO == this.cboBanco ? '09' : '99';
-              let space = tipoCuenta == '99' ? `${tipoCuenta}00201   ` : `${tipoCuenta}00201`;
-              let col3Length = 29 - `${space}${cuentaBanco}`.length;
+        
+              let cuentaBanco = "";
+              let tipoCuenta = "";
+        
+              if (this.cboReporte == 'CTS') {
+                tipoCuenta = '007';
+                if (dt.BANCO == this.cboBanco) {
+                  cuentaBanco = dt.CUENTA_BANCO_CTS.trim();
+                } else {
+                  cuentaBanco = dt.CUENTA_INTERBANCARIO_CTS.trim();
+                }
+              } else {
+                tipoCuenta = '002';
+                cuentaBanco = dt.BANCO.trim() == this.cboBanco ? dt.CUENTA_BANCO_HABERES.trim() : !dt.CUENTA_INTERBANCARIO.trim().length ? 0 : dt.CUENTA_INTERBANCARIO.trim();
+              }
+        
+              let tipoAbono = dt.BANCO.trim() == this.cboBanco ? '09' : '99';
+        
+        
+              let space = tipoAbono == '99' ? `${tipoAbono}${tipoCuenta}01   ` : `${tipoAbono}${tipoCuenta}01`;
+        
+              let col3Length = 29 - `${space}${cuentaBanco.trim()}`.length;
               let col3 = `${space}${cuentaBanco}`;
               for (let i = 0; i <= col3Length; i++) {
                 col3 += ' ';
               }
-
+        
               let tipoDocumento = (dt.NRO_DOCUMENTO).trim().length == 8 ? '01' : '03';
-
-              let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO}`.length;
-              let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO}`;
+        
+              let col4Length = 17 - `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`.length;
+              let col4 = `P${tipoDocumento}${dt.NRO_DOCUMENTO.trim()}`;
               for (let i = 0; i <= col4Length; i++) {
                 col4 += ' ';
               }
-
-              let col5Length = 20 - `${dt.APELLIDO_PATERNO}`.length;
+        
+              let col5Length = 19 - `${dt.APELLIDO_PATERNO.trim()}`.length;
               let col5 = `${this.sinDiacriticos(dt.APELLIDO_PATERNO)}`;
               for (let i = 0; i <= col5Length; i++) {
                 col5 += ' ';
               }
-
-              let col6Length = 20 - `${dt.APELLIDO_MATERNO}`.length;
+        
+              let col6Length = 19 - `${dt.APELLIDO_MATERNO.trim()}`.length;
               let col6 = `${this.sinDiacriticos(dt.APELLIDO_MATERNO)}`;
               for (let i = 0; i <= col6Length; i++) {
                 col6 += ' ';
               }
-
-              let col7Length = 21 - `${dt.NOMBRE_COMPLETO}`.length;
+        
+              let col7Length = 26 - `${dt.NOMBRE_COMPLETO}`.length;
               let nombre_completo = this.sinDiacriticos(dt.NOMBRE_COMPLETO);
               let col7 = `${nombre_completo}`;
               for (let i = 0; i <= col7Length - 7; i++) {
                 col7 += ' ';
               }
-              this.fileName = dt['UNIDAD_SERVICIO'];
-
+        
               if (`${dt.NOMBRE_COMPLETO}`.length > 22) {
                 for (let i = 0; i <= 35 - `${dt.NOMBRE_COMPLETO}`.length; i++) {
                   colUlt += '0';
@@ -404,6 +487,7 @@ export class MtPlanillaComponent implements OnInit {
                 colUlt += '000000000000000';
               }
 
+              this.fileName = dt['UNIDAD_SERVICIO'];
               this.text += `${col1}${concatSueldo}${col3}${col4}${col5}${col6}${col7}${colUlt} \n`;
 
               if (dataTemp.length - 1 == i) {
@@ -687,7 +771,7 @@ export class MtPlanillaComponent implements OnInit {
               this.text += `${col1}${col2}${col3}${concatSueldo} \n`;
 
               if (dataTemp.length - 1 == i) {
-  
+
                 this.dyanmicDownloadByHtmlTag();
                 dataTemp = [];
                 this.text = "";
