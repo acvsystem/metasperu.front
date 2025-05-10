@@ -150,7 +150,7 @@ export class MtArticulosComponent implements OnInit {
     });
 
     let profileUser = this.store.getStore('mt-profile');
-    if ((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code.length) {
+    if (((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code.length) && (profileUser || {}).code != 'OF') {
       this.isVendedor = true;
 
       let profileUser = this.store.getStore('mt-profile');
