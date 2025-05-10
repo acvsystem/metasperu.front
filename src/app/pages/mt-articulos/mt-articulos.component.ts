@@ -113,7 +113,7 @@ export class MtArticulosComponent implements OnInit {
     });
 
     this.socket.on('responseAsistencia', (configuracion) => {
-      
+
     });
 
     this.socket.on('sessionConnect', (listaSession) => {
@@ -184,7 +184,7 @@ export class MtArticulosComponent implements OnInit {
       let undServicio = "";
 
       let indexVS = (codeTiendasVs || []).find((tienda) => tienda.code == (profileUser || {}).code);
-   
+
       if (Object.keys(indexVS || {}).length) {
         undServicio = 'VICTORIA SECRET';
       }
@@ -209,7 +209,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-
+      console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda'],this.proccessData.length , this.compTiendaList.length);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -508,7 +508,7 @@ export class MtArticulosComponent implements OnInit {
 
   onProcessPetition(undNegocio) {
     let storeConxOnline = this.store.getStore('conx_online');
-   
+
     if (undNegocio == 'VICTORIA SECRET') {
       this.onDataView = [];
       this.onReporteList = [];
