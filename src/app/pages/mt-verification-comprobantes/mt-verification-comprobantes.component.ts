@@ -91,21 +91,21 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.onListClient();
 
     this.socket.on('terminales:get:name:response', (terminales) => {//RECIBE NOMBRE DE LOS TERMINALES FRONT RETAIL
-      let indexData = this.bodyList.findIndex((data) => (data.codigo == (terminales || [])[0].CODIGO_TIENDA));
+      let indexData = (this.dataSource['_data']['_value'] || []).findIndex((data) => (data.codigo == (terminales || [])[0].CODIGO_TIENDA));
       if (indexData != -1) {
-        (this.bodyList || [])[indexData].terminales = terminales;
+        (this.dataSource['_data']['_value'] || [])[indexData].terminales = terminales;
       }
     });
 
     this.socket.on('terminales:get:cantidad:response', (dataTerminal) => {//CANTIDAD DE COMPROBANTES POR TERMINAL
       this.isShowLoading = false;
-      let indexData = this.bodyList.findIndex((data) => (data.codigo == (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")));
+      let indexData = (this.dataSource['_data']['_value'] || []).findIndex((data) => (data.codigo == (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")));
       if (indexData != -1) {
-        (this.bodyList || [])[indexData].dataTerminales = [];
-        (this.bodyList || [])[indexData].terminales.filter((trm) => {
+        (this.dataSource['_data']['_value'] || [])[indexData].dataTerminales = [];
+        (this.dataSource['_data']['_value'] || [])[indexData].terminales.filter((trm) => {
           let elm = (dataTerminal || []).find((dt) => (dt || {}).NOM_TERMINAL == (trm || {}).NOM_TERMINAL);
 
-          (this.bodyList || [])[indexData].dataTerminales.push({
+          (this.dataSource['_data']['_value'] || [])[indexData].dataTerminales.push({
             'NOM_TERMINAL': (trm || {}).NOM_TERMINAL,
             'CANTIDAD': (elm || {}).CANTIDAD || 0,
             'CODIGO': (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")
@@ -153,7 +153,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
         */
       } else {
 
-        console.log(listaSession);
+        console.log(listaSession[0]['CODIGO_TERMINAL']);
         (dataList || []).filter((dataSocket: any) => {
 
           if ((dataSocket || {}).ISONLINE == 1) {
@@ -169,17 +169,19 @@ export class MtVerificationComprobantesComponent implements OnInit {
           }
 
           let codigo = (dataSocket || {}).CODIGO_TERMINAL;
-          let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+          let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
           if (indexData != -1) {
-            (this.bodyList || [])[indexData].codigo = (dataSocket || {}).CODIGO_TERMINAL;
-            (this.bodyList || [])[indexData].Tienda = (dataSocket || {}).DESCRIPCION;
-            (this.bodyList || [])[indexData].isVerification = (dataSocket || {}).VERIFICACION;
-            (this.bodyList || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
-            (this.bodyList || [])[indexData].online = (dataSocket || {}).ISONLINE;
-            (this.bodyList || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
+            (this.dataSource['_data']['_value'] || [])[indexData].codigo = (dataSocket || {}).CODIGO_TERMINAL;
+            (this.dataSource['_data']['_value'] || [])[indexData].Tienda = (dataSocket || {}).DESCRIPCION;
+            (this.dataSource['_data']['_value'] || [])[indexData].isVerification = (listaSession[0] || {}).VERIFICACION;
+            (this.dataSource['_data']['_value'] || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
+            (this.dataSource['_data']['_value'] || [])[indexData].online = (dataSocket || {}).ISONLINE;
+            (this.dataSource['_data']['_value'] || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
           }
         });
       }
+
+      console.log(this.dataSource['_data']['_value']);
 
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
@@ -210,9 +212,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
         this.service.onNotification.emit(notificationList);
       }
 
-      let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+      let indexData = (this.dataSource['_data']['_value'] || []).findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {
-        (this.bodyList || [])[indexData].transacciones = (dataSocket || [])[0].transaciones;
+        (this.dataSource['_data']['_value'] || [])[indexData].transacciones = (dataSocket || [])[0].transaciones;
       }
     });
 
@@ -286,9 +288,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
       let codigo = (dataSocket || [])[0].code;
-      let indexData = this.bodyList.findIndex((data) => (data.codigo == codigo));
+      let indexData = (this.dataSource['_data']['_value'] || []).findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {
-        (this.bodyList || [])[indexData].clientes_null = (dataSocket || [])[0].clientCant;
+        (this.dataSource['_data']['_value'] || [])[indexData].clientes_null = (dataSocket || [])[0].clientCant;
       }
     });
 
@@ -354,8 +356,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
     };
 
     this.service.get(parms).then((response) => {
-      
-     let tiendaList = (response || {}).data || [];
+
+      let tiendaList = (response || {}).data || [];
 
       (tiendaList || []).filter((tnd) => {
 
@@ -377,6 +379,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
         }
 
       });
+
+      this.dataSource = new MatTableDataSource(this.bodyList);
 
     });
   }

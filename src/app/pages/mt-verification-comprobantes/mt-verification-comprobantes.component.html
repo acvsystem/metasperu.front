@@ -125,7 +125,7 @@
     
           <table mat-table [dataSource]="dataSource" multiTemplateDataRows
            class="mat-elevation-z8">
-           @for (column of columnsToDisplay; track column) {
+           @for (column of columnsToDisplay; track $index) {
              <ng-container matColumnDef="{{column}}">
                <th mat-header-cell *matHeaderCellDef> {{column}} </th>
                <td mat-cell *matCellDef="let element"> 
@@ -200,7 +200,7 @@
                         </div>
                       </div>
                       <ul class="list-group">
-                        @for(terminal of element.dataTerminales; track terminal;let idx = $index){
+                        @for(terminal of element.dataTerminales; track $index;let idx = $index){
                           <li id="{{idx}}-origen-{{terminal.CODIGO}}" name="origen" class="origen list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="onSelectedTranferencia($event,terminal,'')">
                             {{terminal.NOM_TERMINAL}}
                             <span *ngIf="terminal.CANTIDAD == 0" class="badge bg-success-comprobantes badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
@@ -231,7 +231,7 @@
                         </div>
                       </div>
                       <ul class="list-group">
-                        @for(terminal of element.dataTerminales; track terminal;let idx = $index){
+                        @for(terminal of element.dataTerminales; track $index;let idx = $index){
                           <li id="{{idx}}-destino-{{terminal.CODIGO}}" class="destino list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="onSelectedTranferencia($event,'',terminal)">
                             {{terminal.NOM_TERMINAL}}
                             <span *ngIf="terminal.CANTIDAD == 0" class="badge bg-success-comprobantes badge-pill" style="margin-left: 50px;">{{terminal.CANTIDAD}}</span>
