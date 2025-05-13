@@ -21,6 +21,7 @@ export class MtPanelHorarioComponent implements OnInit {
   dataSourcePap = new MatTableDataSource<any>(this.listaPapeletas);
   filterEmpleado: string = "";
   codigoPap: string = "";
+  filterCodigoPapeleta: string = "";
   isHorario: boolean = false;
   isViewPap: boolean = false;
   isViewPapeleta: boolean = false;
@@ -183,6 +184,17 @@ export class MtPanelHorarioComponent implements OnInit {
     this.onListHorario();
     this.onListPapeleta();
   }
+
+  onSearchPapeleta() {
+    this.codigoPap = this.filterCodigoPapeleta;
+  }
+
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
+  }
+
 
   onViewPapeleta(ev) {
     this.codigoPap = "";

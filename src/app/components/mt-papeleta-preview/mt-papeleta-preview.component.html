@@ -1,10 +1,18 @@
 <ion-row style="color: black;">
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <div style="display: flex;justify-content: right;align-items: center;margin-bottom: 10px;">
-            <button type="button" class="btn btn-danger" (click)="onPdf()">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="display: inline-flex;align-items: center;" >
+          @if(userNivel == 'RRHH' || userNivel == 'SISTEMAS') {
+            <mt-calendar id="vFechapap" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
+            ></mt-calendar>
+            <button type="button" class="btn btn-primary btn-sm" (click)="onUpdateFecha()">
+              Actualizar
+            </button>
+          }
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="display: flex;align-items: center;justify-content: end;">
+          <div style="display: flex;justify-content: right;align-items: center;">
+            <button type="button" class="btn btn-danger btn-sm" (click)="onPdf()">
               <span style="margin-right: 5px;">Descargar PDF</span> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
             </button>
           </div>

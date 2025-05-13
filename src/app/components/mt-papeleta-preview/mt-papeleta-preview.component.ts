@@ -2,6 +2,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
 import * as html2pdf from 'html2pdf.js';
 import * as $ from 'jquery';
+import { StorageService } from 'src/app/utils/storage';
 
 @Component({
   selector: 'mt-papeleta-preview',
@@ -13,7 +14,10 @@ export class MtPapeletaPreviewComponent implements OnInit {
   bodyList: Array<any> = [];
   dataPap: Array<any> = [];
   listTipoPap: Array<any> = [];
+  perfilUser: any = {};
+  userNivel: string = "";
   observacion: string = "";
+  vFechapap: string = "";
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -37,9 +41,12 @@ export class MtPapeletaPreviewComponent implements OnInit {
     { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
   ];
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService, private store: StorageService,) { }
 
   ngOnInit() {
+
+    this.perfilUser = this.store.getStore('mt-profile');
+    this.userNivel = (this.perfilUser || {}).mt_nivel;
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -115,4 +122,24 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
     return;
   }
+
+  onUpdateFecha() {
+
+    let parms = {
+      url: '/papeleta/update/fecha',
+      body: [{ fecha: this.vFechapap, id_papeleta: this.dataPap[0].id_papeleta }]
+    };
+
+    this.service.post(parms).then(async (response) => {
+      this.onSearchPap(this.codigoPap);
+      this.service.toastSuccess('Actualizado con exito..!!', 'Papeleta');
+    });
+
+  }
+
+  onCaledar(ev) {
+    let date = new Date(ev.value).toLocaleDateString().split('/');
+    this[ev.id] = `${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`;
+  }
+
 }
