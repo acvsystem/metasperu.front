@@ -41,6 +41,7 @@ export class MtTableFilterComponent implements OnInit {
   isFilterD: boolean = false;
   dataFilter: Array<any> = [];
   arFiltro: Array<any> = [];
+  arCodigosViewPap: Array<any> = [];
   dialog = inject(MatDialog);
   filteredValues: any = {
     tienda: "",
@@ -141,7 +142,7 @@ export class MtTableFilterComponent implements OnInit {
     } else {
       this.isFilterPAP = false;
     }
-    
+
     this.filteredValues['estadoPapeleta'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
@@ -180,7 +181,7 @@ export class MtTableFilterComponent implements OnInit {
     } else {
       this.isFilterTR = false;
     }
-    
+
     this.filteredValues['statusTardanza'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
@@ -194,7 +195,7 @@ export class MtTableFilterComponent implements OnInit {
     } else {
       this.isFilterST = false;
     }
-    
+
     this.filteredValues['statusRegistro'] = filterValue.trim().toLowerCase();
     this.dataSource.filter = JSON.stringify(this.filteredValues);
     this.dataSource.filterPredicate = this.customFilterPredicate();
@@ -241,7 +242,7 @@ export class MtTableFilterComponent implements OnInit {
         data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) &&
         data.statusRegistro.toLowerCase().includes(searchString.statusRegistro) &&
         data.estadoPapeleta.toLowerCase().includes(searchString.estadoPapeleta) &&
-        data.nombre_completo.toLowerCase().includes(searchString.nombre_completo) && 
+        data.nombre_completo.toLowerCase().includes(searchString.nombre_completo) &&
         data.dia.toLowerCase().includes(searchString.dia)
       );
 
@@ -261,6 +262,11 @@ export class MtTableFilterComponent implements OnInit {
     console.log(ev);
     this.codigoPap = "";
     this.codigoPap = (ev || [])[0].CODIGO_PAPELETA;
+    this.arCodigosViewPap = [];
+    (ev || []).filter((p) => {
+      this.arCodigosViewPap.push({ codigoPap: (p || {}).CODIGO_PAPELETA });
+    });
+
     this.isViewPapeleta = true;
   }
 }

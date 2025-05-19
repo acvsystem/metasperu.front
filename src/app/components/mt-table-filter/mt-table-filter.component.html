@@ -12,7 +12,7 @@
       </div>
     }@else{
       <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;width: 800px;">
-        <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap.length"></mt-papeleta-preview>
+        <mt-papeleta-preview [arCodigos]="arCodigosViewPap" [isUpdate]="false" *ngIf="codigoPap.length"></mt-papeleta-preview>
       </div>
     }
   </mat-drawer>

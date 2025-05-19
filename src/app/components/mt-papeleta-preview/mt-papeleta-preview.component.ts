@@ -11,6 +11,8 @@ import { StorageService } from 'src/app/utils/storage';
 })
 export class MtPapeletaPreviewComponent implements OnInit {
   @Input() codigoPap: string = "";
+  @Input() arCodigos: Array<any> = [];
+  @Input() isUpdate: Array<any> = [];
   bodyList: Array<any> = [];
   dataPap: Array<any> = [];
   listTipoPap: Array<any> = [];
@@ -18,6 +20,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
   userNivel: string = "";
   observacion: string = "";
   vFechapap: string = "";
+  isMultiPap: boolean = true;
   onListTiendas: Array<any> = [
     { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
     { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
@@ -55,6 +58,17 @@ export class MtPapeletaPreviewComponent implements OnInit {
       await this.onListTipoPapeleta();
       this.onSearchPap(this.codigoPap);
     }
+
+    if (changes && changes.hasOwnProperty('arCodigos')) {
+      this.dataPap = [];
+      await this.onListTipoPapeleta();
+      this.arCodigos.filter((p) => {
+        this.onSearchPap((p || {}).codigoPap);
+      });
+
+    }
+
+
   }
 
   onSearchPap(codigo) {
@@ -64,7 +78,12 @@ export class MtPapeletaPreviewComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
-      this.dataPap = [response[0]];
+      
+      if ((this.arCodigos || []).length) {
+        this.dataPap.push(response[0]);
+      } else {
+        this.dataPap = [response[0]];
+      }
 
       if (this.dataPap.length) {
 

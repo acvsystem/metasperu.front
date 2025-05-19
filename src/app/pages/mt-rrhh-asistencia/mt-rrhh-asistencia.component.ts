@@ -328,6 +328,10 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
 
+              if (this.onDataTemp[indexData]['papeletas'].length > 1) {
+                this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], (((huellero || {}).papeletas || [])[0] || {})['HORA_SOLICITADA']);
+              }
+
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
               this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
               this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
@@ -587,7 +591,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   async onConsultarAsistencia() {
-   
+
     if (!this.isErrorFecha) {
       if (this.sedeReporte == 'tienda') {
         let arVerif = [];

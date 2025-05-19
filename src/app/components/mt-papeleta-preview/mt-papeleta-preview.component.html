@@ -2,7 +2,7 @@
   <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="display: inline-flex;align-items: center;" >
-          @if(userNivel == 'RRHH' || userNivel == 'SISTEMAS') {
+          @if((userNivel == 'RRHH' || userNivel == 'SISTEMAS') && isUpdate) {
             <mt-calendar id="vFechapap" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
             ></mt-calendar>
             <button type="button" class="btn btn-primary btn-sm" (click)="onUpdateFecha()">
@@ -18,8 +18,8 @@
           </div>
         </ion-col>
       </ion-row>
-    <div style="display: flex;justify-content: center;align-items: center;" id="papeleta-pdf">
-      <div style="border: 1px solid black;width: 100%;padding: 10px;" *ngFor="let pap of dataPap">
+    <div id="papeleta-pdf">
+      <div style="border: 1px solid black;width: 100%;padding: 10px;margin-bottom: 10px;" *ngFor="let pap of dataPap">
         <div style="width: 778px;display: flex;">
           <div style="width: 129.66px;">
             <div style="display: flex;
