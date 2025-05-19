@@ -399,6 +399,10 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             if (huellero.tpAsociado != "**") { //DEFAULT
 
+              if (this.onDataTemp[indexData]['papeletas'].length > 1) {
+                this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], (((huellero || {}).papeletas || [])[1] || {})['HORA_SOLICITADA']);
+              }
+
               this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
               this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
               this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
@@ -1191,6 +1195,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               if (huellero.tpAsociado != "**") { //DEFAULT
 
+
+                if (this.onDataTemp[indexData]['papeletas'].length > 1) {
+                  this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], (((huellero || {}).papeletas || [])[1] || {})['HORA_SOLICITADA']);
+                }
+
                 this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hrIn);
                 this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hrIn;
                 this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hrOut;
@@ -1970,52 +1979,52 @@ export class MtPapeletaHorarioComponent implements OnInit {
               url: '/recursos_humanos/pap/registrar',
               body: dataPapeleta
             };
-            
-                        this.service.post(parms).then(async (response) => {
-                          if ((response || {}).success) {
-                            this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
-                            this.isResetCalendarComp = true;
-                            this.isResetForm = true;
-                            this.store.removeStore('mt-hrExtra');
-            
-                            this.cboCasos = "";
-                            this.cboCargo = "";
-                            //this.vFechaDesde = "";
-                            //this.vFechaHasta = "";
-                            this.horaSalida = "";
-                            this.horaLlegada = "";
-                            this.hroAcumuladaTotal = "";
-                            this.hroTomada = "";
-                            this.hroAcumulada = "";
-                            this.bodyList = [];
-                            this.vObservacion = "";
-                            this.horaSalida = "";
-                            this.horaLlegada = "";
-            
-            
-                            this.onListPapeleta();
-                            this.onGenerarCodigoPapeleta();
-            
-            
-            
-                            $('#horaLlegada input')[0].value = "";
-                            $('#horaSalida input')[0].value = "";
-            
-                            this.horaSalida = "";
-                            this.horaLlegada = "";
-                            $('#horaLlegada input')[0].value = "";
-                            $('#horaSalida input')[0].value = "";
-            
-            
-                            this.cboEmpleado = "";
-                            this.vNameOptionSelected = "";
-                            $("#cboEmpleado span#cboEmpleado")[0].innerText = "Seleccione Empleado";
-                            $("#cboCasos span#cboCasos")[0].innerText = "Tipo de caso";
-                            $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
-            
-                          }
-                        });
-            
+
+            this.service.post(parms).then(async (response) => {
+              if ((response || {}).success) {
+                this.service.toastSuccess("Registrado con exito..!!", 'Registro Papeleta');
+                this.isResetCalendarComp = true;
+                this.isResetForm = true;
+                this.store.removeStore('mt-hrExtra');
+
+                this.cboCasos = "";
+                this.cboCargo = "";
+                //this.vFechaDesde = "";
+                //this.vFechaHasta = "";
+                this.horaSalida = "";
+                this.horaLlegada = "";
+                this.hroAcumuladaTotal = "";
+                this.hroTomada = "";
+                this.hroAcumulada = "";
+                this.bodyList = [];
+                this.vObservacion = "";
+                this.horaSalida = "";
+                this.horaLlegada = "";
+
+
+                this.onListPapeleta();
+                this.onGenerarCodigoPapeleta();
+
+
+
+                $('#horaLlegada input')[0].value = "";
+                $('#horaSalida input')[0].value = "";
+
+                this.horaSalida = "";
+                this.horaLlegada = "";
+                $('#horaLlegada input')[0].value = "";
+                $('#horaSalida input')[0].value = "";
+
+
+                this.cboEmpleado = "";
+                this.vNameOptionSelected = "";
+                $("#cboEmpleado span#cboEmpleado")[0].innerText = "Seleccione Empleado";
+                $("#cboCasos span#cboCasos")[0].innerText = "Tipo de caso";
+                $("#cboCargo span#cboCargo")[0].innerText = "Seleccione Cargo";
+
+              }
+            });
+
           } else {
             if (!isErrorHSolicitada) {
               this.service.toastError("Complete todos los campos..!!", "Papeleta");
