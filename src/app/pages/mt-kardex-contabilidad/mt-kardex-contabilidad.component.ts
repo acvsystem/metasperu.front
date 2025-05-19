@@ -162,7 +162,7 @@ export class MtKardexContabilidadComponent implements OnInit {
       this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
 
       let data = JSON.parse((dataCuo || {}).data || []);
-
+      console.log(data);
       this.dataOriginal = [...data];
       this.dataViewCuo = data;
 
@@ -172,8 +172,8 @@ export class MtKardexContabilidadComponent implements OnInit {
           documento: cuo.dtDocumento,
           cuo: cuo.dtCuo,
           tabla: cuo.dtTabla,
-          isUpdate: cuo.dtLenCuo > 0 ? 'True' : 'False',
-          valor: cuo.dtDocumento,
+          isUpdate: parseInt(cuo.dtLenCuo) > 0 ? 'True' : 'False',
+          valor: cuo.dtDocumento.trim(),
           init: date[0].replace('/', '-'),
           end: date[1].replace('/', '-')
         });
@@ -206,7 +206,6 @@ export class MtKardexContabilidadComponent implements OnInit {
     this.socket.on('kardex:get:comprobantes:response', (listaSession) => {
       this.dataAlbaran = [];
       let data = JSON.parse((listaSession || {}).data || []);
-      console.log(data);
       (data || []).filter((cbz) => {
         this.dataAlbaran.push(cbz);
       });
