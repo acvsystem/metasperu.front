@@ -746,31 +746,42 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
 
+  obtenerSiguientesDias(fechaStr) {
+    const fechaBase = new Date(fechaStr);
+    const fechas = [];
+
+    for (let i = 0; i < 7; i++) {
+      const nuevaFecha = new Date(fechaBase);
+      nuevaFecha.setDate(fechaBase.getDate() + i);
+
+      // Formateo: YYYY-MM-DD
+      const año = nuevaFecha.getFullYear();
+      const mes = String(nuevaFecha.getMonth() + 1).padStart(2, '0');
+      const dia = String(nuevaFecha.getDate() + 1).padStart(2, '0');
+
+      fechas.push(`${año}-${mes}-${dia}`);
+    }
+
+    return fechas;
+  }
+
+  onVerifyPap(fecha) {
+
+  }
+
 
   onVerificarHrExtra(dataVerificar) {
-  /*  console.log('onVerificarHrExtra', dataVerificar);
+   /* console.log('onVerificarHrExtra', dataVerificar);
 
-    (dataVerificar || []).fitler((vrf, i) => {
-      (vrf || [])[i].arFechas.filter((rf) => {
-        if ((vrf || [])[i].arFechas.length != 7) {
-          
-        }
-       
-      });
-    });
+    (dataVerificar || []).filter((vrf, i) => {
+      let arsemana = this.obtenerSiguientesDias((vrf || []).arFechas[0]['dia']);
+      const idsArray2 = (vrf || []).arFechas.map(obj => obj.dia);
+      let dias_faltantes = arsemana.filter((d) => !idsArray2.includes(d));
 
 
-    let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
+      console.log(dias_faltantes);
 
-    var dias = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
-
-    var indice = new Date((parseInt(fecha[1])) + "/" + parseInt(fecha[0]) + "/" + (parseInt(fecha[2]))).getDay();
-
-    this.arPartTimeFech.push({
-      dia: row.dia, diaNom: dias[indice], hr_trabajadas: row.hr_trabajadas, indice: indice
-    });
-
-*/
+    });*/
 
     let parms = {
       url: '/recursos_humanos/pap/horas_extras',
@@ -825,7 +836,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
           });
         });
-
+    
   }
 
   onListPapeleta() {

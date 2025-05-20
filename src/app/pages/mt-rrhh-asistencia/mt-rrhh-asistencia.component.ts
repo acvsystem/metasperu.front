@@ -278,6 +278,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
 
+              let hrPapeleta = "";
+
+              if ((huellero || {}).isPapeleta) {
+                ((huellero || {}).papeletas || []).filter((papeleta) => {
+                  hrPapeleta = this.obtenerHorasTrabajadas((papeleta || {})['HORA_SOLICITADA'], (hrPapeleta || "").length > 0 ? hrPapeleta : hrt);
+                });
+              }
+
               this.onDataTemp.push({
                 tienda: (selectedLocal || {})["name"],
                 codigoEJB: (dataEJB || {}).codigoEJB,
@@ -297,7 +305,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 hr_brake: "",
                 hr_ingreso_2: "",
                 hr_salida_2: "",
-                hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : this.obtenerHorasTrabajadas(hrt, (((huellero || {}).papeletas || [])[0] || {})['HORA_SOLICITADA']),
+                hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : hrPapeleta,
                 caja: (huellero || {}).caja,
                 isJornadaCompleta: false,
                 isBrakeComplete: false,
@@ -328,9 +336,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
 
-              if (this.onDataTemp[indexData]['papeletas'].length > 1) {
-                this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], (((huellero || {}).papeletas || [])[1] || {})['HORA_SOLICITADA']);
-              }
+
 
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
               this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
