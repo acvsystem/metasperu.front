@@ -399,7 +399,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
             if (huellero.tpAsociado != "**") { //DEFAULT
 
-              if (this.onDataTemp[indexData]['papeletas'].length > 1) {
+              if ((this.onDataTemp[indexData]['papeletas'] || []).length > 1) {
                 this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], (((huellero || {}).papeletas || [])[1] || {})['HORA_SOLICITADA']);
               }
 
