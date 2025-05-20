@@ -307,7 +307,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 hr_salida_2: "",
                 hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : hrPapeleta,
                 caja: (huellero || {}).caja,
-                isJornadaCompleta: false,
+                isJornadaCompleta: this.onVerificacionJornada(!(huellero || {}).isPapeleta ? hrt : hrPapeleta),
                 isBrakeComplete: false,
                 isRegistroMax: false,
                 statusRegistro: 'CORRECTO',
@@ -339,7 +339,9 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
 
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
-              this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1));
+
+
+              this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.onDataTemp[indexData]['hr_trabajadas']);
               this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
               this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
