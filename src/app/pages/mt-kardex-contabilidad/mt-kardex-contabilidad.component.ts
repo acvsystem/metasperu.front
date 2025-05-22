@@ -167,6 +167,9 @@ export class MtKardexContabilidadComponent implements OnInit {
       this.dataViewCuo = data;
 
       this.dataViewCuo.filter((cuo, i) => {
+
+        this.dataViewCuo[i]['dtCuoDefaul'] = cuo.dtCuo;
+
         this.dataSave.push({
           code: this.vCode,
           documento: cuo.dtDocumento,
@@ -316,6 +319,8 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   onSaveCuo() {
+    console.log(this.dataSave);
+    /*
     this.isLoading = true;
     let storeConxOnline = this.store.getStore('conx_online');
     let index = storeConxOnline.findIndex((codeCnx) => codeCnx == this.vCode);
@@ -324,29 +329,35 @@ export class MtKardexContabilidadComponent implements OnInit {
       this.socket.emit('kardex:post:cuo', this.dataSave);
     } else {
       this.service.toastError('Caja sin conexion..!!', 'CUO');
-    }
+    }*/
   }
 
 
   sum(val: any, documento: string, rowIndex: number) {
+
+    let index = this.dataSave.findIndex((coe) => coe.documento == documento);
+    //$('#cuoEdit' + rowIndex)[0].innerText = val.target.innerText.trim();
+    // $('#cuoEdit' + rowIndex)[0].innerHtml = val.target.innerText.trim();
+
+    // this.dataViewCuo[index]['dtCuoDefaul'] = val.target.innerText.trim();
+    this.dataViewCuo[index]['dtCuo'] = val.target.innerText.trim();
+
+
     this.vCuoEdit = val.target.innerText;
     const original = [...this.dataOriginal];
 
-    let index = this.dataSave.findIndex((coe) => coe.documento == documento);
+
 
     let isUpdate = 'false';
 
     isUpdate = original[index]['dtLenCuo'] > 0 ? 'True' : 'False';
 
-    this.dataSave[index]['cuo'] = val.target.innerText.trim();
-    this.dataSave[index]['isUpdate'] = isUpdate;
+    this.dataSave[index]['cuo'] = $('#cuoEdit' + rowIndex)[0].innerText; this.dataSave[index]['isUpdate'] = isUpdate;
 
-    this.dataViewCuo[index]['dtCuo'] = val.target.innerText.trim();
 
-    $('#cuoEdit' + rowIndex)[0].innerText = val.target.innerText.trim();
-    $('#cuoEdit' + rowIndex)[0].innerHtml = val.target.innerText.trim();
 
-    console.log(this.dataSave);
+
+
 
     this.dataSourceCUO = new MatTableDataSource<any>([]);
     this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
@@ -355,6 +366,11 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   saveTable() {
+    
+    this.dataViewCuo.filter((dt, i) => {
+      this.dataViewCuo[i]['dtCuoDefaul'] = dt.dtCuo;
+    });
+
     this.dataSourceCUO = new MatTableDataSource<any>([]);
     this.dataSourceCUO = new MatTableDataSource<any>(this.dataViewCuo);
     this.dataSourceCUO.paginator = this.paginator;

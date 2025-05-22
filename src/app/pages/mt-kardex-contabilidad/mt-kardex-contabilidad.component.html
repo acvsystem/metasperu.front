@@ -349,7 +349,7 @@
                           <td mat-cell *matCellDef="let element; let i = index" style="max-width: 82px;"> 
                             <div style="width: 100%;display: flex;align-items: center;">
                               <div style="width: 80%;">
-                                <div contenteditable="" id="cuoEdit{{i}}" class="col" (input)="sum($event, element.dtDocumento, i)">{{element.dtCuo}}</div>
+                                <div contenteditable="true" id="cuoEdit{{i}}" class="col" (input)="sum($event, element.dtDocumento, i)">{{element.dtCuoDefaul}}</div>
                               </div>
                             </div>  
                           </td>
