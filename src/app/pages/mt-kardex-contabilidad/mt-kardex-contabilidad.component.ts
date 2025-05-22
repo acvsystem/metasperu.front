@@ -319,8 +319,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   onSaveCuo() {
-    console.log(this.dataSave);
-    /*
+  
     this.isLoading = true;
     let storeConxOnline = this.store.getStore('conx_online');
     let index = storeConxOnline.findIndex((codeCnx) => codeCnx == this.vCode);
@@ -329,7 +328,7 @@ export class MtKardexContabilidadComponent implements OnInit {
       this.socket.emit('kardex:post:cuo', this.dataSave);
     } else {
       this.service.toastError('Caja sin conexion..!!', 'CUO');
-    }*/
+    }
   }
 
 
@@ -366,7 +365,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   saveTable() {
-    
+
     this.dataViewCuo.filter((dt, i) => {
       this.dataViewCuo[i]['dtCuoDefaul'] = dt.dtCuo;
     });
