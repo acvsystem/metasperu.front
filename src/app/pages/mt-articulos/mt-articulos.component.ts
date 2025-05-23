@@ -150,6 +150,7 @@ export class MtArticulosComponent implements OnInit {
     });
 
     let profileUser = this.store.getStore('mt-profile');
+
     if (((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code.length) && (profileUser || {}).code != 'OF') {
       this.isVendedor = true;
 
@@ -185,6 +186,7 @@ export class MtArticulosComponent implements OnInit {
 
       let indexVS = (codeTiendasVs || []).find((tienda) => tienda.code == (profileUser || {}).code);
 
+      console.log(indexVS);
       if (Object.keys(indexVS || {}).length) {
         undServicio = 'VICTORIA SECRET';
       }
@@ -195,7 +197,7 @@ export class MtArticulosComponent implements OnInit {
         undServicio = 'BATH AND BODY WORKS';
       }
 
-
+      
       this.selectedUS = undServicio;
       this.onProcessPetition(undServicio);
     }
@@ -532,8 +534,9 @@ export class MtArticulosComponent implements OnInit {
       ];
 
       codeTiendas.filter((tienda) => {
+        console.log(storeConxOnline);
+        let index = (storeConxOnline || []).findIndex((codeCnx) => codeCnx == tienda.code);
 
-        let index = storeConxOnline.findIndex((codeCnx) => codeCnx == tienda.code);
         if (index > -1) {
           this.compTiendaList.push({ code: tienda.code });
         }
