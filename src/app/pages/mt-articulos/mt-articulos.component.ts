@@ -101,22 +101,9 @@ export class MtArticulosComponent implements OnInit {
   constructor(private http: ShareService, private store: StorageService) { }
 
   ngOnInit() {
-    let configuracion = {
-      socket: '',
-      centroCosto: 'VS',
-      fechInit: '2023-05-01',
-      fechEnd: '2023-05-10'
-    }
+    this.onVerify();
 
-    this.socket.on('consultAsistencia', (configuracion) => {
-
-    });
-
-    this.socket.on('responseAsistencia', (configuracion) => {
-
-    });
-
-    this.socket.on('sessionConnect', (listaSession) => {
+    this.socket.on('comprobantes:get:response', (listaSession) => {
 
       let dataList = [];
       dataList = listaSession || [];
@@ -197,7 +184,7 @@ export class MtArticulosComponent implements OnInit {
         undServicio = 'BATH AND BODY WORKS';
       }
 
-      
+
       this.selectedUS = undServicio;
       this.onProcessPetition(undServicio);
     }
@@ -211,7 +198,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-      console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda'],this.proccessData.length , this.compTiendaList.length);
+      console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda'], this.proccessData.length, this.compTiendaList.length);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -247,6 +234,10 @@ export class MtArticulosComponent implements OnInit {
 
     });
 
+  }
+
+  onVerify() { // ENVIO DE CONSULTA DE COMPROBANTES
+    this.socket.emit('comprobantes:get', 'angular');
   }
 
   onViewDataTable(pageAnt, pageAct) {
