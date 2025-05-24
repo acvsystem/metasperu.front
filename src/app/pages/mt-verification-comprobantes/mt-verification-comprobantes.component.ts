@@ -38,7 +38,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isLoadingDB: boolean = false;
   statusServerList: any = [];
   countClientes: any = 0;
-  socket = io('http://38.187.8.22:3200', {
+  socket = io('http://161.132.94.174:3200', {
     query: { code: 'app' },
     reconnection: true,
     reconnectionDelay: 1000,

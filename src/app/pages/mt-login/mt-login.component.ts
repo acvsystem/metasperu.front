@@ -12,7 +12,7 @@ import { io } from 'socket.io-client';
   styleUrls: ['./mt-login.component.scss'],
 })
 export class MtLoginComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
 
   userName: string = "";
   password: string = "";

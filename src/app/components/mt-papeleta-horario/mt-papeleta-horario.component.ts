@@ -36,7 +36,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-papeleta-horario.component.scss'],
 })
 export class MtPapeletaHorarioComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
   @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
   readonly dialog = inject(MatDialog);
@@ -979,7 +979,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     if (index == 'cboTiendaConsulting') {
-      this.socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+      this.socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
 

@@ -37,7 +37,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-rrhh-asistencia.component.scss'],
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', {
+  socket = io('http://161.132.94.174:3200', {
     query: { code: 'app' }
   });
 

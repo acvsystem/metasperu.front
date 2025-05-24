@@ -14,7 +14,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-planilla.component.scss'],
 })
 export class MtPlanillaComponent implements OnInit {
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
 
   onDataView: Array<any> = [];
   vCalendar: string = "";

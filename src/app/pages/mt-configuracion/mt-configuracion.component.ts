@@ -141,7 +141,7 @@ export class MtConfiguracionComponent implements OnInit {
   vRutaMenu: String = "";
   optionListRol: Array<any> = [];
   vListaClientes: String = "";
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app', token: this.token } });
+  socket = io('http://161.132.94.174:3200', { query: { code: 'app', token: this.token } });
   @ViewChild(MatPaginator) paginator_user: MatPaginator;
   @ViewChild(MatSort) sort_user: MatSort;
 

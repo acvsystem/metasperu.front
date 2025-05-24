@@ -29,7 +29,7 @@ export class MtPanelHorarioComponent implements OnInit {
   onSelectedHorario: Array<any> = [];
   onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
-  socket = io('http://38.187.8.22:3200', { query: { code: 'app' } });
+  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
