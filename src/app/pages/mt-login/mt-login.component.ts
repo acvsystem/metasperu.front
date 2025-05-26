@@ -99,7 +99,7 @@ export class MtLoginComponent implements OnInit {
         "default": (profileUser || {}).default
       }));
     }
-  
+
     this.nav.navigateRoot((profileUser || {}).default);
   }
 
@@ -121,9 +121,9 @@ export class MtLoginComponent implements OnInit {
 
     this.shrService.post(parms).then(async (response) => {
       if ((response || {}).success) {
-        this.onRouteDefault();
+        //this.onRouteDefault();
         this.isCodigo = false;
-
+        this.isLogin = true;
         this.shrService.createToken(this.userName, this.password).then((token) => {
           if (token) {
             this.onRouteDefault();
