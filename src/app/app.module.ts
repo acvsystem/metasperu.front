@@ -30,6 +30,7 @@ import { MtTableFilterPapeletasCreadasComponent } from './components/mt-table-fi
 import { MtTableOficinaComponent } from './components/mt-table-oficina/mt-table-oficina.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
+import { MtTraspasosInventarioComponent } from './pages/mt-traspasos-inventario/mt-traspasos-inventario.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { A11yModule } from '@angular/cdk/a11y';
@@ -136,7 +137,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtTableFilterComponent,
         MtTableFilterPapeletasCreadasComponent,
         MtKardexContabilidadComponent,
-        MtTableOficinaComponent
+        MtTableOficinaComponent,
+        MtTraspasosInventarioComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
