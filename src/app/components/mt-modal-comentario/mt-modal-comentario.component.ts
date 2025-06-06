@@ -13,7 +13,8 @@ import * as $ from 'jquery';
 export interface DialogData {
   comentario: string;
   isViewComentario: boolean;
-  isRechazar:boolean;
+  isRechazar: boolean;
+  isStock: boolean;
 }
 
 @Component({
@@ -27,13 +28,16 @@ export class MtModalComentarioComponent implements OnInit {
   readonly comentario = model(this.data.comentario);
   readonly isViewComentarioModal = model(this.data.isViewComentario);
   readonly isRechazarModal = model(this.data.isRechazar);
+  readonly isStockModal = model(this.data.isStock);
   vComentario: string = "";
   isViewcomentario: any = this.isViewComentarioModal;
   isRechazar: any = this.isRechazarModal;
+  isStock: any = this.isStockModal;
+
   constructor() { }
 
   ngOnInit() {
-   }
+  }
 
   onChangeTextArea(data: any) {
     let id = data.target.id;

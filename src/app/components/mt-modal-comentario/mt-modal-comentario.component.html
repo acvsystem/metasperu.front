@@ -1,8 +1,18 @@
 <mat-dialog-content>
+    @if(isStock){
+    <p>Ingrese cantidad.</p>
+    <textarea id="vComentario" class="form-control" rows="1" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+    }@else{
     <p>Ingrese un comentario.</p>
     <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+    }
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Canelar</button>
-    <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
+    @if(vComentario.length){
+     <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
+    }@else{
+     <button mat-button (click)="onOk()" cdkFocusInitial disabled>Ok</button>
+    }
+ 
 </mat-dialog-actions>

@@ -1,10 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
 import { io } from "socket.io-client";
 import * as XLSX from 'xlsx';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
 
 @Component({
   selector: 'mt-traspasos-inventario',
@@ -20,24 +30,31 @@ export class MtTraspasosInventarioComponent implements OnInit {
   selectedUdsOrigen: string = "";
   vAlmacenOrigen: string = "";
   vAlmacenDestino: string = "";
-  isOnlineTienda: boolean = false;
+  vCode: string = "";
+  isOnlineTiendaOrigen: boolean = false;
+  isOnlineTiendaDestino: boolean = false;
   lsDataTiendas: Array<any> = [];
   cboUnidadServicio: Array<any> = [];
   onDataView: Array<any> = [];
+  parsedData: Array<any> = [];
+  conxOnline: Array<any> = [];
   isDiferencia: boolean = false;
+  readonly dialog = inject(MatDialog);
   dataSource = new MatTableDataSource<any>(this.onDataView);
   displayedColumns: string[] = ['codigoBarras', 'codigoArticulo', 'descripcion', 'talla', 'color', 'stock', 'solicitado', 'estado', 'accion'];
 
   constructor(private service: ShareService, private store: StorageService, private http: HttpClient) { }
 
   ngOnInit() {
+    this.onVerify();
     this.onListaTiendas();
     this.socket.on('inventario:get:barcode:response', (inventario) => {
       let dataInventario = JSON.parse(((inventario || {}).data || []));
 
       let indexEx = this.onDataView.findIndex((dt) => dt.cCodigoBarra == dataInventario[0].cCodigoBarra);
       if (indexEx == -1) {
-        let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra && dtp[1] <= dataInventario[0].cStock);
+        let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
+
         if (indexPD != -1) {
           dataInventario[0]['cSolicitado'] = this.parsedData[indexPD][1];
           this.onDataView.push(dataInventario[0]);
@@ -45,14 +62,42 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource(this.onDataView);
       } else {
-        let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra && dtp[1] <= dataInventario[0].cStock);
+
+        let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
         if (indexPD != -1) {
           this.onDataView[indexEx]['cStock'] = dataInventario[0].cStock;
           this.onDataView[indexEx]['cSolicitado'] = this.parsedData[indexPD][1];
         }
       }
+
     });
 
+    this.socket.on('comprobantes:get:response', (listaSession) => {
+      let dataList = [];
+      dataList = listaSession || [];
+      (dataList || []).filter((dataSocket: any) => {
+
+        if ((dataSocket || {}).ISONLINE == 1) {
+          let index = this.conxOnline.findIndex((conx) => conx == (dataSocket || {}).CODIGO_TERMINAL);
+
+          if (index == -1) {
+            this.conxOnline.push((dataSocket || {}).CODIGO_TERMINAL);
+          }
+        }
+
+        if ((dataSocket || {}).ISONLINE == 0) {
+          this.conxOnline = this.conxOnline.filter((conx) => conx != (dataSocket || {}).CODIGO_TERMINAL);
+        }
+      });
+
+      this.store.removeStore("conx_online");
+      this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
+    });
+
+  }
+
+  onVerify() { // CONSULTA DE TIENDAS CONECTADAS
+    this.socket.emit('comprobantes:get', 'angular');
   }
 
   async onChangeSelect(data: any) {
@@ -63,12 +108,33 @@ export class MtTraspasosInventarioComponent implements OnInit {
     if (index == 'udsOrigen') {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsOrigen);
       this.vAlmacenOrigen = (selectedTienda || {}).COD_ALMACEN;
-      //this.onProcessPetition((selectData || {}).key);
     }
 
     if (index == 'udsDestino') {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsDestino);
       this.vAlmacenDestino = (selectedTienda || {}).COD_ALMACEN;
+    }
+
+    if ((selectData || {}).selectId == "udsOrigen") {
+      this.vCode = (selectData || {}).key;
+      let storeConxOnline = this.store.getStore('conx_online');
+      let index = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
+      if (index > -1) {
+        this.isOnlineTiendaOrigen = true;
+      } else {
+        this.isOnlineTiendaOrigen = false;
+      }
+    }
+
+    if ((selectData || {}).selectId == "udsDestino") {
+      this.vCode = (selectData || {}).key;
+      let storeConxOnline = this.store.getStore('conx_online');
+      let index = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
+      if (index > -1) {
+        this.isOnlineTiendaDestino = true;
+      } else {
+        this.isOnlineTiendaDestino = false;
+      }
     }
 
   }
@@ -78,10 +144,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
   }
 
-  parsedData: any;
+
 
   onFileSelected(event: any): void {
-    console.log(event);
     const file: File = event.target.files[0];
     if (!file) return;
 
@@ -93,8 +158,13 @@ export class MtTraspasosInventarioComponent implements OnInit {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheet = workbook.SheetNames[0];
-        this.parsedData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { header: 1 });
-        console.log(this.parsedData);
+        let dataJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { header: 1 });
+        (dataJson || []).filter((dtj, i) => {
+          if (i > 0) {
+            this.parsedData.push(dtj);
+          }
+        });
+
         this.onConsultarStock(this.parsedData);
       };
       reader.readAsArrayBuffer(file);
@@ -140,15 +210,45 @@ export class MtTraspasosInventarioComponent implements OnInit {
     let inputData = data || {};
     let index = (inputData || {}).id || "";
     this[index] = (inputData || {}).value || "";
-    if (index == 'barcode' && this[index].length > 11) {
-      this.onInventarioOne(this.udsOrigen, this.barcode, this.vAlmacenOrigen);
+
+    if ((inputData || {}).value.length > 11) {
+      let indexPD = this.parsedData.findIndex((dtp) => dtp == (inputData || {}).value || dtp[0] == (inputData || {}).value);
+      if (indexPD == -1) {
+        this.parsedData.push((inputData || {}).value);
+        this.onModalStock();
+      } else {
+        if (this.parsedData[indexPD].length == 2) {
+          this.onModalStock();
+        }
+      }
     }
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    //this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim();
+
   }
+
+  onModalStock() {
+    const dialogRef = this.dialog.open(MtModalComentarioComponent, {
+      data: { comentario: "", isStock: true },
+      width: '100px'
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if ((result || "").length) {
+        let indexPD = this.parsedData.findIndex((dtp) => dtp == this.barcode || dtp[0] == this.barcode);
+        this.parsedData[indexPD] = [this.barcode, result];
+        this.onConsultarStock(this.parsedData);
+      } else {
+        this.onEliminarProducto(this.barcode);
+      }
+    });
+  }
+
+
 
   onListaTiendas() {
     const self = this;
@@ -159,14 +259,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
     this.service.get(parms).then((response) => {
       this.lsDataTiendas = (response || {}).data || [];
       this.cboUnidadServicio = [];
-      //this.tiendasList = [];
 
       (this.lsDataTiendas || []).filter((tienda) => {
-
         this.cboUnidadServicio.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
-
-        /*this.tiendasList.push(
-          { key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION, progress: -1 });*/
       });
     });
   }
@@ -179,56 +274,72 @@ export class MtTraspasosInventarioComponent implements OnInit {
       barcode: barcode
     }
 
-    console.log(configuracion);
-
     this.socket.emit('inventario:get:barcode', configuracion);
   }
 
 
   onGenerarTxt() {
     let isDiferencia = false;
-    this.onDataView.filter((dt, i) => {
-      if (dt.cSolicitado > dt.cStock) {
-        isDiferencia = true;
-      }
-
-      if (this.onDataView.length - 1 == i) {
-        if (isDiferencia) {
-          this.service.toastError('Tienes stock en negativo..!!', 'Traspasos');
-        } else {
-          let contenido = ``;
-
-          this.onDataView.filter((dt) => {
-            contenido += `${this.vAlmacenOrigen}|${this.vAlmacenDestino}|${dt.cCodigoArticulo}|${dt.cColor}|${dt.cTalla}|${dt.cSolicitado}|\n`;
-          });
-
-          const blob = new Blob([contenido], { type: 'text/plain' });
-          const archivo = new File([blob], 'traspaso_stock.txt', { type: 'text/plain' });
-          const formData = new FormData();
-          formData.append('file', archivo);
-
-          this.http.post('http://161.132.94.174:3200/upload/traspasos', formData)
-            .subscribe({
-              next: res => console.log('Subido con éxito'),
-              error: err => console.error('Error', err)
-            });
-
-
-          const enlace = document.createElement('a');
-          enlace.href = URL.createObjectURL(blob);
-          enlace.download = 'traspaso_stock.txt';
-          enlace.click();
-
-          URL.revokeObjectURL(enlace.href);
+    if (this.onDataView.length) {
+      this.onDataView.filter((dt, i) => {
+        if (dt.cSolicitado > dt.cStock) {
+          isDiferencia = true;
         }
-      }
-    });
+
+        if (this.onDataView.length - 1 == i) {
+          if (this.vAlmacenOrigen.length && this.vAlmacenDestino.length && dt.cCodigoArticulo.length && dt.cColor.length && dt.cTalla.length && dt.cSolicitado.length) {
+            if (isDiferencia) {
+              this.service.toastError('Tienes stock en negativo..!!', 'Traspasos');
+            } else {
+              let contenido = ``;
+
+              this.onDataView.filter((dt) => {
+                contenido += `${this.vAlmacenOrigen}|${this.vAlmacenDestino}|${dt.cCodigoArticulo}|${dt.cColor}|${dt.cTalla}|${dt.cSolicitado}|\n`;
+              });
+
+              const blob = new Blob([contenido], { type: 'text/plain' });
+              const archivo = new File([blob], 'traspaso_stock.txt', { type: 'text/plain' });
+              const formData = new FormData();
+              formData.append('file', archivo);
+
+              this.http.post('http://161.132.94.174:3200/upload/traspasos', formData)
+                .subscribe({
+                  next: res => console.log('Subido con éxito'),
+                  error: err => console.error('Error', err)
+                });
+
+
+              const enlace = document.createElement('a');
+              enlace.href = URL.createObjectURL(blob);
+              enlace.download = 'traspaso_stock.txt';
+              enlace.click();
+
+              URL.revokeObjectURL(enlace.href);
+            }
+          } else {
+            this.service.toastError('Faltan datos requeridos para generar el txt..!!', 'Traspasos');
+          }
+        }
+      });
+    } else {
+      this.service.toastError('Faltan datos requeridos para generar el txt..!!', 'Traspasos');
+    }
+
   }
 
   onConsultarStock(dataConsultar) {
     (dataConsultar || []).filter((dt, i) => {
       this.onInventarioOne(this.udsOrigen, String(dt[0]), this.vAlmacenOrigen);
     });
+  }
+
+
+  onEliminarProducto(barcode) {
+    let index = this.onDataView.findIndex((dt) => dt['cCodigoBarra'] == barcode);
+    let indexPD = this.parsedData.findIndex((dt) => dt[0] == barcode);
+    this.onDataView.splice(index, 1);
+    this.parsedData.splice(indexPD, 1);
+    this.dataSource = new MatTableDataSource(this.onDataView);
   }
 
 
