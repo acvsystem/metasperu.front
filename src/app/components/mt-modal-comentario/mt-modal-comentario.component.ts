@@ -45,6 +45,12 @@ export class MtModalComentarioComponent implements OnInit {
     this[id] = inputData || "";
   }
 
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

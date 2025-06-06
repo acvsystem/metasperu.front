@@ -1,7 +1,8 @@
 <mat-dialog-content>
     @if(isStock){
     <p>Ingrese cantidad.</p>
-    <textarea id="vComentario" class="form-control" rows="1" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+     <mt-input id="vComentario" label="Filtro" placeholder="Filtro" type="text" value="{{ vComentario }}"
+            (afterChange)="onChangeInput($event)"></mt-input>
     }@else{
     <p>Ingrese un comentario.</p>
     <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
