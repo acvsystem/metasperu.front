@@ -28,16 +28,23 @@ export class MtTraspasosInventarioComponent implements OnInit {
   udsOrigen: string = "";
   udsDestino: string = "";
   selectedUdsOrigen: string = "";
+  undServicio: string = "";
   vAlmacenOrigen: string = "";
   vAlmacenDestino: string = "";
   vCode: string = "";
   isOnlineTiendaOrigen: boolean = false;
   isOnlineTiendaDestino: boolean = false;
   lsDataTiendas: Array<any> = [];
-  cboUnidadServicio: Array<any> = [];
+  cboUnidadServicioOrigen: Array<any> = [];
+  cboUnidadServicioDestino: Array<any> = [];
   onDataView: Array<any> = [];
   parsedData: Array<any> = [];
   conxOnline: Array<any> = [];
+  optionDefault: Array<any> = [];
+  onListMarcas: Array<any> = [
+    { key: 'VS', value: 'VICTORIA SECRET' },
+    { key: 'BBW', value: 'BATH AND BODY WORKS' }
+  ];
   isDiferencia: boolean = false;
   readonly dialog = inject(MatDialog);
   dataSource = new MatTableDataSource<any>(this.onDataView);
@@ -105,9 +112,28 @@ export class MtTraspasosInventarioComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
+    if (index == 'undServicio') {
+      this.cboUnidadServicioOrigen = [];
+      // this.cboUnidadServicioDestino = [];
+      (this.lsDataTiendas || []).filter((tienda) => {
+        if ((tienda || "").UNID_SERVICIO == this.undServicio) {
+          this.cboUnidadServicioOrigen.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
+          // this.cboUnidadServicioDestino.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
+        }
+      });
+    }
+
     if (index == 'udsOrigen') {
+      this.cboUnidadServicioDestino = [];
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsOrigen);
       this.vAlmacenOrigen = (selectedTienda || {}).COD_ALMACEN;
+      this.cboUnidadServicioDestino = this.cboUnidadServicioOrigen.filter((tdo) => tdo.key != this.udsOrigen);
+
+      if (this.vAlmacenOrigen == this.vAlmacenDestino) {
+        this.optionDefault = [{ key: "", value: "" }];
+        this.udsDestino = "";
+        this.isOnlineTiendaDestino = false;
+      }
     }
 
     if (index == 'udsDestino') {
@@ -258,11 +284,6 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
     this.service.get(parms).then((response) => {
       this.lsDataTiendas = (response || {}).data || [];
-      this.cboUnidadServicio = [];
-
-      (this.lsDataTiendas || []).filter((tienda) => {
-        this.cboUnidadServicio.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
-      });
     });
   }
 

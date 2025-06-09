@@ -2,15 +2,23 @@
   <div id="content" class="full-center-page">
     <div class="card-content">
       <ion-row>
-          <div style="display: flex;align-items: center;">
-            <div  [ngClass]="[isOnlineTiendaOrigen ? 'blob blue': 'blob red']"></div>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <div class="content-button-comp">
+            <mt-select
+            id="undServicio"
+            placeHolder="Unidad de servico"
+            [optionList]="onListMarcas"
+            (changeSelected)="onChangeSelect($event)"
+            ></mt-select>
           </div>
+        </ion-col>
+        <hr style="height: 27px;width: 1px;background: black;">
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
           <div class="content-cbo-tienda">
             <mt-select
             id="udsOrigen"
             placeHolder="Tienda origen"
-            [optionList]="cboUnidadServicio"
+            [optionList]="cboUnidadServicioOrigen"
             (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </div>
@@ -22,15 +30,26 @@
           <div class="content-cbo-tienda">
             <mt-select
             id="udsDestino"
+            [optionDefault]="optionDefault"
             placeHolder="Tienda destino"
-            [optionList]="cboUnidadServicio"
+            [optionList]="cboUnidadServicioDestino"
             (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </div>
         </ion-col>
-                <div style="display: flex;align-items: center;">
-            <div  [ngClass]="[isOnlineTiendaDestino ? 'blob blue': 'blob red']"></div>
-        </div>
+        <hr style="height: 27px;width: 1px;background: black;margin-right: 4px;">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5" style="display: flex;align-items: center;">
+          <div style="display: flex;justify-content: start;margin-right: 10px;">
+            <span style="color: #3d3c3c;border: 1px solid #c1c1c1;border-radius: 4px;padding: 2px;padding-right: 5px;padding-left: 13px; display: flex;justify-content: center;align-items: center;">
+              Origen <div  [ngClass]="[isOnlineTiendaOrigen ? 'blob blue': 'blob red']"></div>
+            </span>
+          </div>
+          <div style="display: flex;justify-content: start;">
+            <span style="color: #3d3c3c;border: 1px solid #c1c1c1;border-radius: 4px;padding: 2px;padding-right: 5px;padding-left: 13px; display: flex;justify-content: center;align-items: center;">
+              Destino <div  [ngClass]="[isOnlineTiendaDestino ? 'blob blue': 'blob red']"></div>
+            </span>
+          </div>
+        </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
@@ -65,7 +84,7 @@
       </ion-row>
 
       <ion-row>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="padding-bottom: 90px;">
          <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="codigoBarras">
              <th mat-header-cell *matHeaderCellDef> Codigo Barras </th>
