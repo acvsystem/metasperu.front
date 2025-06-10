@@ -388,7 +388,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
           }
         } else {
-          this.service.toastError('Rango horario tiene que ser en formato de 12 horas y para part time seleccione en cargo: Asesor Part Time!!', "Horario");
+          this.service.toastError('Rango horario tiene que ser en formato de 24 horas y para part time seleccione en cargo: Asesor Part Time!!', "Horario");
         }
       } else {
         this.service.toastError('Rango de hora ya existe..!!', "Horario");
