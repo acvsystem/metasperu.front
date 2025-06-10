@@ -162,7 +162,8 @@ export class MtHorarioTiendaComponent implements OnInit {
         { key: 2, value: "Cajeros" },
         { key: 3, value: "Asesores" },
         { key: 4, value: "Almaceneros" },
-        { key: 5, value: "Vacaciones" }
+        { key: 5, value: "Asesores part time" },
+        { key: 6, value: "Vacaciones" },
       ];
     }
 
@@ -337,6 +338,11 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
   }
 
+  esMayorADocePM(hora) {
+    const [hh, mm] = hora.split(":").map(Number);
+    return hh > 12 || (hh === 12 && mm >= 0);
+  }
+
   onAddHorario() {
     let index = this.dataHorario.findIndex((dt) => dt.id == this.cboCargo);
 
@@ -346,39 +352,44 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         let hora = this.obtenerDiferenciaHora(this.horaInit, this.horaEnd);
         let confirmHora = (hora || "").split(":");
+        let selectCargo = this.onListCargo.find((dt) => dt.key == this.cboCargo);
+        console.log(selectCargo);
+        if (this.esMayorADocePM(this.horaEnd) || (selectCargo || {}).value == 'Asesores part time') {
+          if (parseInt(confirmHora[0]) <= 9) {
 
-        if (parseInt(confirmHora[0]) <= 9) {
-          if (this.isSearch) {
-            let parms = {
-              url: '/horario/insert/rangoHorario',
-              body: {
-                codigo_tienda: this.codeTienda,
-                rg: `${this.horaInit} a ${this.horaEnd}`,
-                id: this.dataHorario[index]['id']
-              }
-            };
+            if (this.isSearch) {
+              let parms = {
+                url: '/horario/insert/rangoHorario',
+                body: {
+                  codigo_tienda: this.codeTienda,
+                  rg: `${this.horaInit} a ${this.horaEnd}`,
+                  id: this.dataHorario[index]['id']
+                }
+              };
 
-            this.service.post(parms).then(async (response) => {
-              if ((response || {}).success) {
-                this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
-                this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+              this.service.post(parms).then(async (response) => {
+                if ((response || {}).success) {
+                  this.dataHorario[index]['rg_hora'].push({ id: (response || {}).id, position: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
+                  this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
 
-                this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
-              } else {
-                this.service.toastError("Algo salio mal..!!", "Rango horario");
-              }
+                  this.service.toastSuccess("Registrado con exito...!!", "Rango horario");
+                } else {
+                  this.service.toastError("Algo salio mal..!!", "Rango horario");
+                }
 
-            });
+              });
+
+            } else {
+              this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
+              this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+            }
 
           } else {
-            this.dataHorario[index]['rg_hora'].push({ id: this.dataHorario[index]['rg_hora'].length + 1, codigo_tienda: this.codeTienda, rg: `${this.horaInit} a ${this.horaEnd}` });
-            this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
+            this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
           }
         } else {
-          this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
+          this.service.toastError('Rango horario tiene que ser en formato de 12 horas y para part time seleccione en cargo: Asesor Part Time!!', "Horario");
         }
-
-
       } else {
         this.service.toastError('Rango de hora ya existe..!!', "Horario");
       }
@@ -386,7 +397,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     } else {
       this.service.toastError('Seleccione rango horario..!!', "Horario");
     }
-
 
     // this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
     // this.socket.emit('actualizarHorario', this.dataHorario);
@@ -896,16 +906,17 @@ export class MtHorarioTiendaComponent implements OnInit {
           this.dataHorario = [];
           this.store.setStore("mt-isSearch", true);
           this.onListCargo = [];
-          let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Vacaciones'];
+          let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Asesores part time', 'Vacaciones'];
 
           if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
             lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas", "Vacaciones"];
           }
 
           (lsOrden || []).filter((orden, i) => {
-            let row = data.find((rs) => rs.cargo == orden);
-            this.dataHorario.push(row);
-
+            let indexRow = data.find((rs) => rs.cargo == orden);
+            if (indexRow > -1) {
+              this.dataHorario.push(data[indexRow]);
+            }
           });
 
           let dateNow = new Date();
@@ -989,6 +1000,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       { cargo: 'Cajeros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Asesores', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Almaceneros', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+      { cargo: 'Asesores part time', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       { cargo: 'Vacaciones', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia }
     ];
 
@@ -998,6 +1010,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       { value: 'Cajeros' },
       { value: 'Asesores' },
       { value: 'Almaceneros' },
+      { value: 'Asesores part time' },
       { value: 'Vacaciones' }
     ];
 
@@ -1154,7 +1167,6 @@ export class MtHorarioTiendaComponent implements OnInit {
           }
         } else {
           this.service.toastError('Rango de hora debe ser menor o igual a 9 horas...!!', "Horario");
-
         }
 
 
@@ -1275,7 +1287,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         this.store.setStore("mt-isSearch", true);
         this.onListCargo = [];
         let isOficina = false;
-        let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Vacaciones'];
+        let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Asesores part time', 'Vacaciones'];
 
         if ((codigo == 'OF' || (this.codeTienda == "OF" && typeof codigo == 'undefined')) && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
           isOficina = true;
@@ -1283,12 +1295,15 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
 
         if (response.length == 4 && !isOficina) {
-          lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros'];
+          lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Asesores part time', 'Vacaciones'];
         }
 
         (lsOrden || []).filter((orden, i) => {
-          let row = response.find((rs) => rs.cargo == orden);
-          this.dataHorario.push(row);
+          console.log(orden);
+          let indexRow = response.findIndex((rs) => (rs || {}).cargo == orden);
+          if (indexRow > -1) {
+            this.dataHorario.push(response[indexRow]);
+          }
         });
 
 
@@ -1299,12 +1314,12 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         await this.dataHorario.filter((dt, index) => {
 
-          if (!this.dataHorario[index]['dias'].length) {
-            this.dataHorario[index]['dias'] = this.arListDia
+          if (!(this.dataHorario[index]['dias'] || []).length) {
+            this.dataHorario[index]['dias'] = this.arListDia || []
           }
 
 
-          this.dataHorario[index]['dias'].filter((ds, i) => {
+          (this.dataHorario[index]['dias'] || []).filter((ds, i) => {
             let parseDate = ds.fecha_number.split('-');
             let fechaInicio = new Date(fechaActual);
             let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
@@ -1323,7 +1338,7 @@ export class MtHorarioTiendaComponent implements OnInit {
             });
 
 
-            let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+            let obsExist = (this.dataHorario[index]['observacion'] || []).findIndex((obs) => obs.id_dia == ds.id);
 
             if (obsExist != -1) {
               this.dataHorario[index]['dias'][i]['isObservation'] = true;
@@ -1338,13 +1353,13 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
           this.dataHorario[index]['dias'].filter((ds, i) => {
-            let obsExist = this.dataHorario[index]['observacion'].findIndex((obs) => obs.id_dia == ds.id);
+            let obsExist = (this.dataHorario[index]['observacion'] || []).findIndex((obs) => obs.id_dia == ds.id);
             if (obsExist != -1) {
               this.dataHorario[index]['dias'][i]['isObservation'] = true;
             }
           });
 
-          this.onListCargo.push({ key: dt.id, value: dt.cargo });
+          (this.onListCargo || []).push({ key: dt.id, value: dt.cargo });
         });
 
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
