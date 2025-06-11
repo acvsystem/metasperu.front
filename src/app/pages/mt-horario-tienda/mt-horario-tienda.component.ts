@@ -354,7 +354,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         let confirmHora = (hora || "").split(":");
         let selectCargo = this.onListCargo.find((dt) => dt.key == this.cboCargo);
         console.log(selectCargo);
-        if (this.esMayorADocePM(this.horaEnd) || (selectCargo || {}).value == 'Asesores part time') {
+        if (this.esMayorADocePM(this.horaEnd) || (selectCargo || {}).value == 'Asesores part time' || (selectCargo || {}).value == 'Vacaciones') {
           if (parseInt(confirmHora[0]) <= 9) {
 
             if (this.isSearch) {
