@@ -154,7 +154,8 @@ export class MtHorarioTiendaComponent implements OnInit {
         { key: 1, value: "Recursos Humanos" },
         { key: 2, value: "Contabilidad" },
         { key: 3, value: "Sistemas" },
-        { key: 4, value: "Vacaciones" }
+        { key: 4, value: "Recepcion" },
+        { key: 5, value: "Vacaciones" }
       ];
     } else {
       this.onListCargo = [
@@ -909,7 +910,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           let lsOrden = ['Gerentes', 'Cajeros', 'Asesores', 'Almaceneros', 'Asesores part time', 'Vacaciones'];
 
           if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
-            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas", "Vacaciones"];
+            lsOrden = ["Recursos Humanos", "Contabilidad", "Sistemas", "Recepcion", "Vacaciones"];
           }
 
           (lsOrden || []).filter((orden, i) => {
@@ -1019,6 +1020,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         { cargo: 'Recursos Humanos', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
         { cargo: 'Contabilidad', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
         { cargo: 'Sistemas', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
+        { cargo: 'Recepcion', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
         { cargo: 'Vacaciones', codigo_tienda: this.codeTienda, fecha: `${day[0]}-${day[1]}-${day[2]}`, rango: this.vRangoDiasSearch, dias: this.arListDia },
       ];
 
@@ -1026,6 +1028,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         { value: 'Recursos Humanos' },
         { value: 'Contabilidad' },
         { value: 'Sistemas' },
+        { value: 'Recepcion' },
         { value: 'Vacaciones' }
       ];
     }
@@ -1291,7 +1294,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
         if ((codigo == 'OF' || (this.codeTienda == "OF" && typeof codigo == 'undefined')) && ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo")) {
           isOficina = true;
-          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas', 'Vacaciones'];
+          lsOrden = ['Recursos Humanos', 'Contabilidad', 'Sistemas', 'Recepcion', 'Vacaciones'];
         }
 
         if (response.length == 4 && !isOficina) {
