@@ -17,6 +17,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'mt-configuracion',
@@ -32,17 +33,24 @@ export class MtConfiguracionComponent implements OnInit {
   displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel', 'accion'];
   displayedColumnsCajas: string[] = ['nro_caja', 'mac', 'serie_tienda', 'database_instance', 'database_name', 'cod_tipo_factura', 'cod_tipo_boleta', 'property_stock', 'name_excel_stock', 'ruta_download_agente', 'ruta_download_sunat'];
   displayedColumnsPermiso: string[] = ['codigo', 'tienda', 'horario_permiso', 'papeleta_permiso'];
+  displayedColumnsPlugin: string[] = ['select', 'tienda', 'nro_caja', 'mac', 'plugins_instalados', 'ip', 'progreso', 'online'];
+
+
   dataViewSession: Array<any> = [];
   dataViewAuthSession: Array<any> = [];
   dataViewUser: Array<any> = [];
   dataViewCaja: Array<any> = [];
   dataViewPermiso: Array<any> = [];
   dataViewTolerancia: Array<any> = [];
+  dataViewEquipos: Array<any> = [];
+  dataOrigicalEq: Array<any> = [];
   dataSourceSession = new MatTableDataSource<any>(this.dataViewSession);
   dataSourceAuthSession = new MatTableDataSource<any>(this.dataViewAuthSession);
   dataSourceUser = new MatTableDataSource<any>(this.dataViewUser);
   dataSourceCajas = new MatTableDataSource<any>(this.dataViewCaja);
   dataSourcePermiso = new MatTableDataSource<any>(this.dataViewPermiso);
+  dataSourceEquipos = new MatTableDataSource<any>(this.dataViewEquipos);
+  selection = new SelectionModel<any>(true, []);
 
   menuAllList: Array<any> = [];
   menuUserList: Array<any> = [];
@@ -82,6 +90,7 @@ export class MtConfiguracionComponent implements OnInit {
   tipoCuenta: string = "";
   cboPageDefault: string = "";
   cboNivelUser: string = "";
+  cboPlugin: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
   onListPageDefault: Array<any> = [];
@@ -114,11 +123,9 @@ export class MtConfiguracionComponent implements OnInit {
     { id: "SUNAT", value: "SUNAT" },
     { id: "DOCUMENTO", value: "DOCUMENTO" }
   ];
-  onListPlugin: Array<any> = [
-    { key: 'python', value: 'PYTHON' },
-    { key: 'sunat', value: 'SUNAT' },
-    { key: "validacion", value: "VALIDACION" }
-  ];
+
+  onListPlugin: Array<any> = [];
+
   selectNivel: any = {};
   selectedHashNivel: string = "";
   tiendasList: Array<any> = [];
@@ -141,7 +148,15 @@ export class MtConfiguracionComponent implements OnInit {
   vRutaMenu: String = "";
   optionListRol: Array<any> = [];
   vListaClientes: String = "";
+  isOnlineTienda: Boolean = false;
+  cboUnidServicio: String = "";
+  onListUndServicio: Array<any> = [
+    { key: 'VS', value: 'VICTORIA SECRET' },
+    { key: 'BBW', value: 'BATH AND BODY WORKS' }
+  ];
+
   socket = io('http://161.132.94.174:3200', { query: { code: 'app', token: this.token } });
+
   @ViewChild(MatPaginator) paginator_user: MatPaginator;
   @ViewChild(MatSort) sort_user: MatSort;
 
@@ -151,6 +166,8 @@ export class MtConfiguracionComponent implements OnInit {
   @ViewChild(MatPaginator) paginator_caja: MatPaginator;
   @ViewChild(MatSort) sort_caja: MatSort;
 
+  @ViewChild(MatPaginator) paginator_equipos: MatPaginator;
+  @ViewChild(MatSort) sort_paginator_equipos: MatSort;
 
   constructor(private modalCtrl: ModalController, private service: ShareService, private store: StorageService, private cdr: ChangeDetectorRef) { }
 
@@ -163,9 +180,48 @@ export class MtConfiguracionComponent implements OnInit {
     this.onMenuList();
     this.onNivelesList();
     this.onListTienda();
+    this.onEquiposList();
+    this.onPluginList();
+
+    this.socket.on('desconexion:eqp:send', (qep) => {
+    
+      let index = this.dataViewEquipos.findIndex((eqp) => eqp.MAC == ((qep || [])[0] || {}).mac.toUpperCase());
+      
+      (this.dataViewEquipos[index] || {})['ONLINE'] = 'false';
+
+      this.dataSourceEquipos = new MatTableDataSource([]);
+      this.dataSourceEquipos = new MatTableDataSource(this.dataViewEquipos);
+      this.dataSourceEquipos.paginator = this.paginator_equipos;
+      this.dataSourceEquipos.sort = this.sort_paginator_equipos;
+    });
+
     this.socket.on('update:file:status', (status) => {
-      let index = this.tiendasList.findIndex((tienda) => tienda.key == status.serie);
-      (this.tiendasList[index] || {})['progress'] = (status || {}).status == 100 ? 0 : (status || {}).progress;
+
+      let index = this.dataViewEquipos.findIndex((eqp) => eqp.MAC == status.mac.toUpperCase());
+
+      (this.dataViewEquipos[index] || {})['progress'] = (status || {}).status;
+
+      this.dataSourceEquipos = new MatTableDataSource([]);
+      this.dataSourceEquipos = new MatTableDataSource(this.dataViewEquipos);
+      this.dataSourceEquipos.paginator = this.paginator_equipos;
+      this.dataSourceEquipos.sort = this.sort_paginator_equipos;
+    });
+
+    this.socket.on('status:EQP:send', (status) => {
+      let index = this.dataViewEquipos.findIndex((eqp) => eqp.MAC == status.mac.toUpperCase());
+
+      (this.dataViewEquipos[index] || {})['IP'] = status.ip;
+      (this.dataViewEquipos[index] || {})['ONLINE'] = status.online;
+      this.dataSourceEquipos = new MatTableDataSource([]);
+      this.dataSourceEquipos = new MatTableDataSource(this.dataViewEquipos);
+      this.dataSourceEquipos.paginator = this.paginator_equipos;
+      this.dataSourceEquipos.sort = this.sort_paginator_equipos;
+      /*this.dataViewEquipos = [];
+      this.dataViewEquipos = (response || [])['data'];
+      this.dataSourceEquipos = new MatTableDataSource([]);
+      this.dataSourceEquipos = new MatTableDataSource(this.dataViewEquipos);
+      this.dataSourceEquipos.paginator = this.paginator_equipos;
+      this.dataSourceEquipos.sort = this.sort_paginator_equipos;*/
     });
 
     this.onListClient();
@@ -176,6 +232,33 @@ export class MtConfiguracionComponent implements OnInit {
       this.onListAuthSession();
     });
   }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSourceEquipos.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSourceEquipos.data);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+
 
   onListSession() {
     let parms = {
@@ -222,6 +305,39 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataSourceUser = new MatTableDataSource(this.dataViewUser);
       this.dataSourceUser.paginator = this.paginator_user;
       this.dataSourceUser.sort = this.sort_user;
+    });
+  }
+
+  onEquiposList() {
+    let parms = {
+      url: '/equipos/lista'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.dataViewEquipos = [];
+      this.dataOrigicalEq = [];
+      this.dataViewEquipos = (response || [])['data'];
+      this.dataOrigicalEq = (response || [])['data'];
+      this.dataSourceEquipos = new MatTableDataSource([]);
+      this.dataSourceEquipos = new MatTableDataSource(this.dataViewEquipos);
+      this.dataSourceEquipos.paginator = this.paginator_equipos;
+      this.dataSourceEquipos.sort = this.sort_paginator_equipos;
+    });
+  }
+
+
+  onPluginList() {
+    let parms = {
+      url: '/plugin/lista'
+    };
+
+    this.service.get(parms).then((response) => {
+      let data = (response || {}).data;
+
+      (data || []).filter((dt) => {
+        this.onListPlugin.push({ key: dt.NOMBRE_FILE, value: dt.NOMBRE_PLUGIN });
+      });
+
     });
   }
 
@@ -284,15 +400,21 @@ export class MtConfiguracionComponent implements OnInit {
     this[event.target['id']] = value;
   }
 
+  onUpdatePlugin() {
+    let dataSelection = this.selection['_selected'];
+    (dataSelection || []).filter((ds) => {
+      this.onUpdateAgentFront(ds['MAC']);
+    });
+  }
 
-
-  onUpdateAgentFront() {
+  onUpdateAgentFront(macEqp) {
     let body = {
       hash: this.hashAgente,
-      fileName: this.selectedHashNivel == "SUNAT" ? "SUNAT.zip" : this.selectedHashNivel == "AGENTE" ? "agnFront.py" : "PLUGIN_VALIDACION.zip"
+      fileName: this.cboPlugin,
+      mac: (macEqp || "").toLowerCase()
     }
 
-    this.socket.emit('update:file:FrontAgent', this.cboTipo);
+    this.socket.emit('update:file:FrontAgent', body);
   }
 
   onAddEmailList() {
@@ -329,7 +451,7 @@ export class MtConfiguracionComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
-    if (index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
+    if (index != "cboUnidServicio" && index != "cboPlugin" && index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
       this.onListMenuUsuario().then((menu: Array<any>) => {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
@@ -351,8 +473,20 @@ export class MtConfiguracionComponent implements OnInit {
       this.vSerieTienda = this[index];
     }
 
-    if (index = 'cboNivel') {
+    if (index == 'cboNivel') {
       this.onConsultaMenuNivel((selectData || {}).key);
+    }
+
+    if (index == 'cboPlugin') {
+      this.onGenerarHash(this[index]);
+    }
+
+    if (index == 'cboUnidServicio') {
+      this.dataViewEquipos = this.dataOrigicalEq.filter((dt) => dt.UNID_SERVICIO == this[index]);
+      this.dataSourceEquipos = new MatTableDataSource([]);
+      this.dataSourceEquipos = new MatTableDataSource(this.dataViewEquipos);
+      this.dataSourceEquipos.paginator = this.paginator_equipos;
+      this.dataSourceEquipos.sort = this.sort_paginator_equipos;
     }
 
   }
@@ -579,10 +713,10 @@ export class MtConfiguracionComponent implements OnInit {
     });
   }
 
-  onGenerarHash() {
+  onGenerarHash(nivel) {
     let parms = {
       url: '/security/create/hash/agente',
-      body: { nivel: this.selectedHashNivel }
+      body: { nivel: nivel }
     };
 
     this.service.post(parms).then((response) => {

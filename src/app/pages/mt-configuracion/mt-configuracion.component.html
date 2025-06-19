@@ -7,17 +7,22 @@
           <hr style="background-color: black;margin: 6px;">
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-          <mt-select id="cboTienda" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListTienda"></mt-select>
+          <mt-select id="cboTienda" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda"
+            [optionList]="cboListTienda"></mt-select>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="3">
-          <mt-input (afterChange)="onChangeInput($event)" id="vAddSerieTienda" label="Serie" placeholder="Serie tienda" type="text" value="{{ vAddSerieTienda }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddSerieTienda" label="Serie" placeholder="Serie tienda"
+            type="text" value="{{ vAddSerieTienda }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="4">
-          <mt-input (afterChange)="onChangeInput($event)" id="vAddNombreTienda" label="Nombre Tienda" placeholder="Escriba el nombre" type="text" value="{{ vAddNombreTienda }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddNombreTienda" label="Nombre Tienda"
+            placeholder="Escriba el nombre" type="text" value="{{ vAddNombreTienda }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
           <div style="height: 100%;display: flex;align-items: center;">
-            <button matTooltip="Agregar tienda" id="searchProducto" (click)="onRegistrarTienda()" type="button" class="btn btn-primary btn-sm" style="padding-bottom: 0;padding-top: 2px;padding-right: 6px;padding-left: 6px;">
+            <button matTooltip="Agregar tienda" id="searchProducto" (click)="onRegistrarTienda()" type="button"
+              class="btn btn-primary btn-sm"
+              style="padding-bottom: 0;padding-top: 2px;padding-right: 6px;padding-left: 6px;">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
           </div>
@@ -29,13 +34,16 @@
           <hr style="background-color: black;margin: 6px;">
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-          <mt-input (afterChange)="onChangeInput($event)" id="vSerieTienda" label="Serie Tienda" placeholder="Serie tienda" type="text" value="{{ vSerieTienda }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vSerieTienda" label="Serie Tienda"
+            placeholder="Serie tienda" type="text" value="{{ vSerieTienda }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-          <mt-input (afterChange)="onChangeInput($event)" id="vNumeroCaja" label="Caja" placeholder="Numero caja" type="text" value="{{ vNumeroCaja }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vNumeroCaja" label="Caja" placeholder="Numero caja"
+            type="text" value="{{ vNumeroCaja }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vMac" label="Mac" placeholder="Mac" type="text" value="{{ vMac }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vMac" label="Mac" placeholder="Mac" type="text"
+            value="{{ vMac }}"></mt-input>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -44,18 +52,22 @@
           <hr style="background-color: black;margin: 6px;">
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vInstanciaDataBase" label="Instancia BD" placeholder="Instancia Base de Datos" type="text" value="{{ vInstanciaDataBase }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vInstanciaDataBase" label="Instancia BD"
+            placeholder="Instancia Base de Datos" type="text" value="{{ vInstanciaDataBase }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vNameDataBase" label="Nombre BD" placeholder="Nombre Base de Datos" type="text" value="{{ vNameDataBase }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vNameDataBase" label="Nombre BD"
+            placeholder="Nombre Base de Datos" type="text" value="{{ vNameDataBase }}"></mt-input>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoFactura" label="Cod Factura" placeholder="Codigo factura" type="text" value="{{ vCodigoTipoFactura }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoFactura" label="Cod Factura"
+            placeholder="Codigo factura" type="text" value="{{ vCodigoTipoFactura }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoBoleta" label="Cod Boleta" placeholder="Codigo boleta" type="text" value="{{ vCodigoTipoBoleta }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vCodigoTipoBoleta" label="Cod Boleta"
+            placeholder="Codigo boleta" type="text" value="{{ vCodigoTipoBoleta }}"></mt-input>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -64,13 +76,16 @@
           <hr style="background-color: black;margin: 6px;">
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-          <mt-input (afterChange)="onChangeInput($event)" id="vPropertyStock" label="Propiedad Stock" placeholder="Propiedad stock" type="text" value="{{ vPropertyStock }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vPropertyStock" label="Propiedad Stock"
+            placeholder="Propiedad stock" type="text" value="{{ vPropertyStock }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-          <mt-input (afterChange)="onChangeInput($event)" id="vAsuntoEmailStock" label="Asunto email stock" placeholder="Escriba el asunto" type="text" value="{{ vAsuntoEmailStock }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vAsuntoEmailStock" label="Asunto email stock"
+            placeholder="Escriba el asunto" type="text" value="{{ vAsuntoEmailStock }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-          <mt-input (afterChange)="onChangeInput($event)" id="vNameExcelStock" label="Nombre Excel export" placeholder="Escriba el nombre" type="text" value="{{ vNameExcelStock }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vNameExcelStock" label="Nombre Excel export"
+            placeholder="Escriba el nombre" type="text" value="{{ vNameExcelStock }}"></mt-input>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -79,15 +94,17 @@
           <hr style="background-color: black;margin: 6px;">
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadAgente" label="Ruta install agente" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadAgente }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadAgente" label="Ruta install agente"
+            placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadAgente }}"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-          <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadSunat" label="Ruta install sunat" placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadSunat }}"></mt-input>
+          <mt-input (afterChange)="onChangeInput($event)" id="vRutaDownloadSunat" label="Ruta install sunat"
+            placeholder="Ruta instalacion" type="text" value="{{ vRutaDownloadSunat }}"></mt-input>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-          <button  id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onRegistrarCaja()">
+          <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onRegistrarCaja()">
             Registrar Caja
           </button>
         </ion-col>
@@ -101,8 +118,8 @@
           <mat-tab label="Sistema">
             <div class="example-small-box mat-elevation-z4 boy-tap" style="padding-top: 20px;">
               <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                <!--
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="8" sizeLg="8">
+                  <!--
                   <ion-row>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                       <div class="card-content-configuration">
@@ -190,13 +207,105 @@
                             <div class="content-view">
                               <ion-row>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                                  <mt-select id="cboTipo" placeHolder="Plugin" [optionList]="onListPlugin"
-                                  (changeSelected)="onChangeSelect($event)"></mt-select>
+                                  <mt-select id="cboUnidServicio" placeHolder="Unidad de Servicio" style="width: 100%;"
+                                    [optionList]="onListUndServicio"
+                                    (changeSelected)="onChangeSelect($event)"></mt-select>
                                 </ion-col>
-                                <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4" class="aling-left">
-                                  <button (click)="onUpdateAgentFront()" type="button" class="btn btn-primary btn-sm" disabled><i class="fa fa-refresh" aria-hidden="true"></i> Actualizar</button>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" class="aling-left">
+                                  <mt-select id="cboPlugin" placeHolder="Plugin" [optionList]="onListPlugin" style="width: 100%;"
+                                    (changeSelected)="onChangeSelect($event)"></mt-select>
+                                </ion-col>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" class="aling-left">
+                                  <button (click)="onUpdatePlugin()" type="button" class="btn btn-primary btn-sm"><i
+                                      class="fa fa-refresh" aria-hidden="true"></i> Actualizar</button>
+                                  <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-refresh"
+                                      aria-hidden="true"></i> Plugin File</button>
                                 </ion-col>
                               </ion-row>
+                              <ion-row>
+                                <ion-col>
+                                  <table mat-table [dataSource]="dataSourceEquipos" class="mat-elevation-z8">
+
+                                    <!-- Checkbox Column -->
+                                    <ng-container matColumnDef="select">
+                                      <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                          [checked]="selection.hasValue() && isAllSelected()"
+                                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                          [aria-label]="checkboxLabel()">
+                                        </mat-checkbox>
+                                      </th>
+                                      <td mat-cell *matCellDef="let row">
+                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                          (change)="$event ? selection.toggle(row) : null"
+                                          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                        </mat-checkbox>
+                                      </td>
+                                    </ng-container>
+
+                                    <!-- Position Column -->
+                                    <ng-container matColumnDef="tienda">
+                                      <th mat-header-cell *matHeaderCellDef> Tienda </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.DESCRIPCION}} </td>
+                                    </ng-container>
+
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="nro_caja">
+                                      <th mat-header-cell *matHeaderCellDef> Nro Caja </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.NUM_CAJA}} </td>
+                                    </ng-container>
+
+                                    <!-- Weight Column -->
+                                    <ng-container matColumnDef="mac">
+                                      <th mat-header-cell *matHeaderCellDef> MAC </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.MAC}} </td>
+                                    </ng-container>
+
+                                    <!-- Symbol Column -->
+                                    <ng-container matColumnDef="plugins_instalados">
+                                      <th mat-header-cell *matHeaderCellDef> Plugins Instalados </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                                    </ng-container>
+
+                                    <!-- Symbol Column -->
+                                    <ng-container matColumnDef="ip">
+                                      <th mat-header-cell *matHeaderCellDef> IP </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.IP}} </td>
+                                    </ng-container>
+
+                                    <!-- Symbol Column -->
+                                    <ng-container matColumnDef="progreso">
+                                      <th mat-header-cell *matHeaderCellDef> Descarga </th>
+                                      <td mat-cell *matCellDef="let element">
+
+                                        <span class="badge text-bg-success rounded-pill"
+                                          *ngIf="element.progress == 100"><i class="fa fa-check"
+                                            aria-hidden="true"></i></span>
+                                        <span class="badge bg-primary rounded-pill"
+                                          *ngIf="element.progress > 0 && 99 > element.progress">{{element.progress}}%</span>
+
+                                      </td>
+                                    </ng-container>
+
+                                    <!-- Symbol Column -->
+                                    <ng-container matColumnDef="online">
+                                      <th mat-header-cell *matHeaderCellDef> Online </th>
+                                      <td mat-cell *matCellDef="let element">
+                                        <div [ngClass]="[element.ONLINE == 'true' ? 'blob blue': 'blob red']"></div>
+                                      </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPlugin"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPlugin;"
+                                      (click)="selection.toggle(row)">
+                                    </tr>
+                                  </table>
+                                  <mat-paginator [pageSizeOptions]="[10, 20, 30, 40, 50]" showFirstLastButtons
+                                    aria-label="Select page of periodic elements">
+                                  </mat-paginator>
+                                </ion-col>
+                              </ion-row>
+                              <!--
                               <ion-row>
                                 <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
                                   <ol class="list-group">
@@ -210,6 +319,7 @@
                                   </ol>
                                 </ion-col>
                               </ion-row>
+                              -->
                             </div>
                           </ion-col>
                         </ion-row>
@@ -217,32 +327,34 @@
                     </ion-col>
                   </ion-row>
                 </ion-col>
-          
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+
+                <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
                   <ion-row>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                       <div class="card-content-configuration">
-                      <ion-row>
-                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                          <div class="content-view">
-                            <ion-row class="border-bottom-title">
-                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                                <span class="title card-title">Clientes a eliminar o descatalogar</span>
-                              </ion-col>
-                            </ion-row>
-                            <ion-row>
-                              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
-                                <button type="button" (click)="onSaveClientes()" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
-                              </ion-col>
-                            </ion-row>
-                            <ion-row>
-                              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                                  <textarea id="vListaClientes" class="form-control" rows="3" (change)="onValueChange($event)" [value]="vListaClientes"></textarea>
-                              </ion-col>
-                            </ion-row>
-                          </div>
-                        </ion-col>
-                      </ion-row>
+                        <ion-row>
+                          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                            <div class="content-view">
+                              <ion-row class="border-bottom-title">
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                  <span class="title card-title">Clientes a eliminar o descatalogar</span>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" class="aling-left">
+                                  <button type="button" (click)="onSaveClientes()" class="btn btn-primary btn-sm"><i
+                                      class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row>
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                                  <textarea id="vListaClientes" class="form-control" rows="3"
+                                    (change)="onValueChange($event)" [value]="vListaClientes"></textarea>
+                                </ion-col>
+                              </ion-row>
+                            </div>
+                          </ion-col>
+                        </ion-row>
                       </div>
                     </ion-col>
                   </ion-row>
@@ -260,34 +372,27 @@
                               </ion-row>
                               <ion-row>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
-                                  <mt-input
-                                  id="vReferencia"
-                                  label="Referencia"
-                                  placeholder="Referencia"
-                                  type="text"
-                                  value="{{ vReferencia }}"
-                                  (afterChange)="onChangeInput($event)"
-                                ></mt-input>
+                                  <mt-input id="vReferencia" label="Referencia" placeholder="Referencia" type="text"
+                                    value="{{ vReferencia }}" (afterChange)="onChangeInput($event)"></mt-input>
                                 </ion-col>
-                                <ion-col sizeXs="1" sizeSm="1" sizeMd="3" sizeLg="3" >
-                                <mt-calendar 
-                                [selected] = vTiempoTolerancia
-                                id="vTiempoTolerancia"
-                                [isTime]="true" 
-                                [isReset]="isResetCalendar"
-                                placeholder="Tiempo de tolerancia"
-                                name="horaLlegada"
-                                (afterChange)="onCaledar($event)">
-                              </mt-calendar>
+                                <ion-col sizeXs="1" sizeSm="1" sizeMd="3" sizeLg="3">
+                                  <mt-calendar [selected]=vTiempoTolerancia id="vTiempoTolerancia" [isTime]="true"
+                                    [isReset]="isResetCalendar" placeholder="Tiempo de tolerancia" name="horaLlegada"
+                                    (afterChange)="onCaledar($event)">
+                                  </mt-calendar>
                                 </ion-col>
-                                <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" style="display: flex;justify-content: center;align-items: center;">
-                                  <button type="button" (click)="onRegTiempoTolerancia()" matTooltip="Guardar Registro" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1"
+                                  style="display: flex;justify-content: center;align-items: center;">
+                                  <button type="button" (click)="onRegTiempoTolerancia()" matTooltip="Guardar Registro"
+                                    class="btn btn-primary btn-sm"><i class="fa fa-check"
+                                      aria-hidden="true"></i></button>
                                 </ion-col>
                               </ion-row>
                               <ion-row>
                                 <ion-col sizeXs="11" sizeSm="11" sizeMd="12" sizeLg="12">
                                   <ol class="list-group">
-                                    <li class="list-group-item item-tolerancia" *ngFor="let data of dataViewTolerancia" (click)="onSelectTolerancia(data)">
+                                    <li class="list-group-item item-tolerancia" *ngFor="let data of dataViewTolerancia"
+                                      (click)="onSelectTolerancia(data)">
                                       <ion-row>
                                         <ion-col sizeXs="6" sizeSm="6" sizeMd="6" sizeLg="6">
                                           {{data.REFERENCIA}}
@@ -307,9 +412,9 @@
                     </ion-col>
                   </ion-row>
                 </ion-col>
-          
+
               </ion-row>
-  
+
             </div>
           </mat-tab>
           <mat-tab label="Session">
@@ -318,28 +423,28 @@
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <div class="mat-elevation-z8" *ngIf="isSession">
                     <table mat-table [dataSource]="dataSourceSession">
-                        <ng-container matColumnDef="id_session">
-                          <th mat-header-cell *matHeaderCellDef> ID Session </th>
-                          <td mat-cell *matCellDef="let element"> {{element.ID_SESSION}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="email">
-                          <th mat-header-cell *matHeaderCellDef> Email </th>
-                          <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
-                        </ng-container>
-      
-                        <ng-container matColumnDef="ip">
-                          <th mat-header-cell *matHeaderCellDef> IP </th>
-                          <td mat-cell *matCellDef="let element"> {{element.IP}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="divice">
-                          <th mat-header-cell *matHeaderCellDef> Divice </th>
-                          <td mat-cell *matCellDef="let element"> {{element.DIVICE}} </td>
-                        </ng-container>
-      
-                        <tr mat-header-row *matHeaderRowDef="displayedColumnsSession"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsSession;"></tr>
+                      <ng-container matColumnDef="id_session">
+                        <th mat-header-cell *matHeaderCellDef> ID Session </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID_SESSION}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Email </th>
+                        <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ip">
+                        <th mat-header-cell *matHeaderCellDef> IP </th>
+                        <td mat-cell *matCellDef="let element"> {{element.IP}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="divice">
+                        <th mat-header-cell *matHeaderCellDef> Divice </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DIVICE}} </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsSession"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsSession;"></tr>
                     </table>
                     <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
                       aria-label="Select page of periodic elements">
@@ -349,32 +454,34 @@
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <div class="mat-elevation-z8" *ngIf="isSession">
                     <table mat-table [dataSource]="dataSourceAuthSession">
-                        <ng-container matColumnDef="id_auth_session">
-                          <th mat-header-cell *matHeaderCellDef> ID Auth Session </th>
-                          <td mat-cell *matCellDef="let element"> {{element.ID_AUTH_SESSION}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="email">
-                          <th mat-header-cell *matHeaderCellDef> Email </th>
-                          <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
-                        </ng-container>
-      
-                        <ng-container matColumnDef="codigo">
-                          <th mat-header-cell *matHeaderCellDef> Codigo </th>
-                          <td mat-cell *matCellDef="let element"> {{element.CODIGO}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="accion">
-                          <th mat-header-cell *matHeaderCellDef> Accion </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
-                            <button matTooltip="Eliminar Codigo" (click)="onDeleteAuth(element.ID_AUTH_SESSION)" id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
-                              <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </button>
-                          </td>
-                        </ng-container>
-      
-                        <tr mat-header-row *matHeaderRowDef="displayedColumnsAuthSession"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsAuthSession;"></tr>
+                      <ng-container matColumnDef="id_auth_session">
+                        <th mat-header-cell *matHeaderCellDef> ID Auth Session </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID_AUTH_SESSION}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Email </th>
+                        <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.CODIGO}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="accion">
+                        <th mat-header-cell *matHeaderCellDef> Accion </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                          <button matTooltip="Eliminar Codigo" (click)="onDeleteAuth(element.ID_AUTH_SESSION)"
+                            id="searchProducto" type="button" class="btn btn-danger btn-sm"
+                            style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                          </button>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsAuthSession"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsAuthSession;"></tr>
                     </table>
                   </div>
                 </ion-col>
@@ -391,47 +498,44 @@
                         <ion-row>
                           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                             @if(isEditUser){
-                              <button  id="searchProducto" (click)="onNewUser()" type="button" class="btn btn-primary btn-sm">
-                                Guardar
-                              </button>
-                              <button  id="searchProducto" (click)="onCancelarEdit()" type="button" class="btn btn-danger btn-sm">
-                                Cancelar
-                              </button>
+                            <button id="searchProducto" (click)="onNewUser()" type="button"
+                              class="btn btn-primary btn-sm">
+                              Guardar
+                            </button>
+                            <button id="searchProducto" (click)="onCancelarEdit()" type="button"
+                              class="btn btn-danger btn-sm">
+                              Cancelar
+                            </button>
                             }@else{
-                              <button  id="searchProducto" (click)="onNewUser()" type="button" class="btn btn-primary btn-sm">
-                                Crear Usuario
-                              </button>
+                            <button id="searchProducto" (click)="onNewUser()" type="button"
+                              class="btn btn-primary btn-sm">
+                              Crear Usuario
+                            </button>
                             }
 
                           </ion-col>
                         </ion-row>
                         <ion-row>
                           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                            <mt-input id="vUsuarioNew" (afterChange)="onChangeInput($event)" label="Usuario" placeholder="Usuario" type="text" value="{{ vUsuarioNew }}"></mt-input>
+                            <mt-input id="vUsuarioNew" (afterChange)="onChangeInput($event)" label="Usuario"
+                              placeholder="Usuario" type="text" value="{{ vUsuarioNew }}"></mt-input>
                           </ion-col>
                           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                            <mt-input id="vPassword" (afterChange)="onChangeInput($event)" label="Password" placeholder="Password" type="text" value="{{ vPassword }}"></mt-input>
+                            <mt-input id="vPassword" (afterChange)="onChangeInput($event)" label="Password"
+                              placeholder="Password" type="text" value="{{ vPassword }}"></mt-input>
                           </ion-col>
                           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                            <mt-select
-                            id="cboPageDefault"
-                            placeHolder="Paginas Default"
-                            [optionList]="dataDeafultPage"
-                            (changeSelected)="onChangeSelect($event)"
-                            [optionDefault]="optionDefaultPage"
-                            ></mt-select>
+                            <mt-select id="cboPageDefault" placeHolder="Paginas Default" [optionList]="dataDeafultPage"
+                              (changeSelected)="onChangeSelect($event)" [optionDefault]="optionDefaultPage"></mt-select>
                           </ion-col>
                           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                            <mt-select
-                            id="cboNivelUser"
-                            placeHolder="Tipo Cuenta"
-                            [optionList]="dataNivelList"
-                            (changeSelected)="onChangeSelect($event)"
-                            [optionDefault]="optionDefaultNivel"
-                            ></mt-select>
+                            <mt-select id="cboNivelUser" placeHolder="Tipo Cuenta" [optionList]="dataNivelList"
+                              (changeSelected)="onChangeSelect($event)"
+                              [optionDefault]="optionDefaultNivel"></mt-select>
                           </ion-col>
                           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                            <mt-input id="vEmail" (afterChange)="onChangeInput($event)" label="Email" placeholder="Email" type="text" value="{{ vEmail }}"></mt-input>
+                            <mt-input id="vEmail" (afterChange)="onChangeInput($event)" label="Email"
+                              placeholder="Email" type="text" value="{{ vEmail }}"></mt-input>
                           </ion-col>
                         </ion-row>
                       </div>
@@ -443,61 +547,57 @@
                             <div class="example-container">
                               <ion-row>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-                                  <mt-input id="vMenu" (afterChange)="onChangeInput($event)" label="Menu" placeholder="Nombre del menu" type="text" value="{{ vMenu }}"></mt-input>
+                                  <mt-input id="vMenu" (afterChange)="onChangeInput($event)" label="Menu"
+                                    placeholder="Nombre del menu" type="text" value="{{ vMenu }}"></mt-input>
                                 </ion-col>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-                                  <mt-input id="vRutaMenu" (afterChange)="onChangeInput($event)" label="Ruta" placeholder="Nombre de ruta" type="text" value="{{ vRutaMenu }}"></mt-input>
+                                  <mt-input id="vRutaMenu" (afterChange)="onChangeInput($event)" label="Ruta"
+                                    placeholder="Nombre de ruta" type="text" value="{{ vRutaMenu }}"></mt-input>
                                 </ion-col>
-                                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
-                                  <button  id="searchProducto" (click)="onNewMenu()" type="button" class="btn btn-primary btn-sm">
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2"
+                                  style="display: flex;align-items: center;">
+                                  <button id="searchProducto" (click)="onNewMenu()" type="button"
+                                    class="btn btn-primary btn-sm">
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                   </button>
                                 </ion-col>
                               </ion-row>
                               <div style="align-items: center;display: inline-flex;width: 100%;">
                                 <h2>Menu</h2>
-                              </div>                             
-                        
-                              <div
-                                id="dropMenu"
-                                cdkDropList
-                                [cdkDropListData]="dataViewMenu"
-                                class="example-list"
+                              </div>
+
+                              <div id="dropMenu" cdkDropList [cdkDropListData]="dataViewMenu" class="example-list"
                                 (cdkDropListDropped)="drop($event)">
                                 @for (item of dataViewMenu; track item) {
-                                  <div class="example-box" cdkDrag>{{item}}</div>
+                                <div class="example-box" cdkDrag>{{item}}</div>
                                 }
                               </div>
                             </div>
-                          
+
                             <div class="example-container" style="margin: 0px;">
                               <ion-row>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="10" sizeLg="10">
-                                  <mt-input (afterChange)="onChangeInput($event)" id="vNivel" label="Nivel" placeholder="Nombre del nivel" type="text" value="{{ vNivel }}"></mt-input>
+                                  <mt-input (afterChange)="onChangeInput($event)" id="vNivel" label="Nivel"
+                                    placeholder="Nombre del nivel" type="text" value="{{ vNivel }}"></mt-input>
                                 </ion-col>
-                                <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1" style="display: flex;align-items: center;">
-                                  <button  id="searchProducto" (click)="onNewNivel()" type="button" class="btn btn-primary btn-sm">
+                                <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1"
+                                  style="display: flex;align-items: center;">
+                                  <button id="searchProducto" (click)="onNewNivel()" type="button"
+                                    class="btn btn-primary btn-sm">
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                   </button>
                                 </ion-col>
                               </ion-row>
                               <div style="align-items: center;display: inline-flex;width: 100%;">
-                                <h2 style="margin-right: 20px;">Niveles</h2>  <mt-select style="width: 100%;"
-                              id="cboNivel"
-                              placeHolder="Niveles sistema"
-                              [optionList]="dataNivelList"
-                              (changeSelected)="onChangeSelect($event)"
-                              ></mt-select>
+                                <h2 style="margin-right: 20px;">Niveles</h2> <mt-select style="width: 100%;"
+                                  id="cboNivel" placeHolder="Niveles sistema" [optionList]="dataNivelList"
+                                  (changeSelected)="onChangeSelect($event)"></mt-select>
                               </div>
 
-                              <div
-                                id="dropNivel"
-                                cdkDropList
-                                [cdkDropListData]="dataNivelListOne"
-                                class="example-list"
+                              <div id="dropNivel" cdkDropList [cdkDropListData]="dataNivelListOne" class="example-list"
                                 (cdkDropListDropped)="drop($event)">
                                 @for (item of dataNivelListOne; track item) {
-                                  <div class="example-box" cdkDrag>{{item}}</div>
+                                <div class="example-box" cdkDrag>{{item}}</div>
                                 }
                               </div>
                             </div>
@@ -510,47 +610,48 @@
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
                   <ion-row>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                      <mt-input id="vUsuario" (keyup)="applyFilter($event)" label="Filtro" placeholder="Filtro" type="text" value="{{ vUsuario }}"></mt-input>
+                      <mt-input id="vUsuario" (keyup)="applyFilter($event)" label="Filtro" placeholder="Filtro"
+                        type="text" value="{{ vUsuario }}"></mt-input>
                     </ion-col>
                   </ion-row>
                   <div class="mat-elevation-z8" *ngIf="isUsers">
                     <table mat-table [dataSource]="dataSourceUser">
-                        <ng-container matColumnDef="usuario">
-                          <th mat-header-cell *matHeaderCellDef> Usuario </th>
-                          <td mat-cell *matCellDef="let element"> {{element.USUARIO}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="password">
-                          <th mat-header-cell *matHeaderCellDef> Password </th>
-                          <td mat-cell *matCellDef="let element"> {{element.PASSWORD}} </td>
-                        </ng-container>
-      
-                        <ng-container matColumnDef="page_default">
-                          <th mat-header-cell *matHeaderCellDef> Page Default </th>
-                          <td mat-cell *matCellDef="let element"> {{element.DEFAULT_PAGE}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="email">
-                          <th mat-header-cell *matHeaderCellDef> Email </th>
-                          <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="nivel">
-                          <th mat-header-cell *matHeaderCellDef> Nivel </th>
-                          <td mat-cell *matCellDef="let element"> {{element.NIVEL}} </td>
-                        </ng-container>
+                      <ng-container matColumnDef="usuario">
+                        <th mat-header-cell *matHeaderCellDef> Usuario </th>
+                        <td mat-cell *matCellDef="let element"> {{element.USUARIO}} </td>
+                      </ng-container>
 
-                        <ng-container matColumnDef="accion">
-                          <th mat-header-cell *matHeaderCellDef> Accion </th>
-                          <td mat-cell *matCellDef="let element"> 
-                            <button  (click)="onEditUser(element)" type="button" class="btn btn-primary btn-sm">
-                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                            </button>
-                          </td>
-                        </ng-container>
-      
-                        <tr mat-header-row *matHeaderRowDef="displayedColumnsUsers"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsUsers;"></tr>
+                      <ng-container matColumnDef="password">
+                        <th mat-header-cell *matHeaderCellDef> Password </th>
+                        <td mat-cell *matCellDef="let element"> {{element.PASSWORD}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="page_default">
+                        <th mat-header-cell *matHeaderCellDef> Page Default </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DEFAULT_PAGE}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Email </th>
+                        <td mat-cell *matCellDef="let element"> {{element.EMAIL}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="nivel">
+                        <th mat-header-cell *matHeaderCellDef> Nivel </th>
+                        <td mat-cell *matCellDef="let element"> {{element.NIVEL}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="accion">
+                        <th mat-header-cell *matHeaderCellDef> Accion </th>
+                        <td mat-cell *matCellDef="let element">
+                          <button (click)="onEditUser(element)" type="button" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </button>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsUsers"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsUsers;"></tr>
                     </table>
                     <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
                       aria-label="Select page of periodic elements">
@@ -566,12 +667,14 @@
                 <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                   <ion-row>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
-                      <mt-input id="filterTienda" label="Filtro" placeholder="Filtro" type="text" value="{{ filterTienda }}"
-                        (keyup)="applyFilterPapeleta($event)"></mt-input>
+                      <mt-input id="filterTienda" label="Filtro" placeholder="Filtro" type="text"
+                        value="{{ filterTienda }}" (keyup)="applyFilterPapeleta($event)"></mt-input>
                     </ion-col>
                     <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
                       <div style="align-items: center;height: 100%;display: flex;">
-                        <button style="margin-left: 8px;" (click)="drawer.toggle()" matTooltip="Registrar Tienda" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm">
+                        <button style="margin-left: 8px;" (click)="drawer.toggle()" matTooltip="Registrar Tienda"
+                          id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button"
+                          class="btn btn-primary btn-sm">
                           Registrar caja
                         </button>
                       </div>
@@ -579,64 +682,64 @@
                   </ion-row>
                   <div class="mat-elevation-z8" *ngIf="isCajas">
                     <table mat-table [dataSource]="dataSourceCajas" multiTemplateDataRows>
-                        <ng-container matColumnDef="nro_caja">
-                          <th mat-header-cell *matHeaderCellDef> Caja </th>
-                          <td mat-cell *matCellDef="let element"> {{element.NUM_CAJA}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="mac">
-                          <th mat-header-cell *matHeaderCellDef> MAC </th>
-                          <td mat-cell *matCellDef="let element"> {{element.MAC}} </td>
-                        </ng-container>
-      
-                        <ng-container matColumnDef="serie_tienda">
-                          <th mat-header-cell *matHeaderCellDef> Serie </th>
-                          <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="database_instance">
-                          <th mat-header-cell *matHeaderCellDef> Database instance </th>
-                          <td mat-cell *matCellDef="let element"> {{element.DATABASE_INSTANCE}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="database_name">
-                          <th mat-header-cell *matHeaderCellDef> Database name </th>
-                          <td mat-cell *matCellDef="let element"> {{element.DATABASE_NAME}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="cod_tipo_factura">
-                          <th mat-header-cell *matHeaderCellDef> Factura </th>
-                          <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_FAC}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="cod_tipo_boleta">
-                          <th mat-header-cell *matHeaderCellDef> Boleta </th>
-                          <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_BOL}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="property_stock">
-                          <th mat-header-cell *matHeaderCellDef> Property stock </th>
-                          <td mat-cell *matCellDef="let element"> {{element.PROPERTY_STOCK}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="name_excel_stock">
-                          <th mat-header-cell *matHeaderCellDef> Name excel stock </th>
-                          <td mat-cell *matCellDef="let element"> {{element.NAME_EXCEL_REPORT_STOCK}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="ruta_download_agente">
-                          <th mat-header-cell *matHeaderCellDef> Ruta download agente </th>
-                          <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_PY}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="ruta_download_sunat">
-                          <th mat-header-cell *matHeaderCellDef> Ruta download sunat </th>
-                          <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_SUNAT}} </td>
-                        </ng-container>
-      
-                        <tr mat-header-row *matHeaderRowDef="displayedColumnsCajas"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsCajas;"></tr>
-                        
+                      <ng-container matColumnDef="nro_caja">
+                        <th mat-header-cell *matHeaderCellDef> Caja </th>
+                        <td mat-cell *matCellDef="let element"> {{element.NUM_CAJA}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="mac">
+                        <th mat-header-cell *matHeaderCellDef> MAC </th>
+                        <td mat-cell *matCellDef="let element"> {{element.MAC}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="serie_tienda">
+                        <th mat-header-cell *matHeaderCellDef> Serie </th>
+                        <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="database_instance">
+                        <th mat-header-cell *matHeaderCellDef> Database instance </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DATABASE_INSTANCE}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="database_name">
+                        <th mat-header-cell *matHeaderCellDef> Database name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DATABASE_NAME}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="cod_tipo_factura">
+                        <th mat-header-cell *matHeaderCellDef> Factura </th>
+                        <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_FAC}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="cod_tipo_boleta">
+                        <th mat-header-cell *matHeaderCellDef> Boleta </th>
+                        <td mat-cell *matCellDef="let element"> {{element.COD_TIPO_BOL}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="property_stock">
+                        <th mat-header-cell *matHeaderCellDef> Property stock </th>
+                        <td mat-cell *matCellDef="let element"> {{element.PROPERTY_STOCK}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="name_excel_stock">
+                        <th mat-header-cell *matHeaderCellDef> Name excel stock </th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME_EXCEL_REPORT_STOCK}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ruta_download_agente">
+                        <th mat-header-cell *matHeaderCellDef> Ruta download agente </th>
+                        <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_PY}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ruta_download_sunat">
+                        <th mat-header-cell *matHeaderCellDef> Ruta download sunat </th>
+                        <td mat-cell *matCellDef="let element"> {{element.RUTA_DOWNLOAD_SUNAT}} </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsCajas"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsCajas;"></tr>
+
                     </table>
                     <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
                       aria-label="Select page of periodic elements">
@@ -650,40 +753,36 @@
             <div class="example-large-box mat-elevation-z4" style="padding-top: 20px;">
               <div class="mat-elevation-z8" *ngIf="isHp">
                 <table mat-table [dataSource]="dataSourcePermiso">
-                    <ng-container matColumnDef="codigo">
-                      <th mat-header-cell *matHeaderCellDef> Codigo </th>
-                      <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
-                    </ng-container>
+                  <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.SERIE_TIENDA}} </td>
+                  </ng-container>
 
-                    <ng-container matColumnDef="tienda">
-                      <th mat-header-cell *matHeaderCellDef> Tienda </th>
-                      <td mat-cell *matCellDef="let element"> {{element.DESCRIPCION}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="horario_permiso">
-                      <th mat-header-cell *matHeaderCellDef> Horario Permiso </th>
-                      <td mat-cell *matCellDef="let element"> 
-                        <mat-checkbox
-                          class="example-margin"
-                          checked="{{element.IS_FREE_HORARIO == 0 ? false : true}}"
-                          (change)="onUpdatePermisoHP(element,$event.checked,element.IS_FREE_PAPELETA == 0 ? false : true)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
+                  <ng-container matColumnDef="tienda">
+                    <th mat-header-cell *matHeaderCellDef> Tienda </th>
+                    <td mat-cell *matCellDef="let element"> {{element.DESCRIPCION}} </td>
+                  </ng-container>
 
-                    <ng-container matColumnDef="papeleta_permiso">
-                      <th mat-header-cell *matHeaderCellDef> Papeleta Permiso </th>
-                      <td mat-cell *matCellDef="let element"> 
-                        <mat-checkbox
-                        class="example-margin"
-                        checked="{{element.IS_FREE_PAPELETA == 0 ? false : true}}"
+                  <ng-container matColumnDef="horario_permiso">
+                    <th mat-header-cell *matHeaderCellDef> Horario Permiso </th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-checkbox class="example-margin" checked="{{element.IS_FREE_HORARIO == 0 ? false : true}}"
+                        (change)="onUpdatePermisoHP(element,$event.checked,element.IS_FREE_PAPELETA == 0 ? false : true)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="papeleta_permiso">
+                    <th mat-header-cell *matHeaderCellDef> Papeleta Permiso </th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-checkbox class="example-margin" checked="{{element.IS_FREE_PAPELETA == 0 ? false : true}}"
                         (change)="onUpdatePermisoHP(element,element.IS_FREE_HORARIO == 0 ? false : true,$event.checked)">
                       </mat-checkbox>
-                      </td>
-                    </ng-container>
-  
-                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPermiso"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPermiso;"></tr>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumnsPermiso"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsPermiso;"></tr>
                 </table>
               </div>
             </div>
