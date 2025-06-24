@@ -1,5 +1,5 @@
 export class GlobalConstants {
 
-    public static backendServer: string = "http://161.132.94.174:3200";
+    public static backendServer: string = "http://38.187.8.22:3200";
 
 }
