@@ -15,6 +15,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-autorizacion-hora-extra',
@@ -22,7 +23,7 @@ import {
   styleUrls: ['./mt-autorizacion-hora-extra.component.scss'],
 })
 export class MtAutorizacionHoraExtraComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   readonly dialog = inject(MatDialog);
   onDataView: Array<any> = [];
   arDataEJB: Array<any> = [];
