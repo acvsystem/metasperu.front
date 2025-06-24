@@ -15,6 +15,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-traspasos-inventario',
@@ -22,7 +23,7 @@ import { MtModalComentarioComponent } from '../../components/mt-modal-comentario
   styleUrls: ['./mt-traspasos-inventario.component.scss'],
 })
 export class MtTraspasosInventarioComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   barcode: string = "";
   filterProducto: string = "";
   udsOrigen: string = "";
@@ -323,7 +324,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
               const formData = new FormData();
               formData.append('file', archivo);
 
-              this.http.post('http://161.132.94.174:3200/upload/traspasos', formData)
+              this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
                 .subscribe({
                   next: res => console.log('Subido con éxito'),
                   error: err => console.error('Error', err)

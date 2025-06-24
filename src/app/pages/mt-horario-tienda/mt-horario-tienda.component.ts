@@ -10,6 +10,7 @@ import { ShareService } from '../../services/shareService';
 import { ToastrService } from 'ngx-toastr';
 import * as html2pdf from 'html2pdf.js';
 import * as $ from 'jquery';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-horario-tienda',
@@ -18,7 +19,7 @@ import * as $ from 'jquery';
 })
 export class MtHorarioTiendaComponent implements OnInit {
   @Input() data: Array<any> = [];
-  socket = io('http://161.132.94.174:3200', { reconnectionDelayMax: 10000, query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { reconnectionDelayMax: 10000, query: { code: 'app' } });
   cboCargo: number = 0;
   idCargo: number = 1;
   horaInit: string = "";

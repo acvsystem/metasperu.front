@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { io } from "socket.io-client";
+import { GlobalConstants } from '../../const/globalConstants';
+
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 
@@ -14,7 +16,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-planilla.component.scss'],
 })
 export class MtPlanillaComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
   onDataView: Array<any> = [];
   vCalendar: string = "";

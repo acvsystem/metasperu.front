@@ -18,6 +18,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { SelectionModel } from '@angular/cdk/collections';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-configuracion',
@@ -155,7 +156,7 @@ export class MtConfiguracionComponent implements OnInit {
     { key: 'BBW', value: 'BATH AND BODY WORKS' }
   ];
 
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app', token: this.token } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app', token: this.token } });
 
   @ViewChild(MatPaginator) paginator_user: MatPaginator;
   @ViewChild(MatSort) sort_user: MatSort;
@@ -184,9 +185,9 @@ export class MtConfiguracionComponent implements OnInit {
     this.onPluginList();
 
     this.socket.on('desconexion:eqp:send', (qep) => {
-    
+
       let index = this.dataViewEquipos.findIndex((eqp) => eqp.MAC == ((qep || [])[0] || {}).mac.toUpperCase());
-      
+
       (this.dataViewEquipos[index] || {})['ONLINE'] = 'false';
 
       this.dataSourceEquipos = new MatTableDataSource([]);

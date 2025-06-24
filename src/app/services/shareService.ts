@@ -4,6 +4,7 @@ import { IRequestParams } from '../const/IRequestParams';
 import { StorageService } from '../utils/storage';
 import { HttpService } from './httpService';
 import { ToastrService } from 'ngx-toastr';
+import { GlobalConstants } from '../const/globalConstants';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class ShareService {
   @Output() onCloseSelect: EventEmitter<any> = new EventEmitter();
   @Output() onViewPageAdmin: EventEmitter<any> = new EventEmitter();
 
-  serverRute: string = 'http://161.132.94.174:3200';
+  serverRute: string = GlobalConstants.backendServer;
 
   constructor(private store: StorageService, private xhr: HttpService, private toastr: ToastrService) { }
 

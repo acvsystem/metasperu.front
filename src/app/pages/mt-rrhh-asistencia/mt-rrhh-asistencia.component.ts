@@ -27,6 +27,7 @@ import { StorageService } from 'src/app/utils/storage';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { GlobalConstants } from '../../const/globalConstants';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -37,7 +38,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-rrhh-asistencia.component.scss'],
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', {
+  socket = io(GlobalConstants.backendServer, {
     query: { code: 'app' }
   });
 

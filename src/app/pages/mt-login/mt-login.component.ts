@@ -5,6 +5,7 @@ import { StorageService } from '../../utils/storage';
 import { UAParser } from 'ua-parser-js';
 import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
 import { io } from 'socket.io-client';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'app-mt-login',
@@ -12,7 +13,7 @@ import { io } from 'socket.io-client';
   styleUrls: ['./mt-login.component.scss'],
 })
 export class MtLoginComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
   userName: string = "";
   password: string = "";

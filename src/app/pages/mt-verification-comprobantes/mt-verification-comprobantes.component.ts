@@ -9,6 +9,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'app-mt-verification-comprobantes',
@@ -38,7 +39,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isLoadingDB: boolean = false;
   statusServerList: any = [];
   countClientes: any = 0;
-  socket = io('http://161.132.94.174:3200', {
+  socket = io(GlobalConstants.backendServer, {
     query: { code: 'app' },
     reconnection: true,
     reconnectionDelay: 1000,

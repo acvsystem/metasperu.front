@@ -10,7 +10,7 @@ import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import * as $ from 'jquery';
 import { StorageService } from 'src/app/utils/storage';
-
+import { GlobalConstants } from '../../const/globalConstants';
 const moment = _rollupMoment || _moment;
 
 interface Shoes {
@@ -99,7 +99,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   dataAlbaran: Array<any> = [];
   conxOnline: Array<any> = [];
   dataSave: Array<any> = [];
-  socket = io('http://161.132.94.174:3200', {
+  socket = io(GlobalConstants.backendServer, {
     query: { code: 'app' },
     reconnection: true,
     reconnectionDelay: 1000,
@@ -319,7 +319,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   onSaveCuo() {
-  
+
     this.isLoading = true;
     let storeConxOnline = this.store.getStore('conx_online');
     let index = storeConxOnline.findIndex((codeCnx) => codeCnx == this.vCode);

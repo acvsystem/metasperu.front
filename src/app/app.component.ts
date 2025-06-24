@@ -8,13 +8,15 @@ import { ShareService } from './services/shareService';
 import { MenuController } from '@ionic/angular';
 import { UAParser } from 'ua-parser-js';
 import { io } from 'socket.io-client';
+import { GlobalConstants } from './const/globalConstants';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   isShowLoading: boolean = false;
   renderNavBar: boolean = false;
   isMobil: boolean = false;

@@ -7,6 +7,7 @@ import { StorageService } from 'src/app/utils/storage';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { GlobalConstants } from '../../const/globalConstants';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -17,7 +18,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-articulos.component.scss'],
 })
 export class MtArticulosComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   displayedColumns: string[] = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color'];
   headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];

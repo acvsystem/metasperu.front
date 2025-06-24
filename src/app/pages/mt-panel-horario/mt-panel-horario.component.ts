@@ -4,7 +4,7 @@ import { ShareService } from 'src/app/services/shareService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-panel-horario',
@@ -29,7 +29,7 @@ export class MtPanelHorarioComponent implements OnInit {
   onSelectedHorario: Array<any> = [];
   onSelectedPapeleta: Array<any> = [];
   onListCasos: Array<any> = [];
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 

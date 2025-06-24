@@ -26,6 +26,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
+import { GlobalConstants } from '../../const/globalConstants';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -36,7 +37,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-papeleta-horario.component.scss'],
 })
 export class MtPapeletaHorarioComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
   readonly dialog = inject(MatDialog);
@@ -772,7 +773,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                       }
                     } else {
                       let inx = this.dataVerify.findIndex((dv) => dv.fecha == dataPromise[indx]["fechas"][0]['dia']);
-                     
+
                       if (inx == -1) {
                         this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: dataPromise[indx]["hrTrabajadas"], fecha: dataPromise[indx]["fechas"][0]['dia'], hrx_acumulado: dataPromise[indx]["hrExtra"], extra: dataPromise[indx]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: dataPromise[indx]["fechas"] });
                       }
@@ -1093,7 +1094,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     if (index == 'cboTiendaConsulting') {
-      this.socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+      this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
 

@@ -7,6 +7,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { ShareService } from 'src/app/services/shareService';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-observacion-horario',
@@ -14,7 +15,7 @@ import { ShareService } from 'src/app/services/shareService';
   styleUrls: ['./mt-observacion-horario.component.scss'],
 })
 export class MtObservacionHorarioComponent implements OnInit {
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   @Input() vIdDia: number = 0;
   @Output() changeObservation: EventEmitter<any> = new EventEmitter();
   @Input() dataObservation: Array<any> = [];

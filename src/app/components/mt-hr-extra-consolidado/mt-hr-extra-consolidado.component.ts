@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { io } from 'socket.io-client';
 import { ShareService } from 'src/app/services/shareService';
+import { GlobalConstants } from '../../const/globalConstants';
 
 @Component({
   selector: 'mt-hr-extra-consolidado',
@@ -15,7 +16,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input() vTiendaLogin: any = {};
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
-  socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   onListEmpleado: Array<any> = [];
   arDataEJB: Array<any> = [];
   parseEJB: Array<any> = [];
@@ -93,7 +94,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
   onProcess() {
 
-    this.socket = io('http://161.132.94.174:3200', { query: { code: 'app' } });
+    this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
     this.onTiempoTolerancia();
 
