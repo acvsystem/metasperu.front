@@ -206,7 +206,12 @@ export class AppComponent {
   }
 
   onNavigatorRoute(route) {
-    this.nav.navigateRoot(route);
+    if (route == 'traspaso_inventario') {
+      this.router.navigate(['/traspaso_inventario', { timestamp: new Date().getTime() }]);
+    } else {
+      this.nav.navigateRoot(route);
+    }
+
     this.menu.close();
   }
 

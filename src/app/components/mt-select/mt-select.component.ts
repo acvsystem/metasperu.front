@@ -13,6 +13,7 @@ export class MtSelectComponent implements OnInit {
   @Input() placeHolder: string = "Seleccione su opcion";
   @Input() isRequired: boolean = false;
   @Input() selectOption: boolean = false;
+  @Input() isDisabled: boolean = false;
   @Input() optionDefault: Array<any> = [];
   @Input() nameOptionSelected: string = "";
   @Output() changeSelected: EventEmitter<any> = new EventEmitter();

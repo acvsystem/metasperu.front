@@ -104,3 +104,9 @@
         color: rgb(223, 1, 1);
     }
 }
+
+.disabled {
+    pointer-events: none !important;
+    background: #dddddd !important;
+    color: #898989 !important;
+}

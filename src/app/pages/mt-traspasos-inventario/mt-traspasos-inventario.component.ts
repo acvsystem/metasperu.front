@@ -16,6 +16,8 @@ import {
 } from '@angular/material/dialog';
 import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
 import { GlobalConstants } from '../../const/globalConstants';
+import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'mt-traspasos-inventario',
@@ -35,6 +37,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
   vCode: string = "";
   isOnlineTiendaOrigen: boolean = false;
   isOnlineTiendaDestino: boolean = false;
+  isDisabledSelect: boolean = false;
   lsDataTiendas: Array<any> = [];
   cboUnidadServicioOrigen: Array<any> = [];
   cboUnidadServicioDestino: Array<any> = [];
@@ -51,7 +54,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
   dataSource = new MatTableDataSource<any>(this.onDataView);
   displayedColumns: string[] = ['codigoBarras', 'codigoArticulo', 'descripcion', 'talla', 'color', 'stock', 'solicitado', 'estado', 'accion'];
 
-  constructor(private service: ShareService, private store: StorageService, private http: HttpClient) { }
+  constructor(private service: ShareService, private store: StorageService, private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.onVerify();
@@ -171,9 +174,15 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
   }
 
+  onNewTraspaso() {
+    this.router.navigate(['/traspaso_inventario', { timestamp: new Date().getTime() }]);
+  }
+
 
 
   onFileSelected(event: any): void {
+    const self = this;
+
     const file: File = event.target.files[0];
     if (!file) return;
 
@@ -191,7 +200,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
             this.parsedData.push(dtj);
           }
         });
-
+        self.isDisabledSelect = true;
         this.onConsultarStock(this.parsedData);
       };
       reader.readAsArrayBuffer(file);
