@@ -276,6 +276,13 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
 
               let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
+              let isVerificar = false;
+
+              if (!isTardanza) {
+                if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0]) && parseInt(ingreso[1]) < 55) {
+                  isVerificar = true;
+                }
+              }
 
               let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
 
@@ -318,6 +325,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 rango_horario: (huellero || {}).rango_horario,
                 isNullRango: !((huellero || {}).rango_horario || "").length ? true : false,
                 isTardanza: isTardanza,
+                isVerificar: isVerificar,
                 hr_brake: "",
                 hr_ingreso_2: "",
                 hr_salida_2: "",
@@ -327,7 +335,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 isBrakeComplete: false,
                 isRegistroMax: false,
                 statusRegistro: 'CORRECTO',
-                statusTardanza: isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
+                statusTardanza: isVerificar ? 'verificar' : isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
                 dataRegistro: [huellero],
                 papeletas: (huellero || {}).papeletas || [],
                 isPapeleta: (huellero || {}).isPapeleta,
