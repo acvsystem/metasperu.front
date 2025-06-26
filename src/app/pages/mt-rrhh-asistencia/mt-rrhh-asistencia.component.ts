@@ -283,6 +283,21 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               if ((huellero || {}).isPapeleta) {
                 ((huellero || {}).papeletas || []).filter((papeleta) => {
+                  if (isTardanza) {
+                    let salidapap = (papeleta || {})['HORA_SALIDA'].split(':');
+                    let salidapapInt = parseInt(salidapap[0]) * 60 + parseInt(salidapap[1]);
+                    let llegadapap = (papeleta || {})['HORA_LLEGADA'].split(':');
+                    let llegadapapInt = parseInt(llegadapap[0]) * 60 + parseInt(llegadapap[1]);
+
+                    if (ingresoHorarioInt >= salidapapInt) {
+                      if (llegadapapInt >= ingresoInt) {
+                        isTardanza = false;
+                      } else {
+                        isTardanza = true;
+                      }
+                    }
+                  }
+
                   hrPapeleta = this.obtenerHorasTrabajadas((papeleta || {})['HORA_SOLICITADA'], (hrPapeleta || "").length > 0 ? hrPapeleta : hrt);
                 });
               }
