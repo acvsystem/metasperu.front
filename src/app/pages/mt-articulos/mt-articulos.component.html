@@ -1,78 +1,60 @@
-
-
 <ion-content>
   <div id="content" class="full-center-page">
-    @if(isLoading){
-      <div class="console-loading">
-      </div>
-      <div style="display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100%;
-          position: fixed;
-          text-align: center;
-          width: 100%;
-          z-index: 9999999;">
-        <div class="loader">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"></path></svg>
-          <span></span>
-        </div>
-      </div>
-    }
+    <mt-loading [isVisible]="isLoading"></mt-loading>
 
-  <!--  <div class="console-loading" *ngIf="isProccess">
-      <table class="table table-bordered table-hover table-process">
-        <thead>
-          <tr>
-            <th class="columHead" *ngFor="let columHead of headListTienda;let i = index">{{columHead}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let columBody of onListTiendas;let index = index" class="columData">
-            <td class="columBody">{{columBody.name}}</td>
-            <td class="columBody">{{columBody.procesar}}</td>
-            <td class="columBody">{{columBody.procesado}}</td>
-            <td class="columBody">
-              <span *ngIf="columBody.procesar == columBody.procesado" style="color: green;"><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>
-              <span *ngIf="columBody.procesar != columBody.procesado"><i class="fa fa-circle-o" aria-hidden="true"></i></span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    -->
-
-   <div class="card-content">
+    <div class="card-content">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-          <mt-input id="filterProducto" label="Filtro" placeholder="Filtro" type="text" value="{{ filterProducto }}"
-            (keyup)="applyFilter($event)"></mt-input>
+          <mt-input 
+            id="filterProducto" 
+            label="Filtro" 
+            placeholder="Filtro" 
+            type="text" 
+            value="{{ filterProducto }}"
+            (keyup)="applyFilter($event)"
+          ></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="!isVendedor">
           <div class="content-button-comp">
-            <mt-select
-            id="selectedUS"
-            placeHolder="Unidad de servico"
-            [optionList]="onListMarcas"
-            (changeSelected)="onChangeSelect($event)"
+            <mt-select 
+              id="selectedUS" 
+              placeHolder="Unidad de servico" 
+              [optionList]="onListMarcas"
+              (changeSelected)="onChangeSelect($event)"
             ></mt-select>
           </div>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-          <mt-input
-          id="barcode"
-          label="Codigo de barra"
-          placeholder="Codigo de barra"
-          type="text"
-          value="{{ barcode }}"
-          (afterChange)="onChangeInput($event)"
-        ></mt-input>
+          <mt-input 
+            id="barcode" 
+            label="Codigo de barra" 
+            placeholder="Codigo de barra" 
+            type="text" 
+            value="{{ barcode }}"
+            (afterChange)="onChangeInput($event)"
+          ></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
           <div class="content-button postition-start">
             <div class="content-button-comp">
-              <button id="searchProducto"  type="button" class="btn btn-primary btn-sm" (click)="onStockTable()"><i class="fa fa-search" aria-hidden="true"></i></button> 
-              <button  type="button" class="btn btn-success btn-sm" (click)="onExcelExport()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Excel</button>  
+              <button 
+                id="searchProducto" 
+                type="button" 
+                class="btn btn-primary btn-sm" 
+                (click)="onStockTable()">
+                <i
+                  class="fa fa-search" 
+                  aria-hidden="true"></i>
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-success btn-sm" 
+                (click)="onExcelExport()">
+                <i
+                  class="fa fa-file-excel-o" 
+                  aria-hidden="true">
+                </i> Exportar Excel
+              </button>
             </div>
           </div>
         </ion-col>
@@ -83,277 +65,277 @@
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <div class="mat-elevation-z8">
                 @if(selectedUS != 'VICTORIA SECRET' && selectedUS != 'BATH AND BODY WORKS') {
-                  <table mat-table [dataSource]="dataSource">
+                <table mat-table [dataSource]="dataSource">
 
-                    <ng-container matColumnDef="codigoBarra">
-                      <th mat-header-cell *matHeaderCellDef> Codigo Barra </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cCodigoBarra}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="referencia">
-                      <th mat-header-cell *matHeaderCellDef> Referencia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cReferencia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="descripcion">
-                      <th mat-header-cell *matHeaderCellDef> Descripcion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cDescripcion}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="departamento">
-                      <th mat-header-cell *matHeaderCellDef> Departamento </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cDepartamento}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="seccion">
-                      <th mat-header-cell *matHeaderCellDef> Seccion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cSeccion}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="familia">
-                      <th mat-header-cell *matHeaderCellDef> Familia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cFamilia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="subfamilia">
-                      <th mat-header-cell *matHeaderCellDef> SubFamilia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cSubFamilia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="temporada">
-                      <th mat-header-cell *matHeaderCellDef> Temporada </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cTemporada}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="talla">
-                      <th mat-header-cell *matHeaderCellDef> Talla </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cTalla}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="color">
-                      <th mat-header-cell *matHeaderCellDef> Color </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cColor}} </td>
-                    </ng-container>
-  
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
+                  <ng-container matColumnDef="codigoBarra">
+                    <th mat-header-cell *matHeaderCellDef> Codigo Barra </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cCodigoBarra}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="referencia">
+                    <th mat-header-cell *matHeaderCellDef> Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cReferencia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cDescripcion}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="departamento">
+                    <th mat-header-cell *matHeaderCellDef> Departamento </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cDepartamento}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="seccion">
+                    <th mat-header-cell *matHeaderCellDef> Seccion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cSeccion}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="familia">
+                    <th mat-header-cell *matHeaderCellDef> Familia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cFamilia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="subfamilia">
+                    <th mat-header-cell *matHeaderCellDef> SubFamilia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cSubFamilia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="temporada">
+                    <th mat-header-cell *matHeaderCellDef> Temporada </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cTemporada}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="talla">
+                    <th mat-header-cell *matHeaderCellDef> Talla </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cTalla}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="color">
+                    <th mat-header-cell *matHeaderCellDef> Color </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cColor}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
                 }
 
                 @if(selectedUS == 'VICTORIA SECRET') {
-                  <table mat-table [dataSource]="dataSource">
+                <table mat-table [dataSource]="dataSource">
 
-                    <ng-container matColumnDef="codigoBarra">
-                      <th mat-header-cell *matHeaderCellDef> Codigo Barra </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cCodigoBarra}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="referencia">
-                      <th mat-header-cell *matHeaderCellDef> Referencia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cReferencia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="descripcion">
-                      <th mat-header-cell *matHeaderCellDef> Descripcion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cDescripcion}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="departamento">
-                      <th mat-header-cell *matHeaderCellDef> Departamento </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cDepartamento}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="seccion">
-                      <th mat-header-cell *matHeaderCellDef> Seccion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cSeccion}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="familia">
-                      <th mat-header-cell *matHeaderCellDef> Familia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cFamilia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="subfamilia">
-                      <th mat-header-cell *matHeaderCellDef> SubFamilia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cSubFamilia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="temporada">
-                      <th mat-header-cell *matHeaderCellDef> Temporada </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cTemporada}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="talla">
-                      <th mat-header-cell *matHeaderCellDef> Talla </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cTalla}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="color">
-                      <th mat-header-cell *matHeaderCellDef> Color </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cColor}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_aqp">
-                      <th mat-header-cell *matHeaderCellDef> VS-AQP </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_AQP}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_lrb">
-                      <th mat-header-cell *matHeaderCellDef> VS-LRB </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_LRB}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_pn">
-                      <th mat-header-cell *matHeaderCellDef> VS-PN </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_PN}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_psm">
-                      <th mat-header-cell *matHeaderCellDef> VS-PSM </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_PSM}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_rps">
-                      <th mat-header-cell *matHeaderCellDef> VS-RPS </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_RPS}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_mds">
-                      <th mat-header-cell *matHeaderCellDef> VS-MDS </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_MDS}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_pur">
-                      <th mat-header-cell *matHeaderCellDef> VS-PUR </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_PUR}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_ecom">
-                      <th mat-header-cell *matHeaderCellDef> VS-ECOM </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_ECOM}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_mep">
-                      <th mat-header-cell *matHeaderCellDef> VS-MEP </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_MEP}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_mnk">
-                      <th mat-header-cell *matHeaderCellDef> VS-MNK </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_MNK}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vsfa_joc">
-                      <th mat-header-cell *matHeaderCellDef> VSFA-JOC </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VSFA_JOC}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="vs_mptru">
-                      <th mat-header-cell *matHeaderCellDef> VS-MPTRU </th>
-                      <td mat-cell *matCellDef="let element"> {{element.VS_M_PLAZA}} </td>
-                    </ng-container>
-  
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
+                  <ng-container matColumnDef="codigoBarra">
+                    <th mat-header-cell *matHeaderCellDef> Codigo Barra </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cCodigoBarra}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="referencia">
+                    <th mat-header-cell *matHeaderCellDef> Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cReferencia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cDescripcion}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="departamento">
+                    <th mat-header-cell *matHeaderCellDef> Departamento </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cDepartamento}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="seccion">
+                    <th mat-header-cell *matHeaderCellDef> Seccion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cSeccion}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="familia">
+                    <th mat-header-cell *matHeaderCellDef> Familia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cFamilia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="subfamilia">
+                    <th mat-header-cell *matHeaderCellDef> SubFamilia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cSubFamilia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="temporada">
+                    <th mat-header-cell *matHeaderCellDef> Temporada </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cTemporada}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="talla">
+                    <th mat-header-cell *matHeaderCellDef> Talla </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cTalla}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="color">
+                    <th mat-header-cell *matHeaderCellDef> Color </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cColor}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_aqp">
+                    <th mat-header-cell *matHeaderCellDef> VS-AQP </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_AQP}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_lrb">
+                    <th mat-header-cell *matHeaderCellDef> VS-LRB </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_LRB}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_pn">
+                    <th mat-header-cell *matHeaderCellDef> VS-PN </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_PN}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_psm">
+                    <th mat-header-cell *matHeaderCellDef> VS-PSM </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_PSM}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_rps">
+                    <th mat-header-cell *matHeaderCellDef> VS-RPS </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_RPS}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_mds">
+                    <th mat-header-cell *matHeaderCellDef> VS-MDS </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_MDS}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_pur">
+                    <th mat-header-cell *matHeaderCellDef> VS-PUR </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_PUR}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_ecom">
+                    <th mat-header-cell *matHeaderCellDef> VS-ECOM </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_ECOM}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_mep">
+                    <th mat-header-cell *matHeaderCellDef> VS-MEP </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_MEP}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_mnk">
+                    <th mat-header-cell *matHeaderCellDef> VS-MNK </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_MNK}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vsfa_joc">
+                    <th mat-header-cell *matHeaderCellDef> VSFA-JOC </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VSFA_JOC}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_mptru">
+                    <th mat-header-cell *matHeaderCellDef> VS-MPTRU </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_M_PLAZA}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
                 }
 
                 @if(selectedUS == 'BATH AND BODY WORKS') {
-                  <table mat-table [dataSource]="dataSource">
+                <table mat-table [dataSource]="dataSource">
 
-                    <ng-container matColumnDef="codigoBarra">
-                      <th mat-header-cell *matHeaderCellDef> Codigo Barra </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cCodigoBarra}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="referencia">
-                      <th mat-header-cell *matHeaderCellDef> Referencia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cReferencia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="descripcion">
-                      <th mat-header-cell *matHeaderCellDef> Descripcion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cDescripcion}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="departamento">
-                      <th mat-header-cell *matHeaderCellDef> Departamento </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cDepartamento}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="seccion">
-                      <th mat-header-cell *matHeaderCellDef> Seccion </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cSeccion}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="familia">
-                      <th mat-header-cell *matHeaderCellDef> Familia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cFamilia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="subfamilia">
-                      <th mat-header-cell *matHeaderCellDef> SubFamilia </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cSubFamilia}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="temporada">
-                      <th mat-header-cell *matHeaderCellDef> Temporada </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cTemporada}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="talla">
-                      <th mat-header-cell *matHeaderCellDef> Talla </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cTalla}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="color">
-                      <th mat-header-cell *matHeaderCellDef> Color </th>
-                      <td mat-cell *matCellDef="let element"> {{element.cColor}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_joc">
-                      <th mat-header-cell *matHeaderCellDef> BBW-JOC </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_JOC}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_aqp">
-                      <th mat-header-cell *matHeaderCellDef> BBW-AQP </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_AQP}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_lrb">
-                      <th mat-header-cell *matHeaderCellDef> BBW-LRB </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_LRB}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_psm">
-                      <th mat-header-cell *matHeaderCellDef> BBW-PSM </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_PSM}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_rps">
-                      <th mat-header-cell *matHeaderCellDef> BBW-RPS </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_RPS}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_ecom">
-                      <th mat-header-cell *matHeaderCellDef> BBW-ECOM </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_ECOM}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_asia">
-                      <th mat-header-cell *matHeaderCellDef> BBW-ASIA </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_ASIA}} </td>
-                    </ng-container>
-  
-                    <ng-container matColumnDef="bbw_mptru">
-                      <th mat-header-cell *matHeaderCellDef> BBW-MPTRU </th>
-                      <td mat-cell *matCellDef="let element"> {{element.BBW_M_PLAZA}} </td>
-                    </ng-container>
-  
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
+                  <ng-container matColumnDef="codigoBarra">
+                    <th mat-header-cell *matHeaderCellDef> Codigo Barra </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cCodigoBarra}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="referencia">
+                    <th mat-header-cell *matHeaderCellDef> Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cReferencia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cDescripcion}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="departamento">
+                    <th mat-header-cell *matHeaderCellDef> Departamento </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cDepartamento}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="seccion">
+                    <th mat-header-cell *matHeaderCellDef> Seccion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cSeccion}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="familia">
+                    <th mat-header-cell *matHeaderCellDef> Familia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cFamilia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="subfamilia">
+                    <th mat-header-cell *matHeaderCellDef> SubFamilia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cSubFamilia}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="temporada">
+                    <th mat-header-cell *matHeaderCellDef> Temporada </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cTemporada}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="talla">
+                    <th mat-header-cell *matHeaderCellDef> Talla </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cTalla}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="color">
+                    <th mat-header-cell *matHeaderCellDef> Color </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cColor}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_joc">
+                    <th mat-header-cell *matHeaderCellDef> BBW-JOC </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_JOC}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_aqp">
+                    <th mat-header-cell *matHeaderCellDef> BBW-AQP </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_AQP}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_lrb">
+                    <th mat-header-cell *matHeaderCellDef> BBW-LRB </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_LRB}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_psm">
+                    <th mat-header-cell *matHeaderCellDef> BBW-PSM </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_PSM}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_rps">
+                    <th mat-header-cell *matHeaderCellDef> BBW-RPS </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_RPS}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_ecom">
+                    <th mat-header-cell *matHeaderCellDef> BBW-ECOM </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_ECOM}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_asia">
+                    <th mat-header-cell *matHeaderCellDef> BBW-ASIA </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_ASIA}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bbw_mptru">
+                    <th mat-header-cell *matHeaderCellDef> BBW-MPTRU </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BBW_M_PLAZA}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
                 }
 
 
@@ -369,60 +351,61 @@
 
     <div class="card-content" *ngIf="!isVendedor">
       <ion-row>
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
-        <div class="card-content-configuration">
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div class="content-view">
-                <ion-row class="border-bottom-title">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <div style="text-align: center;">
-                      <button  type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i class="fa fa-repeat" aria-hidden="true"></i> Generar y Enviar Email</button>
-                      <mt-select
-                      id="selectedEmail"
-                      placeHolder="Email"
-                      [optionList]="optionListEmail"
-                      (changeSelected)="onChangeSelect($event)"
-                      ></mt-select>
-                      <span *ngIf="isError" style="color: red;">Seleccione el correo donde se enviaran los reportes</span>
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-row class="border-bottom-title">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <div style="text-align: center;">
-                      <div class="form-check form-switch all-checked">
-                        <label class="form-check-label" for="flexSwitchCheckDefault" style="color: black;">All</label>
-                        <input class="form-check-input" type="checkbox" id="allChecked" (change)="onCheked($event,'all')">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="5" sizeLg="5">
+          <div class="card-content-configuration">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                <div class="content-view">
+                  <ion-row class="border-bottom-title">
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div style="text-align: center;">
+                        <button type="button" class="btn btn-primary btn-sm" (click)="onCargaInventario()"><i
+                            class="fa fa-repeat" aria-hidden="true"></i> Generar y Enviar Email</button>
+                        <mt-select id="selectedEmail" placeHolder="Email" [optionList]="optionListEmail"
+                          (changeSelected)="onChangeSelect($event)"></mt-select>
+                        <span *ngIf="isError" style="color: red;">Seleccione el correo donde se enviaran los
+                          reportes</span>
                       </div>
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                    <ol class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tienda of tiendasList">
-                        <div class="ms-2 me-auto">
-                          <div class="fw-bold">{{tienda.value}}</div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="border-bottom-title">
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <div style="text-align: center;">
+                        <div class="form-check form-switch all-checked">
+                          <label class="form-check-label" for="flexSwitchCheckDefault" style="color: black;">All</label>
+                          <input class="form-check-input" type="checkbox" id="allChecked"
+                            (change)="onCheked($event,'all')">
                         </div>
-                        <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i class="fa fa-check" aria-hidden="true"></i></span>
-                        <span class="badge bg-primary rounded-pill" *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
-                        <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item" (change)="onCheked($event,tienda.key)" [checked]="tienda.checked">
-                        </div>
-                      </li>
-                    </ol>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
-      </ion-col>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                      <ol class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-start"
+                          *ngFor="let tienda of tiendasList">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{tienda.value}}</div>
+                          </div>
+                          <span class="badge text-bg-success rounded-pill" *ngIf="tienda.progress == 0"><i
+                              class="fa fa-check" aria-hidden="true"></i></span>
+                          <span class="badge bg-primary rounded-pill"
+                            *ngIf="tienda.progress > 0">{{tienda.progress}}%</span>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault checkbox-item"
+                              (change)="onCheked($event,tienda.key)" [checked]="tienda.checked">
+                          </div>
+                        </li>
+                      </ol>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
       </ion-row>
     </div>
 
   </div>
 </ion-content>
-
-

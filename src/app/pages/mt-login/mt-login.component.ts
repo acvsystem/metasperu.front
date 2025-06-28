@@ -22,7 +22,9 @@ export class MtLoginComponent implements OnInit {
   isCodeExpired: boolean = false;
   isCodeFail: boolean = false;
   isLogin: boolean = true;
-  msjError: string = "";
+  isLoading: boolean = false;
+  msjErrorCodigo: string = "";
+  msjErrorLogin: string = GlobalConstants.message.login.error;
 
   constructor(
     private shrService: ShareService,
@@ -35,6 +37,7 @@ export class MtLoginComponent implements OnInit {
 
 
   async onLogin() {
+    this.isLoading = true;
     const { browser, cpu, device, os } = UAParser();
     let publicIP = await publicIpv4();
 
@@ -52,14 +55,13 @@ export class MtLoginComponent implements OnInit {
         {
           usuario: this.userName,
           password: this.password,
-          divice: `${browser.name} ${browser.version}`,
+          divice: `${(browser || {}).name} ${(browser || {}).version}`,
           ip: publicIP
         }
-
       };
 
       this.shrService.post(parms).then(async (response) => {
-        console.log(response);
+        this.isLoading = false;
         if ((response || {}).success) {
           this.isLogin = true;
           this.shrService.createToken(this.userName, this.password).then((token) => {
@@ -73,11 +75,6 @@ export class MtLoginComponent implements OnInit {
         } else if (!(response || {}).login) {
           this.isLogin = false;
         }
-
-
-
-
-
       });
     }
   }
@@ -105,6 +102,7 @@ export class MtLoginComponent implements OnInit {
   }
 
   async onValid() {
+    this.isLoading = true;
     const { browser, cpu, device, os } = UAParser();
     let publicIP = await publicIpv4();
     let parms = {
@@ -121,8 +119,8 @@ export class MtLoginComponent implements OnInit {
     };
 
     this.shrService.post(parms).then(async (response) => {
+       this.isLoading = false;
       if ((response || {}).success) {
-        //this.onRouteDefault();
         this.isCodigo = false;
         this.isLogin = true;
         this.shrService.createToken(this.userName, this.password).then((token) => {
@@ -133,14 +131,13 @@ export class MtLoginComponent implements OnInit {
       } else {
         if ((response || {}).codExpired) {
           this.isCodeExpired = (response || {}).codExpired;
+          this.msjErrorCodigo = GlobalConstants.message.login.errorCodigoExp;
         }
 
         if ((response || {}).codeFail) {
           this.isCodeFail = (response || {}).codeFail;
+          this.msjErrorCodigo = GlobalConstants.message.login.errorCodigo;
         }
-
-        this.msjError = (response || {}).msj;
-
       }
     });
   }
