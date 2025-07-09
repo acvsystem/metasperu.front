@@ -901,9 +901,24 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     if ($event.isRange) {
       this.vDetallado = [];
       let range = $event.value;
+
+      let dateNow = new Date();
+
+      let day = new Date(dateNow).toLocaleDateString().split('/');
+
+      let date = new Date(range[1]).toLocaleDateString().split('/');
+      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
+      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
+
       console.log(range);
-      if (range.length >= 2) {
-        this.vDetallado = range;
+
+      if (f1.getTime() > f2.getTime()) {
+        this.isErrorFecha = true;
+        this.openSnackBar("La fecha seleccionada no puede ser posterior a la actual.");
+      } else {
+        if (range.length >= 2) {
+          this.vDetallado = range;
+        }
       }
     }
   }
