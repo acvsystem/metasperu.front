@@ -318,7 +318,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
         }
 
         if (this.onDataView.length - 1 == i) {
-          if (this.vAlmacenOrigen.length && this.vAlmacenDestino.length && dt.cCodigoArticulo.length && dt.cColor.length && dt.cTalla.length && dt.cSolicitado.length) {
+          if (this.vAlmacenOrigen.length && this.vAlmacenDestino.length && dt.cCodigoArticulo.toString().length && dt.cColor.length && dt.cTalla.length && dt.cSolicitado.toString().length) {
             if (isDiferencia) {
               this.service.toastError('Tienes stock en negativo..!!', 'Traspasos');
             } else {
