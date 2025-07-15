@@ -34,6 +34,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
   undServicio: string = "";
   vAlmacenOrigen: string = "";
   vAlmacenDestino: string = "";
+  vTPOrigen: string = "";
+  vTPDestino: string = "";
   vCode: string = "";
   isOnlineTiendaOrigen: boolean = false;
   isOnlineTiendaDestino: boolean = false;
@@ -130,7 +132,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
     if (index == 'udsOrigen') {
       this.cboUnidadServicioDestino = [];
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsOrigen);
+      console.log(selectedTienda);
       this.vAlmacenOrigen = (selectedTienda || {}).COD_ALMACEN;
+      this.vTPOrigen = (selectedTienda || {}).TIPO_TIENDA;
       this.cboUnidadServicioDestino = this.cboUnidadServicioOrigen.filter((tdo) => tdo.key != this.udsOrigen);
 
       if (this.vAlmacenOrigen == this.vAlmacenDestino) {
@@ -143,6 +147,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
     if (index == 'udsDestino') {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsDestino);
       this.vAlmacenDestino = (selectedTienda || {}).COD_ALMACEN;
+      this.vTPDestino = (selectedTienda || {}).TIPO_TIENDA;
     }
 
     if ((selectData || {}).selectId == "udsOrigen") {
@@ -328,10 +333,18 @@ export class MtTraspasosInventarioComponent implements OnInit {
                 contenido += `${this.vAlmacenOrigen}|${this.vAlmacenDestino}|${dt.cCodigoArticulo}|${dt.cColor}|${dt.cTalla}|${dt.cSolicitado}|\n`;
               });
 
+              let nmCarpeta = this.onVerificarTipoTienda();
+              let min = 1000;
+              let max = 99000;
+              let idFile = Math.floor(Math.random() * (max - min + 1) + min);
+              
               const blob = new Blob([contenido], { type: 'text/plain' });
-              const archivo = new File([blob], 'traspaso_stock.txt', { type: 'text/plain' });
+              const archivo = new File([blob], `traspaso_stock_${idFile}.txt`, { type: 'text/plain' });
               const formData = new FormData();
+
               formData.append('file', archivo);
+
+              formData.append('ftpDirectorio', nmCarpeta);
 
               this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
                 .subscribe({
@@ -340,9 +353,10 @@ export class MtTraspasosInventarioComponent implements OnInit {
                 });
 
 
+
               const enlace = document.createElement('a');
               enlace.href = URL.createObjectURL(blob);
-              enlace.download = 'traspaso_stock.txt';
+              enlace.download = `traspaso_stock_${idFile}.txt`;
               enlace.click();
 
               URL.revokeObjectURL(enlace.href);
@@ -356,6 +370,24 @@ export class MtTraspasosInventarioComponent implements OnInit {
       this.service.toastError('Faltan datos requeridos para generar el txt..!!', 'Traspasos');
     }
 
+  }
+
+  onVerificarTipoTienda(): string {
+    let tipoTienda = "";
+
+    if ((this.vTPOrigen == 'VSBA' && this.vTPDestino == 'VSBA') || (this.vTPOrigen == 'VSBA' && this.vTPDestino == 'VSFA')) {
+      tipoTienda = 'VSBA';
+    }
+
+    if ((this.vTPOrigen == 'VSFA' && this.vTPDestino == 'VSBA')) {
+      tipoTienda = 'VSFA';
+    }
+
+    if (this.vTPOrigen == 'BBW' && this.vTPDestino == 'BBW') {
+      tipoTienda = 'BBW';
+    }
+
+    return tipoTienda;
   }
 
   onConsultarStock(dataConsultar) {
