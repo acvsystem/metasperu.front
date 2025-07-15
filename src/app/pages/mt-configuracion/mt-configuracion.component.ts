@@ -99,11 +99,16 @@ export class MtConfiguracionComponent implements OnInit {
   cboListTienda: Array<any> = [];
   selectOption: Array<any> = [];
   dataMenuList: Array<any> = [];
+  dataDropTiendaList: Array<any> = [];
   dataViewMenu: Array<any> = [];
+  dataViewTiendas: Array<any> = [];
   dataNivelList: Array<any> = [];
   dataNivelListOne: Array<any> = [];
+  dataTiendaListOne: Array<any> = [];
   dataPermiso: Array<any> = [];
+  dataAsignato: Array<any> = [];
   dataDeafultPage: Array<any> = [];
+  dataCboUser: Array<any> = [];
   emailLinkRegistro: string = "";
   hashAgente: string = "";
   nombreMenu: string = "";
@@ -303,6 +308,11 @@ export class MtConfiguracionComponent implements OnInit {
 
     this.service.get(parms).then((response) => {
       this.dataViewUser = (response || [])['data'];
+
+      this.dataViewUser.filter((du) => {
+        this.dataCboUser.push({ key: du.USUARIO, value: du.USUARIO });
+      });
+
       this.dataSourceUser = new MatTableDataSource(this.dataViewUser);
       this.dataSourceUser.paginator = this.paginator_user;
       this.dataSourceUser.sort = this.sort_user;
@@ -581,6 +591,17 @@ export class MtConfiguracionComponent implements OnInit {
         this.tiendasList.push(
           { key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION, progress: -1 });
       });
+
+      /*ASIGNACION DE TIENDA*/
+      console.log(response);
+      this.dataDropTiendaList = (response || []).data;
+      this.dataViewMenu = [];
+      this.dataDeafultPage = [];
+      (this.dataDropTiendaList || []).filter((menu, i) => {
+        this.dataViewTiendas.push((menu || {}).DESCRIPCION);
+
+      });
+
     });
   }
 
@@ -910,6 +931,7 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
 
+
   onNivelesList() {
     let parms = {
       url: '/menu/sistema/niveles'
@@ -942,6 +964,8 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
 
+
+
   onAddOpcionNivel(id_menu, nivel) {
     let parms = {
       url: '/menu/sistema/add/permisos',
@@ -954,6 +978,8 @@ export class MtConfiguracionComponent implements OnInit {
       this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
     });
   }
+
+  
 
   onNewNivel() {
     let parms = {
@@ -1054,6 +1080,36 @@ export class MtConfiguracionComponent implements OnInit {
     this.cboNivelUser = "";
     this.optionDefaultNivel = [{ key: "", value: "" }];
 
+  }
+
+  dropTienda(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+
+    } else {
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+      if ((event || {})['container']['id'] == "dropTienda") {
+        let dataRecept = event.container.data;
+        let dataAsignato = this.dataAsignato.find((permiso) => permiso.DESCRIPCION == dataRecept[event.currentIndex]);
+        this.onDeletepcionNivel(dataAsignato.ID_PERMISO_USER);
+      }
+
+      if ((event || {})['container']['id'] == "dropTiendaAsig") {
+        let dataRecept = event.container.data;
+
+        let dataMenu = this.dataDropTiendaList.find((tienda) => tienda.DESCRIPCION == dataRecept[event.currentIndex]);
+        this.onAddOpcionNivel(dataMenu.ID_MENU, this.cboNivel);
+      }
+
+    }
   }
 
   drop(event: CdkDragDrop<string[]>) {

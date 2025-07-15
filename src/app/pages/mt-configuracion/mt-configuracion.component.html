@@ -538,6 +538,47 @@
                         </ion-row>
                       </div>
                     </mat-tab>
+                    <mat-tab label="Asignacion Tiendas">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                          <ion-row>
+                            <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                              <mt-select style="width: 100%;"
+                                id="cboUsuarioTienda" placeHolder="Usuarios sistema" [optionList]="dataCboUser"
+                                (changeSelected)="onChangeSelect($event)"></mt-select>
+                            </ion-col>
+                          </ion-row>
+                          <div cdkDropListGroup style="display: flex;justify-content: center;">
+                            <div class="example-container">
+                             
+                              <div style="align-items: center;display: inline-flex;width: 100%;">
+                                <h2>Tiendas</h2>
+                              </div>
+
+                              <div id="dropTienda" cdkDropList [cdkDropListData]="dataViewTiendas" class="example-list maxH-drop"
+                                (cdkDropListDropped)="dropTienda($event)">
+                                @for (item of dataViewTiendas; track item) {
+                                <div class="example-box" cdkDrag>{{item}}</div>
+                                }
+                              </div>
+                            </div>
+
+                            <div class="example-container" style="margin: 0px;">
+                              <div style="align-items: center;display: inline-flex;width: 100%;">
+                                <h2 style="margin-right: 20px;">Tiendas asignadas</h2> 
+                              </div>
+
+                              <div id="dropTiendaAsig" cdkDropList [cdkDropListData]="dataTiendaListOne" class="example-list maxH-drop"
+                                (cdkDropListDropped)="dropTienda($event)">
+                                @for (item of dataTiendaListOne; track item) {
+                                <div class="example-box" cdkDrag>{{item}}</div>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </mat-tab>
                     <mat-tab label="Niveles y permisos">
                       <ion-row>
                         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
