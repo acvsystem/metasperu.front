@@ -45,6 +45,8 @@ export class MtConfiguracionComponent implements OnInit {
   dataViewTolerancia: Array<any> = [];
   dataViewEquipos: Array<any> = [];
   dataOrigicalEq: Array<any> = [];
+  tiendaAllList: Array<any> = [];
+  originalTiendaList: Array<any> = [];
   dataSourceSession = new MatTableDataSource<any>(this.dataViewSession);
   dataSourceAuthSession = new MatTableDataSource<any>(this.dataViewAuthSession);
   dataSourceUser = new MatTableDataSource<any>(this.dataViewUser);
@@ -58,6 +60,9 @@ export class MtConfiguracionComponent implements OnInit {
 
   notOptionMenuUserList: Array<any> = [];
   optionMenuUserList: Array<any> = [];
+
+  notTiendaUserList: Array<any> = [];
+  optionTiendaUserList: Array<any> = [];
 
   notOptionMenuKey: Array<any> = [];
   optionMenuKey: Array<any> = [];
@@ -86,6 +91,7 @@ export class MtConfiguracionComponent implements OnInit {
   optionDefaultNivel: Array<any> = [];
   cboNivel: string = "";
   cboTienda: string = "";
+  cboUsuarioTienda: string = "";
   vEmail: string = "";
   cboTipo: string = "";
   tipoCuenta: string = "";
@@ -310,7 +316,9 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataViewUser = (response || [])['data'];
 
       this.dataViewUser.filter((du) => {
-        this.dataCboUser.push({ key: du.USUARIO, value: du.USUARIO });
+        if (du.NIVEL == 'OPERACIONES') {
+          this.dataCboUser.push({ key: du.ID_LOGIN, value: du.USUARIO });
+        }
       });
 
       this.dataSourceUser = new MatTableDataSource(this.dataViewUser);
@@ -462,7 +470,7 @@ export class MtConfiguracionComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
-    if (index != "cboUnidServicio" && index != "cboPlugin" && index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
+    if (index != "cboUsuarioTienda" && index != "cboUnidServicio" && index != "cboPlugin" && index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
       this.onListMenuUsuario().then((menu: Array<any>) => {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
@@ -477,6 +485,32 @@ export class MtConfiguracionComponent implements OnInit {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
         this.notOptionMenuUserList = [...this.menuAllList];
+      });
+    }
+
+    if (index == "cboUsuarioTienda") {
+      this.onListTiendaUsuario((selectData || {}).key).then((tienda: Array<any>) => {
+        this.dataTiendaListOne = [];
+        this.dataTiendaListOne = tienda || [];
+        this.dataViewTiendas = [...this.tiendaAllList];
+        this.dataDropTiendaList = [...this.originalTiendaList];
+        (this.dataTiendaListOne || []).filter((td) => {
+          this.dataViewTiendas = this.dataViewTiendas.filter((tdv) => tdv != td);
+        });
+
+        /* this.notTiendaUserList = [];
+         this.optionMenuUserList = [];
+         this.optionMenuUserList = tienda;
+ 
+         this.tiendaAllList.filter((allMenu) => {
+           if (tienda.indexOf(allMenu) == -1) {
+             this.notTiendaUserList.push(allMenu);
+           }
+         });*/
+      }).catch((rej) => {
+        this.dataViewTiendas = [];
+        this.dataTiendaListOne = [];
+        this.dataViewTiendas = [...this.tiendaAllList];
       });
     }
 
@@ -583,23 +617,25 @@ export class MtConfiguracionComponent implements OnInit {
       let tiendaList = (response || {}).data || [];
       this.cboListTienda = [];
       this.tiendasList = [];
-
+      this.tiendaAllList = [];
       (tiendaList || []).filter((tienda) => {
 
         this.cboListTienda.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
 
         this.tiendasList.push(
           { key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION, progress: -1 });
+
+        this.tiendaAllList.push((tienda || {}).DESCRIPCION);
       });
 
       /*ASIGNACION DE TIENDA*/
       console.log(response);
       this.dataDropTiendaList = (response || []).data;
+      this.originalTiendaList = [...(response || []).data]
       this.dataViewMenu = [];
       this.dataDeafultPage = [];
       (this.dataDropTiendaList || []).filter((menu, i) => {
         this.dataViewTiendas.push((menu || {}).DESCRIPCION);
-
       });
 
     });
@@ -685,6 +721,34 @@ export class MtConfiguracionComponent implements OnInit {
       });
     });
 
+  }
+
+  onListTiendaUsuario(idUsuario) {
+    return new Promise((resolve, reject) => {
+      this.optionMenuUserList = [];
+      let parms = {
+        url: '/usuario/tiendas/asigandas',
+        body: {
+          id_usuario: idUsuario
+        }
+      };
+
+      this.service.post(parms).then(async (response) => {
+        let tiendaUsuario = response || [];
+        let tienda = [];
+        this.dataAsignato = tiendaUsuario;
+        tiendaUsuario.filter((tiendaUsuario) => {
+          tienda.push((tiendaUsuario || {}).DESCRIPCION_TIENDA);
+        });
+
+        if (tienda.length) {
+          resolve(tienda);
+        } else {
+          reject([])
+        }
+
+      });
+    });
   }
 
   onListMenu() {
@@ -965,7 +1029,6 @@ export class MtConfiguracionComponent implements OnInit {
 
 
 
-
   onAddOpcionNivel(id_menu, nivel) {
     let parms = {
       url: '/menu/sistema/add/permisos',
@@ -979,7 +1042,23 @@ export class MtConfiguracionComponent implements OnInit {
     });
   }
 
-  
+  onAddAsignarTienda(idUsuario, idTienda, descripcionTienda) {
+    let parms = {
+      url: '/usuario/asignar/tienda',
+      body: [{
+        id_usuario: parseInt(idUsuario),
+        id_tienda: parseInt(idTienda),
+        descripcion_tienda: descripcionTienda
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
+    });
+
+    console.log(parms);
+  }
+
+
 
   onNewNivel() {
     let parms = {
@@ -1016,7 +1095,19 @@ export class MtConfiguracionComponent implements OnInit {
       }]
     };
     this.service.post(parms).then((response) => {
-      this.service.toastSuccess('Opcion eliminada con exito..!!', 'Permisos');
+      this.service.toastSuccess('Opcion eliminada con exito..!!', 'Asignacion');
+    });
+  }
+
+  onDeleteAsigTienda(idRegistro) {
+    let parms = {
+      url: '/usuario/delete/tienda',
+      body: [{
+        id_tienda_asignada: idRegistro
+      }]
+    };
+    this.service.post(parms).then((response) => {
+      this.service.toastSuccess('Opcion eliminada con exito..!!', 'Asignacion');
     });
   }
 
@@ -1098,15 +1189,16 @@ export class MtConfiguracionComponent implements OnInit {
 
       if ((event || {})['container']['id'] == "dropTienda") {
         let dataRecept = event.container.data;
-        let dataAsignato = this.dataAsignato.find((permiso) => permiso.DESCRIPCION == dataRecept[event.currentIndex]);
-        this.onDeletepcionNivel(dataAsignato.ID_PERMISO_USER);
+        console.log(this.dataAsignato);
+        let dataAsignato = this.dataAsignato.find((permiso) => permiso.DESCRIPCION_TIENDA == dataRecept[event.currentIndex]);
+        this.onDeleteAsigTienda(dataAsignato.ID_TIENDA_ASIGANADA);
       }
 
       if ((event || {})['container']['id'] == "dropTiendaAsig") {
         let dataRecept = event.container.data;
 
-        let dataMenu = this.dataDropTiendaList.find((tienda) => tienda.DESCRIPCION == dataRecept[event.currentIndex]);
-        this.onAddOpcionNivel(dataMenu.ID_MENU, this.cboNivel);
+        let dataTienda = this.dataDropTiendaList.find((tienda) => tienda.DESCRIPCION == dataRecept[event.currentIndex]);
+        this.onAddAsignarTienda(this.cboUsuarioTienda, dataTienda.ID_TIENDA, dataTienda.DESCRIPCION);
       }
 
     }
