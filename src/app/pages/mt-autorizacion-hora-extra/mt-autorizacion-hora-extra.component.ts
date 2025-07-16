@@ -445,7 +445,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   onRechazar(ev) {
 
     const dialogRef = this.dialog.open(MtModalComentarioComponent, {
-      data: { comentario: "", isRechazar: true },
+      data: { comentario: "", isRechazar: true, isStock: false },
       width: '500px'
 
     });

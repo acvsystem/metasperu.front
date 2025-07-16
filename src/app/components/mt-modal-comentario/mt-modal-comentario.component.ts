@@ -25,10 +25,10 @@ export interface DialogData {
 export class MtModalComentarioComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<MtModalComentarioComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
-  readonly comentario = model(this.data.comentario);
-  readonly isViewComentarioModal = model(this.data.isViewComentario);
-  readonly isRechazarModal = model(this.data.isRechazar);
-  readonly isStockModal = model(this.data.isStock);
+  readonly comentario = this.data.comentario;
+  readonly isViewComentarioModal =this.data.isViewComentario;
+  readonly isRechazarModal = this.data.isRechazar;
+  readonly isStockModal = this.data.isStock;
   vComentario: string = "";
   isViewcomentario: any = this.isViewComentarioModal;
   isRechazar: any = this.isRechazarModal;
@@ -37,6 +37,7 @@ export class MtModalComentarioComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.isStock);
   }
 
   onChangeTextArea(data: any) {
