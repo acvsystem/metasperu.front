@@ -1,19 +1,29 @@
 <mat-dialog-content>
     @if(isStock){
     <p>Ingrese cantidad.</p>
-     <mt-input id="vComentario" label="Filtro" placeholder="Filtro" type="text" value="{{ vComentario }}"
-            (afterChange)="onChangeInput($event)"></mt-input>
+    <mt-input id="vComentario" label="Filtro" placeholder="Filtro" type="text" value="{{ vComentario }}"
+        (afterChange)="onChangeInput($event)"></mt-input>
     }@else{
-    <p>Ingrese un comentario.</p>
-    <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario" (keyup)="onChangeTextArea($event)"></textarea>
+    <p class="title-comentario">Ingrese un comentario</p>
+
+    <mt-select style="width: 100%;" id="vComentario" placeHolder="Comentarios" [optionList]="dataComentarios"
+        (changeSelected)="onChangeSelect($event)"></mt-select>
+
+    <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <p style="color: red;">Escriba el comentario si no lo encuentra en las opciones.</p>
+            <textarea id="vComentario" class="form-control" rows="10" [value]="vComentario"
+                (keyup)="onChangeTextArea($event)"></textarea>
+        </ion-col>
+    </ion-row>
     }
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Canelar</button>
     @if(vComentario.length){
-     <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
+    <button mat-button (click)="onOk()" cdkFocusInitial>Ok</button>
     }@else{
-     <button mat-button (click)="onOk()" cdkFocusInitial disabled>Ok</button>
+    <button mat-button (click)="onOk()" cdkFocusInitial disabled>Ok</button>
     }
- 
+
 </mat-dialog-actions>

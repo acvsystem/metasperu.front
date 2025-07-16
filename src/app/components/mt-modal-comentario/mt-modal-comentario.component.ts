@@ -26,14 +26,19 @@ export class MtModalComentarioComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<MtModalComentarioComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   readonly comentario = this.data.comentario;
-  readonly isViewComentarioModal =this.data.isViewComentario;
+  readonly isViewComentarioModal = this.data.isViewComentario;
   readonly isRechazarModal = this.data.isRechazar;
   readonly isStockModal = this.data.isStock;
   vComentario: string = "";
   isViewcomentario: any = this.isViewComentarioModal;
   isRechazar: any = this.isRechazarModal;
   isStock: any = this.isStockModal;
-
+  cboComentarios: string = "";
+  dataComentarios: Array<any> = [
+    { key: "No marco su salida de turno", value: "No marco su salida de turno" },
+    { key: "No marco su salida a break", value: "No marco su salida a break" },
+    { key: "Error de sistema", value: "Error de sistema" }
+  ];
   constructor() { }
 
   ngOnInit() {
@@ -60,4 +65,9 @@ export class MtModalComentarioComponent implements OnInit {
     this.dialogRef.close(this.vComentario);
   }
 
+  async onChangeSelect(data: any) {
+    let selectData = data || {};
+    let index = (selectData || {}).selectId || "";
+    this[index] = (selectData || {}).key || "";
+  }
 }
