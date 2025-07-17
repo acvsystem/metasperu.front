@@ -139,7 +139,7 @@ export class MtArticulosComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
 
-    if (((profileUser || {}).mt_nivel == "VSBA" || (profileUser || {}).mt_nivel == "BBW" || (profileUser || {}).code.length) && (profileUser || {}).code != 'OF') {
+    if ((profileUser || {}).code != 'OF') {
       this.isVendedor = true;
 
       let profileUser = this.store.getStore('mt-profile');
@@ -188,6 +188,8 @@ export class MtArticulosComponent implements OnInit {
 
       this.selectedUS = undServicio;
       this.onProcessPetition(undServicio);
+    } else {
+      this.isVendedor = false;
     }
 
 
@@ -495,7 +497,7 @@ export class MtArticulosComponent implements OnInit {
     this.isError = false;
 
     if (index != 'selectedEmail') {
-      this.onProcessPetition((selectData || {}).key);
+      this.onProcessPetition(this.selectedUS);
     }
 
   }
@@ -526,7 +528,7 @@ export class MtArticulosComponent implements OnInit {
       ];
 
       codeTiendas.filter((tienda) => {
-        console.log(storeConxOnline);
+
         let index = (storeConxOnline || []).findIndex((codeCnx) => codeCnx == tienda.code);
 
         if (index > -1) {
@@ -622,9 +624,9 @@ export class MtArticulosComponent implements OnInit {
         }
 
 
-        this.onProcessPetition(undServicio);
+        this.onProcessPetition(this.selectedUS);
       }
-
+      console.log(this.selectedUS);
       if ((this.barcode || "").length) {
 
         this.socket.emit('comunicationStockTable', this.tiendasPetition, this.barcode);
