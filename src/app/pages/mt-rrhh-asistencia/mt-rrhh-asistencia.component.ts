@@ -243,6 +243,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     if (this.isDataEJB && this.isDataServer) {
       this.onDataTemp = [];
+     
       await (this.parseHuellero || []).filter(async (huellero) => {
 
         if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
@@ -448,7 +449,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onProcesarAsistenciaOf(dataProcesar) {
     this.isLoading = false;
-    //console.log(dataProcesar);
+    console.log(dataProcesar);
 
     const ascDates = dataProcesar.sort((a, b) => {
       return new Date(a.logid).getTime() - new Date(b.logid).getTime();
