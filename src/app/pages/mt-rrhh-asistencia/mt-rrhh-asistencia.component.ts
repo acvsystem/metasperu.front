@@ -243,7 +243,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
     if (this.isDataEJB && this.isDataServer) {
       this.onDataTemp = [];
-     
+
       await (this.parseHuellero || []).filter(async (huellero) => {
 
         if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
@@ -280,8 +280,19 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               let isVerificar = false;
 
               if (!isTardanza) {
-                if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0]) && parseInt(ingreso[1]) < 55) {
-                  isVerificar = true;
+                if ((huellero || {}).nro_documento == '70611399' && (huellero || {}).dia == '2025-07-05') {
+                  console.log(huellero);
+                  console.log(parseInt(ingresoHorario[0]), parseInt(ingreso[0]), parseInt(ingreso[1]));
+                }
+                if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0])) {
+                  let diferencia = parseInt(ingresoHorario[0]) - parseInt(ingreso[0]);
+                  if (diferencia == 1) {
+                    if (parseInt(ingreso[1]) < 55) {
+                      isVerificar = true;
+                    }
+                  } else if (diferencia > 1) {
+                    isVerificar = true;
+                  }
                 }
               }
 

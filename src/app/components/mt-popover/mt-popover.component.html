@@ -1,5 +1,23 @@
 <div class="menu-profile">
+  <!--<div class="profile-section">
+    <ion-avatar slot="start">
+      <img class="img-profile" alt="Silhouette of a person's head"
+        src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+    </ion-avatar>
+    <div class="profile-datos">
+      <div class="title-user">nombre de usuario</div>
+      <div class="subtitle-user">correoemail.com</div>
+    </div>
+    <div class="button-edit-user">
+      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    </div>
+  </div>
+  <div class="logout-section">
+
+  </div>-->
+  
   <span *ngFor="let menu of menuList" (click)="OnClickedMenu(menu.fn)">
     {{menu.name}}
   </span>
+  
 </div>
