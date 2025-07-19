@@ -35,7 +35,7 @@
               <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
             </ion-avatar>
           </div>
-          <div class="profile-ico" (click)="isVisiblePopover = !isVisiblePopover" data-bs-dismiss="offcanvas"
+          <div class="profile-ico" (click)="isVisiblePopover = true;clicDentroDelDiv = true" data-bs-dismiss="offcanvas"
             aria-label="Close">
             <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
           </div>
@@ -44,8 +44,8 @@
 
 
 
-      <mt-popover *ngIf="isVisiblePopover" [menuList]="menuList"
-        (onClickedCallback)="onFunctionMenu($event)"></mt-popover>
+      <mt-popover (click)="onDivClick()" *ngIf="isVisiblePopover" [dataProfile]="profileUser"
+        (onClickedCallback)="onLogout()"></mt-popover>
     </ion-header>
 
     <ion-content class="ion-padding">

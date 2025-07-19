@@ -8,15 +8,22 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class MtPopoverComponent implements OnInit {
 
-  @Input() menuList: Array<any> = [];
+  @Input() dataProfile: Array<any> = [];
   @Output() onClickedCallback: EventEmitter<any> = new EventEmitter();
+
+  nombreUsuario: String = "";
+  emailUsuario: String = "";
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.nombreUsuario = this.dataProfile[0]['mt_name_1'];
+    this.emailUsuario = this.dataProfile[0]['email'];
+    console.log(this.dataProfile);
+  }
 
-  OnClickedMenu(ev) {
-    this.onClickedCallback.emit(ev);
+  OnClickedMenu() {
+    this.onClickedCallback.emit("");
   }
 
 }

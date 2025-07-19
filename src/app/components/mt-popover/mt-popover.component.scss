@@ -1,9 +1,9 @@
 .menu-profile {
     position: absolute !important;
     top: 72px !important;
-    right: 0px !important;
+    right: 21px !important;
     display: grid !important;
-    width: 180px !important;//300
+    width: 300px !important; //180
     padding: 8px 5px !important;
     background: white !important;
     border-radius: 5px !important;
@@ -28,7 +28,7 @@
 
 .menu-profile {
 
-    
+    /*
     span {
         cursor: pointer !important;
         border: none !important;
@@ -39,7 +39,7 @@
     span:hover {
         background: #efebeb !important;
     }
-
+*/
     .profile-section {
         display: inline-flex;
         border-bottom: 1px solid #dbdada;
@@ -56,13 +56,14 @@
 
         .title-user {
             font-weight: 500;
-            width: 203px;
+            width: 227px;
         }
 
         .subtitle-user {
-            width: 203px;
+            width: 227px;
             color: #6b6b6b;
             font-weight: 400;
+            font-size: 13px;
         }
 
         .button-edit-user {
@@ -70,9 +71,50 @@
             justify-content: center;
             align-items: center;
             font-size: 20px;
+
             i {
                 cursor: pointer
             }
         }
+    }
+
+    .logout-section {
+        display: flex;
+        align-items: center;
+        height: 48px;
+        border-top: 1px solid #dbdada;
+    }
+
+    .opciones-menu {
+        display: table;
+        align-items: center;
+        height: 33px;
+    }
+
+    .ico-menu {
+        font-size: 22px;
+        color: #515050;
+    }
+
+    .text-menu {
+        padding-left: 10px;
+
+    }
+
+    .button-menu {
+        width: 100%;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        height: 37px;
+        padding-left: 10px;
+        padding-right: 5px;
+        border-radius: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .button-menu:hover {
+        background: #d0d7ed85;
     }
 }

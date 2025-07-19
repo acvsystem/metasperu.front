@@ -1,23 +1,39 @@
 <div class="menu-profile">
-  <!--<div class="profile-section">
+  <div class="profile-section">
     <ion-avatar slot="start">
       <img class="img-profile" alt="Silhouette of a person's head"
         src="https://ionicframework.com/docs/img/demos/avatar.svg" />
     </ion-avatar>
     <div class="profile-datos">
-      <div class="title-user">nombre de usuario</div>
-      <div class="subtitle-user">correoemail.com</div>
+      <div class="title-user">{{nombreUsuario}}</div>
+      <div class="subtitle-user">{{emailUsuario}}</div>
     </div>
-    <div class="button-edit-user">
-      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+  </div>
+  <div class="opciones-menu">
+    <div class="button-menu">
+      <div class="ico-menu">
+        <i class="fa fa-bell-o" aria-hidden="true"></i>
+      </div>
+      <div class="text-menu">Notificaciones</div>
+    </div>
+    <div class="button-menu">
+      <div class="ico-menu">
+        <i class="fa fa-cog" aria-hidden="true"></i>
+      </div>
+      <div class="text-menu">Configuracion cuenta</div>
     </div>
   </div>
   <div class="logout-section">
+    <div class="button-menu" (click)="OnClickedMenu()">
+      <div class="ico-menu">
+        <i class="fa fa-sign-out" aria-hidden="true"></i>
+      </div>
+      <div class="text-menu">Cerrar session</div>
+    </div>
+  </div>
 
-  </div>-->
-  
-  <span *ngFor="let menu of menuList" (click)="OnClickedMenu(menu.fn)">
+  <!--<span *ngFor="let menu of menuList" (click)="OnClickedMenu(menu.fn)">
     {{menu.name}}
-  </span>
-  
+  </span>-->
+
 </div>

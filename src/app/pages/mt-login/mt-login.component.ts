@@ -94,7 +94,8 @@ export class MtLoginComponent implements OnInit {
         "mt_name_1": (profileUser || {}).mt_name_1,
         "mt_nivel": (profileUser || {}).mt_nivel,
         "code": "OF",
-        "default": (profileUser || {}).default
+        "default": (profileUser || {}).default,
+        "email": (profileUser || {}).email
       }));
     }
 

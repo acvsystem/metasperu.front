@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { HttpService } from './services/httpService';
 import { Router, ActivationStart, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { filter } from "rxjs/operators";
@@ -16,6 +16,16 @@ import { GlobalConstants } from './const/globalConstants';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  @HostListener('document:click', ['$event']) onClickFuera(event: MouseEvent) {
+    if (!this.clicDentroDelDiv) {
+      if (this.isVisiblePopover) {
+        this.isVisiblePopover = false;
+      }
+    }
+    this.clicDentroDelDiv = false; // Reiniciar para el siguiente clic
+  }
+
+  clicDentroDelDiv = false;
   socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   isShowLoading: boolean = false;
   renderNavBar: boolean = false;
@@ -67,9 +77,10 @@ export class AppComponent {
         mt_name_1: user.profile.codigo.length ? user.profile.nameTienda.toUpperCase() : user.profile.name.split(' ')[0],
         mt_nivel: user.profile.name.split(' ')[0],
         code: user.profile.codigo,
-        default: user.page.default
+        default: user.page.default,
+        email: user.profile.email
       };
-
+      console.log(newProfile);
       this.profileUser.push(newProfile);
       this.store.removeStore("mt-profile");
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
@@ -162,6 +173,7 @@ export class AppComponent {
     }
 
     document.body.addEventListener("click", function (evt) {
+
       let classListSelect = [...((evt || {}).target || {})["classList"] || []] || [];
       let parentClassList = [...(((evt || {}).target || {})["offsetParent"] || {})['classList'] || []] || [];
 
@@ -174,9 +186,15 @@ export class AppComponent {
     });
   }
 
+  onDivClick() {
+    this.clicDentroDelDiv = true;
+  }
+
   onFunctionMenu(ev) {
     this[ev]();
   }
+
+
 
   onLogout() {
     this.store.removeStore('tn');
