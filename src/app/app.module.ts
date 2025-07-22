@@ -95,7 +95,7 @@ import { MtSearchObervacionComponent } from './components/mt-search-obervacion/m
 import { MtModalComentarioComponent } from './components/mt-modal-comentario/mt-modal-comentario.component';
 import { MtModalViewComentarioComponent } from './components/mt-modal-view-comentario/mt-modal-view-comentario.component';
 import { MtKardexContabilidadComponent } from './pages/mt-kardex-contabilidad/mt-kardex-contabilidad.component';
-
+import { MtPopoverNotificacionComponent } from './components/mt-popover-notificacion/mt-popover-notificacion.component';
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -140,7 +140,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtKardexContabilidadComponent,
         MtTableOficinaComponent,
         MtTraspasosInventarioComponent,
-        MtLoadingComponent
+        MtLoadingComponent,
+        MtPopoverNotificacionComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],

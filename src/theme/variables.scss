@@ -514,3 +514,9 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
     }
 input[type=number] { -moz-appearance:textfield; }
+
+.content-profile .mat-badge-content {
+  margin-left: -7px !important;
+  background: rgb(52, 172, 224) !important;
+}
+

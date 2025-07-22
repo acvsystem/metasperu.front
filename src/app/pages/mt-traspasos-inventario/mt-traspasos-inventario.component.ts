@@ -86,6 +86,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => {
+      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       (dataList || []).filter((dataSocket: any) => {
@@ -337,7 +338,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
               let min = 1000;
               let max = 99000;
               let idFile = Math.floor(Math.random() * (max - min + 1) + min);
-              
+
               const blob = new Blob([contenido], { type: 'text/plain' });
               const archivo = new File([blob], `traspaso_stock_${idFile}.txt`, { type: 'text/plain' });
               const formData = new FormData();
@@ -375,12 +376,16 @@ export class MtTraspasosInventarioComponent implements OnInit {
   onVerificarTipoTienda(): string {
     let tipoTienda = "";
 
-    if ((this.vTPOrigen == 'VSBA' && this.vTPDestino == 'VSBA') || (this.vTPOrigen == 'VSBA' && this.vTPDestino == 'VSFA')) {
+    if ((this.vTPOrigen == 'VSBA' && this.vTPDestino == 'VSBA')) {
       tipoTienda = 'VSBA';
     }
 
+    if ((this.vTPOrigen == 'VSBA' && this.vTPDestino == 'VSFA')) {
+      tipoTienda = 'VSBA_VSFA';
+    }
+
     if ((this.vTPOrigen == 'VSFA' && this.vTPDestino == 'VSBA')) {
-      tipoTienda = 'VSFA';
+      tipoTienda = 'VSFA_VSBA';
     }
 
     if (this.vTPOrigen == 'BBW' && this.vTPDestino == 'BBW') {

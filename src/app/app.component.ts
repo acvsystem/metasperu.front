@@ -18,8 +18,9 @@ import { GlobalConstants } from './const/globalConstants';
 export class AppComponent {
   @HostListener('document:click', ['$event']) onClickFuera(event: MouseEvent) {
     if (!this.clicDentroDelDiv) {
-      if (this.isVisiblePopover) {
+      if (this.isVisiblePopover || this.isVisibleNotificacion) {
         this.isVisiblePopover = false;
+        this.isVisibleNotificacion = false;
       }
     }
     this.clicDentroDelDiv = false; // Reiniciar para el siguiente clic
@@ -29,6 +30,7 @@ export class AppComponent {
   socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   isShowLoading: boolean = false;
   renderNavBar: boolean = false;
+  isVisibleNotificacion: boolean = false;
   isMobil: boolean = false;
   isVisiblePopover: boolean = false;
   menuList: Array<any> = [{ name: "Logout", fn: "onLogout" }];
@@ -37,6 +39,11 @@ export class AppComponent {
   isSubMenuRrhh: boolean = false;
   isSubMenuSistemas: boolean = false;
   isStart = 0;
+  dataNoti:Array<any> = [
+    {tipo:'danger',title: "prueba",body:"Tienes horas extras acumuladas de trabajadores."},
+    {tipo:'warning',title: "prueba",body:"No olvides crear tu horario de la semana proxima."}
+
+  ];
   constructor(
     private httpService: HttpService,
     private router: Router,

@@ -3,7 +3,7 @@
     top: 72px !important;
     right: 21px !important;
     display: grid !important;
-    width: 300px !important; //180
+    width: 325px !important; //180
     padding: 8px 5px !important;
     background: white !important;
     border-radius: 5px !important;
@@ -11,6 +11,8 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: 0.25s !important;
     font-size: 14px !important;
+    max-height: 500px !important;
+    overflow-y: auto !important;
 }
 
 .menu-profile::before {
@@ -20,14 +22,40 @@
     border-right: 1px solid #e1e1e1 !important;
     position: absolute !important;
     top: -7px !important;
-    right: 22px !important;
+    right: 108px !important;
     width: 12px !important;
     height: 12px !important;
     rotate: -45deg !important;
 }
 
-.menu-profile {
+.menu-profile::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
 
+.menu-profile::-webkit-scrollbar:vertical {
+    width: 7px;
+}
+
+.menu-profile::-webkit-scrollbar-button:increment,
+.menu-profile::-webkit-scrollbar-button {
+    display: none;
+}
+
+.menu-profile::-webkit-scrollbar:horizontal {
+    height: 7px;
+}
+
+.menu-profile::-webkit-scrollbar-thumb {
+    background-color: #797979;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+
+.menu-profile::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.menu-profile {
     /*
     span {
         cursor: pointer !important;
@@ -43,7 +71,8 @@
     .profile-section {
         display: inline-flex;
         border-bottom: 1px solid #dbdada;
-        padding-bottom: 7px;
+    
+        cursor: pointer;
 
         ion-avatar {
             width: 40px;
@@ -57,6 +86,7 @@
         .title-user {
             font-weight: 500;
             width: 227px;
+            margin-top: 5px;
         }
 
         .subtitle-user {
@@ -64,6 +94,7 @@
             color: #6b6b6b;
             font-weight: 400;
             font-size: 13px;
+            margin-bottom: 7px;
         }
 
         .button-edit-user {
@@ -78,11 +109,8 @@
         }
     }
 
-    .logout-section {
-        display: flex;
-        align-items: center;
-        height: 48px;
-        border-top: 1px solid #dbdada;
+    .profile-section:hover {
+        background-color: #d0d7ed85;
     }
 
     .opciones-menu {
@@ -107,8 +135,7 @@
         cursor: pointer;
         align-items: center;
         height: 37px;
-        padding-left: 10px;
-        padding-right: 5px;
+        justify-content: center;
         border-radius: 5px;
         margin-top: 5px;
         margin-bottom: 5px;
@@ -117,4 +144,25 @@
     .button-menu:hover {
         background: #d0d7ed85;
     }
+}
+
+.logout-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-top: 1px solid #dbdada;
+}
+
+.estado-color {
+    height: 100%;
+    width: 3px;
+    background: #1492c0;
+    margin-right: 5px;
+}
+
+.content-ico {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

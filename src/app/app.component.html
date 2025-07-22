@@ -24,12 +24,9 @@
         </ion-buttons>
         <ion-title class="headerTitle">METAS PERU</ion-title>
         <div slot="end" class="content-profile">
-          <div class="profile-name" *ngFor="let profile of profileUser">
-            <span class="name">
-              <label>{{profile.mt_name_1}}</label><label>&nbsp;{{profile.mt_name_2}}</label>
-            </span>
-            <span class="nivel">{{profile.mt_nivel}}</span>
-          </div>
+          <span style="display: flex;justify-content: center;align-items: center;cursor: pointer" (click)="isVisibleNotificacion = true;clicDentroDelDiv = true">
+            <i matBadge="1" matBadgeSize="small" class="fa fa-bell-o" aria-hidden="true"></i>
+          </span>
           <div class="profile-logo">
             <ion-avatar slot="start">
               <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
@@ -46,6 +43,9 @@
 
       <mt-popover (click)="onDivClick()" *ngIf="isVisiblePopover" [dataProfile]="profileUser"
         (onClickedCallback)="onLogout()"></mt-popover>
+
+      <mt-popover-notificacion (click)="onDivClick()" *ngIf="isVisibleNotificacion" [dataNotification]="dataNoti"
+        (onClickedCallback)="onLogout()"></mt-popover-notificacion>
     </ion-header>
 
     <ion-content class="ion-padding">

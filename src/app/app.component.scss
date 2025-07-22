@@ -21,6 +21,8 @@
 }
 
 .profile-logo {
+  margin-left: 26px !important;
+
   ion-avatar {
     width: 35px !important;
     height: 35px !important;
@@ -195,3 +197,4 @@
 .example-menu-item:active {
   background-color: rgb(255 255 255 / 16%);
 }
+
