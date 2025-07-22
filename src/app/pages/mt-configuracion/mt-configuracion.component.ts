@@ -189,11 +189,12 @@ export class MtConfiguracionComponent implements OnInit {
      this.onListConfiguration();
      this.onListMenu();
      this.onListRoles();*/
-    this.onMenuList();
+
     this.onNivelesList();
     this.onListTienda();
     this.onEquiposList();
     this.onPluginList();
+    this.onMenuList();
 
     this.socket.on('desconexion:eqp:send', (qep) => {
 
@@ -1128,30 +1129,34 @@ export class MtConfiguracionComponent implements OnInit {
       }]
     };
 
-    this.service.post(parms).then((response) => {
-      if ((response || {}).msj) {
-        this.onUserList();
+    if (this.vUsuarioNew.length && this.vPassword.length && this.cboNivelUser.length && this.vEmail.length) {
+      this.service.post(parms).then((response) => {
+        if ((response || {}).msj) {
+          this.onUserList();
 
-        this.idEditUSer = "";
-        this.vUsuarioNew = "";
-        this.vPassword = "";
-        this.cboPageDefault = "";
-        this.optionDefaultPage = [{ key: "", value: "" }];
-        this.vEmail = "";
-        this.cboNivelUser = "";
-        this.optionDefaultNivel = [{ key: "", value: "" }];
+          this.idEditUSer = "";
+          this.vUsuarioNew = "";
+          this.vPassword = "";
+          this.cboPageDefault = "";
+          this.optionDefaultPage = [{ key: "", value: "" }];
+          this.vEmail = "";
+          this.cboNivelUser = "";
+          this.optionDefaultNivel = [{ key: "", value: "" }];
 
-        if (this.isEditUser) {
-          this.service.toastSuccess('Editado con exito..!!', 'Usuario');
+          if (this.isEditUser) {
+            this.service.toastSuccess('Editado con exito..!!', 'Usuario');
+          } else {
+            this.service.toastSuccess('Registrado con exito..!!', 'Usuario');
+          }
         } else {
-          this.service.toastSuccess('Registrado con exito..!!', 'Usuario');
+          this.service.toastError('Nombre de usuario ya exite..!!', 'Usuario');
         }
-      } else {
-        this.service.toastError('Nombre de usuario ya exite..', 'Usuario');
-      }
 
 
-    });
+      });
+    } else {
+      this.service.toastError('Todos los campos son requeridos..!!', 'Usuario');
+    }
   }
 
 

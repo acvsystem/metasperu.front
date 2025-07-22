@@ -1,7 +1,9 @@
 <div class="menu-profile">
   @for (noti of dataNotification; track noti) {
-  <div class="profile-section">
-    <div class="estado-color">
+  @if(!noti.IS_READ){
+  <div class="profile-section" (click)="onReadNotification(noti.ID_USN)">
+    <div
+      [ngClass]="[noti.TIPO == 'info'? 'estado-color msj-info': noti.TIPO == 'error'? 'estado-color msj-error':  noti.TIPO == 'warning'? 'estado-color msj-error' : noti.TIPO == 'success'? 'estado-color msj-success': 'estado-color']">
       <span></span>
     </div>
     <div class="content-ico">
@@ -11,16 +13,26 @@
       </ion-avatar>
     </div>
     <div class="profile-datos">
-      <div class="title-user">{{noti.title}}</div>
-      <div class="subtitle-user">{{noti.body}}</div>
+      <div class="title-user">{{noti.TITULO}}</div>
+      <div class="subtitle-user">{{noti.MENSAJE}}</div>
     </div>
   </div>
   }
+  }
+
   <div class="logout-section">
+    @if(dataNotification.length){
     <div class="button-menu" (click)="OnClickedMenu()">
       <div class="text-menu">Todas las notificaciones</div>
     </div>
+    }@else{
+    <div >
+      <div class="text-menu">No hay notificaciones</div>
+    </div>
+    }
   </div>
+
+
 
   <!--<span *ngFor="let menu of menuList" (click)="OnClickedMenu(menu.fn)">
     {{menu.name}}

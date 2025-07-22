@@ -39,11 +39,8 @@ export class AppComponent {
   isSubMenuRrhh: boolean = false;
   isSubMenuSistemas: boolean = false;
   isStart = 0;
-  dataNoti: Array<any> = [
-    { tipo: 'danger', title: "prueba", body: "Tienes horas extras acumuladas de trabajadores." },
-    { tipo: 'warning', title: "prueba", body: "No olvides crear tu horario de la semana proxima." }
+  dataNotificaciones: Array<any> = [];
 
-  ];
   constructor(
     private httpService: HttpService,
     private router: Router,
@@ -104,6 +101,11 @@ export class AppComponent {
   }
 
   ngOnInit() {
+
+    this.socket.on('notificaciones:get', async () => {
+      this.onNotitifaciones();
+    });
+
     this.onNotitifaciones();
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
@@ -237,7 +239,25 @@ export class AppComponent {
     };
 
     this.service.get(parms).then((response) => {
-      
+      let dataNoti = response || [];
+      this.dataNotificaciones = [];
+
+      (dataNoti || []).filter((nt) => {
+        if (!nt.IS_READ) {
+          this.dataNotificaciones.push(nt);
+        }
+      });
+    });
+  }
+
+  onReadNotification(ev) {
+    let parms = {
+      url: '/notificaciones/read',
+      body: { idNoti: ev }
+    };
+
+    this.service.post(parms).then((response) => {
+      this.onNotitifaciones();
     });
   }
 

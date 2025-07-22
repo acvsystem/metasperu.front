@@ -24,8 +24,14 @@
         </ion-buttons>
         <ion-title class="headerTitle">METAS PERU</ion-title>
         <div slot="end" class="content-profile">
-          <span style="display: flex;justify-content: center;align-items: center;cursor: pointer" (click)="isVisibleNotificacion = true;clicDentroDelDiv = true">
+          <span style="display: flex;justify-content: center;align-items: center;cursor: pointer;display: none;"
+            (click)="isVisibleNotificacion = true;clicDentroDelDiv = true">
+            @if(dataNotificaciones.length){
             <i matBadge="1" matBadgeSize="small" class="fa fa-bell-o" aria-hidden="true"></i>
+            }@else{
+            <i matBadgeSize="small" class="fa fa-bell-o" aria-hidden="true"></i>
+            }
+
           </span>
           <div class="profile-logo">
             <ion-avatar slot="start">
@@ -44,8 +50,8 @@
       <mt-popover (click)="onDivClick()" *ngIf="isVisiblePopover" [dataProfile]="profileUser"
         (onClickedCallback)="onLogout()"></mt-popover>
 
-      <mt-popover-notificacion (click)="onDivClick()" *ngIf="isVisibleNotificacion" [dataNotification]="dataNoti"
-        (onClickedCallback)="onLogout()"></mt-popover-notificacion>
+      <mt-popover-notificacion (click)="onDivClick()" *ngIf="isVisibleNotificacion" [dataNotification]="dataNotificaciones"
+        (onClickedCallback)="onLogout()" (onReadCallBack)="onReadNotification($event)"></mt-popover-notificacion>
     </ion-header>
 
     <ion-content class="ion-padding">

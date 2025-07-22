@@ -56,6 +56,7 @@
 }
 
 .menu-profile {
+
     /*
     span {
         cursor: pointer !important;
@@ -71,7 +72,7 @@
     .profile-section {
         display: inline-flex;
         border-bottom: 1px solid #dbdada;
-    
+
         cursor: pointer;
 
         ion-avatar {
@@ -165,4 +166,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+.msj-error {
+    background: #c03614;
+}
+
+.msj-info {
+    background: #1492c0;
+}
+
+.msj-alert {
+    background: #c0b214;
+}
+
+.msj-success {
+    background: #14c05f;
 }
