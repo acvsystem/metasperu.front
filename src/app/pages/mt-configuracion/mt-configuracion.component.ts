@@ -978,6 +978,7 @@ export class MtConfiguracionComponent implements OnInit {
         url: '/menu/sistema/lista'
       };
       this.service.get(parms).then((response) => {
+        const self = this;
         this.dataMenuList = response;
         this.dataViewMenu = [];
         this.dataDeafultPage = [];
@@ -985,6 +986,7 @@ export class MtConfiguracionComponent implements OnInit {
           this.dataViewMenu.push((menu || {}).NOMBRE_MENU);
           this.dataDeafultPage.push({ key: (menu || {}).RUTA, value: (menu || {}).RUTA });
           if (this.dataMenuList.length - 1 == i) {
+            console.log(self.dataDeafultPage);
             resolve(this.dataViewMenu);
           }
         });
@@ -1127,22 +1129,27 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      this.onUserList();
+      if ((response || {}).msj) {
+        this.onUserList();
 
-      this.idEditUSer = "";
-      this.vUsuarioNew = "";
-      this.vPassword = "";
-      this.cboPageDefault = "";
-      this.optionDefaultPage = [{ key: "", value: "" }];
-      this.vEmail = "";
-      this.cboNivelUser = "";
-      this.optionDefaultNivel = [{ key: "", value: "" }];
+        this.idEditUSer = "";
+        this.vUsuarioNew = "";
+        this.vPassword = "";
+        this.cboPageDefault = "";
+        this.optionDefaultPage = [{ key: "", value: "" }];
+        this.vEmail = "";
+        this.cboNivelUser = "";
+        this.optionDefaultNivel = [{ key: "", value: "" }];
 
-      if (this.isEditUser) {
-        this.service.toastSuccess('Editado con exito..!!', 'Usuario');
+        if (this.isEditUser) {
+          this.service.toastSuccess('Editado con exito..!!', 'Usuario');
+        } else {
+          this.service.toastSuccess('Registrado con exito..!!', 'Usuario');
+        }
       } else {
-        this.service.toastSuccess('Registrado con exito..!!', 'Usuario');
+        this.service.toastError('Nombre de usuario ya exite..', 'Usuario');
       }
+
 
     });
   }

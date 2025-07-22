@@ -136,6 +136,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
       console.log(selectedTienda);
       this.vAlmacenOrigen = (selectedTienda || {}).COD_ALMACEN;
       this.vTPOrigen = (selectedTienda || {}).TIPO_TIENDA;
+
       this.cboUnidadServicioDestino = this.cboUnidadServicioOrigen.filter((tdo) => tdo.key != this.udsOrigen);
 
       if (this.vAlmacenOrigen == this.vAlmacenDestino) {
@@ -149,6 +150,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsDestino);
       this.vAlmacenDestino = (selectedTienda || {}).COD_ALMACEN;
       this.vTPDestino = (selectedTienda || {}).TIPO_TIENDA;
+      console.log(this.vTPOrigen, this.vTPDestino);
     }
 
     if ((selectData || {}).selectId == "udsOrigen") {
@@ -347,6 +349,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
               formData.append('ftpDirectorio', nmCarpeta);
 
+
               this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
                 .subscribe({
                   next: res => console.log('Subido con éxito'),
@@ -386,6 +389,10 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
     if ((this.vTPOrigen == 'VSFA' && this.vTPDestino == 'VSBA')) {
       tipoTienda = 'VSFA_VSBA';
+    }
+
+    if ((this.vTPOrigen == 'VSFA' && this.vTPDestino == 'VSFA')) {
+      tipoTienda = 'VSFA';
     }
 
     if (this.vTPOrigen == 'BBW' && this.vTPDestino == 'BBW') {

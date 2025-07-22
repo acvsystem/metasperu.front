@@ -39,9 +39,9 @@ export class AppComponent {
   isSubMenuRrhh: boolean = false;
   isSubMenuSistemas: boolean = false;
   isStart = 0;
-  dataNoti:Array<any> = [
-    {tipo:'danger',title: "prueba",body:"Tienes horas extras acumuladas de trabajadores."},
-    {tipo:'warning',title: "prueba",body:"No olvides crear tu horario de la semana proxima."}
+  dataNoti: Array<any> = [
+    { tipo: 'danger', title: "prueba", body: "Tienes horas extras acumuladas de trabajadores." },
+    { tipo: 'warning', title: "prueba", body: "No olvides crear tu horario de la semana proxima." }
 
   ];
   constructor(
@@ -104,6 +104,7 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.onNotitifaciones();
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
     let menu = this.store.getStore('mt-menu');
@@ -228,6 +229,16 @@ export class AppComponent {
     }
 
     this.menu.close();
+  }
+
+  onNotitifaciones() {
+    let parms = {
+      url: '/notificaciones'
+    };
+
+    this.service.get(parms).then((response) => {
+      
+    });
   }
 
 }
