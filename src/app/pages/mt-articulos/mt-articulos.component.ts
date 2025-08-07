@@ -139,7 +139,7 @@ export class MtArticulosComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
 
-    if ((profileUser || {}).code != 'OF' && (profileUser || {}).mt_nivel != 'INVENTARIO') {
+    if ((profileUser || {}).code != 'OF' && (profileUser || {}).mt_nivel != 'INVENTARIO' && (profileUser || {}).mt_nivel != 'MARKETING' && (profileUser || {}).mt_nivel != 'OPERACIONES') {
       this.isVendedor = true;
 
       let profileUser = this.store.getStore('mt-profile');

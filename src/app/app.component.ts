@@ -79,7 +79,7 @@ export class AppComponent {
       this.profileUser = [];
       let newProfile = {
         mt_name_1: user.profile.codigo.length ? user.profile.nameTienda.toUpperCase() : user.profile.name.split(' ')[0],
-        mt_nivel: user.profile.name.split(' ')[0],
+        mt_nivel: user.profile.nivel,
         code: user.profile.codigo,
         default: user.page.default,
         email: user.profile.email
