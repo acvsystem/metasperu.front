@@ -36,10 +36,13 @@ export class AppComponent {
   menuList: Array<any> = [{ name: "Logout", fn: "onLogout" }];
   profileUser: any = [];
   menuUser: any = [];
+  lsDataTiendas: any = [];
   isSubMenuRrhh: boolean = false;
   isSubMenuSistemas: boolean = false;
   isStart = 0;
   dataNotificaciones: Array<any> = [];
+  unidServicio: string = "";
+  linkImgPerfil: string = "";
 
   constructor(
     private httpService: HttpService,
@@ -85,6 +88,18 @@ export class AppComponent {
         email: user.profile.email
       };
       console.log(newProfile);
+
+      let tienda = this.lsDataTiendas.find((dt) => dt.SERIE_TIENDA == user.profile.codigo);
+      this.unidServicio = (tienda || {}).UNID_SERVICIO;
+
+      if (this.unidServicio == 'BBW') {
+        this.linkImgPerfil = '../assets/bbwicon.webp';
+      } else if (this.unidServicio == 'VS') {
+        this.linkImgPerfil = '../assets/vsicon.webp';
+      } else {
+        this.linkImgPerfil = '../assets/metasicon.png';
+      }
+
       this.profileUser.push(newProfile);
       this.store.removeStore("mt-profile");
       this.store.setStore("mt-profile", JSON.stringify(newProfile));
@@ -100,15 +115,17 @@ export class AppComponent {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.onListaTiendas();
 
     this.socket.on('notificaciones:get', async () => {
       this.onNotitifaciones();
     });
 
-    this.onNotitifaciones();
+    //this.onNotitifaciones();
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
+
     let menu = this.store.getStore('mt-menu');
     this.menuUser = menu;
     this.isMobil = window.innerWidth < 769;
@@ -204,6 +221,19 @@ export class AppComponent {
     this[ev]();
   }
 
+  onImgProfile(user) {
+
+    let tienda = this.lsDataTiendas.find((dt) => dt.SERIE_TIENDA == ((user || [])[0] || {}).code);
+    this.unidServicio = (tienda || {}).UNID_SERVICIO;
+
+    if (this.unidServicio == 'BBW') {
+      this.linkImgPerfil = '../assets/bbwicon.webp';
+    } else if (this.unidServicio == 'VS') {
+      this.linkImgPerfil = '../assets/vsicon.webp';
+    } else {
+      this.linkImgPerfil = '../assets/metasicon.png';
+    }
+  }
 
 
   onLogout() {
@@ -247,6 +277,18 @@ export class AppComponent {
           this.dataNotificaciones.push(nt);
         }
       });
+    });
+  }
+
+  onListaTiendas() {
+    const self = this;
+    let parms = {
+      url: '/security/lista/registro/tiendas'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.lsDataTiendas = (response || {}).data || [];
+      this.onImgProfile(this.profileUser);
     });
   }
 

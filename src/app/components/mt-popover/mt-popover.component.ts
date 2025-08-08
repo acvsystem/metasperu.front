@@ -9,6 +9,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class MtPopoverComponent implements OnInit {
 
   @Input() dataProfile: Array<any> = [];
+  @Input() imgProfile: string = "";
   @Output() onClickedCallback: EventEmitter<any> = new EventEmitter();
 
   nombreUsuario: String = "";

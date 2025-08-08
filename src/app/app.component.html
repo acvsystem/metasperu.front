@@ -35,7 +35,7 @@
           </span>
           <div class="profile-logo">
             <ion-avatar slot="start">
-              <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+              <img alt="Silhouette of a person's head" src="{{linkImgPerfil}}" />
             </ion-avatar>
           </div>
           <div class="profile-ico" (click)="isVisiblePopover = true;clicDentroDelDiv = true" data-bs-dismiss="offcanvas"
@@ -47,7 +47,7 @@
 
 
 
-      <mt-popover (click)="onDivClick()" *ngIf="isVisiblePopover" [dataProfile]="profileUser"
+      <mt-popover (click)="onDivClick()" *ngIf="isVisiblePopover" [dataProfile]="profileUser" [imgProfile]="linkImgPerfil"
         (onClickedCallback)="onLogout()"></mt-popover>
 
       <mt-popover-notificacion (click)="onDivClick()" *ngIf="isVisibleNotificacion" [dataNotification]="dataNotificaciones"

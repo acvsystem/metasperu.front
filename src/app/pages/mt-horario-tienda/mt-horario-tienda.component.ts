@@ -115,7 +115,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.profileUser = this.store.getStore('mt-profile');
 
-    if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+    if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "OPERACIONES" || (this.profileUser || {}).mt_nivel == "FIELDLEADER") {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (this.profileUser || {}).mt_name_1,
         "mt_nivel": (this.profileUser || {}).mt_nivel,
@@ -150,7 +150,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     }
 
 
-    if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "cmoron" || (this.profileUser || {}).mt_nivel == "jcarreno" || (this.profileUser || {}).mt_nivel == "nduran" || (this.profileUser || {}).mt_nivel == "aseijo") {
+    if (!this.isSearch && (this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "OPERACIONES" || (this.profileUser || {}).mt_nivel == "FIELDLEADER") {
       this.onListCargo = [
         { key: 1, value: "Recursos Humanos" },
         { key: 2, value: "Contabilidad" },
