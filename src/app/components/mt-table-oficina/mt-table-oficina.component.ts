@@ -52,7 +52,6 @@ export class MtTableOficinaComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.dataTable);
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -69,7 +68,6 @@ export class MtTableOficinaComponent implements OnInit {
     const upd = new EventEmitter();
     this.feed(upd.pipe(
       filter(event => {
-        console.log(`menu.close(${JSON.stringify(event)})`);
         if (event === 'click') {
           // Ignore clicks inside the menu 
           return false;

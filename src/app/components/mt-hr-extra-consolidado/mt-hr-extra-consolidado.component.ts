@@ -193,8 +193,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
 
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
-      console.log(response);
-
       let data = (response || {}).data || [];
       this.parseHuellero = data;
       this.onDataTemp = [];
@@ -509,7 +507,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
           }
       
           if (this.onDataTemp.length - 1 == indexData) {
-            console.log(this.onDataTemp);
             this.onVerificarHrExtra(this.dataVerify);
           }
         });

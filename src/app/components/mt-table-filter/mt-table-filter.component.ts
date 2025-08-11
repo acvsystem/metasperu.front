@@ -96,7 +96,6 @@ export class MtTableFilterComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.dataTable);
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -116,7 +115,6 @@ export class MtTableFilterComponent implements OnInit {
     const upd = new EventEmitter();
     this.feed(upd.pipe(
       filter(event => {
-        console.log(`menu.close(${JSON.stringify(event)})`);
         if (event === 'click') {
           // Ignore clicks inside the menu 
           return false;
@@ -223,7 +221,6 @@ export class MtTableFilterComponent implements OnInit {
 
       if (this.filterEmpleado) {
         // search all text fields
-        console.log();
         globalMatch =
           data.tienda
             .toString()
@@ -237,7 +234,6 @@ export class MtTableFilterComponent implements OnInit {
       }
 
       let searchString = JSON.parse(filter);
-      //console.log(data.tienda.toLowerCase(), data.tienda.includes(searchString.tienda), searchString.tienda);
       return (
         data.tienda.toLowerCase().includes(searchString.tienda) &&
         data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) &&
@@ -260,7 +256,6 @@ export class MtTableFilterComponent implements OnInit {
   }
 
   onViewPapeleta(ev) {
-    console.log(ev);
     this.codigoPap = "";
     this.codigoPap = (ev || [])[0].CODIGO_PAPELETA;
     this.arCodigosViewPap = [];

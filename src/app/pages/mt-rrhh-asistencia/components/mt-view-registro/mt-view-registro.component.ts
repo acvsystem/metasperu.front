@@ -27,7 +27,6 @@ export class MtViewRegistroComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.data);
 
     this.data.filter((dt) => {
       this.parseHuellero.push({

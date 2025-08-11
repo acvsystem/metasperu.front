@@ -41,7 +41,7 @@ export class AppComponent {
   isSubMenuSistemas: boolean = false;
   isStart = 0;
   dataNotificaciones: Array<any> = [];
-  unidServicio: string = "";
+  unidServicioPrf: string = "";
   linkImgPerfil: string = "";
 
   constructor(
@@ -77,7 +77,6 @@ export class AppComponent {
     });
 
     this.service.onProfileUser.subscribe((user) => {
-      console.log(user);
       const self = this;
       this.profileUser = [];
       let newProfile = {
@@ -87,15 +86,16 @@ export class AppComponent {
         default: user.page.default,
         email: user.profile.email
       };
-      console.log(newProfile);
 
       let tienda = this.lsDataTiendas.find((dt) => dt.SERIE_TIENDA == user.profile.codigo);
-      this.unidServicio = (tienda || {}).UNID_SERVICIO;
+      this.unidServicioPrf = (tienda || {}).UNID_SERVICIO;
 
-      if (this.unidServicio == 'BBW') {
-        this.linkImgPerfil = '../assets/bbwicon.webp';
-      } else if (this.unidServicio == 'VS') {
-        this.linkImgPerfil = '../assets/vsicon.webp';
+      if (user.profile.nivel == 'TIENDA') {
+        if (this.unidServicioPrf == 'BBW') {
+          this.linkImgPerfil = '../assets/bbwicon.webp';
+        } else if (this.unidServicioPrf == 'VS') {
+          this.linkImgPerfil = '../assets/vsicon.webp';
+        }
       } else {
         this.linkImgPerfil = '../assets/metasicon.png';
       }
@@ -122,7 +122,7 @@ export class AppComponent {
       this.onNotitifaciones();
     });
 
-    //this.onNotitifaciones();
+    this.onNotitifaciones();
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
 
@@ -224,12 +224,14 @@ export class AppComponent {
   onImgProfile(user) {
 
     let tienda = this.lsDataTiendas.find((dt) => dt.SERIE_TIENDA == ((user || [])[0] || {}).code);
-    this.unidServicio = (tienda || {}).UNID_SERVICIO;
+    this.unidServicioPrf = (tienda || {}).UNID_SERVICIO;
 
-    if (this.unidServicio == 'BBW') {
-      this.linkImgPerfil = '../assets/bbwicon.webp';
-    } else if (this.unidServicio == 'VS') {
-      this.linkImgPerfil = '../assets/vsicon.webp';
+    if (user.nivel == 'TIENDA') {
+      if (this.unidServicioPrf == 'BBW') {
+        this.linkImgPerfil = '../assets/bbwicon.webp';
+      } else if (this.unidServicioPrf == 'VS') {
+        this.linkImgPerfil = '../assets/vsicon.webp';
+      }
     } else {
       this.linkImgPerfil = '../assets/metasicon.png';
     }

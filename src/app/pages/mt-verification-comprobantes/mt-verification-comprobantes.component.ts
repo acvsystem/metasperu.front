@@ -116,7 +116,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
-      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
@@ -154,7 +153,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
         */
       } else {
 
-        console.log(listaSession[0]['CODIGO_TERMINAL']);
         (dataList || []).filter((dataSocket: any) => {
 
           if ((dataSocket || {}).ISONLINE == 1) {
@@ -181,8 +179,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
           }
         });
       }
-
-      console.log(this.dataSource['_data']['_value']);
 
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
@@ -266,7 +262,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('sendDataClient', (dataSocket) => {
-      console.log(dataSocket);
       this.contadorCliente += 1;
 
       if (this.contadorCliente == this.contadorCajaOnline) {
@@ -388,7 +383,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   toolCaja(data) {
     this.vDataTienda = data;
-    console.log(this.vDataTienda);
   }
 
   onSelectedTranferencia(ev, dataOne, dataTwo?) {

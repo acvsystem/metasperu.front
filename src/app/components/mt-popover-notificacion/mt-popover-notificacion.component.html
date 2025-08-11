@@ -1,20 +1,20 @@
 <div class="menu-profile">
   @for (noti of dataNotification; track noti) {
-  @if(!noti.IS_READ){
+  @if(!noti.isRead){
   <div class="profile-section" (click)="onReadNotification(noti.ID_USN)">
     <div
-      [ngClass]="[noti.TIPO == 'info'? 'estado-color msj-info': noti.TIPO == 'error'? 'estado-color msj-error':  noti.TIPO == 'warning'? 'estado-color msj-error' : noti.TIPO == 'success'? 'estado-color msj-success': 'estado-color']">
+      [ngClass]="[noti.tipo == 'info'? 'estado-color msj-info': noti.tipo == 'error'? 'estado-color msj-error':  noti.tipo == 'warning'? 'estado-color msj-error' : noti.tipo == 'success'? 'estado-color msj-success': 'estado-color']">
       <span></span>
     </div>
     <div class="content-ico">
       <ion-avatar slot="start">
         <img class="img-profile" alt="Silhouette of a person's head"
-          src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          src="../../../assets/notificacion.png" />
       </ion-avatar>
     </div>
     <div class="profile-datos">
-      <div class="title-user">{{noti.TITULO}}</div>
-      <div class="subtitle-user">{{noti.MENSAJE}}</div>
+      <div class="title-user">{{noti.titulo}}</div>
+      <div class="subtitle-user">{{noti.mensaje}}</div>
     </div>
   </div>
   }

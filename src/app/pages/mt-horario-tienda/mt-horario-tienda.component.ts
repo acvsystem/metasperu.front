@@ -122,11 +122,6 @@ export class MtHorarioTiendaComponent implements OnInit {
         "code": "OF"
       }));
 
-      console.log({
-        "mt_name_1": (this.profileUser || {}).mt_name_1,
-        "mt_nivel": (this.profileUser || {}).mt_nivel,
-        "code": "OF"
-      });
     }
 
     this.getScreenSize();
@@ -246,7 +241,6 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
       let dataEmpleado = (response || {}).data;
-      console.log(dataEmpleado);
       let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
       dataEmpleado.filter((emp) => {
@@ -355,7 +349,6 @@ export class MtHorarioTiendaComponent implements OnInit {
         let hora = this.obtenerDiferenciaHora(this.horaInit, this.horaEnd);
         let confirmHora = (hora || "").split(":");
         let selectCargo = this.onListCargo.find((dt) => dt.key == this.cboCargo);
-        console.log(selectCargo);
         if (this.esMayorADocePM(this.horaEnd) || (selectCargo || {}).value == 'Asesores part time' || (selectCargo || {}).value == 'Vacaciones') {
           if (parseInt(confirmHora[0]) <= 9) {
 
@@ -1284,7 +1277,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
-      console.log(response);
       if ((response || []).length) {
         this.dataHorario = [];
         this.isSearch = true;
@@ -1303,7 +1295,6 @@ export class MtHorarioTiendaComponent implements OnInit {
         }
 
         (lsOrden || []).filter((orden, i) => {
-          console.log(orden);
           let indexRow = response.findIndex((rs) => (rs || {}).cargo == orden);
           if (indexRow > -1) {
             this.dataHorario.push(response[indexRow]);

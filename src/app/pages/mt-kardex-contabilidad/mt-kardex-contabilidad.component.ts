@@ -162,7 +162,6 @@ export class MtKardexContabilidadComponent implements OnInit {
       this.vDetallado = [date[0].replace('/', '-'), date[1].replace('/', '-')];
 
       let data = JSON.parse((dataCuo || {}).data || []);
-      console.log(data);
       this.dataOriginal = [...data];
       this.dataViewCuo = data;
 
@@ -233,7 +232,6 @@ export class MtKardexContabilidadComponent implements OnInit {
   }
 
   onSelectAlbaran(ev) {
-    console.log(ev);
     const self = this;
     self.vSerieDoc = (ev || {}).cmpSerie;
     self.vNumeroDoc = (ev || {}).cmpNumero;

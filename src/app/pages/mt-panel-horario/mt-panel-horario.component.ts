@@ -81,7 +81,6 @@ export class MtPanelHorarioComponent implements OnInit {
       const ascDates = response.reverse();
 
       this.listaPapeletas = ascDates;
-      console.log(this.listaPapeletas);
       (this.listaPapeletas || []).filter((data, i) => {
         let tipo = this.onListCasos.filter((tp) => tp.key == data['id_tipo_papeleta']);
         this.listaPapeletas[i]['tipo'] = ((tipo || [])[0] || {})['value'];

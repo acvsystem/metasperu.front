@@ -20,7 +20,6 @@ export class MtPopoverComponent implements OnInit {
   ngOnInit() {
     this.nombreUsuario = this.dataProfile[0]['mt_name_1'];
     this.emailUsuario = this.dataProfile[0]['email'];
-    console.log(this.dataProfile);
   }
 
   OnClickedMenu() {

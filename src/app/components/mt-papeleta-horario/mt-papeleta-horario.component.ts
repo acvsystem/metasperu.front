@@ -220,7 +220,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let data = (response || {}).data || [];
 
       this.parseHuellero = data;
-      console.log(this.parseHuellero);
       this.onDataTemp = [];
       this.bodyList = [];
       this.dataVerify = [];
@@ -265,7 +264,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
               isException: (huellero || {}).isException,
               dataRegistro: [huellero]
             });
-            console.log(huellero);
             if (huellero.tpAsociado == "**") { //PART TIME
               this.isPartTime = true;
 
@@ -372,7 +370,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
             }
 
           } else {
-            console.log(huellero);
             if (huellero.tpAsociado == "**") { //PART TIME
 
 
@@ -383,8 +380,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
 
               this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
-
-              console.log(this.arPartTimeFech);
 
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
@@ -670,7 +665,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let count = "00:00";
       let arFechas = [];
       let cFechas = [];
-      console.log(this.arPartTimeFech);
       this.arPartTimeFech.filter(async (pt, index) => {
 
         let hr = (pt.hr_trabajadas || "").split(":");
@@ -870,7 +864,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
   obtenerLunes(fechaStr) {
-    console.log(fechaStr);
     const fecha = new Date(fechaStr);
     const dia = fecha.getDay(); // 0 (domingo) a 6 (sábado)
     const diff = (dia + 6) % 7; // diferencia desde el lunes
@@ -916,8 +909,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
   onVerificarHrExtra(dataVerificar) {
-    console.log('onVerificarHrExtra', dataVerificar);
-
     let parms = {
       url: '/recursos_humanos/pap/horas_extras',
       body: dataVerificar
@@ -1183,7 +1174,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
 
         let data = (response || {}).data || [];
-        console.log('reporteHorario', data);
         this.parseHuellero = data;
 
         this.onDataTemp = [];
@@ -1802,7 +1792,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       (this.dataViewPermiso || []).filter((tienda) => {
         //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
         if (this.codeTienda == (tienda || {}).SERIE_TIENDA) {
-          console.log((f1.getTime(), f2.getTime()), (tienda || {}).IS_FREE_PAPELETA);
           if ((f1.getTime() < f2.getTime()) && !(tienda || {}).IS_FREE_PAPELETA) {
 
             this.service.toastError("La fecha seleccionada no puede ser anterior a la actual.", "Papeleta");
@@ -2114,7 +2103,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
               isErrorHSolicitada = false;
               arVerify.push(true);
             }
-            console.log(this.dataViewPermiso);
             (this.dataViewPermiso || []).filter((tienda) => {
               //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
               if (this.codeTienda == (tienda || {}).SERIE_TIENDA) {

@@ -161,7 +161,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         let dateNow = new Date();
         let mesNow = (dateNow.getMonth() + 1).toString();
         let periodo = `${(mesNow.length == 1) ? '0' + mesNow : mesNow}/${dateNow.getFullYear().toString()}`;
-        console.log("EJB", true);
         let dataEJB = [];
         this.parseEJB = [];
         this.exportFeriado = [];
@@ -205,7 +204,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       }
 
       if (configuracion.id == "servGeneral") {
-        console.log("servGeneral", true);
 
         this.countDataLength += ((configuracion || {}).data || []).length;
 
@@ -215,7 +213,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
 
         if (this.countDataLength == (configuracion || {}).length) {
-          console.log(this.countDataLength, (configuracion || {}).length);
           this.countDataLength = 0;
           this.onProcesarAsistencia();
         }
@@ -281,8 +278,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
               if (!isTardanza) {
                 if ((huellero || {}).nro_documento == '70611399' && (huellero || {}).dia == '2025-07-05') {
-                  console.log(huellero);
-                  console.log(parseInt(ingresoHorario[0]), parseInt(ingreso[0]), parseInt(ingreso[1]));
                 }
                 if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0])) {
                   let diferencia = parseInt(ingresoHorario[0]) - parseInt(ingreso[0]);
@@ -460,7 +455,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onProcesarAsistenciaOf(dataProcesar) {
     this.isLoading = false;
-    console.log(dataProcesar);
 
     const ascDates = dataProcesar.sort((a, b) => {
       return new Date(a.logid).getTime() - new Date(b.logid).getTime();
@@ -571,7 +565,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onGenerarGraffic() {
     this.arrDataGrafic = [];
-    console.log("onGenerarGraffic", this.onDataTemp);
     this.onDataTemp.filter((dt) => {
       if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
         let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
@@ -699,7 +692,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
         }
       } else {
-        console.log(this.vDetallado);
         let date = ((this.vCalendarDefault || [])[0] || "").split('/');
         let dataTemp = [];
         this.onDataViewOf = [];
@@ -792,7 +784,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     let tmpFeriado = [];
     let arrFecFeriado = [];
 
-    console.log(dateList);
     (dateList || []).filter((dt) => {
       let date = new Date(dt).toLocaleDateString().split('/');
       (arrFecFeriado || []).push(`${date[2]}-${(date[1].length == 1) ? '0' + date[1] : date[1]}-${(date[0].length == 1) ? '0' + date[0] : date[0]}`);
@@ -879,7 +870,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   onCaledar($event) {
-    console.log("onCaledar", $event);
     this.isErrorFecha = false;
     if ($event.isPeriodo) {
       this.vCalendar = [];
@@ -921,8 +911,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       let date = new Date(range[1]).toLocaleDateString().split('/');
       var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
       var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
-
-      console.log(range);
 
       if (f1.getTime() > f2.getTime()) {
         this.isErrorFecha = true;
@@ -1029,7 +1017,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   isViewPapeleta: boolean = true;
 
   onViewPapeleta(ev) {
-    console.log(ev);
     this.codigoPap = "";
     this.codigoPap = (ev || [])[0].CODIGO_PAPELETA;
     this.isViewPapeleta = true;
@@ -1110,7 +1097,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
 
   onViewGrafic() {
 
-    console.log("onViewGrafic", this.cboTipoGraffic);
     let arrLabels = [];
     let data = [];
 

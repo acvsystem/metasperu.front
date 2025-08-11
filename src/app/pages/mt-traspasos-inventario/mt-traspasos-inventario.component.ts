@@ -86,7 +86,6 @@ export class MtTraspasosInventarioComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => {
-      console.log(listaSession);
       let dataList = [];
       dataList = listaSession || [];
       (dataList || []).filter((dataSocket: any) => {
@@ -133,7 +132,6 @@ export class MtTraspasosInventarioComponent implements OnInit {
     if (index == 'udsOrigen') {
       this.cboUnidadServicioDestino = [];
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsOrigen);
-      console.log(selectedTienda);
       this.vAlmacenOrigen = (selectedTienda || {}).COD_ALMACEN;
       this.vTPOrigen = (selectedTienda || {}).TIPO_TIENDA;
 
@@ -150,7 +148,6 @@ export class MtTraspasosInventarioComponent implements OnInit {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsDestino);
       this.vAlmacenDestino = (selectedTienda || {}).COD_ALMACEN;
       this.vTPDestino = (selectedTienda || {}).TIPO_TIENDA;
-      console.log(this.vTPOrigen, this.vTPDestino);
     }
 
     if ((selectData || {}).selectId == "udsOrigen") {

@@ -42,7 +42,6 @@ export class MtModalComentarioComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.isStock);
   }
 
   onChangeTextArea(data: any) {

@@ -78,7 +78,6 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
     const upd = new EventEmitter();
     this.feed(upd.pipe(
       filter(event => {
-        console.log(`menu.close(${JSON.stringify(event)})`);
         if (event === 'click') {
           // Ignore clicks inside the menu 
           return false;
@@ -165,7 +164,6 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
 
       if (this.filterTiendaUnid) {
         // search all text fields
-        console.log();
         globalMatch =
           data.uns
             .toString()
@@ -179,7 +177,6 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
       }
 
       let searchString = JSON.parse(filter);
-      //console.log(data.tienda.toLowerCase(), data.tienda.includes(searchString.tienda), searchString.tienda);
       return (
         data.codigo_papeleta.toLowerCase().includes(searchString.codigo_papeleta) &&
         data.nombre_completo.toLowerCase().includes(searchString.nombre_completo) &&

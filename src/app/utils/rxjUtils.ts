@@ -21,7 +21,6 @@ export const genericRetryStrategy = (
             if (retryAttempt > maxRetryAttempts || excludedStatusCodes.find(e => e === error.status)) {
                 return throwError(error);
             }
-            console.log(`Attempt ${retryAttempt}: retrying in ${retryAttempt * scalingDuration}ms`);
             // retry after 1s, 2s, etc...
             return timer(retryAttempt * scalingDuration);
         }),

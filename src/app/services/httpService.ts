@@ -49,7 +49,6 @@ export class HttpService {
     }
 
     this.eventShowLoading.emit(true);
-    console.log(file);
     return this.http.post(URL, body || file, { headers, params }).pipe(
       tap((x) => this.eventShowLoading.emit(false)),
       retryWhen(

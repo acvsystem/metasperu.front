@@ -39,7 +39,6 @@ export class MtSelectComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.hasOwnProperty('optionList')) {
       this.originalOptionList = [...this.optionList];
-      console.log(this.id,this.originalOptionList);
     }
 
     if (changes && changes.hasOwnProperty('selectOption')) {
@@ -81,7 +80,6 @@ export class MtSelectComponent implements OnInit {
   onFilter(value) {
 
     let originalOptionList = [...this.originalOptionList];
-    console.log(originalOptionList);
     let dataSearch = (originalOptionList || []).filter((option) => {
       const acentos = { 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U' };
       let palabraFilter = (option || {}).value.split('').map(letra => acentos[letra] || letra).join('').toString();

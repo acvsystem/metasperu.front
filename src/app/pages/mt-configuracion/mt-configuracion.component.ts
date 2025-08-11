@@ -630,7 +630,6 @@ export class MtConfiguracionComponent implements OnInit {
       });
 
       /*ASIGNACION DE TIENDA*/
-      console.log(response);
       this.dataDropTiendaList = (response || []).data;
       this.originalTiendaList = [...(response || []).data]
       this.dataViewMenu = [];
@@ -987,7 +986,6 @@ export class MtConfiguracionComponent implements OnInit {
           this.dataViewMenu.push((menu || {}).NOMBRE_MENU);
           this.dataDeafultPage.push({ key: (menu || {}).RUTA, value: (menu || {}).RUTA });
           if (this.dataMenuList.length - 1 == i) {
-            console.log(self.dataDeafultPage);
             resolve(this.dataViewMenu);
           }
         });
@@ -1058,7 +1056,6 @@ export class MtConfiguracionComponent implements OnInit {
       this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
     });
 
-    console.log(parms);
   }
 
 
@@ -1201,7 +1198,6 @@ export class MtConfiguracionComponent implements OnInit {
 
       if ((event || {})['container']['id'] == "dropTienda") {
         let dataRecept = event.container.data;
-        console.log(this.dataAsignato);
         let dataAsignato = this.dataAsignato.find((permiso) => permiso.DESCRIPCION_TIENDA == dataRecept[event.currentIndex]);
         this.onDeleteAsigTienda(dataAsignato.ID_TIENDA_ASIGANADA);
       }

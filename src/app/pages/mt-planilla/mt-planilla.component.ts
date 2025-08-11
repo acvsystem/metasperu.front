@@ -800,7 +800,6 @@ export class MtPlanillaComponent implements OnInit {
     });
 
     if (codigoList.length) {
-      console.log(codigoList);
       await codigoList.filter(async (codigo, i) => {
         if (i <= 9) {
           let dataTemp = [];
@@ -821,7 +820,6 @@ export class MtPlanillaComponent implements OnInit {
             });
 
             if (dataTemp.length - 1 == i) {
-              console.log(this.fileName, dataExport);
               this.exportAsExcelFile(dataExport, this.fileName);
               dataTemp = [];
               this.text = "";
@@ -843,7 +841,6 @@ export class MtPlanillaComponent implements OnInit {
 
               let cuentaBanco = (dw || {}).BANCO == 2 ? ((dw || {}).CUENTA_BANCO_HABERES || "") : !((dw || {}).CUENTA_INTERBANCARIO || "").length ? '0' : ((dw || {}).CUENTA_INTERBANCARIO || "");
               this.fileName = dw['UNIDAD_SERVICIO'];
-              console.log(dw.NOMBRE_COMPLETO, cuentaBanco || 0);
               dataExport.push({
                 DOI_Tipo: dw.NRO_DOCUMENTO.trim().length == 8 ? 'L' : 'E',
                 DOI_Numero: ((dw || {}).NRO_DOCUMENTO || 0).trim(),
@@ -854,7 +851,6 @@ export class MtPlanillaComponent implements OnInit {
               });
 
               if (dataTemp.length - 1 == i) {
-                console.log(this.fileName, dataExport);
                 this.exportAsExcelFile(dataExport, this.fileName);
                 dataTemp = [];
                 this.text = "";
@@ -887,7 +883,6 @@ export class MtPlanillaComponent implements OnInit {
               });
 
               if (dataTemp.length - 1 == i) {
-                console.log(this.fileName, dataExport);
                 this.exportAsExcelFile(dataExport, this.fileName);
                 dataTemp = [];
                 this.text = "";
