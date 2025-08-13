@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as html2pdf from 'html2pdf.js';
 import * as $ from 'jquery';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'mt-horario-tienda',
@@ -19,7 +20,7 @@ import { GlobalConstants } from '../../const/globalConstants';
 })
 export class MtHorarioTiendaComponent implements OnInit {
   @Input() data: Array<any> = [];
-  socket = io(GlobalConstants.backendServer, { reconnectionDelayMax: 10000, query: { code: 'app' } });
+  //socket = io(GlobalConstants.backendServer, { reconnectionDelayMax: 10000, query: { code: 'app' } });
   cboCargo: number = 0;
   idCargo: number = 1;
   horaInit: string = "";
@@ -106,7 +107,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.screenWith = window.innerWidth - 10;
   }
 
-  constructor(private store: StorageService, private service: ShareService) { }
+  constructor(private store: StorageService, private service: ShareService, private socket: SocketService) { }
 
 
 
@@ -228,11 +229,6 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.unidServicio = (unidServicio || {})['uns'];
     this.onListEmpleado = [];
-
-    this.socket.on("connect_error", () => {
-      // revert to classic upgrade
-      this.socket.io.opts.transports = ["polling", "websocket"];
-    });
 
 
     this.socket.emit('horario/empleadoEJB', this.unidServicio);
@@ -929,7 +925,7 @@ export class MtHorarioTiendaComponent implements OnInit {
               let fechaInicio = new Date(fechaActual);
               let fechaFin = new Date(`${parseDate[2]}-${parseDate[1]}-${parseDate[0]}`);
 
-              if ((fechaFin.getTime() < fechaInicio.getTime()) && (this.profileUser || {}).mt_nivel != "RRHH" && (this.profileUser || {}).mt_nivel != "SISTEMAS" && (this.profileUser || {}).mt_nivel != "JOHNNY" ) {
+              if ((fechaFin.getTime() < fechaInicio.getTime()) && (this.profileUser || {}).mt_nivel != "RRHH" && (this.profileUser || {}).mt_nivel != "SISTEMAS" && (this.profileUser || {}).mt_nivel != "JOHNNY") {
                 this.dataHorario[index]['dias'][i]['isExpired'] = true;
               } else {
                 this.dataHorario[index]['dias'][i]['isExpired'] = false;

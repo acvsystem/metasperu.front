@@ -10,6 +10,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-mt-verification-comprobantes',
@@ -39,13 +40,13 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isLoadingDB: boolean = false;
   statusServerList: any = [];
   countClientes: any = 0;
-  socket = io(GlobalConstants.backendServer, {
-    query: { code: 'app' },
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    reconnectionAttempts: 99999
-  });
+  /* socket = io(GlobalConstants.backendServer, {
+     query: { code: 'app' },
+     reconnection: true,
+     reconnectionDelay: 1000,
+     reconnectionDelayMax: 5000,
+     reconnectionAttempts: 99999
+   });*/
 
   isShowLoading: boolean = false;
   isErrorVerificacion: boolean = false;
@@ -69,7 +70,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   private _snackBar = inject(MatSnackBar);
 
-  constructor(private service: ShareService, private store: StorageService) { }
+  constructor(private service: ShareService, private store: StorageService, private socket: SocketService) { }
 
   ngOnInit() {
     this.onVerify();
@@ -97,6 +98,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
         (this.dataSource['_data']['_value'] || [])[indexData].terminales = terminales;
       }
     });
+
 
     this.socket.on('terminales:get:cantidad:response', (dataTerminal) => {//CANTIDAD DE COMPROBANTES POR TERMINAL
       this.isShowLoading = false;
@@ -357,22 +359,22 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
       (tiendaList || []).filter((tnd) => {
 
-        if ((tnd || {}).SERIE_TIENDA != '9Q') {
-          this.conxOnline.push((tnd || {}).CODIGO_TERMINAL);
 
-          (this.bodyList || []).push({
-            codigo: (tnd || {}).CODIGO_TERMINAL,
-            Tienda: (tnd || {}).DESCRIPCION,
-            isVerification: (tnd || {}).VERIFICACION,
-            cant_comprobantes: (tnd || {}).CANT_COMPROBANTES,
-            transacciones: 0,
-            clientes_null: 0,
-            online: (tnd || {}).ISONLINE,
-            conexICG: 0,
-            terminales: [],
-            dataTerminales: []
-          });
-        }
+        this.conxOnline.push((tnd || {}).CODIGO_TERMINAL);
+
+        (this.bodyList || []).push({
+          codigo: (tnd || {}).CODIGO_TERMINAL,
+          Tienda: (tnd || {}).DESCRIPCION,
+          isVerification: (tnd || {}).VERIFICACION,
+          cant_comprobantes: (tnd || {}).CANT_COMPROBANTES,
+          transacciones: 0,
+          clientes_null: 0,
+          online: (tnd || {}).ISONLINE,
+          conexICG: 0,
+          terminales: [],
+          dataTerminales: []
+        });
+
 
       });
 

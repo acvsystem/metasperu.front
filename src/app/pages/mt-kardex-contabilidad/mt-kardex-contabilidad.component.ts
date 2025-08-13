@@ -11,6 +11,7 @@ import { default as _rollupMoment, Moment } from 'moment';
 import * as $ from 'jquery';
 import { StorageService } from 'src/app/utils/storage';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 const moment = _rollupMoment || _moment;
 
 interface Shoes {
@@ -99,13 +100,13 @@ export class MtKardexContabilidadComponent implements OnInit {
   dataAlbaran: Array<any> = [];
   conxOnline: Array<any> = [];
   dataSave: Array<any> = [];
-  socket = io(GlobalConstants.backendServer, {
-    query: { code: 'app' },
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    reconnectionAttempts: 99999
-  });
+  /* socket = io(GlobalConstants.backendServer, {
+     query: { code: 'app' },
+     reconnection: true,
+     reconnectionDelay: 1000,
+     reconnectionDelayMax: 5000,
+     reconnectionAttempts: 99999
+   });*/
 
   shoes: Shoes[] = [];
 
@@ -114,7 +115,7 @@ export class MtKardexContabilidadComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private service: ShareService, private store: StorageService) {
+  constructor(private service: ShareService, private store: StorageService, private socket: SocketService) {
     this.form = new FormGroup({
       clothes: this.shoesControl,
     });

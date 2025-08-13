@@ -9,7 +9,7 @@ import { MenuController } from '@ionic/angular';
 import { UAParser } from 'ua-parser-js';
 import { io } from 'socket.io-client';
 import { GlobalConstants } from './const/globalConstants';
-
+import { SocketService } from './services/socket.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -27,7 +27,11 @@ export class AppComponent {
   }
 
   clicDentroDelDiv = false;
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  /* socket = io(GlobalConstants.backendServer, {
+     query: { code: 'app' }, auth: {
+       token: 'eyJhbGci...'
+     }
+   });*/
   isShowLoading: boolean = false;
   renderNavBar: boolean = false;
   isVisibleNotificacion: boolean = false;
@@ -45,7 +49,7 @@ export class AppComponent {
   linkImgPerfil: string = "";
 
   constructor(
-    private httpService: HttpService,
+    private socket: SocketService,
     private router: Router,
     private store: StorageService,
     private nav: NavController,
@@ -118,11 +122,16 @@ export class AppComponent {
   async ngOnInit() {
     await this.onListaTiendas();
 
-    this.socket.on('notificaciones:get', async () => {
-      this.onNotitifaciones();
+    this.socket.on('notificaciones:get', async (dataNoti) => {
+      (dataNoti || []).filter((nt) => {
+        if (!nt.IS_READ) {
+          this.dataNotificaciones.push(nt);
+        }
+      });
+      // this.onNotitifaciones();
     });
 
-    this.onNotitifaciones();
+    //this.onNotitifaciones();
     const selft = this;
     let profileUser = this.store.getStore('mt-profile');
 

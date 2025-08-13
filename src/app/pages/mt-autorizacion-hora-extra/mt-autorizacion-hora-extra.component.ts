@@ -16,6 +16,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'mt-autorizacion-hora-extra',
@@ -23,7 +24,7 @@ import { GlobalConstants } from '../../const/globalConstants';
   styleUrls: ['./mt-autorizacion-hora-extra.component.scss'],
 })
 export class MtAutorizacionHoraExtraComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  //socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   readonly dialog = inject(MatDialog);
   onDataView: Array<any> = [];
   arDataEJB: Array<any> = [];
@@ -72,7 +73,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private store: StorageService, private service: ShareService) { }
+  constructor(private store: StorageService, private service: ShareService, private socket: SocketService) { }
 
   ngOnInit() {
 
@@ -99,7 +100,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
           viewData.push(pen);
         }
 
-        if ((this.profileUser.mt_name_1 == "jcarreno"  || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
+        if ((this.profileUser.mt_name_1 == "jcarreno" || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
           viewData.push(pen);
         }
 
@@ -116,7 +117,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
             viewData.push(pen);
           }
 
-          if ((this.profileUser.mt_name_1 == "jcarreno"  || this.profileUser.mt_name_1 == "paulodosreis")  && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
+          if ((this.profileUser.mt_name_1 == "jcarreno" || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
             viewData.push(pen);
           }
 
@@ -390,7 +391,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
           viewData.push(pen);
         }
 
-        if ((this.profileUser.mt_name_1 == "jcarreno"  || this.profileUser.mt_name_1 == "paulodosreis")  && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
+        if ((this.profileUser.mt_name_1 == "jcarreno" || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
           viewData.push(pen);
         }
 
@@ -406,7 +407,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
             viewData.push(pen);
           }
 
-          if ((this.profileUser.mt_name_1 == "jcarreno"  || this.profileUser.mt_name_1 == "paulodosreis")  && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
+          if ((this.profileUser.mt_name_1 == "jcarreno" || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VS LA RAMBLA' || pen['TIENDA'] == 'VS PLAZA NORTE' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VS SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VS SALAVERRY' || pen['TIENDA'] == 'VS MALL DEL SUR' || pen['TIENDA'] == 'VS PURUCHUCO' || pen['TIENDA'] == 'VS MEGA PLAZA' || pen['TIENDA'] == 'VS MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
             viewData.push(pen);
           }
 

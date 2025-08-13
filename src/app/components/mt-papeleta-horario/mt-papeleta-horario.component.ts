@@ -27,6 +27,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -37,7 +38,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-papeleta-horario.component.scss'],
 })
 export class MtPapeletaHorarioComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  // socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
   readonly dialog = inject(MatDialog);
@@ -171,7 +172,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService) {
+  constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService, private socket: SocketService) {
     this.getScreenSize();
   }
 
@@ -1085,7 +1086,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     if (index == 'cboTiendaConsulting') {
-      this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+     // this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
 

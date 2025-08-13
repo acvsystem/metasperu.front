@@ -8,6 +8,7 @@ import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -18,7 +19,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-articulos.component.scss'],
 })
 export class MtArticulosComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  //socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   displayedColumns: string[] = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color'];
   headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
@@ -99,7 +100,7 @@ export class MtArticulosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: ShareService, private store: StorageService) { }
+  constructor(private http: ShareService, private store: StorageService, private socket: SocketService) { }
 
   ngOnInit() {
     this.onVerify();

@@ -8,6 +8,7 @@ import {
 } from '@angular/material/snack-bar';
 import { ShareService } from 'src/app/services/shareService';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'mt-observacion-horario',
@@ -15,7 +16,7 @@ import { GlobalConstants } from '../../const/globalConstants';
   styleUrls: ['./mt-observacion-horario.component.scss'],
 })
 export class MtObservacionHorarioComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  //socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   @Input() vIdDia: number = 0;
   @Output() changeObservation: EventEmitter<any> = new EventEmitter();
   @Input() dataObservation: Array<any> = [];
@@ -23,7 +24,7 @@ export class MtObservacionHorarioComponent implements OnInit {
   @Input() isSearch: boolean = false;
   @Input() idHorario: number = 0;
   @Input() isViewObservacion: boolean = false;
-  
+
   onListEmpleado: Array<any> = [];
   vObservacion: string = "";
   arObservacion: Array<any> = [];
@@ -70,7 +71,7 @@ export class MtObservacionHorarioComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private store: StorageService, private service: ShareService) { }
+  constructor(private store: StorageService, private service: ShareService, private socket: SocketService) { }
 
   ngOnInit() {
     let profileUser = this.store.getStore('mt-profile');
@@ -91,13 +92,13 @@ export class MtObservacionHorarioComponent implements OnInit {
     if (changes && changes.hasOwnProperty('dataObservation')) {
       this.arObservacion = this.dataObservation;
       this.vObservacion = "";
-      
+
     }
 
     if (changes && changes.hasOwnProperty('vIdDia')) {
       this.idDia = this.vIdDia;
       this.vObservacion = "";
-    }   
+    }
 
   }
 

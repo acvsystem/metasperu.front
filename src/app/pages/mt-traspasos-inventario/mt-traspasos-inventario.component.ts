@@ -18,6 +18,7 @@ import { MtModalComentarioComponent } from '../../components/mt-modal-comentario
 import { GlobalConstants } from '../../const/globalConstants';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'mt-traspasos-inventario',
@@ -25,7 +26,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./mt-traspasos-inventario.component.scss'],
 })
 export class MtTraspasosInventarioComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  //socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   barcode: string = "";
   filterProducto: string = "";
   udsOrigen: string = "";
@@ -56,7 +57,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
   dataSource = new MatTableDataSource<any>(this.onDataView);
   displayedColumns: string[] = ['codigoBarras', 'codigoArticulo', 'descripcion', 'talla', 'color', 'stock', 'solicitado', 'estado', 'accion'];
 
-  constructor(private service: ShareService, private store: StorageService, private http: HttpClient, private router: Router) { }
+  constructor(private service: ShareService, private store: StorageService, private http: HttpClient, private router: Router, private socket: SocketService) { }
 
   ngOnInit() {
     this.onVerify();

@@ -20,6 +20,7 @@ import { io } from 'socket.io-client';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'mt-dropbox',
@@ -27,7 +28,7 @@ import { GlobalConstants } from '../../const/globalConstants';
   styleUrls: ['./mt-dropbox.component.scss'],
 })
 export class MtDropboxComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  //socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   dialog = inject(MatDialog);
   arDirectorios: Array<any> = [];
   dataSource = new MatTableDataSource<any>(this.arDirectorios);
@@ -44,11 +45,11 @@ export class MtDropboxComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private service: ShareService, private http: HttpClient) { }
+  constructor(private service: ShareService, private http: HttpClient, private socket: SocketService) { }
 
   ngOnInit() {
     this.onDirFile();
-  
+
   }
 
 
@@ -327,7 +328,7 @@ export class MtDropboxComponent implements OnInit {
 
     //Array.from(files).forEach(f => formData.append('file', f))
 
-    this.http.post(  `${GlobalConstants.backendServer}/upload/driveCloud`, files, { reportProgress: true, observe: 'events' })
+    this.http.post(`${GlobalConstants.backendServer}/upload/driveCloud`, files, { reportProgress: true, observe: 'events' })
       .subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.percentDone = Math.round(100 * event.loaded / event.total);

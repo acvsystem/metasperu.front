@@ -28,6 +28,7 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -38,9 +39,9 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-rrhh-asistencia.component.scss'],
 })
 export class MtRrhhAsistenciaComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, {
-    query: { code: 'app' }
-  });
+  /* socket = io(GlobalConstants.backendServer, {
+     query: { code: 'app' }
+   });*/
 
   displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
   displayedColumnsOf: string[] = ['nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'rango_horario', 'isTardanza'];
@@ -142,7 +143,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private ngZone: NgZone, private sanitizer: DomSanitizer, private service: ShareService, private store: StorageService,) { }
+  constructor(private ngZone: NgZone, private sanitizer: DomSanitizer, private service: ShareService, private store: StorageService, private socket: SocketService) { }
 
   ngOnInit() {
     let profileUser = this.store.getStore('mt-profile');

@@ -6,6 +6,7 @@ import { UAParser } from 'ua-parser-js';
 import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
 import { io } from 'socket.io-client';
 import { GlobalConstants } from '../../const/globalConstants';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-mt-login',
@@ -13,7 +14,7 @@ import { GlobalConstants } from '../../const/globalConstants';
   styleUrls: ['./mt-login.component.scss'],
 })
 export class MtLoginComponent implements OnInit {
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  // socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
   userName: string = "";
   password: string = "";
@@ -29,7 +30,8 @@ export class MtLoginComponent implements OnInit {
   constructor(
     private shrService: ShareService,
     private nav: NavController,
-    private store: StorageService
+    private store: StorageService,
+    private socket: SocketService
   ) { }
 
   async ngOnInit() {
@@ -120,7 +122,7 @@ export class MtLoginComponent implements OnInit {
     };
 
     this.shrService.post(parms).then(async (response) => {
-       this.isLoading = false;
+      this.isLoading = false;
       if ((response || {}).success) {
         this.isCodigo = false;
         this.isLogin = true;
