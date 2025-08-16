@@ -86,6 +86,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
     { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code_uns: '0027', uns: 'VS', code: '9Q', name: 'VS MALL AVENTURA SA', procesar: 0, procesado: -1 },
     { code_uns: '0001', uns: 'ADMINISTRACION', code: 'OF', name: 'ADMINISTRACION', procesar: 0, procesado: -1 }
   ];
 
@@ -230,12 +231,13 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.unidServicio = (unidServicio || {})['uns'];
     this.onListEmpleado = [];
 
-
+    console.log("EMPLEADO", this.unidServicio);
     this.socket.emit('horario/empleadoEJB', this.unidServicio);
 
 
 
     this.socket.on('reporteEmpleadoTienda', async (response) => {
+      console.log(response);
       let dataEmpleado = (response || {}).data;
       let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
