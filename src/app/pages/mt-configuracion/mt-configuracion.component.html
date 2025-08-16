@@ -3,29 +3,45 @@
     <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+          <label style="color: black;margin: 6px;">Agregar tienda</label>
+          <hr style="background-color: black;margin: 6px;">
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddSerieTienda" label="Serie" placeholder="Serie tienda"
+            type="text" value="{{ vAddSerieTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddNombreTienda" label="Nombre Tienda"
+            placeholder="Escriba el nombre" type="text" value="{{ vAddNombreTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddCodigoAlmTienda" label="Codigo almacen"
+            placeholder="Escriba el codigo alm" type="text" value="{{ vAddCodigoAlmTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <mt-input (afterChange)="onChangeInput($event)" id="vAddEmailTienda" label="Email"
+            placeholder="Escriba el email" type="text" value="{{ vAddEmailTienda }}"></mt-input>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+          <mt-select id="cboUnidServicioTnd" (changeSelected)="onChangeSelect($event)" placeHolder="Unidad servicio"
+            [optionList]="onListUndServicio"></mt-select>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+          <div style="height: 100%;display: flex;align-items: center;">
+            <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onRegistrarTienda()">
+              Agregar tienda
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <label style="color: black;margin: 6px;">Tienda</label>
           <hr style="background-color: black;margin: 6px;">
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
           <mt-select id="cboTienda" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda"
             [optionList]="cboListTienda"></mt-select>
-        </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="3">
-          <mt-input (afterChange)="onChangeInput($event)" id="vAddSerieTienda" label="Serie" placeholder="Serie tienda"
-            type="text" value="{{ vAddSerieTienda }}"></mt-input>
-        </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="4">
-          <mt-input (afterChange)="onChangeInput($event)" id="vAddNombreTienda" label="Nombre Tienda"
-            placeholder="Escriba el nombre" type="text" value="{{ vAddNombreTienda }}"></mt-input>
-        </ion-col>
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="1" sizeLg="1">
-          <div style="height: 100%;display: flex;align-items: center;">
-            <button matTooltip="Agregar tienda" id="searchProducto" (click)="onRegistrarTienda()" type="button"
-              class="btn btn-primary btn-sm"
-              style="padding-bottom: 0;padding-top: 2px;padding-right: 6px;padding-left: 6px;">
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-          </div>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -212,8 +228,8 @@
                                     (changeSelected)="onChangeSelect($event)"></mt-select>
                                 </ion-col>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" class="aling-left">
-                                  <mt-select id="cboPlugin" placeHolder="Plugin" [optionList]="onListPlugin" style="width: 100%;"
-                                    (changeSelected)="onChangeSelect($event)"></mt-select>
+                                  <mt-select id="cboPlugin" placeHolder="Plugin" [optionList]="onListPlugin"
+                                    style="width: 100%;" (changeSelected)="onChangeSelect($event)"></mt-select>
                                 </ion-col>
                                 <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3" class="aling-left">
                                   <button (click)="onUpdatePlugin()" type="button" class="btn btn-primary btn-sm"><i
@@ -543,20 +559,19 @@
                         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                           <ion-row>
                             <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                              <mt-select style="width: 100%;"
-                                id="cboUsuarioTienda" placeHolder="Usuarios sistema" [optionList]="dataCboUser"
-                                (changeSelected)="onChangeSelect($event)"></mt-select>
+                              <mt-select style="width: 100%;" id="cboUsuarioTienda" placeHolder="Usuarios sistema"
+                                [optionList]="dataCboUser" (changeSelected)="onChangeSelect($event)"></mt-select>
                             </ion-col>
                           </ion-row>
                           <div cdkDropListGroup style="display: flex;justify-content: center;">
                             <div class="example-container">
-                             
+
                               <div style="align-items: center;display: inline-flex;width: 100%;">
                                 <h2>Tiendas</h2>
                               </div>
 
-                              <div id="dropTienda" cdkDropList [cdkDropListData]="dataViewTiendas" class="example-list maxH-drop"
-                                (cdkDropListDropped)="dropTienda($event)">
+                              <div id="dropTienda" cdkDropList [cdkDropListData]="dataViewTiendas"
+                                class="example-list maxH-drop" (cdkDropListDropped)="dropTienda($event)">
                                 @for (item of dataViewTiendas; track item) {
                                 <div class="example-box" cdkDrag>{{item}}</div>
                                 }
@@ -565,11 +580,11 @@
 
                             <div class="example-container" style="margin: 0px;">
                               <div style="align-items: center;display: inline-flex;width: 100%;">
-                                <h2 style="margin-right: 20px;">Tiendas asignadas</h2> 
+                                <h2 style="margin-right: 20px;">Tiendas asignadas</h2>
                               </div>
 
-                              <div id="dropTiendaAsig" cdkDropList [cdkDropListData]="dataTiendaListOne" class="example-list maxH-drop"
-                                (cdkDropListDropped)="dropTienda($event)">
+                              <div id="dropTiendaAsig" cdkDropList [cdkDropListData]="dataTiendaListOne"
+                                class="example-list maxH-drop" (cdkDropListDropped)="dropTienda($event)">
                                 @for (item of dataTiendaListOne; track item) {
                                 <div class="example-box" cdkDrag>{{item}}</div>
                                 }

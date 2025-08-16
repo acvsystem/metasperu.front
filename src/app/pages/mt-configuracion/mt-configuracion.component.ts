@@ -162,6 +162,9 @@ export class MtConfiguracionComponent implements OnInit {
   vListaClientes: String = "";
   isOnlineTienda: Boolean = false;
   cboUnidServicio: String = "";
+  cboUnidServicioTnd: String = "";
+  vAddCodigoAlmTienda: String = "";
+  vAddEmailTienda: String = "";
   onListUndServicio: Array<any> = [
     { key: 'VS', value: 'VICTORIA SECRET' },
     { key: 'BBW', value: 'BATH AND BODY WORKS' }
@@ -471,7 +474,7 @@ export class MtConfiguracionComponent implements OnInit {
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
-    if (index != "cboUsuarioTienda" && index != "cboUnidServicio" && index != "cboPlugin" && index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
+    if (index != "cboUnidServicioTnd" && index != "cboUsuarioTienda" && index != "cboUnidServicio" && index != "cboPlugin" && index != "cboTipo" && index != 'cboTienda' && index != 'cboNivel' && index != 'cboPageDefault' && index != 'cboNivelUser') {
       this.onListMenuUsuario().then((menu: Array<any>) => {
         this.notOptionMenuUserList = [];
         this.optionMenuUserList = [];
@@ -668,13 +671,19 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onRegistrarTienda() {
+
     let parms = {
       url: '/security/add/registro/tiendas',
       body: [{
         serie_tienda: this.vAddSerieTienda || "",
-        nombre_tienda: this.vAddNombreTienda || ""
+        nombre_tienda: this.vAddNombreTienda || "",
+        cod_almacen: this.vAddCodigoAlmTienda || "",
+        unid_servicio: this.cboUnidServicioTnd,
+        tipo_tienda: this.cboUnidServicioTnd == "VS" ? "VSBA" : "BBW",
+        email: this.vAddEmailTienda || ""
       }]
     };
+
     this.service.post(parms).then((response) => {
       this.onListTienda();
       this.vAddSerieTienda = "";

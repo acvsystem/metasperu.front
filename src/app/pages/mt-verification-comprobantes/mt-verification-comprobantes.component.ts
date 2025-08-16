@@ -118,8 +118,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
+
       let dataList = [];
       dataList = listaSession || [];
+      console.log((dataList || [])[0]['CODIGO_TERMINAL']);
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
 
       if (dataList.length >= 1 && index == -1) {
