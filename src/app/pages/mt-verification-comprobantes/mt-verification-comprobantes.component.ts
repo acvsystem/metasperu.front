@@ -341,11 +341,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
   }
 
   onListClient() {
-    let parms = {
-      url: '/security/service/cliente/list/delete'
-    };
-    this.service.get(parms).then((response) => {
-      this.vListaClientes = response.toString();
+    this.service.clientClearList('GET').then((listClient: Array<any>) => {
+      (listClient || []).filter((list) => {
+        this.vListaClientes = ((list || {}).client_clear).toString();
+      });
     });
   }
 

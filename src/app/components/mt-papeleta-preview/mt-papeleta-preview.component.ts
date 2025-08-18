@@ -21,30 +21,11 @@ export class MtPapeletaPreviewComponent implements OnInit {
   observacion: string = "";
   vFechapap: string = "";
   isMultiPap: boolean = true;
-  onListTiendas: Array<any> = [
-    { uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
-  ];
+  onListTiendas: Array<any> = [];
 
-  constructor(private service: ShareService, private store: StorageService,) { }
+  constructor(private service: ShareService, private store: StorageService,) {
+    this.onAllStore();
+  }
 
   ngOnInit() {
 
@@ -71,6 +52,20 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   }
 
+  onAllStore() {
+    this.service.allStores().then((stores: Array<any>) => {
+      (stores || []).filter((store) => {
+        this.onListTiendas.push({
+          uns: (store || {}).service_unit,
+          code: (store || {}).serie,
+          name: (store || {}).description,
+          procesar: 0,
+          procesado: -1
+        });
+      });
+    });
+  }
+
   onSearchPap(codigo) {
     let parms = {
       url: '/recursos_humanos/pap/search/papeleta',
@@ -78,7 +73,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
-      
+
       if ((this.arCodigos || []).length) {
         this.dataPap.push(response[0]);
       } else {

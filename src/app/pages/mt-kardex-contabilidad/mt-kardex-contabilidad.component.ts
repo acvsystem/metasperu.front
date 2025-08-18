@@ -384,22 +384,13 @@ export class MtKardexContabilidadComponent implements OnInit {
 
 
   onListTienda() {
-    const self = this;
-    let parms = {
-      url: '/security/lista/registro/tiendas'
-    };
-
-    this.service.get(parms).then((response) => {
-      let tiendaList = (response || {}).data || [];
+    this.service.allStores().then((stores: Array<any>) => {
       this.cboListTienda = [];
       this.tiendasList = [];
 
-      (tiendaList || []).filter((tienda) => {
-
-        this.cboListTienda.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
-
-        this.tiendasList.push(
-          { key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION, progress: -1 });
+      (stores || []).filter((store) => {
+        this.cboListTienda.push({ key: (store || {}).serie, value: (store || {}).description });
+        this.tiendasList.push({ key: (store || {}).serie, value: (store || {}).description, progress: -1 });
       });
     });
   }

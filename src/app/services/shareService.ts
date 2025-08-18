@@ -192,7 +192,7 @@ export class ShareService {
       .toPromise();
   }
 
-  createToken(userName, password): Promise<any> {
+  public createToken(userName, password): Promise<any> {
     let parms = {
       url: '/security/login',
       body: { "usuario": userName, "password": password }
@@ -214,14 +214,49 @@ export class ShareService {
   }
 
 
-  toastSuccess(mensaje, titulo) {
+  public toastSuccess(mensaje, titulo) {
     this.toastr.success(mensaje, titulo);
   }
 
-  toastError(mensaje, titulo) {
+  public toastError(mensaje, titulo) {
     this.toastr.error(mensaje, titulo);
   }
 
+  public allStores() {
+    return new Promise((resolve, reject) => {
+      let parms = {
+        url: '/stores/all'
+      };
+
+      this.get(parms).then((response: Array<any>) => {
+        resolve(response)
+      });
+    });
+  }
+
+  public clientClearList(method: string, client_clear?: any) {
+    return new Promise((resolve, reject) => {
+      let parms = {};
+      let uri = '/configuration/client/list/clear';
+
+      if (method == "GET") {
+        parms = {
+          url: uri
+        };
+        this.get(parms).then((response: Array<any>) => {
+          resolve(response)
+        });
+      } else {
+        parms = {
+          url: uri,
+          client_clear: client_clear
+        };
+        this.post(parms).then((response: Array<any>) => {
+          resolve(response)
+        });
+      }
+    });
+  }
 
 
 }

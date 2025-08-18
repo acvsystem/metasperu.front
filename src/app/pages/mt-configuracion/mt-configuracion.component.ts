@@ -98,6 +98,7 @@ export class MtConfiguracionComponent implements OnInit {
   cboPageDefault: string = "";
   cboNivelUser: string = "";
   cboPlugin: string = "";
+  vAddCodigoEjbTienda: string = "";
   dataEmailService: Array<any> = [];
   dataEmailListSend: Array<any> = [];
   onListPageDefault: Array<any> = [];
@@ -301,14 +302,7 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onSaveClientes() {
-    let parms = {
-      url: '/security/service/cliente/list/delete',
-      body: [{ cliente: this.vListaClientes }]
-    };
-
-    this.service.post(parms).then((response) => {
-
-    });
+    this.service.clientClearList('POST', { cliente: this.vListaClientes });
   }
 
   onUserList() {
@@ -410,11 +404,10 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onListClient() {
-    let parms = {
-      url: '/security/service/cliente/list/delete'
-    };
-    this.service.get(parms).then((response) => {
-      this.vListaClientes = response.toString();
+    this.service.clientClearList('GET').then((listClient: Array<any>) => {
+      (listClient || []).filter((list) => {
+        this.vListaClientes = ((list || {}).client_clear).toString();
+      });
     });
   }
 
@@ -612,35 +605,24 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onListTienda() {
-    const self = this;
-    let parms = {
-      url: '/security/lista/registro/tiendas'
-    };
-
-    this.service.get(parms).then((response) => {
-      let tiendaList = (response || {}).data || [];
+    this.service.allStores().then((stores: Array<any>) => {
       this.cboListTienda = [];
       this.tiendasList = [];
       this.tiendaAllList = [];
-      (tiendaList || []).filter((tienda) => {
-
-        this.cboListTienda.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
-
-        this.tiendasList.push(
-          { key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION, progress: -1 });
-
-        this.tiendaAllList.push((tienda || {}).DESCRIPCION);
+      (stores || []).filter((store) => {
+        (this.cboListTienda || []).push({ key: (store || {}).serie, value: (store || {}).description });
+        this.tiendasList.push({ key: (store || {}).serie, value: (store || {}).description, progress: -1 });
+        this.tiendaAllList.push((store || {}).description);
       });
 
       /*ASIGNACION DE TIENDA*/
-      this.dataDropTiendaList = (response || []).data;
-      this.originalTiendaList = [...(response || []).data]
+      this.dataDropTiendaList = stores || [];
+      this.originalTiendaList = [...stores]
       this.dataViewMenu = [];
       this.dataDeafultPage = [];
       (this.dataDropTiendaList || []).filter((menu, i) => {
-        this.dataViewTiendas.push((menu || {}).DESCRIPCION);
+        (this.dataViewTiendas || []).push((menu || {}).DESCRIPCION);
       });
-
     });
   }
 
@@ -680,7 +662,8 @@ export class MtConfiguracionComponent implements OnInit {
         cod_almacen: this.vAddCodigoAlmTienda || "",
         unid_servicio: this.cboUnidServicioTnd,
         tipo_tienda: this.cboUnidServicioTnd == "VS" ? "VSBA" : "BBW",
-        email: this.vAddEmailTienda || ""
+        email: this.vAddEmailTienda || "",
+        codigo_ejb: this.vAddCodigoEjbTienda || ""
       }]
     };
 

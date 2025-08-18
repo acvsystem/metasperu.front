@@ -66,27 +66,6 @@ export class MtHorarioTiendaComponent implements OnInit {
   screenWith: number = 0;
   vObservacion: string = "";
   onListTiendas: Array<any> = [
-    { code_uns: '0003', uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { code_uns: '0023', uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code_uns: '0024', uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code_uns: '0010', uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { code_uns: '0009', uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { code_uns: '0004', uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { code_uns: '0006', uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code_uns: '0005', uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code_uns: '0007', uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { code_uns: '0012', uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { code_uns: '0011', uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { code_uns: '0013', uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { code_uns: '0019', uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { code_uns: '0016', uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { code_uns: '0014', uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { code_uns: '0015', uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { code_uns: '0008', uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code_uns: '0027', uns: 'VS', code: '9Q', name: 'VS MALL AVENTURA SA', procesar: 0, procesado: -1 },
     { code_uns: '0001', uns: 'ADMINISTRACION', code: 'OF', name: 'ADMINISTRACION', procesar: 0, procesado: -1 }
   ];
 
@@ -108,7 +87,9 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.screenWith = window.innerWidth - 10;
   }
 
-  constructor(private store: StorageService, private service: ShareService, private socket: SocketService) { }
+  constructor(private store: StorageService, private service: ShareService, private socket: SocketService) {
+    this.onAllStore();
+  }
 
 
 
@@ -275,6 +256,21 @@ export class MtHorarioTiendaComponent implements OnInit {
     });
 
     this.onPermisosTienda();
+  }
+
+  onAllStore() {
+    this.service.allStores().then((stores: Array<any>) => {
+      (stores || []).filter((store) => {
+        (this.onListTiendas || []).push({
+          code_uns: (store || {}).code_store_ejb,
+          uns: (store || {}).service_unit,
+          code: (store || {}).serie,
+          name: (store || {}).description,
+          procesar: 0,
+          procesado: -1
+        });
+      });
+    });
   }
 
   onPermisosTienda() {

@@ -91,8 +91,8 @@ export class AppComponent {
         email: user.profile.email
       };
 
-      let tienda = this.lsDataTiendas.find((dt) => dt.SERIE_TIENDA == user.profile.codigo);
-      this.unidServicioPrf = (tienda || {}).UNID_SERVICIO;
+      let tienda = this.lsDataTiendas.find((dt) => (dt || {}).serie == user.profile.codigo);
+      this.unidServicioPrf = (tienda || {}).service_unit;
 
       if (user.profile.nivel == 'TIENDA') {
         if (this.unidServicioPrf == 'BBW') {
@@ -232,8 +232,8 @@ export class AppComponent {
 
   onImgProfile(user) {
 
-    let tienda = this.lsDataTiendas.find((dt) => dt.SERIE_TIENDA == ((user || [])[0] || {}).code);
-    this.unidServicioPrf = (tienda || {}).UNID_SERVICIO;
+    let tienda = this.lsDataTiendas.find((dt) => dt.serie == ((user || [])[0] || {}).code);
+    this.unidServicioPrf = (tienda || {}).service_unit;
 
     if (user.nivel == 'TIENDA') {
       if (this.unidServicioPrf == 'BBW') {
@@ -292,13 +292,8 @@ export class AppComponent {
   }
 
   onListaTiendas() {
-    const self = this;
-    let parms = {
-      url: '/security/lista/registro/tiendas'
-    };
-
-    this.service.get(parms).then((response) => {
-      this.lsDataTiendas = (response || {}).data || [];
+    this.service.allStores().then((response) => {
+      this.lsDataTiendas = response || [];
       this.onImgProfile(this.profileUser);
     });
   }

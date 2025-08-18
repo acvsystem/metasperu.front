@@ -123,8 +123,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
       this.cboUnidadServicioOrigen = [];
       // this.cboUnidadServicioDestino = [];
       (this.lsDataTiendas || []).filter((tienda) => {
-        if ((tienda || "").UNID_SERVICIO == this.undServicio) {
-          this.cboUnidadServicioOrigen.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
+        if ((tienda || "").service_unit == this.undServicio) {
+          this.cboUnidadServicioOrigen.push({ key: (tienda || {}).serie, value: (tienda || {}).description });
           // this.cboUnidadServicioDestino.push({ key: (tienda || {}).SERIE_TIENDA, value: (tienda || {}).DESCRIPCION });
         }
       });
@@ -132,9 +132,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
     if (index == 'udsOrigen') {
       this.cboUnidadServicioDestino = [];
-      let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsOrigen);
-      this.vAlmacenOrigen = (selectedTienda || {}).COD_ALMACEN;
-      this.vTPOrigen = (selectedTienda || {}).TIPO_TIENDA;
+      let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.serie == this.udsOrigen);
+      this.vAlmacenOrigen = (selectedTienda || {}).code_wharehouse;
+      this.vTPOrigen = (selectedTienda || {}).store_type;
 
       this.cboUnidadServicioDestino = this.cboUnidadServicioOrigen.filter((tdo) => tdo.key != this.udsOrigen);
 
@@ -146,9 +146,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
     }
 
     if (index == 'udsDestino') {
-      let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.SERIE_TIENDA == this.udsDestino);
-      this.vAlmacenDestino = (selectedTienda || {}).COD_ALMACEN;
-      this.vTPDestino = (selectedTienda || {}).TIPO_TIENDA;
+      let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.serie == this.udsDestino);
+      this.vAlmacenDestino = (selectedTienda || {}).code_wharehouse;
+      this.vTPDestino = (selectedTienda || {}).store_type;
     }
 
     if ((selectData || {}).selectId == "udsOrigen") {
@@ -293,13 +293,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
 
   onListaTiendas() {
-    const self = this;
-    let parms = {
-      url: '/security/lista/registro/tiendas'
-    };
-
-    this.service.get(parms).then((response) => {
-      this.lsDataTiendas = (response || {}).data || [];
+    this.service.allStores().then((stores: Array<any>) => {
+      this.lsDataTiendas = stores || [];
     });
   }
 

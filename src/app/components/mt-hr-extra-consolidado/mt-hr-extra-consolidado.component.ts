@@ -40,57 +40,37 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   dataSource = new MatTableDataSource<any>(this.onListEmpleado);
   displayedColumns = ['nombre_completo', 'nro_documento', 'hroAcumulada'];
   isTienda: boolean = false;
-  cboTiendas: Array<any> = [
-    { key: '7A', value: 'BBW JOCKEY' },
-    { key: '7J', value: 'BBW MALL AVENTURA AQP' },
-    { key: '7E', value: 'BBW LA RAMBLA' },
-    { key: '7C', value: 'BBW SAN MIGUEL' },
-    { key: '7D', value: 'BBW SALAVERRY' },
-    { key: '7F', value: 'BBW ECOMMERCE' },
-    { key: '7I', value: 'BBW MALL PLAZA TRU' },
-    { key: '7A7', value: 'BBW ASIA' },
-    { key: '9N', value: 'VS MALL AVENTURA AQP' },
-    { key: '9D', value: 'VS LA RAMBLA' },
-    { key: '9B', value: 'VS PLAZA NORTE' },
-    { key: '9C', value: 'VS SAN MIGUEL' },
-    { key: '9I', value: 'VS SALAVERRY' },
-    { key: '9G', value: 'VS MALL DEL SUR' },
-    { key: '9H', value: 'VS PURUCHUCO' },
-    { key: '9M', value: 'VS ECOMMERCE' },
-    { key: '9K', value: 'VS MEGA PLAZA' },
-    { key: '9L', value: 'VS MINKA' },
-    { key: '9F', value: 'VSFA JOCKEY FULL' },
-    { key: '9P', value: 'VS MALL PLAZA TRU' }
-  ];
-  onListTiendas: Array<any> = [
-    { code_uns: '0003', uns: 'BBW', code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { code_uns: '0023', uns: 'VS', code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code_uns: '0024', uns: 'BBW', code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code_uns: '0010', uns: 'BBW', code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { code_uns: '0009', uns: 'VS', code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { code_uns: '0004', uns: 'VS', code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { code_uns: '0006', uns: 'BBW', code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code_uns: '0005', uns: 'VS', code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code_uns: '0007', uns: 'BBW', code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { code_uns: '0012', uns: 'VS', code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { code_uns: '0011', uns: 'VS', code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { code_uns: '0013', uns: 'VS', code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { code_uns: '0019', uns: 'VS', code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { code_uns: '0016', uns: 'BBW', code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { code_uns: '0014', uns: 'VS', code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { code_uns: '0015', uns: 'VS', code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { code_uns: '0008', uns: 'VS', code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
-  ];
+  cboTiendas: Array<any> = [];
+  onListTiendas: Array<any> = [];
 
-  constructor(private service: ShareService) { }
+  constructor(private service: ShareService) {
+    this.onAllStore();
+  }
 
   ngOnInit() {
     this.onProcess();
   }
 
+  onAllStore() {
+    this.service.allStores().then((stores: Array<any>) => {
+      (stores || []).filter((store) => {
+        (this.onListTiendas || []).push(
+          {
+            code_uns: (store || {}).code_store_ejb,
+            uns: (store || {}).service_unit,
+            code: (store || {}).serie,
+            name: (store || {}).description,
+            procesar: 0,
+            procesado: -1
+          });
+
+        (this.cboTiendas || []).push({
+          key: (store || {}).serie,
+          value: (store || {}).description
+        });
+      });
+    });
+  }
 
   onProcess() {
 
@@ -442,7 +422,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
           }
         }
       });
-  
+
       if (!this.isPartTime && this.onDataTemp.length) {
 
         this.onDataTemp.filter((dt, indexData) => {
@@ -505,7 +485,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
               this.onDataTemp[indexData]['hr_faltante'] = process;
             }
           }
-      
+
           if (this.onDataTemp.length - 1 == indexData) {
             this.onVerificarHrExtra(this.dataVerify);
           }
