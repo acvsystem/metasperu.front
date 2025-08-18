@@ -57,6 +57,7 @@ export class MtPanelHorarioComponent implements OnInit {
     { code: '7A7', rango: '', name: 'BBW ASIA', isHorario: false, id_Horario: 0 },
     { code: '9P', rango: '', name: 'VS MALL PLAZA TRU', isHorario: false, id_Horario: 0 },
     { code: '7I', rango: '', name: 'BBW MALL PLAZA TRU', isHorario: false, id_Horario: 0 },
+    { code: '9Q', rango: '', name: 'VS SANTA ANITA', isHorario: false, id_Horario: 0 },
     { code: 'OF', rango: '', name: 'ADMINISTRACION', isHorario: false, id_Horario: 0 }
   ];
 

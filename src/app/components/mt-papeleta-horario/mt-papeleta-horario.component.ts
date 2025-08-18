@@ -38,7 +38,7 @@ const EXCEL_EXTENSION = '.xlsx';
   styleUrls: ['./mt-papeleta-horario.component.scss'],
 })
 export class MtPapeletaHorarioComponent implements OnInit {
-  // socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+  socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   @Input() isConsulting: boolean = false;
   isMantenimiento: boolean = false;
   readonly dialog = inject(MatDialog);
@@ -133,6 +133,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { code_uns: '0022', uns: 'BBW', code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code_uns: '0025', uns: 'VS', code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
     { code_uns: '0026', uns: 'BBW', code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code_uns: '0027', uns: 'VS', code: '9Q', name: 'VS SANTA ANITA', procesar: 0, procesado: -1 },
     { code_uns: '0001', uns: 'ADMINISTRACION', code: 'OF', name: 'ADMINISTRACION', procesar: 0, procesado: -1 }
   ];
 
@@ -157,6 +158,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     { key: '7A7', value: 'BBW ASIA' },
     { key: '9P', value: 'VS MALL PLAZA TRU' },
     { key: '7I', value: 'BBW MALL PLAZA TRU' },
+    { key: '9Q', value: 'VS SANTA ANITA' },
     { key: 'OF', value: 'ADMINISTRACION' }
   ];
 
@@ -172,7 +174,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService, private socket: SocketService) {
+  constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService) {
     this.getScreenSize();
   }
 
@@ -211,7 +213,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
-
+      console.log(response);
       this.onCargarEmpleado(response);
 
     });
@@ -1086,7 +1088,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     if (index == 'cboTiendaConsulting') {
-     // this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+      this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
 
@@ -1125,7 +1127,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
-
+        console.log(response);
         let dataEmpleado = (response || {}).data || [];
         let codigo_uns = (this.onListTiendas || []).find((tienda) => (tienda || {}).code == this.codeTienda);
 

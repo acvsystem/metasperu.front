@@ -27,7 +27,7 @@
           <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
             <ion-row>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="isConsulting">
-                <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Empleado" [optionList]="cboListCargo"></mt-select>
+                <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListCargo"></mt-select>
               </ion-col>
               <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
                 <mt-select id="cboEmpleado" (changeSelected)="onChangeSelect($event)" [nameOptionSelected]="vNameOptionSelected" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"></mt-select>
