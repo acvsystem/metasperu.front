@@ -142,7 +142,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
-    this.codeTienda = profileUser.code.toUpperCase();
+    this.codeTienda = ((profileUser || {}).code || "").toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.onSelectTienda = unidServicio;
 
@@ -550,14 +550,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
         (this.onListTiendas || []).push({
           code_uns: (store || {}).code_store_ejb,
           uns: (store || {}).service_unit,
-          code: (store || {}).code,
+          code: (store || {}).serie,
           name: (store || {}).description,
           procesar: 0,
           procesado: -1
         });
 
         (this.cboListCargo || []).push({
-          key: (store || {}).code, value: (store || {}).description
+          key: (store || {}).serie, value: (store || {}).description
         });
       });
     });
@@ -1078,8 +1078,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       let profileUser = this.store.getStore('mt-profile');
       this.nameTienda = profileUser.mt_name_1.toUpperCase();
-      this.codeTienda = profileUser.code.toUpperCase();
-      let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
+ 
+      let unidServicio = this.onListTiendas.find((tienda) => tienda.name == this[index]);
+     this.codeTienda = ((profileUser || {}).code || this[index]).toUpperCase();
+      console.log(unidServicio);
+
       this.unidServicio = (unidServicio || {})['uns'];
       this.onListEmpleado = [];
       this.socket.emit('consultaListaEmpleado', this.unidServicio);
