@@ -222,7 +222,7 @@ export class MtTableFilterComponent implements OnInit {
       if (this.filterEmpleado) {
         // search all text fields
         globalMatch =
-          data.tienda
+          (data || {}).tienda
             .toString()
             .trim()
             .toLowerCase()
@@ -235,12 +235,12 @@ export class MtTableFilterComponent implements OnInit {
 
       let searchString = JSON.parse(filter);
       return (
-        data.tienda.toLowerCase().includes(searchString.tienda) &&
-        data.statusTardanza.toLowerCase().includes(searchString.statusTardanza) &&
-        data.statusRegistro.toLowerCase().includes(searchString.statusRegistro) &&
-        data.estadoPapeleta.toLowerCase().includes(searchString.estadoPapeleta) &&
-        data.nombre_completo.toLowerCase().includes(searchString.nombre_completo) &&
-        data.dia.toLowerCase().includes(searchString.dia)
+        ((data || {}).tienda || "").toLowerCase().includes((searchString || {}).tienda || "") &&
+        ((data || {}).statusTardanza || "").toLowerCase().includes((searchString || {}).statusTardanza || "") &&
+        ((data || {}).statusRegistro || "").toLowerCase().includes((searchString || {}).statusRegistro || "") &&
+        ((data || {}).estadoPapeleta || "").toLowerCase().includes((searchString || {}).estadoPapeleta || "") &&
+        ((data || {}).nombre_completo || "").toLowerCase().includes((searchString || {}).nombre_completo || "") &&
+        ((data || {}).dia || "").toLowerCase().includes((searchString || {}).dia || "")
       );
 
     };
