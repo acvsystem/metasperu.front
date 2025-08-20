@@ -5,54 +5,27 @@
     <div class="card-content">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-          <mt-input 
-            id="filterProducto" 
-            label="Filtro" 
-            placeholder="Filtro" 
-            type="text" 
-            value="{{ filterProducto }}"
-            (keyup)="applyFilter($event)"
-          ></mt-input>
+          <mt-input id="filterProducto" label="Filtro" placeholder="Filtro" type="text" value="{{ filterProducto }}"
+            (keyup)="applyFilter($event)"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" *ngIf="!isVendedor">
           <div class="content-button-comp">
-            <mt-select 
-              id="selectedUS" 
-              placeHolder="Unidad de servico" 
-              [optionList]="onListMarcas"
-              (changeSelected)="onChangeSelect($event)"
-            ></mt-select>
+            <mt-select id="selectedUS" placeHolder="Unidad de servico" [optionList]="onListMarcas"
+              (changeSelected)="onChangeSelect($event)"></mt-select>
           </div>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-          <mt-input 
-            id="barcode" 
-            label="Codigo de barra" 
-            placeholder="Codigo de barra" 
-            type="text" 
-            value="{{ barcode }}"
-            (afterChange)="onChangeInput($event)"
-          ></mt-input>
+          <mt-input id="barcode" label="Codigo de barra" placeholder="Codigo de barra" type="text" value="{{ barcode }}"
+            (afterChange)="onChangeInput($event)"></mt-input>
         </ion-col>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="3" sizeLg="3">
           <div class="content-button postition-start">
             <div class="content-button-comp">
-              <button 
-                id="searchProducto" 
-                type="button" 
-                class="btn btn-primary btn-sm" 
-                (click)="onStockTable()">
-                <i
-                  class="fa fa-search" 
-                  aria-hidden="true"></i>
+              <button id="searchProducto" type="button" class="btn btn-primary btn-sm" (click)="onStockTable()">
+                <i class="fa fa-search" aria-hidden="true"></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-success btn-sm" 
-                (click)="onExcelExport()">
-                <i
-                  class="fa fa-file-excel-o" 
-                  aria-hidden="true">
+              <button type="button" class="btn btn-success btn-sm" (click)="onExcelExport()">
+                <i class="fa fa-file-excel-o" aria-hidden="true">
                 </i> Exportar Excel
               </button>
             </div>
@@ -233,6 +206,11 @@
                   <ng-container matColumnDef="vs_mptru">
                     <th mat-header-cell *matHeaderCellDef> VS-MPTRU </th>
                     <td mat-cell *matCellDef="let element"> {{element.VS_M_PLAZA}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vs_santa_anita">
+                    <th mat-header-cell *matHeaderCellDef> VS-SA </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VS_SANTA_ANITA}} </td>
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

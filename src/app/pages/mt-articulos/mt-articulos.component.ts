@@ -59,7 +59,8 @@ export class MtArticulosComponent implements OnInit {
     { key: '9F', value: 'VSFA JOCKEY FULL', progress: -1, checked: false },
     { key: '7A7', value: 'BBW ASIA', progress: -1, checked: false },
     { key: '9P', value: 'VS MALL PLAZA', progress: -1, checked: false },
-    { key: '7I', value: 'BB MALL PLAZA', progress: -1, checked: false }
+    { key: '7I', value: 'BBW MALL PLAZA', progress: -1, checked: false },
+    { key: '9Q', value: 'VS SANTA ANITA', progress: -1, checked: false }
   ];
 
   onListTiendas: Array<any> = [
@@ -82,7 +83,8 @@ export class MtArticulosComponent implements OnInit {
     { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code: '9P', name: 'VS MALL PLAZA', procesar: 0, procesado: -1 },
-    { code: '7I', name: 'BB MALL PLAZA', procesar: 0, procesado: -1 }
+    { code: '7I', name: 'BBW MALL PLAZA', procesar: 0, procesado: -1 },
+    { code: '9Q', name: 'VS SANTA ANITA', procesar: 0, procesado: -1 }
   ];
 
   onListMarcas: Array<any> = [
@@ -157,7 +159,8 @@ export class MtArticulosComponent implements OnInit {
         { code: '9K' },
         { code: '9L' },
         { code: '9F' },
-        { code: '9P' }
+        { code: '9P' },
+        { code: '9Q' }
       ];
 
       let codeTiendasBBW = [
@@ -201,6 +204,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
+      console.log(data[0].cCodigoTienda);
       this.proccessData.push(data[0].cCodigoTienda);
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
@@ -382,7 +386,8 @@ export class MtArticulosComponent implements OnInit {
         { code: '9F', property_r: 'VSFA_JOC', property: 'vs_full', ready: false },
         { code: '7A7', property_r: 'BBW_ASIA', property: 'bbw_asia', ready: false },
         { code: '9P', property_r: 'VS_M_PLAZA', property: 'vs_mall_plaza', ready: false },
-        { code: '7I', property_r: 'BBW_M_PLAZA', property: 'bbw_m_plaza', ready: false }
+        { code: '7I', property_r: 'BBW_M_PLAZA', property: 'bbw_m_plaza', ready: false },
+        { code: '9Q', property_r: 'VS_SANTA_ANITA', property: 'vs_santa_anita', ready: false }
       ];
 
 
@@ -439,7 +444,9 @@ export class MtArticulosComponent implements OnInit {
               "VS_MEP": this.onEvalDesconection('9K', (data || {}).vs_m_plaza || 0),
               "VS_MNK": this.onEvalDesconection('9L', (data || {}).vs_minka || 0),
               "VSFA_JOC": this.onEvalDesconection('9F', (data || {}).vs_full || 0),
-              "VS_M_PLAZA": this.onEvalDesconection('9P', (data || {}).vs_mall_plaza || 0)
+              "VS_SA": this.onEvalDesconection('9F', (data || {}).vs_santa_anita || 0),
+              "VS_M_PLAZA": this.onEvalDesconection('9P', (data || {}).vs_mall_plaza || 0),
+              "VS_SANTA_ANITA": this.onEvalDesconection('9Q', (data || {}).vs_santa_anita || 0)
             });
           }
           if (this.selectedUS == 'BATH AND BODY WORKS' || undServicio == 'BATH AND BODY WORKS') {
@@ -509,8 +516,8 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU'];
-      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru'];
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU','VS-SA'];
+      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru','vs_santa_anita'];
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
@@ -523,7 +530,8 @@ export class MtArticulosComponent implements OnInit {
         { code: '9K' },
         { code: '9L' },
         { code: '9F' },
-        { code: '9P' }
+        { code: '9P' },
+        { code: '9Q' }
       ];
 
       codeTiendas.filter((tienda) => {
@@ -594,7 +602,8 @@ export class MtArticulosComponent implements OnInit {
           { code: '9K' },
           { code: '9L' },
           { code: '9F' },
-          { code: '9P' }
+          { code: '9P' },
+          { code: '9Q' }
         ];
 
         let codeTiendasBBW = [
