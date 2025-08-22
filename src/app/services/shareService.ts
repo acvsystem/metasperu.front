@@ -35,7 +35,7 @@ export class ShareService {
       }
     }
     this.hearders = [];
-    this.hearders.push({ key: 'Authorization', value: (token || {}).value });
+    this.hearders.push({ key: 'Authorization', value: `Bearer ${(token || {}).value}` });
     if (parms_.isAuth) {
       this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
     }
@@ -91,7 +91,7 @@ export class ShareService {
       }
     }
     this.hearders = [];
-    this.hearders.push({ key: 'Authorization', value: (token || {}).value });
+    this.hearders.push({ key: 'Authorization', value: `Bearer ${(token || {}).value}` });
     if (parms_.isAuth) {
       this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
     }
@@ -147,7 +147,7 @@ export class ShareService {
       }
     }
     this.hearders = [];
-    this.hearders.push({ key: 'Authorization', value: 'Bearer' + (token || {}).value });
+    this.hearders.push({ key: 'Authorization', value: `Bearer ${(token || {}).value}`});
     if (parms_.isAuth) {
       this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
     }
@@ -203,7 +203,7 @@ export class ShareService {
       }
     }
     this.hearders = [];
-    this.hearders.push({ key: 'Authorization', value: (token || {}).value });
+    this.hearders.push({ key: 'Authorization', value: `Bearer ${(token || {}).value}` });
     if (parms_.isAuth) {
       this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
     }
