@@ -80,7 +80,7 @@ export class ShareService {
       .toPromise();
   }
 
-  public get(parms_: IRequestParams): Promise<any> {
+  public put(parms_: IRequestParams): Promise<any> {
     const self = this;
 
     let token = self.store.getStore('tn');
@@ -92,6 +92,62 @@ export class ShareService {
     }
     this.hearders = [];
     this.hearders.push({ key: 'Authorization', value: (token || {}).value });
+    if (parms_.isAuth) {
+      this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
+    }
+
+    let serverUrl = typeof parms_._serverUrl === 'undefined' ? '' : parms_._serverUrl;
+
+    let parms: IRequestParams = {
+      url: parms_.url,
+      headers: this.hearders,
+      parms: parms_.parms,
+      body: parms_.body,
+      server: this.serverRute,
+      file: parms_.file
+    };
+
+    /* if (serverUrl.length > 0) {
+       Object.assign(parms, {
+         _serverUrl: serverUrl
+       });
+     }*/
+
+    return this.xhr
+      .put(parms, true)
+      .pipe(
+        concatMap((response) => {
+          if (response.status == 401) {
+            this.intPost++;
+            if (this.intPost >= 3) {
+              this.intPost = 0;
+              return of([]);
+            }
+            return [{ msj: "login" }];
+          } else if (response.status == 403 || response.status == 400) {
+            return of(response);
+          } else if (response['statusText'] == 'Unknown Error') {
+            return of([]);
+          } else {
+            return of(response);
+          }
+        }),
+      )
+      .toPromise();
+  }
+
+  public get(parms_: IRequestParams): Promise<any> {
+    const self = this;
+
+    let token = self.store.getStore('tn');
+
+    if (typeof parms_.isAuth === 'undefined') {
+      if (typeof token == 'undefined') {
+        return Promise.resolve(throwError(-1));
+      }
+    }
+    this.hearders = [];
+    this.hearders.push({ key: 'Authorization', value: 'Bearer' + (token || {}).value });
     if (parms_.isAuth) {
       this.hearders = this.hearders.filter(p => p.key !== 'Authorization');
     }
@@ -195,7 +251,7 @@ export class ShareService {
   public createToken(userName, password): Promise<any> {
     let parms = {
       url: '/security/login',
-      body: { "usuario": userName, "password": password }
+      body: { "username": userName, "password": password }
     };
 
     return this.post(parms).then((response) => {

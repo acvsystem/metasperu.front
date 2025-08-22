@@ -364,7 +364,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
   onListHorasAutorizar() {
     let parms = {
-      url: '/papeleta/lista/horas_autorizacion'
+      url: '/ballot/authorization/all'
     };
     this.service.get(parms).then(async (response) => {
 

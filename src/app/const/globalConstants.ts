@@ -1,6 +1,6 @@
 export class GlobalConstants {
 
-    public static backendServer: string = "http://38.187.8.22:3200";
+    public static backendServer: string = "http://localhost:3200";
 
     public static message = {
         login: {

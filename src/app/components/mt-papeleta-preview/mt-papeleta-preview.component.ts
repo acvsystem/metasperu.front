@@ -123,7 +123,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   async onListTipoPapeleta() {
     let parms = {
-      url: '/papeleta/lista/tipo_papeleta'
+      url: '/ballot/type/all'
     };
 
     await this.service.get(parms).then(async (response) => {
@@ -140,11 +140,11 @@ export class MtPapeletaPreviewComponent implements OnInit {
   onUpdateFecha() {
 
     let parms = {
-      url: '/papeleta/update/fecha',
+      url: '/ballot/fecha',
       body: [{ fecha: this.vFechapap, id_papeleta: this.dataPap[0].id_papeleta }]
     };
 
-    this.service.post(parms).then(async (response) => {
+    this.service.put(parms).then(async (response) => {
       this.onSearchPap(this.codigoPap);
       this.service.toastSuccess('Actualizado con exito..!!', 'Papeleta');
     });

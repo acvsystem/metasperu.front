@@ -351,7 +351,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onListTienda() { //LISTA DE TIENDAS REGISTRADAS
     const self = this;
     let parms = {
-      url: '/comprobantes/session/lista'
+      url: '/stores/terminals/all'
     };
 
     this.service.get(parms).then((response) => {

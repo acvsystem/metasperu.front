@@ -64,6 +64,36 @@ export class HttpService {
     );
   }
 
+  put(request: IRequestParams, returnError?: boolean) {
+
+    let params = this.getParams(request);
+    let headers = this.getHeader(request);
+    let body: any = null;
+    let URL = `${request.server}${request.url}`;
+    let file = new FormData();
+
+    if (request.file) {
+      file.append('file', request.file, request.file['name']);
+    } else {
+      body = request.body;
+    }
+
+    this.eventShowLoading.emit(true);
+    return this.http.put(URL, body || file, { headers, params }).pipe(
+      tap((x) => this.eventShowLoading.emit(false)),
+      retryWhen(
+        genericRetryStrategy({
+          excludedStatusCodes: [401, 403, 400, 500],
+        }),
+      ),
+      catchError((error) => {
+        this.eventShowLoading.emit(false);
+        if (returnError) return of(error);
+        else return throwError(error);
+      }),
+    );
+  }
+
   get(request: IRequestParams, returnError?: boolean) {
 
     let params = this.getParams(request);
@@ -110,6 +140,6 @@ export class HttpService {
     );
   }
 
-  
-  
+
+
 }

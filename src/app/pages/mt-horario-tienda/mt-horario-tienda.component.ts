@@ -348,11 +348,11 @@ export class MtHorarioTiendaComponent implements OnInit {
 
             if (this.isSearch) {
               let parms = {
-                url: '/horario/insert/rangoHorario',
+                url: '/schedule/range',
                 body: {
-                  codigo_tienda: this.codeTienda,
-                  rg: `${this.horaInit} a ${this.horaEnd}`,
-                  id: this.dataHorario[index]['id']
+                  code_store: this.codeTienda,
+                  range: `${this.horaInit} a ${this.horaEnd}`,
+                  id_schedule: this.dataHorario[index]['id']
                 }
               };
 
@@ -670,14 +670,14 @@ export class MtHorarioTiendaComponent implements OnInit {
       if (this.isSearch) {
         if (isContinue) {
           let parms = {
-            url: '/horario/insert/diaTrabajo',
+            url: '/schedule/day/work',
             body: {
-              codigo_tienda: this.codeTienda,
-              numero_documento: (data || {}).numero_documento,
-              nombre_completo: (data || {}).nombre_completo,
-              id_rango: (data || {}).rg,
-              id_dia: (data || {}).id_dia,
-              id_horario: this.dataHorario[index]['id']
+              code_store: this.codeTienda,
+              identity_document: (data || {}).numero_documento,
+              full_name: (data || {}).nombre_completo,
+              id_range: (data || {}).rg,
+              id_day: (data || {}).id_dia,
+              id_schedule: this.dataHorario[index]['id']
             }
           }
 
@@ -791,14 +791,14 @@ export class MtHorarioTiendaComponent implements OnInit {
         } else {
           if (this.isSearch) {
             let parms = {
-              url: '/horario/insert/diaLibre',
+              url: '/schedule/day/free',
               body: {
-                codigo_tienda: this.codeTienda,
-                numero_documento: (data || {}).numero_documento,
-                nombre_completo: (data || {}).nombre_completo,
-                id_rango: (data || {}).rg,
-                id_dia: (data || {}).id_dia,
-                id_horario: this.dataHorario[index]['id']
+                code_store: this.codeTienda,
+                identity_document: (data || {}).numero_documento,
+                full_name: (data || {}).nombre_completo,
+                id_range: (data || {}).rg,
+                id_day: (data || {}).id_dia,
+                id_schedule: this.dataHorario[index]['id']
               }
             };
 
@@ -882,10 +882,27 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onSaveCalendario() {
     this.isSearch = true;
+    let requestJSON = [];
+    
+    (this.dataHorario || []).filter((horario) => {
+      (requestJSON || []).push({
+        id: (horario || {}).id,
+        cargo: (horario || {}).cargo,
+        date: (horario || {}).fecha,
+        range: (horario || {}).rango,
+        code: (horario || {}).codigo_tienda,
+        range_date: (horario || {}).rg_hora,
+        days: (horario || {}).dias,
+        days_work: (horario || {}).dias_trabajo,
+        days_free: (horario || {}).dias_libres,
+        arWorkers: (horario || {}).arListTrabajador,
+        observation: (horario || {}).observacion
+      });
+    });
 
     let parms = {
-      url: '/horario/registrar',
-      body: this.dataHorario
+      url: '/schedule/register',
+      body: requestJSON
     };
 
     this.service.post(parms).then(async (response) => {
@@ -1054,11 +1071,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     });
 
     this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-
-    let parms = {
-      url: '/calendario/generar',
-      body: listCargoTienda
-    };
   }
 
   onModal(value) {

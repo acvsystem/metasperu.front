@@ -971,7 +971,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   onListTipoPapeleta() {
     let parms = {
-      url: '/papeleta/lista/tipo_papeleta'
+      url: '/ballot/type/all'
     };
 
     this.service.get(parms).then(async (response) => {

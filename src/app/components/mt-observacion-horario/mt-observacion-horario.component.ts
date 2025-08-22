@@ -122,7 +122,7 @@ export class MtObservacionHorarioComponent implements OnInit {
         if (index == -1) {
           if (this.isSearch) {
             let parms = {
-              url: '/horario/insert/observacion',
+              url: '/schedule/observation',
               body: {
                 id_dia: this.idDia,
                 id_horario: this.idHorario,

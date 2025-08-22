@@ -75,7 +75,7 @@ export class MtPanelHorarioComponent implements OnInit {
   //LISTA DE PAPELETAS
   onListPapeleta() {
     let parms = {
-      url: '/papeleta/listarPapeleta'
+      url: '/ballot/all'
     };
 
     this.service.get(parms).then(async (response) => {
@@ -99,7 +99,7 @@ export class MtPanelHorarioComponent implements OnInit {
 
   onListTipoPapeleta() {
     let parms = {
-      url: '/papeleta/lista/tipo_papeleta'
+      url: '/ballot/type/all'
     };
 
     this.service.get(parms).then(async (response) => {
@@ -111,7 +111,7 @@ export class MtPanelHorarioComponent implements OnInit {
 
   onListHorario() {
     let parms = {
-      url: '/calendario/listarHorario'
+      url: '/chedule/all'
     };
 
     this.service.get(parms).then(async (response) => {

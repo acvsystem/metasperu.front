@@ -279,7 +279,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   onListSession() {
     let parms = {
-      url: '/session_login/view'
+      url: '/security/session/login/all'
     };
 
     this.service.get(parms).then((response) => {
@@ -292,7 +292,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   onListAuthSession() {
     let parms = {
-      url: '/auth_session/view'
+      url: '/security/session/auth/all'
     };
 
     this.service.get(parms).then((response) => {
@@ -307,15 +307,15 @@ export class MtConfiguracionComponent implements OnInit {
 
   onUserList() {
     let parms = {
-      url: '/login/users'
+      url: '/security/users/all'
     };
 
     this.service.get(parms).then((response) => {
-      this.dataViewUser = (response || [])['data'];
-
+      this.dataViewUser = (response || {}).data;
+    
       this.dataViewUser.filter((du) => {
-        if (du.NIVEL == 'OPERACIONES') {
-          this.dataCboUser.push({ key: du.ID_LOGIN, value: du.USUARIO });
+        if (du.level == 'OPERACIONES') {
+          this.dataCboUser.push({ key: du.id_user, value: du.user });
         }
       });
 
@@ -327,7 +327,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   onEquiposList() {
     let parms = {
-      url: '/equipos/lista'
+      url: '/computers/all'
     };
 
     this.service.get(parms).then((response) => {
@@ -718,14 +718,12 @@ export class MtConfiguracionComponent implements OnInit {
   onListTiendaUsuario(idUsuario) {
     return new Promise((resolve, reject) => {
       this.optionMenuUserList = [];
-      let parms = {
-        url: '/usuario/tiendas/asigandas',
-        body: {
-          id_usuario: idUsuario
-        }
+      let parameters = {
+        url: '/configuration/asignation/store',
+        parms: [{ key: 'id_user', value: idUsuario }]
       };
 
-      this.service.post(parms).then(async (response) => {
+      this.service.get(parameters).then(async (response) => {
         let tiendaUsuario = response || [];
         let tienda = [];
         this.dataAsignato = tiendaUsuario;
@@ -967,7 +965,7 @@ export class MtConfiguracionComponent implements OnInit {
   onMenuList() {
     return new Promise((resolve, reject) => {
       let parms = {
-        url: '/menu/sistema/lista'
+        url: '/configuration/menu/all'
       };
       this.service.get(parms).then((response) => {
         const self = this;
@@ -991,7 +989,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   onNivelesList() {
     let parms = {
-      url: '/menu/sistema/niveles'
+      url: '/configuration/level/all'
     };
     this.service.get(parms).then((response) => {
       response.filter((nivel) => {
@@ -1024,11 +1022,11 @@ export class MtConfiguracionComponent implements OnInit {
 
   onAddOpcionNivel(id_menu, nivel) {
     let parms = {
-      url: '/menu/sistema/add/permisos',
-      body: [{
+      url: '/configuration/menu/permission',
+      body: {
         id_menu: id_menu,
-        nivel: nivel
-      }]
+        level: nivel
+      }
     };
     this.service.post(parms).then((response) => {
       this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
@@ -1037,12 +1035,12 @@ export class MtConfiguracionComponent implements OnInit {
 
   onAddAsignarTienda(idUsuario, idTienda, descripcionTienda) {
     let parms = {
-      url: '/usuario/asignar/tienda',
-      body: [{
-        id_usuario: parseInt(idUsuario),
-        id_tienda: parseInt(idTienda),
-        descripcion_tienda: descripcionTienda
-      }]
+      url: '/configuration/asignation/store',
+      body: {
+        id_user: parseInt(idUsuario),
+        id_store: parseInt(idTienda),
+        description_store: descripcionTienda
+      }
     };
     this.service.post(parms).then((response) => {
       this.service.toastSuccess('Opcion agregada con exito..!!', 'Permisos');
@@ -1054,10 +1052,10 @@ export class MtConfiguracionComponent implements OnInit {
 
   onNewNivel() {
     let parms = {
-      url: '/menu/sistema/niveles',
-      body: [{
-        nivel: this.vNivel
-      }]
+      url: '/configuration/level',
+      body: {
+        level: this.vNivel
+      }
     };
     this.service.post(parms).then((response) => {
       this.onNivelesList();
@@ -1067,11 +1065,11 @@ export class MtConfiguracionComponent implements OnInit {
 
   onNewMenu() {
     let parms = {
-      url: '/menu/add/sistema',
-      body: [{
-        nombre_menu: this.vMenu,
-        ruta: this.vRutaMenu
-      }]
+      url: '/configuration/menu',
+      body: {
+        name_menu: this.vMenu,
+        route: this.vRutaMenu
+      }
     };
     this.service.post(parms).then((response) => {
       this.onMenuList();
