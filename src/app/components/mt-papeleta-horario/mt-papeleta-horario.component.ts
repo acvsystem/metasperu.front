@@ -172,13 +172,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
-      console.log(response);
       this.onCargarEmpleado(response);
 
     });
 
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
-
+      console.log(response);
       let data = (response || {}).data || [];
 
       this.parseHuellero = data;
@@ -1032,7 +1031,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     if (index != 'cboCargo') {
       if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
-
+        
         this.isPartTime = false;
 
         if (index != "cboEmpleado") {
@@ -1060,6 +1059,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         this.cantidadPapeletas = (cantidadPap || []).length;
         //SE CONSULTA HORAS EXTRAS DE 2 MESES O 60 DIAS
+        console.log(configuracion);
         this.socket.emit('consultaHorasTrab', configuracion);
       }
     }

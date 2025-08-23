@@ -126,7 +126,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 }
+    { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
+    { code: '9Q', name: 'VS SANTA ANITA', procesar: 0, procesado: -1 }
   ];
   fileUrl;
 
