@@ -383,11 +383,11 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
 
       await dataPendiente.filter((pen, i) => {
-        if (this.profileUser.mt_name_1 == "cmoron" && (pen['TIENDA'] == 'BBW MALL AVENTURA AQP' || pen['TIENDA'] == 'VS MALL AVENTURA AQP' || pen['TIENDA'] == 'VS MALL PLAZA TRU' || pen['TIENDA'] == 'BBW MALL PLAZA TRU' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW JOCKEY')) {
+        if (this.profileUser.mt_name_1 == "cmoron" && (pen['TIENDA'] == 'BBW MALL AVENTURA AQP' || pen['TIENDA'] == 'VSBA MALL AVENTURA AQP' || pen['TIENDA'] == 'VSBA MALL PLAZA TRU' || pen['TIENDA'] == 'BBW MALL PLAZA TRU' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW JOCKEY')) {
           viewData.push(pen);
         }
 
-        if ((this.profileUser.mt_name_1 == "jcarreno" || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VSBA LA RAMBLA' || pen['TIENDA'] == 'VSBA PLAZA NORTE' || pen['TIENDA'] == 'VS MALL AVENTURA SANTA ANITA' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VSBA SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VSBA SALAVERRY' || pen['TIENDA'] == 'VSBA MALL DEL SUR' || pen['TIENDA'] == 'VSBA PURUCHUCO' || pen['TIENDA'] == 'VSBA MEGA PLAZA' || pen['TIENDA'] == 'VSBA MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
+        if ((this.profileUser.mt_name_1 == "jcarreno" || this.profileUser.mt_name_1 == "paulodosreis") && (pen['TIENDA'] == 'BBW JOCKEY' || pen['TIENDA'] == 'BBW LA RAMBLA' || pen['TIENDA'] == 'VSBA LA RAMBLA' || pen['TIENDA'] == 'VSBA PLAZA NORTE' || pen['TIENDA'] == 'VSBA MALL AVENTURA SANTA ANITA' || pen['TIENDA'] == 'BBW SAN MIGUEL' || pen['TIENDA'] == 'VSBA SAN MIGUEL' || pen['TIENDA'] == 'BBW SALAVERRY' || pen['TIENDA'] == 'VSBA SALAVERRY' || pen['TIENDA'] == 'VSBA MALL DEL SUR' || pen['TIENDA'] == 'VSBA PURUCHUCO' || pen['TIENDA'] == 'VSBA MEGA PLAZA' || pen['TIENDA'] == 'VSBA MINKA' || pen['TIENDA'] == 'BBW ASIA')) {
           viewData.push(pen);
         }
 
@@ -399,7 +399,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
       await dataResponse.filter((pen, i) => {
         if (pen.ESTADO != 'pendiente') {
-          if (this.profileUser.mt_name_1 == "cmoron" && (pen['TIENDA'] == 'BBW MALL AVENTURA AQP' || pen['TIENDA'] == 'VS MALL AVENTURA AQP' || pen['TIENDA'] == 'VS MALL PLAZA TRU' || pen['TIENDA'] == 'BBW MALL PLAZA TRU' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW JOCKEY')) {
+          if (this.profileUser.mt_name_1 == "cmoron" && (pen['TIENDA'] == 'BBW MALL AVENTURA AQP' || pen['TIENDA'] == 'VSBA MALL AVENTURA AQP' || pen['TIENDA'] == 'VSBA MALL PLAZA TRU' || pen['TIENDA'] == 'BBW MALL PLAZA TRU' || pen['TIENDA'] == 'VSFA JOCKEY FULL' || pen['TIENDA'] == 'BBW JOCKEY')) {
             viewData.push(pen);
           }
 
