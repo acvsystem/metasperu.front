@@ -1,116 +1,122 @@
+<ion-content>
+  <div id="content" class="full-center">
+    <div class="card-content">
+      <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
+        <mat-tab label="Horarios Creados">
+          <div class="example-small-box mat-elevation-z4 boy-tap" style="padding-top: 20px;">
+            @if(!isHorario){
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                <mt-input id="filterEmpleado" label="Filtro" placeholder="Filtro" type="text"
+                  value="{{ filterEmpleado }}" (keyup)="applyFilter($event)"></mt-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+                <ion-row class="scroll-y">
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <div class="mat-elevation-z8">
+                      <table mat-table [dataSource]="dataSource">
+                        <ng-container matColumnDef="Tienda">
+                          <th mat-header-cell *matHeaderCellDef> Tienda </th>
+                          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                        </ng-container>
 
-    <ion-content>
-      <div id="content" class="full-center">
-        <div class="card-content">
-          <mat-tab-group dynamicHeight (selectedTabChange)="onCall($event)">
-            <mat-tab label="Horarios Creados">
-              <div class="example-small-box mat-elevation-z4 boy-tap" style="padding-top: 20px;">
-                @if(!isHorario){
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-                      <mt-input id="filterEmpleado" label="Filtro" placeholder="Filtro" type="text" value="{{ filterEmpleado }}"
-                        (keyup)="applyFilter($event)"></mt-input>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-                      <ion-row class="scroll-y">
-                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                          <div class="mat-elevation-z8">
-                            <table mat-table [dataSource]="dataSource">
-                                <ng-container matColumnDef="Tienda">
-                                  <th mat-header-cell *matHeaderCellDef> Tienda </th>
-                                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-    
-                                <ng-container matColumnDef="Inicio_semana">
-                                  <th mat-header-cell *matHeaderCellDef> Inicio semana </th>
-                                  <td mat-cell *matCellDef="let element"> 
-                                    <span>{{element.rango_1}}</span>
-                                  </td>
-                                </ng-container>
-    
-                                <ng-container matColumnDef="Termino_semana">
-                                  <th mat-header-cell *matHeaderCellDef> Termino semana </th>
-                                  <td mat-cell *matCellDef="let element"> 
-                                    <span>{{element.rango_2}}</span>
-                                  </td>
-                                </ng-container>
-              
-                                <ng-container matColumnDef="Accion">
-                                  <th mat-header-cell *matHeaderCellDef> Accion </th>
-                                  <td mat-cell *matCellDef="let element">
-                                    <button (click)="onViewHorario(element)" style="margin-left: 8px;" matTooltip="ver horario" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
-                                      <i class="fa fa-calendar" aria-hidden="true"></i>
-                                    </button>
-    
-                                    <button (click)="onViewObservacion(element)" style="margin-left: 8px;" matTooltip="ver observaciones" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
-                                      <i class="fa fa-bars" aria-hidden="true"></i>
-                                    </button>
-                          
-                                  </td>
-                                </ng-container>
-              
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-                            <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
-                              aria-label="Select page of periodic elements">
-                            </mat-paginator>
-                          </div>
-                        </ion-col>
-                      </ion-row>
-                    </ion-col>
-                  </ion-row>
-                } @else {
-                  <button type="button" class="btn btn-light" (click)="onBack()">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                  </button>
-                  <mt-horario-tienda [data]="onSelectedHorario" *ngIf="onSelectedHorario.length && !isObservaciones"></mt-horario-tienda>
-    
-                  <mt-search-obervacion [data]="onSelectedHorario" *ngIf="isObservaciones && onSelectedHorario.length"></mt-search-obervacion>
-                }
-    
-              </div>
-            </mat-tab>
-            <mat-tab label="Papeletas Creadas" style="min-height: 1000px">
-              <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
-                @if(!isViewPapeleta){
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
-                      <mt-input id="filterEmpleado" label="Filtro" placeholder="Filtro" type="text" value="{{ filterEmpleado }}"
-                        (keyup)="applyFilterPapeleta($event)"></mt-input>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-                      <ion-row class="scroll-y">
-                        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                          <mt-table-filter-papeletas-creadas [dataTable]="listaPapeletas"></mt-table-filter-papeletas-creadas>
-                        </ion-col>
-                      </ion-row>
-                    </ion-col>
-                  </ion-row>
-                } @else {
-                  <button type="button" class="btn btn-light" (click)="onBackPap()">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                  </button>
-                  <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap.length"></mt-papeleta-preview>
-                }
-              </div>
-            </mat-tab>
-            <mat-tab label="Horas Extras Detallado" style="min-height: 1000px">
-              <mt-papeleta-horario [isConsulting]="true"></mt-papeleta-horario>
-            </mat-tab>
-            <mat-tab label="Horas Extras Consolidado" style="min-height: 1000px">
-              <mt-hr-extra-consolidado></mt-hr-extra-consolidado>
-            </mat-tab>
-          </mat-tab-group>
-        </div>
-      </div>
-    </ion-content>
+                        <ng-container matColumnDef="Inicio_semana">
+                          <th mat-header-cell *matHeaderCellDef> Inicio semana </th>
+                          <td mat-cell *matCellDef="let element">
+                            <span>{{element.rango_1}}</span>
+                          </td>
+                        </ng-container>
 
+                        <ng-container matColumnDef="Termino_semana">
+                          <th mat-header-cell *matHeaderCellDef> Termino semana </th>
+                          <td mat-cell *matCellDef="let element">
+                            <span>{{element.rango_2}}</span>
+                          </td>
+                        </ng-container>
 
+                        <ng-container matColumnDef="fecha_hora">
+                          <th mat-header-cell *matHeaderCellDef> Fecha & Hora </th>
+                          <td mat-cell *matCellDef="let element">
+                            <span>{{element.datetime}}</span>
+                          </td>
+                        </ng-container>
 
+                        <ng-container matColumnDef="Accion">
+                          <th mat-header-cell *matHeaderCellDef> Accion </th>
+                          <td mat-cell *matCellDef="let element">
+                            <button (click)="onViewHorario(element)" style="margin-left: 8px;" matTooltip="ver horario"
+                              id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
+                              <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </button>
 
+                            <button (click)="onViewObservacion(element)" style="margin-left: 8px;"
+                              matTooltip="ver observaciones" id="searchProducto" type="button"
+                              class="btn btn-primary btn-sm" type="button">
+                              <i class="fa fa-bars" aria-hidden="true"></i>
+                            </button>
 
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                      <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+                        aria-label="Select page of periodic elements">
+                      </mat-paginator>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            } @else {
+            <button type="button" class="btn btn-light" (click)="onBack()">
+              <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <mt-horario-tienda [data]="onSelectedHorario"
+              *ngIf="onSelectedHorario.length && !isObservaciones"></mt-horario-tienda>
+
+            <mt-search-obervacion [data]="onSelectedHorario"
+              *ngIf="isObservaciones && onSelectedHorario.length"></mt-search-obervacion>
+            }
+
+          </div>
+        </mat-tab>
+        <mat-tab label="Papeletas Creadas" style="min-height: 1000px">
+          <div class="example-large-box mat-elevation-z4" style="min-height: 1000px;padding-top: 20px;">
+            @if(!isViewPapeleta){
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+                <mt-input id="filterEmpleado" label="Filtro" placeholder="Filtro" type="text"
+                  value="{{ filterEmpleado }}" (keyup)="applyFilterPapeleta($event)"></mt-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+                <ion-row class="scroll-y">
+                  <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+                    <mt-table-filter-papeletas-creadas [dataTable]="listaPapeletas"></mt-table-filter-papeletas-creadas>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            } @else {
+            <button type="button" class="btn btn-light" (click)="onBackPap()">
+              <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap.length"></mt-papeleta-preview>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="Horas Extras Detallado" style="min-height: 1000px">
+          <mt-papeleta-horario [isConsulting]="true"></mt-papeleta-horario>
+        </mat-tab>
+        <mat-tab label="Horas Extras Consolidado" style="min-height: 1000px">
+          <mt-hr-extra-consolidado></mt-hr-extra-consolidado>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</ion-content>

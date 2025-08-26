@@ -12,7 +12,7 @@ import { GlobalConstants } from '../../const/globalConstants';
   styleUrls: ['./mt-panel-horario.component.scss'],
 })
 export class MtPanelHorarioComponent implements OnInit {
-  displayedColumns: string[] = ['Tienda', 'Inicio_semana', 'Termino_semana', 'Accion'];
+  displayedColumns: string[] = ['Tienda', 'Inicio_semana', 'Termino_semana', 'fecha_hora', 'Accion'];
   displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
   dataView: Array<any> = [];
   dataViewPap: Array<any> = [];
@@ -132,7 +132,7 @@ export class MtPanelHorarioComponent implements OnInit {
 
               if (!Object.keys(exist || {}).length) {
                 this.dataView.push({
-                  id: this.dataView.length + 1, fecha: dt.FECHA, code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name
+                  id: this.dataView.length + 1, fecha: dt.FECHA, code: tienda[0].code, rango_1: horario[0], rango_2: horario[1], name: tienda[0].name, datetime: dt.DATETIME
                 })
               }
             }
