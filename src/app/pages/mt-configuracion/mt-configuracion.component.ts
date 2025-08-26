@@ -302,7 +302,7 @@ export class MtConfiguracionComponent implements OnInit {
   }
 
   onSaveClientes() {
-    this.service.clientClearList('POST', { cliente: this.vListaClientes });
+    this.service.clientClearList('POST', this.vListaClientes);
   }
 
   onUserList() {
@@ -405,9 +405,7 @@ export class MtConfiguracionComponent implements OnInit {
 
   onListClient() {
     this.service.clientClearList('GET').then((listClient: Array<any>) => {
-      (listClient || []).filter((list) => {
-        this.vListaClientes = ((list || {}).client_clear).toString();
-      });
+      this.vListaClientes = listClient.toString();
     });
   }
 

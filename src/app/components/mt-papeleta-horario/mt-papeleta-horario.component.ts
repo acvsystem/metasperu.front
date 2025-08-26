@@ -133,6 +133,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
   constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService) {
+    this.onAllStore();
     this.getScreenSize();
     this.onAllStore();
   }

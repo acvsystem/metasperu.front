@@ -225,7 +225,7 @@ export class ShareService {
   public allStores() {
     return new Promise((resolve, reject) => {
       let parms = {
-        url: '/stores/all'
+        url: '/security/lista/registro/tiendas'
       };
 
       this.get(parms).then((response: Array<any>) => {
@@ -237,7 +237,7 @@ export class ShareService {
   public clientClearList(method: string, client_clear?: any) {
     return new Promise((resolve, reject) => {
       let parms = {};
-      let uri = '/configuration/client/list/clear';
+      let uri = '/security/service/cliente/list/delete';
 
       if (method == "GET") {
         parms = {
@@ -249,7 +249,9 @@ export class ShareService {
       } else {
         parms = {
           url: uri,
-          client_clear: client_clear
+          body: {
+            client_clear: client_clear
+          }
         };
         this.post(parms).then((response: Array<any>) => {
           resolve(response)

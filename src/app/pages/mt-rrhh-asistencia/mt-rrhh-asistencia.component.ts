@@ -159,6 +159,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.socket.on('reporteHuellero', async (configuracion) => {
 
       if (configuracion.id == "EJB") {
+
         this.isDataEJB = true;
         let dateNow = new Date();
         let mesNow = (dateNow.getMonth() + 1).toString();
@@ -208,7 +209,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
       if (configuracion.id == "servGeneral") {
 
         this.countDataLength += ((configuracion || {}).data || []).length;
-
+        console.log((configuracion || {}).data);
         (configuracion || {}).data.filter((dt) => {
           this.dataServGeneral.push(dt);
         });

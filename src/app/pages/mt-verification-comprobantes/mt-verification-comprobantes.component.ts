@@ -342,9 +342,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
   onListClient() {
     this.service.clientClearList('GET').then((listClient: Array<any>) => {
-      (listClient || []).filter((list) => {
-        this.vListaClientes = ((list || {}).client_clear).toString();
-      });
+      this.vListaClientes = listClient.toString();
     });
   }
 
