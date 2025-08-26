@@ -61,6 +61,7 @@ export class MtObservacionHorarioComponent implements OnInit {
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.unidServicio = (unidServicio || {})['uns'];
     this.vObservacion = "";
+    console.log(this.dataTrabajadores);
     this.dataTrabajadores.filter((trb) => {
       this.onListEmpleado.push({ key: trb.nombre_completo, value: trb.nombre_completo },);
     });

@@ -619,7 +619,7 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataViewMenu = [];
       this.dataDeafultPage = [];
       (this.dataDropTiendaList || []).filter((menu, i) => {
-        (this.dataViewTiendas || []).push((menu || {}).DESCRIPCION);
+        (this.dataViewTiendas || []).push((menu || {}).description);
       });
     });
   }

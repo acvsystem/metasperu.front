@@ -96,6 +96,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   async ngOnInit() {
 
 
+
     this.profileUser = this.store.getStore('mt-profile');
 
     if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "OPERACIONES" || (this.profileUser || {}).mt_nivel == "FIELDLEADER") {
@@ -880,6 +881,22 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
 
+  obtenerFechaMysql(): string {
+    const ahora = new Date();
+
+    const año = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+    const dia = String(ahora.getDate()).padStart(2, '0');
+
+    const horas = String(ahora.getHours()).padStart(2, '0');
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    const segundos = String(ahora.getSeconds()).padStart(2, '0');
+
+    return `${dia}-${mes}-${año} ${horas}:${minutos}:${segundos}`;
+  }
+
+
+
   onSaveCalendario() {
     this.isSearch = true;
 
@@ -1040,6 +1057,7 @@ export class MtHorarioTiendaComponent implements OnInit {
           id: this.dataHorario.length + 1,
           cargo: cargo.value,
           fecha: `${day[0]}-${day[1]}-${day[2]}`,
+          datetime: this.obtenerFechaMysql(),
           rango: this.vRangoDiasSearch,
           codigo_tienda: this.codeTienda,
           rg_hora: [],
@@ -1426,6 +1444,7 @@ export interface HorarioElement {
   cargo: string,
   codigo_tienda: string,
   fecha: string,
+  datetime: string,
   rango: any,
   rg_hora: Array<any>,
   dias: Array<any>,
