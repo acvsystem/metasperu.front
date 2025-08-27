@@ -91,7 +91,7 @@ export class MtLoginComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
 
-    if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY" || (profileUser || {}).mt_nivel == "RRHH") {
+    if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY" || (profileUser || {}).mt_nivel == "RRHH" ||  (profileUser || {}).mt_nivel == "FIELDLEADER" ||  (profileUser || {}).mt_nivel == "OPERACIONES" ) {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (profileUser || {}).mt_name_1,
         "mt_nivel": (profileUser || {}).mt_nivel,
