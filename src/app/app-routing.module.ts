@@ -14,6 +14,7 @@ import { MtDetailCajaComponent } from './pages/mt-verification-comprobantes/mt-d
 import { MtDropboxComponent } from './pages/mt-dropbox/mt-dropbox.component';
 import { MtKardexContabilidadComponent } from './pages/mt-kardex-contabilidad/mt-kardex-contabilidad.component';
 import { MtTraspasosInventarioComponent } from './pages/mt-traspasos-inventario/mt-traspasos-inventario.component';
+import { MtIcgreportComponent } from './pages/mt-icgreport/mt-icgreport.component';
 
 const routes: Routes = [
   {
@@ -82,6 +83,11 @@ const routes: Routes = [
   {
     path: 'traspaso_inventario',
     component: MtTraspasosInventarioComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'icgreport',
+    component: MtIcgreportComponent,
     canActivate: [authGuard]
   }
 ];
