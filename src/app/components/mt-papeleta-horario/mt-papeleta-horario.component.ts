@@ -562,7 +562,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
     });
   }
-  
+
   onCargarEmpleado(response) {
     let dataEmpleado = (response || {}).data || [];
     let codigo_uns = (this.onListTiendas || []).find((tienda) => (tienda || {}).code == this.codeTienda);
@@ -757,7 +757,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
                   }
 
                   if (dataPromise.length - 1 == indx) {
-
                     this.onVerificarHrExtra(this.dataVerify);
                   }
                 });
@@ -840,7 +839,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   }
 
   onSearchFechasPartTime(index) {
-    this.arSelectRegistro = this.dataVerify[index].arFechas;
+    this.arSelectRegistro = this.bodyList[index].arFechas;
   }
 
 
@@ -1032,7 +1031,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     if (index != 'cboCargo') {
       if (this.cboCasos == '7' || this.cboCasos == "Compensacion de horas trabajadas" || this.isConsulting || (index == "cboEmpleado" && this.idCboTipoPap)) {
-        
+
         this.isPartTime = false;
 
         if (index != "cboEmpleado") {
@@ -1079,9 +1078,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       let profileUser = this.store.getStore('mt-profile');
       this.nameTienda = profileUser.mt_name_1.toUpperCase();
- 
+
       let unidServicio = this.onListTiendas.find((tienda) => tienda.name == this[index]);
-     this.codeTienda = ((profileUser || {}).code || this[index]).toUpperCase();
+      this.codeTienda = ((profileUser || {}).code || this[index]).toUpperCase();
       console.log(unidServicio);
 
       this.unidServicio = (unidServicio || {})['uns'];
