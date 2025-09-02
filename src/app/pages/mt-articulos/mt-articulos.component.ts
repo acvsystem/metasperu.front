@@ -484,16 +484,16 @@ export class MtArticulosComponent implements OnInit {
   }
 
   onEvalDesconection(codigo, value) {
-
-    let storeConxOnline = this.store.getStore('conx_online');
     let online = false;
-    let index = storeConxOnline.findIndex((codeCnx) => codeCnx == codigo);
-    if (index > -1) {
-      online = true;
+    if (codigo != '9Q') {
+      let storeConxOnline = this.store.getStore('conx_online');
+      let index = storeConxOnline.findIndex((codeCnx) => codeCnx == codigo);
+      if (index > -1) {
+        online = true;
+      }
     }
 
     return !online ? 'S/C' : value;
-
   }
 
   async onChangeSelect(data: any) {
@@ -516,8 +516,8 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU','VS-SA'];
-      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru','vs_santa_anita'];
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU', 'VS-SA'];
+      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru', 'vs_santa_anita'];
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
