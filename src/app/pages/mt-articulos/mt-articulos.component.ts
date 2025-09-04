@@ -485,12 +485,10 @@ export class MtArticulosComponent implements OnInit {
 
   onEvalDesconection(codigo, value) {
     let online = false;
-    if (codigo != '9Q') {
-      let storeConxOnline = this.store.getStore('conx_online');
-      let index = storeConxOnline.findIndex((codeCnx) => codeCnx == codigo);
-      if (index > -1) {
-        online = true;
-      }
+    let storeConxOnline = this.store.getStore('conx_online');
+    let index = storeConxOnline.findIndex((codeCnx) => codeCnx == codigo);
+    if (index > -1) {
+      online = true;
     }
 
     return !online ? 'S/C' : value;
