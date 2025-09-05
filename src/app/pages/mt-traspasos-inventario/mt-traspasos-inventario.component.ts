@@ -35,6 +35,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
   undServicio: string = "";
   vAlmacenOrigen: string = "";
   vAlmacenDestino: string = "";
+  nameStoreOrigin: string = "";
+  nameStoreDestination: string = "";
   vTPOrigen: string = "";
   vTPDestino: string = "";
   vCode: string = "";
@@ -56,12 +58,16 @@ export class MtTraspasosInventarioComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   dataSource = new MatTableDataSource<any>(this.onDataView);
   displayedColumns: string[] = ['codigoBarras', 'codigoArticulo', 'descripcion', 'talla', 'color', 'stock', 'solicitado', 'estado', 'accion'];
+  dataTransfers: Array<any> = [];
+  newTraspaso: any = {};
+  expandedElement: Array<any> = [];
 
   constructor(private service: ShareService, private store: StorageService, private http: HttpClient, private router: Router, private socket: SocketService) { }
 
   ngOnInit() {
     this.onVerify();
     this.onListaTiendas();
+    this.allTransfers();
     this.socket.on('inventario:get:barcode:response', (inventario) => {
       let dataInventario = JSON.parse(((inventario || {}).data || []));
 
@@ -135,7 +141,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.serie == this.udsOrigen);
       this.vAlmacenOrigen = (selectedTienda || {}).code_wharehouse;
       this.vTPOrigen = (selectedTienda || {}).store_type;
-
+      this.nameStoreOrigin = (selectedTienda || {}).description;
       this.cboUnidadServicioDestino = this.cboUnidadServicioOrigen.filter((tdo) => tdo.key != this.udsOrigen);
 
       if (this.vAlmacenOrigen == this.vAlmacenDestino) {
@@ -149,6 +155,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
       let selectedTienda = (this.lsDataTiendas || []).find((dt) => dt.serie == this.udsDestino);
       this.vAlmacenDestino = (selectedTienda || {}).code_wharehouse;
       this.vTPDestino = (selectedTienda || {}).store_type;
+      this.nameStoreDestination = (selectedTienda || {}).description;
     }
 
     if ((selectData || {}).selectId == "udsOrigen") {
@@ -305,13 +312,15 @@ export class MtTraspasosInventarioComponent implements OnInit {
       origen: almOrgine,
       barcode: barcode
     }
-
+    console.log(configuracion);
     this.socket.emit('inventario:get:barcode', configuracion);
   }
 
 
   onGenerarTxt() {
     let isDiferencia = false;
+    let detailTransfers = [];
+    this.newTraspaso = [];
     if (this.onDataView.length) {
       this.onDataView.filter((dt, i) => {
         if (dt.cSolicitado > dt.cStock) {
@@ -327,7 +336,27 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
               this.onDataView.filter((dt) => {
                 contenido += `${this.vAlmacenOrigen}|${this.vAlmacenDestino}|${dt.cCodigoArticulo}|${dt.cColor}|${dt.cTalla}|${dt.cSolicitado}|\n`;
+
+                (detailTransfers || []).push({
+                  barcode: dt.cCodigoBarra,
+                  article_code: dt.cCodigoArticulo,
+                  description: dt.cDescripcion,
+                  size: dt.cTalla,
+                  color: dt.cColor,
+                  stock: dt.cStock,
+                  stock_required: dt.cSolicitado
+                });
               });
+
+              this.newTraspaso = {
+                unid_service: this.undServicio || "",
+                store_origin: this.nameStoreOrigin || "",
+                store_destination: this.nameStoreDestination || "",
+                code_warehouse_origin: this.vAlmacenOrigen || "",
+                code_warehouse_destination: this.vAlmacenDestino || "",
+                datetime: this.obtenerFechaMysql(),
+                details: detailTransfers || []
+              };
 
               let nmCarpeta = this.onVerificarTipoTienda();
               let min = 1000;
@@ -342,10 +371,13 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
               formData.append('ftpDirectorio', nmCarpeta);
 
-
               this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
                 .subscribe({
-                  next: res => console.log('Subido con éxito'),
+                  next: res => {
+                    console.log('Subido con éxito')
+                    this.service.toastError('Se realizo el traspaso con exito..!!', 'Traspasos');
+                    this.onRegisterTrasfer();
+                  },
                   error: err => console.error('Error', err)
                 });
 
@@ -367,6 +399,32 @@ export class MtTraspasosInventarioComponent implements OnInit {
       this.service.toastError('Faltan datos requeridos para generar el txt..!!', 'Traspasos');
     }
 
+  }
+
+  obtenerFechaMysql(): string {
+    const ahora = new Date();
+
+    const año = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+    const dia = String(ahora.getDate()).padStart(2, '0');
+
+    const horas = String(ahora.getHours()).padStart(2, '0');
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    const segundos = String(ahora.getSeconds()).padStart(2, '0');
+
+    return `${dia}-${mes}-${año} ${horas}:${minutos}:${segundos}`;
+  }
+
+
+  onRegisterTrasfer() {
+    let parms = {
+      url: '/transfers/new',
+      body: this.newTraspaso
+    };
+
+    this.service.post(parms).then(async (response) => {
+      this.allTransfers();
+    });
   }
 
   onVerificarTipoTienda(): string {
@@ -410,6 +468,25 @@ export class MtTraspasosInventarioComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.onDataView);
   }
 
+  allTransfers() {
+    let parms = {
+      url: '/transfers/all'
+    };
 
+    this.service.get(parms).then(async (response) => {
+      this.dataTransfers = response.data;
+    });
+  }
+
+  onCall(ev) {
+    if (ev.tab.textLabel == "Creacion de Traspasos") {
+      this.onVerify();
+      this.onListaTiendas();
+    }
+
+    if (ev.tab.textLabel == "Traspasos realizados") {
+      this.allTransfers();
+    }
+  }
 
 }

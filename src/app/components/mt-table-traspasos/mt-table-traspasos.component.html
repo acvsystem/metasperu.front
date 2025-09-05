@@ -1,0 +1,103 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+
+    <ng-container matColumnDef="code_transfer">
+      <th mat-header-cell *matHeaderCellDef> Codigo </th>
+      <td mat-cell *matCellDef="let element"> {{element.code_transfer}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="unid_service">
+      <th mat-header-cell *matHeaderCellDef> Unidad servicio </th>
+      <td mat-cell *matCellDef="let element"> {{element.unid_service}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="store_origin">
+      <th mat-header-cell *matHeaderCellDef> Tienda origen </th>
+      <td mat-cell *matCellDef="let element"> {{element.store_origin}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="store_destination">
+      <th mat-header-cell *matHeaderCellDef> Tienda destino </th>
+      <td mat-cell *matCellDef="let element"> {{element.store_destination}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code_warehouse_origin">
+      <th mat-header-cell *matHeaderCellDef> Almacen origen </th>
+      <td mat-cell *matCellDef="let element"> {{element.code_warehouse_origin}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code_warehouse_destination">
+      <th mat-header-cell *matHeaderCellDef> Almacen destino </th>
+      <td mat-cell *matCellDef="let element"> {{element.code_warehouse_destination}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="datetime">
+      <th mat-header-cell *matHeaderCellDef> Creacion </th>
+      <td mat-cell *matCellDef="let element"> {{element.datetime}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expand">
+      <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button aria-label="expand row"
+          (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+          @if (expandedElement === element) {
+          <mat-icon>keyboard_arrow_up</mat-icon>
+          } @else {
+          <mat-icon>keyboard_arrow_down</mat-icon>
+          }
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="8">
+        <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <div style="width: 100%;">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Codigo articulo</th>
+                  <th scope="col">Codigo barra</th>
+                  <th scope="col">Color</th>
+                  <th scope="col">Descripcion</th>
+                  <th scope="col">Talla</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Stock solicitado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (det of element.detail; track det) {
+                <tr>
+                  <th scope="row">{{det.article_code}}</th>
+                  <td>{{det.barcode}}</td>
+                  <td>{{det.color}}</td>
+                  <td>{{det.description}}</td>
+                  <td>{{det.size}}</td>
+                  <td>{{det.stock}}</td>
+                  <td>{{det.stock_required}}</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+
+
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Select page of periodic elements">
+  </mat-paginator>
+</div>
