@@ -2,14 +2,58 @@
 
   <mat-drawer-container class="example-container" [hasBackdrop]="true">
     <mat-drawer #drawer [mode]="'over'" position="end">
- 
+
     </mat-drawer>
     <mat-drawer-content>
       <mt-loading [isVisible]="isLoading"></mt-loading>
-      
+
       <div id="content" class="full-center-page">
         <div class="card-content">
-          
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+              <mt-calendar [isPeriodo]="false" [isRange]="true" placeholder="Seleccione las fechas"
+                (afterChange)="onCaledar($event)"></mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
+              <button (click)="onConsultar()" id="searchProducto" type="button" class="btn btn-primary btn-sm"><i
+                  class="fa fa-search" aria-hidden="true"></i></button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <div style="display: inline-flex;">
+                @for (card of arCardData; track card) {
+                <mat-card class="example-card" appearance="outlined"
+                  style="width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;">
+                  <mat-card-header style="display: flex;justify-content: center;padding-bottom: 14px;padding-top: 0px;">
+                    <mat-card-title>{{card.title}}</mat-card-title>
+                  </mat-card-header>
+                  <table mat-table [dataSource]="card.data" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="departamento">
+                      <th mat-header-cell *matHeaderCellDef> Departamento </th>
+                      <td mat-cell *matCellDef="let element"> {{element.departament}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unidades">
+                      <th mat-header-cell *matHeaderCellDef> Unid. </th>
+                      <td mat-cell *matCellDef="let element"> {{element.unid}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importe">
+                      <th mat-header-cell *matHeaderCellDef> Importe </th>
+                      <td mat-cell *matCellDef="let element"> {{element.import}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </mat-card>
+                }
+              </div>
+            </ion-col>
+          </ion-row>
+
         </div>
       </div>
     </mat-drawer-content>
