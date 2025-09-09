@@ -10,7 +10,28 @@
       <div id="content" class="full-center-page">
         <div class="card-content">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="4" sizeLg="4">
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-select id="cboStore" placeHolder="Tiendas" [optionList]="cboStoreAll"
+                (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2"
+              style="display: flex;align-items: center;">
+              <div style="margin-right: 55px;display: flex;align-items: center;">
+                <div [ngClass]="[isOnlineTienda ? 'blob blue': 'blob red']"></div>
+                @if(isOnlineTienda){
+                <span style="color:rgb(36, 143, 189)">conectado</span>
+                }@else{
+                <span style="color:rgb(212, 53, 53)">sin conexion</span>
+                }
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-select id="cboColumn" placeHolder="Tipo columna" [optionList]="cboColunmAll"
+                (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
               <mt-calendar [isPeriodo]="false" [isRange]="true" placeholder="Seleccione las fechas"
                 (afterChange)="onCaledar($event)"></mt-calendar>
             </ion-col>
@@ -21,12 +42,22 @@
           </ion-row>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div style="display: ruby;">
+              <div cdkDropList cdkDropListOrientation="mixed" class="example-list" (cdkDropListDropped)="drop($event)">
                 @for (card of arCardData; track card) {
-                <mat-card class="example-card" appearance="outlined"
+                <mat-card class="example-box" cdkDrag class="example-card" appearance="outlined"
                   style="width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;">
-                  <mat-card-header style="display: flex;justify-content: center;padding-bottom: 14px;padding-top: 0px;">
-                    <mat-card-title>{{card.title}}</mat-card-title>
+                  <mat-card-header style="display: contents;width: 100%;padding-bottom: 14px;padding-top: 0px;">
+                    <mat-card-title style="width: 100%;">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <p style="font-weight: 500;margin: 0;">{{card.store}}</p>
+                          <p style="font-size: 20px;">{{card.column}}</p>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="text-align: end;">
+                          <p style="font-size: 20px;">{{card.title}}</p>
+                        </ion-col>
+                      </ion-row>
+                    </mat-card-title>
                   </mat-card-header>
                   <table mat-table [dataSource]="card.data" class="mat-elevation-z8">
 
@@ -51,6 +82,7 @@
                 </mat-card>
                 }
               </div>
+
             </ion-col>
           </ion-row>
 

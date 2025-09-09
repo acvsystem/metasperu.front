@@ -225,7 +225,7 @@ export class ShareService {
   public allStores() {
     return new Promise((resolve, reject) => {
       let parms = {
-        url: '/security/lista/registro/tiendas'
+        url: '/store/all'
       };
 
       this.get(parms).then((response: Array<any>) => {
