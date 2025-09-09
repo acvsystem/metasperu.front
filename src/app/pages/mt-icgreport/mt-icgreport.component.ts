@@ -11,7 +11,7 @@ import { StorageService } from 'src/app/utils/storage';
 })
 export class MtIcgreportComponent implements OnInit {
   isLoading: boolean = false;
-  displayedColumns: string[] = ['departamento', 'unidades', 'importe'];
+  displayedColumns: string[] = ['departamento', 'porcentage', 'importe', 'unidades'];
   dataSource = [];
   isErrorFecha: boolean = false;
   isOnlineTienda: boolean = false;
@@ -63,12 +63,15 @@ export class MtIcgreportComponent implements OnInit {
       let serieTienda: string = dataResponse[0]['cCodigoTienda'];
 
       let dataTable = [];
-
+      let countTotal = 0;
       (dataResponse || []).filter((dr) => {
+
         dataTable.push({
           departament: dr.cDepartamento,
           unid: parseInt(dr.cUnidades),
-          import: dr.cImporte
+          import: dr.cImporte,
+          total_import: 0,
+          porcentage_import: 0
         });
       });
 
@@ -80,7 +83,9 @@ export class MtIcgreportComponent implements OnInit {
         title: titleCard,
         store: (socketStore || {}).description,
         column: dateResponse['column'],
-        data: dataTable
+        data: dataTable,
+        total_stock: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
+        total_import: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
       })
 
       this.dataSource = dataTable;
@@ -151,6 +156,18 @@ export class MtIcgreportComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.arCardData, event.previousIndex, event.currentIndex);
+  }
+
+  getTotalCost() {
+    return Number(this.dataSource.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2));
+  }
+
+  getTotalStock() {
+    return this.dataSource.reduce((acum, f) => acum + parseFloat(f.unid), 0);
+  }
+
+  getPorcentage(importe, total) {
+    return Math.round((importe * 100) / total);
   }
 
 }

@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -98,6 +98,10 @@ import { MtKardexContabilidadComponent } from './pages/mt-kardex-contabilidad/mt
 import { MtPopoverNotificacionComponent } from './components/mt-popover-notificacion/mt-popover-notificacion.component';
 import { MtIcgreportComponent } from './pages/mt-icgreport/mt-icgreport.component';
 import { MtTableTraspasosComponent } from './components/mt-table-traspasos/mt-table-traspasos.component';
+import { registerLocaleData } from '@angular/common';
+import localeEsPe from '@angular/common/locales/es-PE';
+
+registerLocaleData(localeEsPe, 'es-PE');
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
@@ -202,6 +206,7 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         ToastrModule.forRoot(),
         SocketIoModule.forRoot(confSocket)],
     providers: [
+        { provide: LOCALE_ID, useValue: 'es-PE' },
         provideAnimations(),
         provideToastr({
             positionClass: 'toast-bottom-right',

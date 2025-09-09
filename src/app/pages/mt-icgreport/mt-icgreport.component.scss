@@ -119,3 +119,15 @@
         box-shadow: 0 0 0 0 rgba(52, 172, 224, 0);
     }
 }
+
+tr.mat-mdc-footer-row {
+  font-weight: bold;
+}
+
+.mat-mdc-table-sticky {
+  border-top: 1px solid #e0e0e0;
+}
+
+.example-container {
+  overflow: auto;
+}
