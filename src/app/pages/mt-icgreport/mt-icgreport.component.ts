@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ShareService } from 'src/app/services/shareService';
 import { SocketService } from 'src/app/services/socket.service';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -10,6 +10,12 @@ import { StorageService } from 'src/app/utils/storage';
   styleUrls: ['./mt-icgreport.component.scss'],
 })
 export class MtIcgreportComponent implements OnInit {
+  @HostListener('document:click', ['$event']) onClickFuera(event: MouseEvent) {
+    if (this.isVisiblePopover) {
+      this.isVisiblePopover = false;
+    }
+  }
+
   isLoading: boolean = false;
   displayedColumns: string[] = ['departamento', 'porcentage', 'importe', 'unidades'];
   dataSource = [];
@@ -17,16 +23,29 @@ export class MtIcgreportComponent implements OnInit {
   isOnlineTienda: boolean = false;
   isOnlineTienda1: boolean = false;
   isOnlineTienda2: boolean = false;
+  isComparationStores: boolean = false;
+  isVisiblePopover: boolean = false;
+  clicDentroDelDiv: boolean = false;
   cboColumn: string = "";
   cboStore1: string = "";
   cboStore2: string = "";
   cboStore: string = "";
   cboReport: string = "";
+  cboSemana: string = "";
+  vAnio_1: string = "";
+  vAnio_2: string = "";
+  vPlaceholder_anio_1: string = "Año";
+  vPlaceholder_anio_2: string = "Año 2";
+  optionTipoFecha: string = "fecha";
   vDetallado: Array<any> = [];
   vCalendar1: Array<any> = [];
   vCalendar2: Array<any> = [];
   arCardData: Array<any> = [];
   conxOnline: Array<any> = [];
+  cboSemanaAll: Array<any> = [];
+  arStoreAll: Array<any> = [];
+  arSemanaAll: Array<any> = [];
+  cboStoreAll: Array<any> = [];
   cboColunmAll: Array<any> = [
     { key: 'Departamento', value: 'Departamento' },
     { key: 'Familia', value: 'Familia' },
@@ -36,8 +55,6 @@ export class MtIcgreportComponent implements OnInit {
     { key: 'Simple', value: 'Simple' },
     { key: 'Comparativo', value: 'Comparativo' }
   ];
-  arStoreAll: Array<any> = [];
-  cboStoreAll: Array<any> = [];
 
   constructor(private socket: SocketService, private service: ShareService, private store: StorageService) { }
 
@@ -65,16 +82,14 @@ export class MtIcgreportComponent implements OnInit {
       this.store.removeStore("conx_online");
       this.store.setStore("conx_online", JSON.stringify(this.conxOnline));
     });
-
+    this.generarSemanas("");
     this.onStoreAll();
     this.socket.on('report:sales:departament:response', (response) => {
-      console.log(response);
+
       let dataResponse: Array<any> = JSON.parse(response['data']);
       let dateResponse: Array<any> = response['date'];
       let keyComparation = dateResponse['key'];
       let dataTable = [];
-
-
 
       let socketStore = this.arStoreAll.find((store) => store.serie == dateResponse['code'])
 
@@ -188,50 +203,82 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   onConsultar() {
-
-    if (this.cboReport == 'Comparativo') {
-      let keyReport = this.codigoNumerico();
-
-      let configuration1 = {
-        f1: this.vCalendar1[0],
-        f2: this.vCalendar1[1],
-        code: this.cboStore1,
-        column: this.cboColumn,
-        key: keyReport
-      };
-
-      this.socket.emit('reportSalesDepartament', configuration1);
-
-      let configuration2 = {
-        f1: this.vCalendar2[0],
-        f2: this.vCalendar2[1],
-        code: this.cboStore2,
-        column: this.cboColumn,
-        key: keyReport
-      };
-
-      this.socket.emit('reportSalesDepartament', configuration2);
-
-    } else {
-      let configuration = {
-        f1: this.vDetallado[0],
-        f2: this.vDetallado[1],
-        code: this.cboStore,
-        column: this.cboColumn
-      };
-      this.socket.emit('reportSalesDepartament', configuration);
+    if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana') {//simple,departamento,semana - tr-1
+      let semanasAll: Array<any> = this.generarSemanas(this.vAnio_1);
+      if (semanasAll.length) {
+        let semanaSelected = semanasAll.find((sm) => sm.semana == this.cboSemana);
+        this.sendConsultReport(this.convertirFechaSQL(semanaSelected['inicio']), this.convertirFechaSQL(semanaSelected['fin']), this.cboStore, this.cboColumn);
+      }
     }
+
+    if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//simple,departamento,fecha - tr-2
+      this.sendConsultReport(this.vCalendar1[0], this.vCalendar1[1], this.cboStore, this.cboColumn);
+    }
+
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana') {//comparativo,departamento,semana - tr-3
+      let keyReport = this.codigoNumerico();
+      let semanasAll_1: Array<any> = this.generarSemanas(this.vAnio_1);
+      let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
+      let semanaSelected_1 = semanasAll_1.find((sm) => sm.semana == this.cboSemana);
+      let semanaSelected_2 = semanasAll_2.find((sm) => sm.semana == this.cboSemana);
+      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
+    }
+
+    /*
+        if (this.cboReport == 'Comparativo') {
+          let keyReport = this.codigoNumerico();
+    
+          let configuration1 = {
+            f1: this.vCalendar1[0],
+            f2: this.vCalendar1[1],
+            code: this.cboStore1,
+            column: this.cboColumn,
+            key: keyReport
+          };
+    
+          this.socket.emit('reportSalesDepartament', configuration1);
+    
+          let configuration2 = {
+            f1: this.vCalendar2[0],
+            f2: this.vCalendar2[1],
+            code: this.cboStore2,
+            column: this.cboColumn,
+            key: keyReport
+          };
+    
+          this.socket.emit('reportSalesDepartament', configuration2);
+    
+        } else {
+          let configuration = {
+            f1: this.vDetallado[0],
+            f2: this.vDetallado[1],
+            code: this.cboStore,
+            column: this.cboColumn
+          };
+          this.socket.emit('reportSalesDepartament', configuration);
+        }*/
   }
 
   onChangeSelect(data: any) {
+    console.log(data);
     const self = this;
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
 
     if (index == 'cboReport' && (selectData || {}).key == 'Comparativo') {
+      this.isComparationStores = false;
       this.displayedColumns = ['departamento1', 'porcentage1', 'importe1', 'unidades1', 'porcentage2', 'importe2', 'unidades2', 'diff_procentage', 'diff_unid'];
+      if (this.optionTipoFecha == 'semana' && this.cboReport == 'Comparativo') {
+        this.vPlaceholder_anio_1 = "Año 1";
+      }
     }
+
+    if (index == 'cboReport' && (selectData || {}).key == 'simple') {
+      this.vPlaceholder_anio_1 = "Año";
+    }
+
     if (index == 'cboStore') {
       let storeConxOnline = this.store.getStore('conx_online');
       let indexStore = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
@@ -266,6 +313,10 @@ export class MtIcgreportComponent implements OnInit {
       }
 
       this.isOnlineTienda = false;
+    }
+
+    if (index == 'cboSemana') {
+      let semana = this.arSemanaAll.find((sm) => sm.semana == (selectData || {}).key);
     }
 
   }
@@ -308,6 +359,96 @@ export class MtIcgreportComponent implements OnInit {
       .padStart(longitud, '0');
   }
 
+  generarSemanas(inAnio) {
+    const semanas = [];
+    this.arSemanaAll = [];
+    this.cboSemanaAll = [];
+    let anio = inAnio.length ? parseInt(inAnio) : new Date().getFullYear();
+    // Primer lunes de febrero
+    let inicio = new Date(anio, 1, 1);
+    while (inicio.getDay() !== 1) {
+      inicio.setDate(inicio.getDate() + 1);
+    }
+
+    // Ajuste: retroceder 1 día para que empiece en domingo
+    inicio.setDate(inicio.getDate() - 1);
+
+    // Último día = 31 de enero del año siguiente
+    const limite = new Date(anio + 1, 0, 31);
+
+    let contador = 1;
+    while (inicio <= limite) {
+      const fin = new Date(inicio);
+      fin.setDate(inicio.getDate() + 6);
+
+      semanas.push({
+        semana: contador,
+        inicio: inicio.toLocaleDateString('en-EN'),
+        fin: fin.toLocaleDateString('en-EN')
+      });
+      this.cboSemanaAll.push({ key: contador, value: `Semana ${contador}` });
+      inicio = new Date(fin);
+      inicio.setDate(fin.getDate() + 1);
+      contador++;
+
+
+    }
+
+    if (!this.arSemanaAll.length) {
+      this.arSemanaAll = semanas;
+    }
+
+    return semanas;
+  }
+
+  onChangeInput(data: any) {
+    let inputData = data || {};
+    let index = (inputData || {}).id || "";
+    this[index] = (inputData || {}).value || "";
+  }
+
+  radioChange(ev) {
+    this.optionTipoFecha = (ev || {}).value;
+    if (ev.value == 'semana' && this.cboReport == 'Comparativo') {
+      this.vPlaceholder_anio_1 = "Año 1";
+    } else {
+      this.vPlaceholder_anio_1 = "Año";
+    }
+  }
+
+  checkedChange(ev) {
+    this.isComparationStores = ev;
+  }
+
+  toggleMenu(event: MouseEvent): void {
+    event.stopPropagation(); // evita que se cierre al hacer click en el botón
+    this.isVisiblePopover = !this.isVisiblePopover;
+  }
+
+  sendConsultReport(date_1, date_2, codeStore, column, inKeyReport?) {
+    let keyReport = inKeyReport.length ? inKeyReport : this.codigoNumerico();
+
+    let configuration = {
+      f1: date_1,
+      f2: date_2,
+      code: codeStore,
+      column: column,
+      key: keyReport
+    };
+    console.log(configuration);
+    this.socket.emit('reportSalesDepartament', configuration);
+  }
+
+  convertirFechaSQL(fechaStr: string): string {
+    // Parsear la fecha (se asume formato M/d/yyyy o MM/dd/yyyy)
+    const [mes, dia, anio] = fechaStr.split("/").map(Number);
+
+    // Ajustar con ceros a la izquierda
+    const mesStr = mes.toString().padStart(2, "0");
+    const diaStr = dia.toString().padStart(2, "0");
+
+    return `${anio}-${mesStr}-${diaStr}`;
+  }
 
 }
 
