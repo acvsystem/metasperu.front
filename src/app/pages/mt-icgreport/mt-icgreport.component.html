@@ -11,29 +11,70 @@
         <div class="card-content">
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-select id="cboReport" placeHolder="Reportes" [optionList]="cboReportAll"
+                (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+            <hr style="height: 27px;width: 1px;background: black;">
+            @if(cboReport == 'Comparativo'){
+            <div style="margin-left: 6px;height: 60px;display: flex;align-items: center;">
+              <div [ngClass]="[isOnlineTienda1 ? 'blob blue': 'blob red']"></div>
+              @if(isOnlineTienda1){
+              <span style="color:rgb(36, 143, 189)"></span>
+              }@else{
+              <span style="color:rgb(212, 53, 53)"></span>
+              }
+            </div>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-select id="cboStore1" placeHolder="Tiendas" [optionList]="cboStoreAll"
+                (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-select id="cboStore2" placeHolder="Tiendas" [optionList]="cboStoreAll"
+                (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+            <div style="height: 60px;display: flex;align-items: center;">
+              <div [ngClass]="[isOnlineTienda2 ? 'blob blue': 'blob red']"></div>
+              @if(isOnlineTienda2){
+              <span style="color:rgb(36, 143, 189)"></span>
+              }@else{
+              <span style="color:rgb(212, 53, 53)"></span>
+              }
+            </div>
+            }@else{
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
               <mt-select id="cboStore" placeHolder="Tiendas" [optionList]="cboStoreAll"
                 (changeSelected)="onChangeSelect($event)"></mt-select>
             </ion-col>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
-              <div style="margin-right: 55px;display: flex;align-items: center;">
-                <div [ngClass]="[isOnlineTienda ? 'blob blue': 'blob red']"></div>
-                @if(isOnlineTienda){
-                <span style="color:rgb(36, 143, 189)">conectado</span>
-                }@else{
-                <span style="color:rgb(212, 53, 53)">sin conexion</span>
-                }
-              </div>
-            </ion-col>
+            <div style="height: 60px;display: flex;align-items: center;">
+              <div [ngClass]="[isOnlineTienda ? 'blob blue': 'blob red']"></div>
+              @if(isOnlineTienda){
+              <span style="color:rgb(36, 143, 189)"></span>
+              }@else{
+              <span style="color:rgb(212, 53, 53)"></span>
+              }
+            </div>
+            }
           </ion-row>
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
               <mt-select id="cboColumn" placeHolder="Tipo columna" [optionList]="cboColunmAll"
                 (changeSelected)="onChangeSelect($event)"></mt-select>
             </ion-col>
+            @if(cboReport == 'Comparativo'){
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-calendar id="calendar1" [isPeriodo]="false" [isRange]="true" placeholder="Fechas tienda 1"
+                (afterChange)="onCaledar($event)"></mt-calendar>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
+              <mt-calendar id="calendar2" [isPeriodo]="false" [isRange]="true" placeholder="Fechas tienda 2"
+                (afterChange)="onCaledar($event)"></mt-calendar>
+            </ion-col>
+            }@else{
             <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
               <mt-calendar [isPeriodo]="false" [isRange]="true" placeholder="Seleccione las fechas"
                 (afterChange)="onCaledar($event)"></mt-calendar>
             </ion-col>
+            }
             <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2" style="display: flex;align-items: center;">
               <button (click)="onConsultar()" id="searchProducto" type="button" class="btn btn-primary btn-sm"><i
                   class="fa fa-search" aria-hidden="true"></i></button>
@@ -44,7 +85,7 @@
               <div cdkDropList cdkDropListOrientation="mixed" class="example-list" (cdkDropListDropped)="drop($event)">
                 @for (card of arCardData; track card) {
                 <mat-card class="example-box" cdkDrag class="example-card" appearance="outlined"
-                  style="width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;">
+                  style="min-width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;">
                   <mat-card-header style="display: contents;width: 100%;padding-bottom: 14px;padding-top: 0px;">
                     <mat-card-title style="width: 100%;">
                       <ion-row>
@@ -58,6 +99,7 @@
                       </ion-row>
                     </mat-card-title>
                   </mat-card-header>
+                  @if(cboReport != 'Comparativo'){
                   <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0">
 
                     <ng-container matColumnDef="departamento">
@@ -68,7 +110,8 @@
 
                     <ng-container matColumnDef="porcentage">
                       <th mat-header-cell *matHeaderCellDef> % </th>
-                      <td mat-cell *matCellDef="let element"> {{getPorcentage(element.import,card.total_import)}} % </td>
+                      <td mat-cell *matCellDef="let element"> {{getPorcentage(element.import,card.total_import)}} %
+                      </td>
                       <td mat-footer-cell *matFooterCellDef>100 %</td>
                     </ng-container>
 
@@ -76,7 +119,8 @@
                       <th mat-header-cell *matHeaderCellDef> Importe </th>
                       <td mat-cell *matCellDef="let element"> {{element.import | currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
-                      <td mat-footer-cell *matFooterCellDef> {{card.total_import | currency:'PEN':'symbol':'1.2-2':'es-PE'
+                      <td mat-footer-cell *matFooterCellDef> {{card.total_import |
+                        currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
                     </ng-container>
 
@@ -91,6 +135,80 @@
 
                     <tr mat-footer-row *matFooterRowDef="displayedColumns" class="example-first-footer-row"></tr>
                   </table>
+                  }@else{
+                  <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0">
+
+                    <ng-container matColumnDef="departamento1">
+                      <th mat-header-cell *matHeaderCellDef> Departamento </th>
+                      <td mat-cell *matCellDef="let element"> {{element.departament}} </td>
+                      <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="porcentage1">
+                      <th mat-header-cell *matHeaderCellDef> % </th>
+                      <td mat-cell *matCellDef="let element"> {{getPorcentage(element.import,card.total_import1)}} %
+                      </td>
+                      <td mat-footer-cell *matFooterCellDef>100 %</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importe1">
+                      <th mat-header-cell *matHeaderCellDef> Importe </th>
+                      <td mat-cell *matCellDef="let element"> {{element.import | currency:'PEN':'symbol':'1.2-2':'es-PE'
+                        }} </td>
+                      <td mat-footer-cell *matFooterCellDef> {{card.total_import1 |
+                        currency:'PEN':'symbol':'1.2-2':'es-PE'
+                        }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unidades1">
+                      <th mat-header-cell *matHeaderCellDef> Unid. </th>
+                      <td mat-cell *matCellDef="let element"> {{element.unid}} </td>
+                      <td mat-footer-cell *matFooterCellDef>{{card.total_stock1}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="porcentage2">
+                      <th mat-header-cell *matHeaderCellDef> % </th>
+                      <td mat-cell *matCellDef="let element"> {{getPorcentage(element.import2,card.total_import2)}} %
+                      </td>
+                      <td mat-footer-cell *matFooterCellDef>100 %</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importe2">
+                      <th mat-header-cell *matHeaderCellDef> Importe </th>
+                      <td mat-cell *matCellDef="let element"> {{element.import2 | currency:'PEN':'symbol':'1.2-2':'es-PE'
+                        }} </td>
+                      <td mat-footer-cell *matFooterCellDef> {{card.total_import2 |
+                        currency:'PEN':'symbol':'1.2-2':'es-PE'
+                        }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unidades2">
+                      <th mat-header-cell *matHeaderCellDef> Unid. </th>
+                      <td mat-cell *matCellDef="let element"> {{element.unid2}} </td>
+                      <td mat-footer-cell *matFooterCellDef>{{card.total_stock2}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="diff_procentage">
+                      <th mat-header-cell *matHeaderCellDef> Diff S/. </th>
+                      <td mat-cell *matCellDef="let element">{{getPorcentage(element.import,card.total_import1) - getPorcentage(element.import2,card.total_import2)}} %</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getDiferenciaProce(card.total_import1,card.total_import2)}} %</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="diff_unid">
+                      <th mat-header-cell *matHeaderCellDef> Diff Unid </th>
+                      <td mat-cell *matCellDef="let element">{{getPorcentage(element.unid,element.unid2)}} % </td>
+                      <td mat-footer-cell *matFooterCellDef>{{getDiferenciaProce(card.total_stock1,card.total_stock2)}} %</td>
+                    </ng-container>
+
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <tr mat-footer-row *matFooterRowDef="displayedColumns" class="example-first-footer-row"></tr>
+                  </table>
+                  }
+
                 </mat-card>
                 }
               </div>

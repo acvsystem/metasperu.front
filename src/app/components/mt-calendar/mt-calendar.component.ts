@@ -140,7 +140,7 @@ export class MtCalendarComponent implements OnInit {
       let dateEnd = `${moment(this.range.value.end).format('YYYY/MM/DD')}`;
       ar = [`${moment(this.range.value.start).format('YYYY/MM/DD')}`, `${moment(this.range.value.end).format('YYYY/MM/DD')}`];
       if ((dateStart != 'Invalid date' && dateEnd != 'Invalid date') && (dateStart != null && dateEnd != null)) {
-        this.afterChange.emit({ isRange: true, value: ar });
+        this.afterChange.emit({ id: this.id, isRange: true, value: ar });
       }
 
     }

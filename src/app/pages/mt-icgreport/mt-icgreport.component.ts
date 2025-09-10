@@ -15,15 +15,26 @@ export class MtIcgreportComponent implements OnInit {
   dataSource = [];
   isErrorFecha: boolean = false;
   isOnlineTienda: boolean = false;
+  isOnlineTienda1: boolean = false;
+  isOnlineTienda2: boolean = false;
   cboColumn: string = "";
+  cboStore1: string = "";
+  cboStore2: string = "";
   cboStore: string = "";
+  cboReport: string = "";
   vDetallado: Array<any> = [];
+  vCalendar1: Array<any> = [];
+  vCalendar2: Array<any> = [];
   arCardData: Array<any> = [];
   conxOnline: Array<any> = [];
   cboColunmAll: Array<any> = [
     { key: 'Departamento', value: 'Departamento' },
     { key: 'Familia', value: 'Familia' },
     { key: 'Sub Familia', value: 'Sub Familia' }
+  ];
+  cboReportAll: Array<any> = [
+    { key: 'Simple', value: 'Simple' },
+    { key: 'Comparativo', value: 'Comparativo' }
   ];
   arStoreAll: Array<any> = [];
   cboStoreAll: Array<any> = [];
@@ -60,70 +71,156 @@ export class MtIcgreportComponent implements OnInit {
       console.log(response);
       let dataResponse: Array<any> = JSON.parse(response['data']);
       let dateResponse: Array<any> = response['date'];
-      let serieTienda: string = dataResponse[0]['cCodigoTienda'];
-
+      let keyComparation = dateResponse['key'];
       let dataTable = [];
-      let countTotal = 0;
-      (dataResponse || []).filter((dr) => {
 
-        dataTable.push({
-          departament: dr.cDepartamento,
-          unid: parseInt(dr.cUnidades),
-          import: dr.cImporte,
-          total_import: 0,
-          porcentage_import: 0
-        });
-      });
+
 
       let socketStore = this.arStoreAll.find((store) => store.serie == dateResponse['code'])
 
       let titleCard = `${dateResponse['f1']} - ${dateResponse['f2']}`;
-      this.arCardData.push({
-        id: this.arCardData.length + 1,
-        title: titleCard,
-        store: (socketStore || {}).description,
-        column: dateResponse['column'],
-        data: dataTable,
-        total_stock: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
-        total_import: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
-      })
 
-      this.dataSource = dataTable;
-      console.log(this.dataSource);
+      if (this.cboReport != 'Comparativo') {
+        (dataResponse || []).filter((dr) => {
+          dataTable.push({
+            departament: dr.cDepartamento,
+            unid: parseInt(dr.cUnidades),
+            import: dr.cImporte,
+            total_import: 0,
+            porcentage_import: 0
+          });
+        });
+
+        this.arCardData.push({
+          id: this.arCardData.length + 1,
+          title: titleCard,
+          store: (socketStore || {}).description,
+          column: dateResponse['column'],
+          data: dataTable,
+          total_stock: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
+          total_import: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
+        });
+
+      } else {
+
+        let indexCard = this.arCardData.findIndex((card) => card.id == keyComparation);
+
+        if (indexCard != -1) {
+          if (indexCard != -1) {
+
+            (dataResponse || []).filter((dr) => {
+              let indexDepartament = this.arCardData[indexCard]['data'].findIndex((dt) => dt.departament == dr.cDepartamento);
+              this.arCardData[indexCard]['data'][indexDepartament]['unid2'] = parseInt(dr.cUnidades);
+              this.arCardData[indexCard]['data'][indexDepartament]['import2'] = dr.cImporte;
+              this.arCardData[indexCard]['data'][indexDepartament]['porcentage_import2'] = 0;
+            });
+
+            this.arCardData[indexCard]['title2'] = titleCard;
+            this.arCardData[indexCard]['store2'] = (socketStore || {}).description;
+            this.arCardData[indexCard]['total_stock2'] = this.arCardData[indexCard]['data'].reduce((acum, f) => acum + parseFloat(f.unid2), 0);
+            this.arCardData[indexCard]['total_import2'] = Number(this.arCardData[indexCard]['data'].reduce((acum, f) => acum + parseFloat(f.import2), 0).toFixed(2));
+          }
+        } else {
+
+          (dataResponse || []).filter((dr) => {
+            dataTable.push({
+              departament: dr.cDepartamento,
+              unid: parseInt(dr.cUnidades),
+              import: dr.cImporte,
+              total_stock1: 0,
+              total_import1: 0,
+              porcentage_import: 0,
+              unid2: 0,
+              import2: 0,
+              total_import2: 0,
+              porcentage_import2: 0
+            });
+          });
+
+          this.arCardData.push({
+            id: keyComparation,
+            column: dateResponse['column'],
+            title1: titleCard,
+            store1: (socketStore || {}).description,
+            data: dataTable,
+            total_stock1: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
+            total_import1: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
+          });
+        }
+      }
+
+      console.log(this.arCardData);
+
+      //this.dataSource = dataTable;
     });
   }
 
   onCaledar($event) {
+    console.log($event);
     this.isErrorFecha = false;
 
-    if ($event.isRange) {
+    if ($event.isRange && $event.id != 'calendar1' && $event.id != 'calendar2') {
       this.vDetallado = [];
       let range = $event.value;
 
-      let dateNow = new Date();
-
-      let day = new Date(dateNow).toLocaleDateString().split('/');
-
-      let date = new Date(range[1]).toLocaleDateString().split('/');
-      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
-      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
-
       if (range.length >= 2) {
         this.vDetallado = range;
-        console.log(this.vDetallado);
+      }
+    }
+
+    if ($event.isRange && $event.id == 'calendar1') {
+      this.vCalendar1 = [];
+      let range = $event.value;
+
+      if (range.length >= 2) {
+        this.vCalendar1 = range;
+      }
+    }
+
+    if ($event.isRange && $event.id == 'calendar2') {
+      this.vCalendar2 = [];
+      let range = $event.value;
+
+      if (range.length >= 2) {
+        this.vCalendar2 = range;
       }
     }
   }
 
   onConsultar() {
-    let configuration = {
-      f1: this.vDetallado[0],
-      f2: this.vDetallado[1],
-      code: this.cboStore,
-      column: this.cboColumn
-    };
 
-    this.socket.emit('reportSalesDepartament', configuration);
+    if (this.cboReport == 'Comparativo') {
+      let keyReport = this.codigoNumerico();
+
+      let configuration1 = {
+        f1: this.vCalendar1[0],
+        f2: this.vCalendar1[1],
+        code: this.cboStore1,
+        column: this.cboColumn,
+        key: keyReport
+      };
+
+      this.socket.emit('reportSalesDepartament', configuration1);
+
+      let configuration2 = {
+        f1: this.vCalendar2[0],
+        f2: this.vCalendar2[1],
+        code: this.cboStore2,
+        column: this.cboColumn,
+        key: keyReport
+      };
+
+      this.socket.emit('reportSalesDepartament', configuration2);
+
+    } else {
+      let configuration = {
+        f1: this.vDetallado[0],
+        f2: this.vDetallado[1],
+        code: this.cboStore,
+        column: this.cboColumn
+      };
+      this.socket.emit('reportSalesDepartament', configuration);
+    }
   }
 
   onChangeSelect(data: any) {
@@ -131,6 +228,10 @@ export class MtIcgreportComponent implements OnInit {
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
     this[index] = (selectData || {}).key || "";
+
+    if (index == 'cboReport' && (selectData || {}).key == 'Comparativo') {
+      this.displayedColumns = ['departamento1', 'porcentage1', 'importe1', 'unidades1', 'porcentage2', 'importe2', 'unidades2', 'diff_procentage', 'diff_unid'];
+    }
     if (index == 'cboStore') {
       let storeConxOnline = this.store.getStore('conx_online');
       let indexStore = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
@@ -139,7 +240,34 @@ export class MtIcgreportComponent implements OnInit {
       } else {
         this.isOnlineTienda = false;
       }
+      this.isOnlineTienda1 = false;
+      this.isOnlineTienda2 = false;
     }
+
+    if (index == 'cboStore1') {
+      let storeConxOnline = this.store.getStore('conx_online');
+      let indexStore = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
+      if (indexStore > -1) {
+        this.isOnlineTienda1 = true;
+      } else {
+        this.isOnlineTienda1 = false;
+      }
+
+      this.isOnlineTienda = false;
+    }
+
+    if (index == 'cboStore2') {
+      let storeConxOnline = this.store.getStore('conx_online');
+      let indexStore = storeConxOnline.findIndex((codeCnx) => codeCnx == (selectData || {}).key);
+      if (indexStore > -1) {
+        this.isOnlineTienda2 = true;
+      } else {
+        this.isOnlineTienda2 = false;
+      }
+
+      this.isOnlineTienda = false;
+    }
+
   }
 
   onStoreAll() {
@@ -169,6 +297,17 @@ export class MtIcgreportComponent implements OnInit {
   getPorcentage(importe, total) {
     return Math.round((importe * 100) / total);
   }
+
+  getDiferenciaProce(total1, total2) {
+    return Math.round((total1 - total2) / total2 * 100);
+  }
+
+  codigoNumerico(longitud = 6) {
+    return Math.floor(Math.random() * Math.pow(10, longitud))
+      .toString()
+      .padStart(longitud, '0');
+  }
+
 
 }
 
