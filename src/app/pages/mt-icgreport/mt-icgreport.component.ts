@@ -40,6 +40,7 @@ export class MtIcgreportComponent implements OnInit {
   vDetallado: Array<any> = [];
   vCalendar1: Array<any> = [];
   vCalendar2: Array<any> = [];
+  arCardDataTemp: Array<any> = [];
   arCardData: Array<any> = [];
   conxOnline: Array<any> = [];
   cboSemanaAll: Array<any> = [];
@@ -85,10 +86,11 @@ export class MtIcgreportComponent implements OnInit {
     this.generarSemanas("");
     this.onStoreAll();
     this.socket.on('report:sales:departament:response', (response) => {
-
+      console.log(response);
       let dataResponse: Array<any> = JSON.parse(response['data']);
       let dateResponse: Array<any> = response['date'];
       let keyComparation = dateResponse['key'];
+      let anioData = dateResponse['anio'];
       let dataTable = [];
 
       let socketStore = this.arStoreAll.find((store) => store.serie == dateResponse['code'])
@@ -117,56 +119,35 @@ export class MtIcgreportComponent implements OnInit {
         });
 
       } else {
-
-        let indexCard = this.arCardData.findIndex((card) => card.id == keyComparation);
-
+        let indexCard = this.arCardDataTemp.findIndex((card) => card.id == keyComparation);
         if (indexCard != -1) {
-          if (indexCard != -1) {
-
-            (dataResponse || []).filter((dr) => {
-              let indexDepartament = this.arCardData[indexCard]['data'].findIndex((dt) => dt.departament == dr.cDepartamento);
-              this.arCardData[indexCard]['data'][indexDepartament]['unid2'] = parseInt(dr.cUnidades);
-              this.arCardData[indexCard]['data'][indexDepartament]['import2'] = dr.cImporte;
-              this.arCardData[indexCard]['data'][indexDepartament]['porcentage_import2'] = 0;
-            });
-
-            this.arCardData[indexCard]['title2'] = titleCard;
-            this.arCardData[indexCard]['store2'] = (socketStore || {}).description;
-            this.arCardData[indexCard]['total_stock2'] = this.arCardData[indexCard]['data'].reduce((acum, f) => acum + parseFloat(f.unid2), 0);
-            this.arCardData[indexCard]['total_import2'] = Number(this.arCardData[indexCard]['data'].reduce((acum, f) => acum + parseFloat(f.import2), 0).toFixed(2));
-          }
-        } else {
-
           (dataResponse || []).filter((dr) => {
-            dataTable.push({
-              departament: dr.cDepartamento,
+            let indexDepartament = this.arCardDataTemp.findIndex((card) => card.departament == dr.cDepartamento);
+            this.arCardDataTemp[indexDepartament]['anio_2'] = {
+              anio: anioData,
               unid: parseInt(dr.cUnidades),
-              import: dr.cImporte,
-              total_stock1: 0,
-              total_import1: 0,
-              porcentage_import: 0,
-              unid2: 0,
-              import2: 0,
-              total_import2: 0,
-              porcentage_import2: 0
-            });
+              import: dr.cImporte
+            };
           });
 
-          this.arCardData.push({
-            id: keyComparation,
-            column: dateResponse['column'],
-            title1: titleCard,
-            store1: (socketStore || {}).description,
-            data: dataTable,
-            total_stock1: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
-            total_import1: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
+          this.onSearchDataAnio();
+        } else {
+          (dataResponse || []).filter((dr) => {
+            this.arCardDataTemp.push({
+              id: keyComparation,
+              departament: dr.cDepartamento,
+              anio_1: {
+                anio: anioData,
+                unid: parseInt(dr.cUnidades),
+                import: dr.cImporte,
+                proc_1: 0
+              },
+              anio_2: {}
+            });
+
           });
         }
       }
-
-      console.log(this.arCardData);
-
-      //this.dataSource = dataTable;
     });
   }
 
@@ -200,6 +181,48 @@ export class MtIcgreportComponent implements OnInit {
         this.vCalendar2 = range;
       }
     }
+  }
+
+  onSearchDataAnio() {
+    let parseData = [];
+    this.arCardDataTemp.filter((dt) => {
+      parseData.push({
+        id: dt.id,
+        departament: dt.departament,
+        anio_1: (((dt || {}).anio_1 || [])[0] || {}).anio > (((dt || {}).anio_2 || [])[0] || {}).anio ? dt.anio_1 : dt.anio_2,
+        anio_2: (((dt || {}).anio_1 || [])[0] || {}).anio > (((dt || {}).anio_2 || [])[0] || {}).anio ? dt.anio_2 : dt.anio_1
+      });
+    });
+
+    let index = this.arCardData.findIndex((dt) => dt.id == parseData[0].id);
+
+    if (index == -1) {
+      let total_stock_1 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_1.unid), 0).toFixed(2));
+      let total_stock_2 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_2.unid), 0).toFixed(2));
+      let total_import_1 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_1.import), 0).toFixed(2));
+      let total_import_2 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_2.import), 0).toFixed(2));
+      let porc_1 = 0;
+      let porc_2 = 0;
+      parseData.filter((pr, i) => {
+        porc_1 = this.getPorcentage(pr.anio_1.import, total_import_1);
+        parseData[i]['anio_1']['proc_1'] = porc_1;
+        porc_2 = this.getPorcentage(pr.anio_2.import, total_import_2);
+        parseData[i]['anio_2']['proc_2'] = porc_2;
+      });
+
+      this.arCardData.push({
+        id: parseData[0].id,
+        data: parseData,
+        total_stock_1: total_stock_1,
+        total_stock_2: total_stock_2,
+        total_import_1: total_import_1,
+        total_import_2: total_import_2
+      });
+    }
+
+
+    //this.arCardData['data'] = parseData;
+    console.log(this.arCardData);
   }
 
   onConsultar() {
@@ -328,7 +351,7 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   getPorcentage(totalUnid_1, totalUnid_2) {
-    return Math.round((totalUnid_2 / totalUnid_1) * 100);
+    return Math.round((totalUnid_1 / totalUnid_2) * 100);
   }
 
   getDiferenciaProce(total1, total2) {
@@ -409,13 +432,15 @@ export class MtIcgreportComponent implements OnInit {
 
   sendConsultReport(date_1, date_2, codeStore, column, inKeyReport?) {
     let keyReport = inKeyReport.length ? inKeyReport : this.codigoNumerico();
+    let yearDate = new Date(date_1).getFullYear();
 
     let configuration = {
       f1: date_1,
       f2: date_2,
       code: codeStore,
       column: column,
-      key: keyReport
+      key: keyReport,
+      anio: yearDate
     };
 
     console.log(configuration);

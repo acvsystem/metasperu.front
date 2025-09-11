@@ -143,10 +143,9 @@
                     </mat-card-title>
                   </mat-card-header>
                   @if(cboReport != 'Comparativo'){
-                  <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0">
+                  <table mat-table [dataSource]="card" class="example-container mat-elevation-z8" tabindex="0">
 
                     <ng-container matColumnDef="departamento">
-                      <th mat-header-cell *matHeaderCellDef> 2025 </th>
                       <th mat-header-cell *matHeaderCellDef> Departamento </th>
                       <td mat-cell *matCellDef="let element"> {{element.departament}} </td>
                       <td mat-footer-cell *matFooterCellDef> Total </td>
@@ -180,72 +179,69 @@
                     <tr mat-footer-row *matFooterRowDef="displayedColumns" class="example-first-footer-row"></tr>
                   </table>
                   }@else{
-                  <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0" multiTemplateDataRows>
+                  <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0">
 
                     <ng-container matColumnDef="departamento1">
-                      <th mat-header-cell *matHeaderCellDef owspan="2"> Departamento </th>
+                      <th mat-header-cell *matHeaderCellDef> Departamento </th>
                       <td mat-cell *matCellDef="let element"> {{element.departament}} </td>
                       <td mat-footer-cell *matFooterCellDef class="cellFooter"> Total </td>
                     </ng-container>
 
                     <ng-container matColumnDef="porcentage1">
                       <th mat-header-cell *matHeaderCellDef> % </th>
-                      <td mat-cell *matCellDef="let element"> {{getPorcentage(card.total_import1,element.import)}} %
-                      </td>
+                      <td mat-cell *matCellDef="let element">{{element.anio_1.proc_1}} %</td>
                       <td mat-footer-cell *matFooterCellDef class="cellFooter">100 %</td>
                     </ng-container>
 
                     <ng-container matColumnDef="importe1">
                       <th mat-header-cell *matHeaderCellDef> Importe </th>
-                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.import |
+                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.anio_1.import |
                         currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
-                      <td mat-footer-cell *matFooterCellDef class="cellFooter"> {{card.total_import1 |
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter"> {{card.total_import_1 |
                         currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="unidades1">
                       <th mat-header-cell *matHeaderCellDef> Unid. </th>
-                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.unid}} </td>
-                      <td mat-footer-cell *matFooterCellDef class="cellFooter">{{card.total_stock1}}</td>
+                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.anio_1.unid}} </td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter">{{card.total_stock_1}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="porcentage2">
                       <th mat-header-cell *matHeaderCellDef> % </th>
-                      <td mat-cell *matCellDef="let element"> {{getPorcentage(card.total_import2,element.import2)}} %
-                      </td>
+                      <td mat-cell *matCellDef="let element">{{element.anio_2.proc_2}} %</td>
                       <td mat-footer-cell *matFooterCellDef class="cellFooter">100 %</td>
                     </ng-container>
 
                     <ng-container matColumnDef="importe2">
                       <th mat-header-cell *matHeaderCellDef> Importe </th>
-                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.import2 |
+                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.anio_2.import |
                         currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
-                      <td mat-footer-cell *matFooterCellDef class="cellFooter"> {{card.total_import2 |
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter"> {{card.total_import_2 |
                         currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="unidades2">
                       <th mat-header-cell *matHeaderCellDef> Unid. </th>
-                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.unid2}} </td>
-                      <td mat-footer-cell *matFooterCellDef class="cellFooter">{{card.total_stock2}}</td>
+                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.anio_2.unid}} </td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter">{{card.total_stock_2}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="diff_procentage">
                       <th mat-header-cell *matHeaderCellDef style="background: #ffe97b;"> Diff S/. </th>
-                      <td mat-cell *matCellDef="let element">{{getPorcentage(card.total_import1,element.import) -
-                        getPorcentage(card.total_import2,element.import2)}} %</td>
+                      <td mat-cell *matCellDef="let element">0 %</td>
                       <td mat-footer-cell *matFooterCellDef>
-                        {{getDiferenciaProce(card.total_import1,card.total_import2)}} %</td>
+                        0 %</td>
                     </ng-container>
 
                     <ng-container matColumnDef="diff_unid">
                       <th mat-header-cell *matHeaderCellDef style="background: #ffe97b;"> Diff Unid </th>
-                      <td mat-cell *matCellDef="let element">{{getPorcentage(element.unid,element.unid2)}} % </td>
-                      <td mat-footer-cell *matFooterCellDef>{{getDiferenciaProce(card.total_stock1,card.total_stock2)}}
+                      <td mat-cell *matCellDef="let element">0 % </td>
+                      <td mat-footer-cell *matFooterCellDef>0
                         %</td>
                     </ng-container>
 
