@@ -203,7 +203,7 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   onConsultar() {
-    if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana') {//simple,departamento,semana - tr-1
+    if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana') {//simple,departamento,semana - rp-1
       let semanasAll: Array<any> = this.generarSemanas(this.vAnio_1);
       if (semanasAll.length) {
         let semanaSelected = semanasAll.find((sm) => sm.semana == this.cboSemana);
@@ -211,11 +211,11 @@ export class MtIcgreportComponent implements OnInit {
       }
     }
 
-    if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//simple,departamento,fecha - tr-2
+    if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//simple,departamento,fecha - rp-2
       this.sendConsultReport(this.vCalendar1[0], this.vCalendar1[1], this.cboStore, this.cboColumn);
     }
 
-    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana') {//comparativo,departamento,semana - tr-3
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana' && !this.isComparationStores) {//comparativo,departamento,semana - rp-3
       let keyReport = this.codigoNumerico();
       let semanasAll_1: Array<any> = this.generarSemanas(this.vAnio_1);
       let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
@@ -225,39 +225,21 @@ export class MtIcgreportComponent implements OnInit {
       this.sendConsultReport(this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
     }
 
-    /*
-        if (this.cboReport == 'Comparativo') {
-          let keyReport = this.codigoNumerico();
-    
-          let configuration1 = {
-            f1: this.vCalendar1[0],
-            f2: this.vCalendar1[1],
-            code: this.cboStore1,
-            column: this.cboColumn,
-            key: keyReport
-          };
-    
-          this.socket.emit('reportSalesDepartament', configuration1);
-    
-          let configuration2 = {
-            f1: this.vCalendar2[0],
-            f2: this.vCalendar2[1],
-            code: this.cboStore2,
-            column: this.cboColumn,
-            key: keyReport
-          };
-    
-          this.socket.emit('reportSalesDepartament', configuration2);
-    
-        } else {
-          let configuration = {
-            f1: this.vDetallado[0],
-            f2: this.vDetallado[1],
-            code: this.cboStore,
-            column: this.cboColumn
-          };
-          this.socket.emit('reportSalesDepartament', configuration);
-        }*/
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana' && this.isComparationStores) {//comparativo,departamento,semana,entre_tiendas - rp-4
+      let keyReport = this.codigoNumerico();
+      let semanasAll_1: Array<any> = this.generarSemanas(this.vAnio_1);
+      let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
+      let semanaSelected_1 = semanasAll_1.find((sm) => sm.semana == this.cboSemana);
+      let semanaSelected_2 = semanasAll_2.find((sm) => sm.semana == this.cboSemana);
+      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore2, this.cboColumn, keyReport);
+    }
+
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//comparativo,departamento,fecha,entre_tiendas - rp-5
+      let keyReport = this.codigoNumerico();
+      this.sendConsultReport(this.vCalendar1[0], this.vCalendar1[1], this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.vCalendar2[0], this.vCalendar2[1], this.cboStore1, this.cboColumn, keyReport);
+    }
   }
 
   onChangeSelect(data: any) {
@@ -345,12 +327,12 @@ export class MtIcgreportComponent implements OnInit {
     return this.dataSource.reduce((acum, f) => acum + parseFloat(f.unid), 0);
   }
 
-  getPorcentage(importe, total) {
-    return Math.round((importe * 100) / total);
+  getPorcentage(totalUnid_1, totalUnid_2) {
+    return Math.round((totalUnid_2 / totalUnid_1) * 100);
   }
 
   getDiferenciaProce(total1, total2) {
-    return Math.round((total1 - total2) / total2 * 100);
+    return Math.round((total1 - total2) / total1 * 100);
   }
 
   codigoNumerico(longitud = 6) {
@@ -435,6 +417,7 @@ export class MtIcgreportComponent implements OnInit {
       column: column,
       key: keyReport
     };
+
     console.log(configuration);
     this.socket.emit('reportSalesDepartament', configuration);
   }
