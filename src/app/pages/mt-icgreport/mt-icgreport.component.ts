@@ -136,11 +136,12 @@ export class MtIcgreportComponent implements OnInit {
             this.arCardDataTemp.push({
               id: keyComparation,
               departament: dr.cDepartamento,
+              diffPorc: 0,
               anio_1: {
                 anio: anioData,
                 unid: parseInt(dr.cUnidades),
                 import: dr.cImporte,
-                proc_1: 0
+                proc_1: 0                
               },
               anio_2: {}
             });
@@ -203,11 +204,13 @@ export class MtIcgreportComponent implements OnInit {
       let total_import_2 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_2.import), 0).toFixed(2));
       let porc_1 = 0;
       let porc_2 = 0;
+      let diffPorc_1 = 0;
       parseData.filter((pr, i) => {
         porc_1 = this.getPorcentage(pr.anio_1.import, total_import_1);
         parseData[i]['anio_1']['proc_1'] = porc_1;
         porc_2 = this.getPorcentage(pr.anio_2.import, total_import_2);
         parseData[i]['anio_2']['proc_2'] = porc_2;
+        parseData[i]['diffPorc'] = porc_1 - porc_2;
       });
 
       this.arCardData.push({
