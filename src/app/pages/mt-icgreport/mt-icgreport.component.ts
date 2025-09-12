@@ -141,7 +141,7 @@ export class MtIcgreportComponent implements OnInit {
                 anio: anioData,
                 unid: parseInt(dr.cUnidades),
                 import: dr.cImporte,
-                proc_1: 0                
+                proc_1: 0
               },
               anio_2: {}
             });
@@ -202,15 +202,17 @@ export class MtIcgreportComponent implements OnInit {
       let total_stock_2 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_2.unid), 0).toFixed(2));
       let total_import_1 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_1.import), 0).toFixed(2));
       let total_import_2 = Number(parseData.reduce((acum, f) => acum + parseFloat(f.anio_2.import), 0).toFixed(2));
+
       let porc_1 = 0;
       let porc_2 = 0;
-      let diffPorc_1 = 0;
+      let diffUnid = 0;
       parseData.filter((pr, i) => {
         porc_1 = this.getPorcentage(pr.anio_1.import, total_import_1);
         parseData[i]['anio_1']['proc_1'] = porc_1;
         porc_2 = this.getPorcentage(pr.anio_2.import, total_import_2);
         parseData[i]['anio_2']['proc_2'] = porc_2;
         parseData[i]['diffPorc'] = porc_1 - porc_2;
+        parseData[i]['diffUnid'] = this.getPorcentage(pr.anio_1.unid, pr.anio_2.unid);
       });
 
       this.arCardData.push({
@@ -219,7 +221,9 @@ export class MtIcgreportComponent implements OnInit {
         total_stock_1: total_stock_1,
         total_stock_2: total_stock_2,
         total_import_1: total_import_1,
-        total_import_2: total_import_2
+        total_import_2: total_import_2,
+        diffImportTotal: this.getDiferenciaProce(total_import_1, total_import_2),
+        diffUnidTotal: this.getDiferenciaProce(total_stock_1, total_stock_2)
       });
     }
 
@@ -229,6 +233,7 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   onConsultar() {
+    this.arCardDataTemp = [];
     if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana') {//simple,departamento,semana - rp-1
       let semanasAll: Array<any> = this.generarSemanas(this.vAnio_1);
       if (semanasAll.length) {
@@ -295,8 +300,9 @@ export class MtIcgreportComponent implements OnInit {
       } else {
         this.isOnlineTienda = false;
       }
-      this.isOnlineTienda1 = false;
-      this.isOnlineTienda2 = false;
+      console.log(this.isOnlineTienda);
+      // this.isOnlineTienda1 = false;
+      //his.isOnlineTienda2 = false;
     }
 
     if (index == 'cboStore1') {
@@ -358,7 +364,7 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   getDiferenciaProce(total1, total2) {
-    return Math.round((total1 - total2) / total1 * 100);
+    return Math.round((total1 - total2) / total2 * 100);
   }
 
   codigoNumerico(longitud = 6) {
@@ -434,7 +440,7 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   sendConsultReport(date_1, date_2, codeStore, column, inKeyReport?) {
-    let keyReport = inKeyReport.length ? inKeyReport : this.codigoNumerico();
+    let keyReport = (inKeyReport || "").length ? inKeyReport : this.codigoNumerico();
     let yearDate = new Date(date_1).getFullYear();
 
     let configuration = {
