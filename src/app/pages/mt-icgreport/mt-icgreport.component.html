@@ -126,8 +126,9 @@
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <div cdkDropList cdkDropListOrientation="mixed" class="example-list" (cdkDropListDropped)="drop($event)">
                 @for (card of arCardData; track card) {
+
                 <mat-card class="example-box" cdkDrag class="example-card" appearance="outlined"
-                  style="min-width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;">
+                  style="min-width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;" *ngIf="card.type_report != 'Comparativo'">
                   <mat-card-header style="display: contents;width: 100%;padding-bottom: 14px;padding-top: 0px;">
                     <mat-card-title style="width: 100%;">
                       <ion-row>
@@ -141,49 +142,75 @@
                       </ion-row>
                     </mat-card-title>
                   </mat-card-header>
-                  @if(cboReport != 'Comparativo'){
-                  <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0">
+
+                  <table mat-table [dataSource]="card.data_simple" class="example-container mat-elevation-z8"
+                    tabindex="0">
 
                     <ng-container matColumnDef="departamento">
                       <th mat-header-cell *matHeaderCellDef> Departamento </th>
                       <td mat-cell *matCellDef="let element"> {{element.departament}} </td>
-                      <td mat-footer-cell *matFooterCellDef> Total </td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter"> Total </td>
                     </ng-container>
 
                     <ng-container matColumnDef="porcentage">
                       <th mat-header-cell *matHeaderCellDef> % </th>
                       <td mat-cell *matCellDef="let element"> {{getPorcentage(element.import,card.total_import)}} %
                       </td>
-                      <td mat-footer-cell *matFooterCellDef>100 %</td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter">100 %</td>
                     </ng-container>
 
                     <ng-container matColumnDef="importe">
                       <th mat-header-cell *matHeaderCellDef> Importe </th>
-                      <td mat-cell *matCellDef="let element"> {{element.import | currency:'PEN':'symbol':'1.2-2':'es-PE'
+                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.import | currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
-                      <td mat-footer-cell *matFooterCellDef> {{card.total_import |
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter"> {{card.total_import |
                         currency:'PEN':'symbol':'1.2-2':'es-PE'
                         }} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="unidades">
                       <th mat-header-cell *matHeaderCellDef> Unid. </th>
-                      <td mat-cell *matCellDef="let element"> {{element.unid}} </td>
-                      <td mat-footer-cell *matFooterCellDef>{{card.total_stock}}</td>
+                      <td mat-cell *matCellDef="let element" class="cellData"> {{element.unid}} </td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter">{{card.total_stock}}</td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns_2"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns_2;"></tr>
 
-                    <tr mat-footer-row *matFooterRowDef="displayedColumns" class="example-first-footer-row"></tr>
+                    <tr mat-footer-row *matFooterRowDef="displayedColumns_2" class="example-first-footer-row"></tr>
                   </table>
-                  }@else{
-                  <table mat-table [dataSource]="card.data" class="example-container mat-elevation-z8" tabindex="0">
+                </mat-card>
+
+                <mat-card class="example-box" cdkDrag class="example-card" appearance="outlined"
+                  style="min-width: 650px;background: white;padding: 16px;margin-bottom: 10px;margin-left: 10px;" *ngIf="card.type_report == 'Comparativo'">
+                  <mat-card-header style="display: contents;width: 100%;padding-bottom: 14px;padding-top: 0px;">
+                    <mat-card-title style="width: 100%;">
+                      <ion-row>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                          <p style="font-weight: 500;margin: 0;" *ngIf="!card.store_2.length">{{card.store_1}}</p>
+                          <p style="font-weight: 500;margin: 0;">{{card.store_1}} - {{card.store_2}}</p>
+                          <p style="font-size: 20px;">{{card.column}}</p>
+                        </ion-col>
+                        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" style="text-align: end;">
+                          <p style="font-size: 20px;">Semana {{card.semana}}</p>
+                        </ion-col>
+                      </ion-row>
+                    </mat-card-title>
+                  </mat-card-header>
+
+                  <table mat-table [dataSource]="card.data_comparativo" class="example-container mat-elevation-z8"
+                    tabindex="0" >
 
                     <ng-container matColumnDef="departamento1">
                       <th mat-header-cell *matHeaderCellDef> Departamento </th>
                       <td mat-cell *matCellDef="let element"> {{element.departament}} </td>
                       <td mat-footer-cell *matFooterCellDef class="cellFooter"> Total </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="anio1">
+                      <th mat-header-cell *matHeaderCellDef> Año </th>
+                      <td mat-cell *matCellDef="let element" class="cellAnio">{{element.anio_1.anio}}</td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter"></td>
                     </ng-container>
 
                     <ng-container matColumnDef="porcentage1">
@@ -206,6 +233,12 @@
                       <th mat-header-cell *matHeaderCellDef> Unid. </th>
                       <td mat-cell *matCellDef="let element" class="cellData"> {{element.anio_1.unid}} </td>
                       <td mat-footer-cell *matFooterCellDef class="cellFooter">{{card.total_stock_1}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="anio2">
+                      <th mat-header-cell *matHeaderCellDef> Año </th>s
+                      <td mat-cell *matCellDef="let element" class="cellAnio">{{element.anio_2.anio}}</td>
+                      <td mat-footer-cell *matFooterCellDef class="cellFooter"></td>
                     </ng-container>
 
                     <ng-container matColumnDef="porcentage2">
@@ -246,12 +279,12 @@
 
 
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns_1"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns_1;"></tr>
 
-                    <tr mat-footer-row *matFooterRowDef="displayedColumns" class="example-first-footer-row"></tr>
+                    <tr mat-footer-row *matFooterRowDef="displayedColumns_1" class="example-first-footer-row"></tr>
                   </table>
-                  }
+
 
                 </mat-card>
                 }

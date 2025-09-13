@@ -17,7 +17,8 @@ export class MtIcgreportComponent implements OnInit {
   }
 
   isLoading: boolean = false;
-  displayedColumns: string[] = ['departamento', 'porcentage', 'importe', 'unidades'];
+  displayedColumns_1 = ['departamento1', 'anio1', 'porcentage1', 'importe1', 'unidades1', 'anio2', 'porcentage2', 'importe2', 'unidades2', 'diff_procentage', 'diff_unid'];
+  displayedColumns_2: string[] = ['departamento', 'porcentage', 'importe', 'unidades'];
   dataSource = [];
   isErrorFecha: boolean = false;
   isOnlineTienda: boolean = false;
@@ -113,16 +114,20 @@ export class MtIcgreportComponent implements OnInit {
           title: titleCard,
           store: (socketStore || {}).description,
           column: dateResponse['column'],
-          data: dataTable,
+          typeReport: dateResponse['type_report'],
+          semana: dateResponse['semana'],
+          data_simple: dataTable,
           total_stock: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
           total_import: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
         });
-
+        console.log(this.arCardData);
       } else {
         let indexCard = this.arCardDataTemp.findIndex((card) => card.id == keyComparation);
         if (indexCard != -1) {
           (dataResponse || []).filter((dr) => {
             let indexDepartament = this.arCardDataTemp.findIndex((card) => card.departament == dr.cDepartamento);
+            console.log((socketStore || {}).description);
+            this.arCardDataTemp[indexDepartament]['store_2'] = (socketStore || {}).description;
             this.arCardDataTemp[indexDepartament]['anio_2'] = {
               anio: anioData,
               unid: parseInt(dr.cUnidades),
@@ -132,10 +137,15 @@ export class MtIcgreportComponent implements OnInit {
 
           this.onSearchDataAnio();
         } else {
+          console.log((socketStore || {}).description);
           (dataResponse || []).filter((dr) => {
             this.arCardDataTemp.push({
               id: keyComparation,
               departament: dr.cDepartamento,
+              column: dateResponse['column'],
+              typeReport: dateResponse['type_report'],
+              semana: dateResponse['semana'],
+              store_1: (socketStore || {}).description,
               diffPorc: 0,
               anio_1: {
                 anio: anioData,
@@ -190,6 +200,11 @@ export class MtIcgreportComponent implements OnInit {
       parseData.push({
         id: dt.id,
         departament: dt.departament,
+        column: dt.column,
+        typeReport: dt.typeReport,
+        semana: dt.semana,
+        store_1: (((dt || {}).anio_1 || [])[0] || {}).anio > (((dt || {}).anio_2 || [])[0] || {}).anio ? dt.store_1 : dt.store_2,
+        store_2: (((dt || {}).anio_1 || [])[0] || {}).anio > (((dt || {}).anio_2 || [])[0] || {}).anio ? dt.store_2 : dt.store_1,
         anio_1: (((dt || {}).anio_1 || [])[0] || {}).anio > (((dt || {}).anio_2 || [])[0] || {}).anio ? dt.anio_1 : dt.anio_2,
         anio_2: (((dt || {}).anio_1 || [])[0] || {}).anio > (((dt || {}).anio_2 || [])[0] || {}).anio ? dt.anio_2 : dt.anio_1
       });
@@ -205,7 +220,7 @@ export class MtIcgreportComponent implements OnInit {
 
       let porc_1 = 0;
       let porc_2 = 0;
-      let diffUnid = 0;
+
       parseData.filter((pr, i) => {
         porc_1 = this.getPorcentage(pr.anio_1.import, total_import_1);
         parseData[i]['anio_1']['proc_1'] = porc_1;
@@ -213,11 +228,21 @@ export class MtIcgreportComponent implements OnInit {
         parseData[i]['anio_2']['proc_2'] = porc_2;
         parseData[i]['diffPorc'] = porc_1 - porc_2;
         parseData[i]['diffUnid'] = this.getPorcentage(pr.anio_1.unid, pr.anio_2.unid);
+        //parseData[i]['store_1'] = pr.store_1;
+        //parseData[i]['store_2'] = pr.store_1;
       });
+
+
 
       this.arCardData.push({
         id: parseData[0].id,
-        data: parseData,
+        store_1: parseData[0]['store_1'],
+        store_2: parseData[0]['store_2'],
+        departament: parseData[0]['departament'],
+        column: parseData[0]['column'],
+        type_report: parseData[0]['typeReport'],
+        semana: parseData[0]['semana'],
+        data_comparativo: parseData,
         total_stock_1: total_stock_1,
         total_stock_2: total_stock_2,
         total_import_1: total_import_1,
@@ -229,7 +254,7 @@ export class MtIcgreportComponent implements OnInit {
 
 
     //this.arCardData['data'] = parseData;
-    console.log(this.arCardData);
+    console.log(parseData);
   }
 
   onConsultar() {
@@ -238,12 +263,12 @@ export class MtIcgreportComponent implements OnInit {
       let semanasAll: Array<any> = this.generarSemanas(this.vAnio_1);
       if (semanasAll.length) {
         let semanaSelected = semanasAll.find((sm) => sm.semana == this.cboSemana);
-        this.sendConsultReport(this.convertirFechaSQL(semanaSelected['inicio']), this.convertirFechaSQL(semanaSelected['fin']), this.cboStore, this.cboColumn);
+        this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected['inicio']), this.convertirFechaSQL(semanaSelected['fin']), this.cboStore, this.cboColumn);
       }
     }
 
     if (this.cboReport == 'Simple' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//simple,departamento,fecha - rp-2
-      this.sendConsultReport(this.vCalendar1[0], this.vCalendar1[1], this.cboStore, this.cboColumn);
+      this.sendConsultReport(this.cboReport, this.vCalendar1[0], this.vCalendar1[1], this.cboStore, this.cboColumn);
     }
 
     if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana' && !this.isComparationStores) {//comparativo,departamento,semana - rp-3
@@ -252,8 +277,8 @@ export class MtIcgreportComponent implements OnInit {
       let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
       let semanaSelected_1 = semanasAll_1.find((sm) => sm.semana == this.cboSemana);
       let semanaSelected_2 = semanasAll_2.find((sm) => sm.semana == this.cboSemana);
-      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
-      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
     }
 
     if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'semana' && this.isComparationStores) {//comparativo,departamento,semana,entre_tiendas - rp-4
@@ -262,19 +287,18 @@ export class MtIcgreportComponent implements OnInit {
       let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
       let semanaSelected_1 = semanasAll_1.find((sm) => sm.semana == this.cboSemana);
       let semanaSelected_2 = semanasAll_2.find((sm) => sm.semana == this.cboSemana);
-      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
-      this.sendConsultReport(this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore2, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore2, this.cboColumn, keyReport);
     }
 
     if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//comparativo,departamento,fecha,entre_tiendas - rp-5
       let keyReport = this.codigoNumerico();
-      this.sendConsultReport(this.vCalendar1[0], this.vCalendar1[1], this.cboStore1, this.cboColumn, keyReport);
-      this.sendConsultReport(this.vCalendar2[0], this.vCalendar2[1], this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.vCalendar1[0], this.vCalendar1[1], this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.vCalendar2[0], this.vCalendar2[1], this.cboStore1, this.cboColumn, keyReport);
     }
   }
 
   onChangeSelect(data: any) {
-    console.log(data);
     const self = this;
     let selectData = data || {};
     let index = (selectData || {}).selectId || "";
@@ -282,7 +306,6 @@ export class MtIcgreportComponent implements OnInit {
 
     if (index == 'cboReport' && (selectData || {}).key == 'Comparativo') {
       this.isComparationStores = false;
-      this.displayedColumns = ['departamento1', 'porcentage1', 'importe1', 'unidades1', 'porcentage2', 'importe2', 'unidades2', 'diff_procentage', 'diff_unid'];
       if (this.optionTipoFecha == 'semana' && this.cboReport == 'Comparativo') {
         this.vPlaceholder_anio_1 = "Año 1";
       }
@@ -439,17 +462,19 @@ export class MtIcgreportComponent implements OnInit {
     this.isVisiblePopover = !this.isVisiblePopover;
   }
 
-  sendConsultReport(date_1, date_2, codeStore, column, inKeyReport?) {
+  sendConsultReport(typeReport, date_1, date_2, codeStore, column, inKeyReport?) {
     let keyReport = (inKeyReport || "").length ? inKeyReport : this.codigoNumerico();
     let yearDate = new Date(date_1).getFullYear();
 
     let configuration = {
       f1: date_1,
       f2: date_2,
+      semana: this.cboSemana,
       code: codeStore,
       column: column,
       key: keyReport,
-      anio: yearDate
+      anio: yearDate,
+      type_report: typeReport
     };
 
     console.log(configuration);
