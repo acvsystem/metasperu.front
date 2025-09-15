@@ -87,7 +87,9 @@ export class MtIcgreportComponent implements OnInit {
     this.generarSemanas("");
     this.onStoreAll();
     this.socket.on('report:sales:departament:response', (response) => {
-      console.log(response);
+      //console.log(response);
+
+
       let dataResponse: Array<any> = JSON.parse(response['data']);
       let dateResponse: Array<any> = response['date'];
       let keyComparation = dateResponse['key'];
@@ -254,7 +256,16 @@ export class MtIcgreportComponent implements OnInit {
 
 
     //this.arCardData['data'] = parseData;
-    console.log(parseData);
+    //console.log(parseData);
+
+    const grupos = Object.entries(parseData).map(([departament, items]) => ({
+      departament,
+      items
+    }));
+
+    console.log(grupos);
+
+
   }
 
   onConsultar() {
@@ -295,6 +306,16 @@ export class MtIcgreportComponent implements OnInit {
       let keyReport = this.codigoNumerico();
       this.sendConsultReport(this.cboReport, this.vCalendar1[0], this.vCalendar1[1], this.cboStore1, this.cboColumn, keyReport);
       this.sendConsultReport(this.cboReport, this.vCalendar2[0], this.vCalendar2[1], this.cboStore1, this.cboColumn, keyReport);
+    }
+
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Familia' && this.optionTipoFecha == 'semana' && !this.isComparationStores) {//comparativo,familia,semana - rp-3
+      let keyReport = this.codigoNumerico();
+      let semanasAll_1: Array<any> = this.generarSemanas(this.vAnio_1);
+      let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
+      let semanaSelected_1 = semanasAll_1.find((sm) => sm.semana == this.cboSemana);
+      let semanaSelected_2 = semanasAll_2.find((sm) => sm.semana == this.cboSemana);
+      this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
     }
   }
 

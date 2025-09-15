@@ -444,7 +444,6 @@ export class MtArticulosComponent implements OnInit {
               "VS_MEP": this.onEvalDesconection('9K', (data || {}).vs_m_plaza || 0),
               "VS_MNK": this.onEvalDesconection('9L', (data || {}).vs_minka || 0),
               "VSFA_JOC": this.onEvalDesconection('9F', (data || {}).vs_full || 0),
-              "VS_SA": this.onEvalDesconection('9F', (data || {}).vs_santa_anita || 0),
               "VS_M_PLAZA": this.onEvalDesconection('9P', (data || {}).vs_mall_plaza || 0),
               "VS_SANTA_ANITA": this.onEvalDesconection('9Q', (data || {}).vs_santa_anita || 0)
             });
