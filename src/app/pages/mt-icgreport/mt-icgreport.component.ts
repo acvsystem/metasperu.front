@@ -87,78 +87,146 @@ export class MtIcgreportComponent implements OnInit {
     this.generarSemanas("");
     this.onStoreAll();
     this.socket.on('report:sales:departament:response', (response) => {
-      //console.log(response);
-
-
+      console.log(response);
       let dataResponse: Array<any> = JSON.parse(response['data']);
       let dateResponse: Array<any> = response['date'];
       let keyComparation = dateResponse['key'];
       let anioData = dateResponse['anio'];
       let dataTable = [];
+      let socketStore = this.arStoreAll.find((store) => store.serie == dateResponse['code']);
 
-      let socketStore = this.arStoreAll.find((store) => store.serie == dateResponse['code'])
+      if (this.cboColumn == 'Familia') {
+        let arFamilia = [];
 
-      let titleCard = `${dateResponse['f1']} - ${dateResponse['f2']}`;
+        if (this.cboReport != 'Comparativo') {
+          dataResponse.filter((dr) => {
+            let index = (arFamilia || []).findIndex((fm) => fm.departament == dr.cDepartamento);
+            let dataFamilia = { familia: dr.cFamilia, unid: parseInt(dr.cUnidades), importe: dr.cImporte };
 
-      if (this.cboReport != 'Comparativo') {
-        (dataResponse || []).filter((dr) => {
-          dataTable.push({
-            departament: dr.cDepartamento,
-            unid: parseInt(dr.cUnidades),
-            import: dr.cImporte,
-            total_import: 0,
-            porcentage_import: 0
-          });
-        });
-
-        this.arCardData.push({
-          id: this.arCardData.length + 1,
-          title: titleCard,
-          store: (socketStore || {}).description,
-          column: dateResponse['column'],
-          typeReport: dateResponse['type_report'],
-          semana: dateResponse['semana'],
-          data_simple: dataTable,
-          total_stock: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
-          total_import: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
-        });
-        console.log(this.arCardData);
-      } else {
-        let indexCard = this.arCardDataTemp.findIndex((card) => card.id == keyComparation);
-        if (indexCard != -1) {
-          (dataResponse || []).filter((dr) => {
-            let indexDepartament = this.arCardDataTemp.findIndex((card) => card.departament == dr.cDepartamento);
-            console.log((socketStore || {}).description);
-            this.arCardDataTemp[indexDepartament]['store_2'] = (socketStore || {}).description;
-            this.arCardDataTemp[indexDepartament]['anio_2'] = {
-              anio: anioData,
-              unid: parseInt(dr.cUnidades),
-              import: dr.cImporte
-            };
+            if (index == -1) {
+              (arFamilia || []).push({
+                id: keyComparation,
+                store: (socketStore || {}).description,
+                column: dateResponse['column'],
+                semana: dateResponse['semana'],
+                departament: dr.cDepartamento,
+                total_import: dr.cImporte,
+                total_und: parseInt(dr.cUnidades),
+                data: [dataFamilia]
+              });
+            } else {
+              (((arFamilia || [])[index] || [])['data'] || []).push(dataFamilia);
+              ((arFamilia || [])[index] || [])['total_import'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.importe), 0).toFixed(2));
+              ((arFamilia || [])[index] || [])['total_und'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.unid), 0).toFixed(2));
+            }
           });
 
-          this.onSearchDataAnio();
+          this.arCardData = arFamilia;
         } else {
-          console.log((socketStore || {}).description);
-          (dataResponse || []).filter((dr) => {
-            this.arCardDataTemp.push({
-              id: keyComparation,
-              departament: dr.cDepartamento,
-              column: dateResponse['column'],
-              typeReport: dateResponse['type_report'],
-              semana: dateResponse['semana'],
-              store_1: (socketStore || {}).description,
-              diffPorc: 0,
-              anio_1: {
+          let indexCard = this.arCardDataTemp.findIndex((card) => card.id == keyComparation);
+
+          if (indexCard != -1) {
+            (dataResponse || []).filter((dr) => {
+              let indexDepartament = this.arCardDataTemp.findIndex((card) => card.departament == dr.cDepartamento);
+
+              this.arCardDataTemp[indexDepartament]['store_2'] = (socketStore || {}).description;
+              this.arCardDataTemp[indexDepartament]['anio_2'] = {
                 anio: anioData,
                 unid: parseInt(dr.cUnidades),
-                import: dr.cImporte,
-                proc_1: 0
-              },
-              anio_2: {}
+                import: dr.cImporte
+              };
             });
 
+            this.onSearchDataAnio();
+          } else {
+
+            (dataResponse || []).filter((dr) => {
+              this.arCardDataTemp.push({
+                id: keyComparation,
+                departament: dr.cDepartamento,
+                column: dateResponse['column'],
+                typeReport: dateResponse['type_report'],
+                semana: dateResponse['semana'],
+                store_1: (socketStore || {}).description,
+                diffPorc: 0,
+                anio_1: {
+                  anio: anioData,
+                  unid: parseInt(dr.cUnidades),
+                  import: dr.cImporte,
+                  proc_1: 0
+                },
+                anio_2: {}
+              });
+
+            });
+          }
+        }
+
+      }
+
+      if (this.cboColumn == 'Departamento') {
+
+        let titleCard = `${dateResponse['f1']} - ${dateResponse['f2']}`;
+
+        if (this.cboReport != 'Comparativo') {
+          (dataResponse || []).filter((dr) => {
+            dataTable.push({
+              departament: dr.cDepartamento,
+              unid: parseInt(dr.cUnidades),
+              import: dr.cImporte,
+              total_import: 0,
+              porcentage_import: 0
+            });
           });
+
+          this.arCardData.push({
+            id: this.arCardData.length + 1,
+            title: titleCard,
+            store: (socketStore || {}).description,
+            column: dateResponse['column'],
+            typeReport: dateResponse['type_report'],
+            semana: dateResponse['semana'],
+            data_simple: dataTable,
+            total_stock: dataTable.reduce((acum, f) => acum + parseFloat(f.unid), 0),
+            total_import: Number(dataTable.reduce((acum, f) => acum + parseFloat(f.import), 0).toFixed(2))
+          });
+        } else {
+          let indexCard = this.arCardDataTemp.findIndex((card) => card.id == keyComparation);
+          if (indexCard != -1) {
+            (dataResponse || []).filter((dr) => {
+              let indexDepartament = this.arCardDataTemp.findIndex((card) => card.departament == dr.cDepartamento);
+
+              this.arCardDataTemp[indexDepartament]['store_2'] = (socketStore || {}).description;
+              this.arCardDataTemp[indexDepartament]['anio_2'] = {
+                anio: anioData,
+                unid: parseInt(dr.cUnidades),
+                import: dr.cImporte
+              };
+            });
+
+            this.onSearchDataAnio();
+          } else {
+
+            (dataResponse || []).filter((dr) => {
+              this.arCardDataTemp.push({
+                id: keyComparation,
+                departament: dr.cDepartamento,
+                column: dateResponse['column'],
+                typeReport: dateResponse['type_report'],
+                semana: dateResponse['semana'],
+                store_1: (socketStore || {}).description,
+                diffPorc: 0,
+                anio_1: {
+                  anio: anioData,
+                  unid: parseInt(dr.cUnidades),
+                  import: dr.cImporte,
+                  proc_1: 0
+                },
+                anio_2: {}
+              });
+
+            });
+          }
         }
       }
     });
@@ -256,14 +324,7 @@ export class MtIcgreportComponent implements OnInit {
 
 
     //this.arCardData['data'] = parseData;
-    //console.log(parseData);
-
-    const grupos = Object.entries(parseData).map(([departament, items]) => ({
-      departament,
-      items
-    }));
-
-    console.log(grupos);
+    console.log(this.arCardData);
 
 
   }
@@ -302,13 +363,35 @@ export class MtIcgreportComponent implements OnInit {
       this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore2, this.cboColumn, keyReport);
     }
 
-    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//comparativo,departamento,fecha,entre_tiendas - rp-5
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha' && this.isComparationStores) {//comparativo,departamento,fecha,entre_tiendas - rp-5
       let keyReport = this.codigoNumerico();
       this.sendConsultReport(this.cboReport, this.vCalendar1[0], this.vCalendar1[1], this.cboStore1, this.cboColumn, keyReport);
       this.sendConsultReport(this.cboReport, this.vCalendar2[0], this.vCalendar2[1], this.cboStore1, this.cboColumn, keyReport);
     }
 
-    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Familia' && this.optionTipoFecha == 'semana' && !this.isComparationStores) {//comparativo,familia,semana - rp-3
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Departamento' && this.optionTipoFecha == 'fecha') {//comparativo,departamento,fecha - rp-6
+      let keyReport = this.codigoNumerico();
+      this.sendConsultReport(this.cboReport, this.vCalendar1[0], this.vCalendar1[1], this.cboStore1, this.cboColumn, keyReport);
+      this.sendConsultReport(this.cboReport, this.vCalendar2[0], this.vCalendar2[1], this.cboStore1, this.cboColumn, keyReport);
+    }
+
+    if (this.cboReport == 'Simple' && this.cboColumn == 'Familia' && this.optionTipoFecha == 'semana') {//simple,familia,semana - rp-7
+      let semanasAll: Array<any> = this.generarSemanas(this.vAnio_1);
+      if (semanasAll.length) {
+        let semanaSelected = semanasAll.find((sm) => sm.semana == this.cboSemana);
+        this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected['inicio']), this.convertirFechaSQL(semanaSelected['fin']), this.cboStore, this.cboColumn);
+      }
+    }
+
+    if (this.cboReport == 'Simple' && this.cboColumn == 'Familia' && this.optionTipoFecha == 'fecha') {//simple,familia,fecha - rp-8
+      let semanasAll: Array<any> = this.generarSemanas(this.vAnio_1);
+      if (semanasAll.length) {
+        let semanaSelected = semanasAll.find((sm) => sm.semana == this.cboSemana);
+        this.sendConsultReport(this.cboReport, this.vCalendar1[0], this.vCalendar1[1], this.cboStore, this.cboColumn);
+      }
+    }
+
+    if (this.cboReport == 'Comparativo' && this.cboColumn == 'Familia' && this.optionTipoFecha == 'semana' && !this.isComparationStores) {//comparativo,familia,semana - rp-9
       let keyReport = this.codigoNumerico();
       let semanasAll_1: Array<any> = this.generarSemanas(this.vAnio_1);
       let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
@@ -317,6 +400,21 @@ export class MtIcgreportComponent implements OnInit {
       this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
       this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
     }
+
+    /*
+        if (this.cboReport == 'Comparativo' && this.cboColumn == 'Familia' && this.optionTipoFecha == 'semana' && !this.isComparationStores) {//comparativo,familia,semana - rp-3
+          let keyReport = this.codigoNumerico();
+          let semanasAll_1: Array<any> = this.generarSemanas(this.vAnio_1);
+          let semanasAll_2: Array<any> = this.generarSemanas(this.vAnio_2);
+          let semanaSelected_1 = semanasAll_1.find((sm) => sm.semana == this.cboSemana);
+          let semanaSelected_2 = semanasAll_2.find((sm) => sm.semana == this.cboSemana);
+          this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_1['inicio']), this.convertirFechaSQL(semanaSelected_1['fin']), this.cboStore1, this.cboColumn, keyReport);
+          this.sendConsultReport(this.cboReport, this.convertirFechaSQL(semanaSelected_2['inicio']), this.convertirFechaSQL(semanaSelected_2['fin']), this.cboStore1, this.cboColumn, keyReport);
+        }*/
+
+
+
+
   }
 
   onChangeSelect(data: any) {
