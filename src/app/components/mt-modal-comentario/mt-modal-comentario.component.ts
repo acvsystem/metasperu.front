@@ -46,7 +46,7 @@ export class MtModalComentarioComponent implements OnInit {
 
   onChangeTextArea(data: any) {
     let id = data.target.id;
-    let inputData = $(`#${id}`).val();
+    let inputData = data.target.value;
     this[id] = inputData || "";
   }
 

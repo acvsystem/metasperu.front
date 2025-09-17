@@ -460,6 +460,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
           usuario: (perfil || {}).mt_name_1 || '',
           comentario: result
         }
+
         this.socket.emit('autorizar_hrx', parse);
         this.onListHorasAutorizar();
       } else {
