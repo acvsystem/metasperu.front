@@ -123,44 +123,64 @@ export class MtIcgreportComponent implements OnInit {
 
           this.arCardData = arFamilia;
         } else {
-          let indexCard = this.arCardDataTemp.findIndex((card) => card.id == keyComparation);
+          let indexCard = this.arCardData.findIndex((card) => card.id == keyComparation);
 
           if (indexCard != -1) {
-            (dataResponse || []).filter((dr) => {
-              let indexDepartament = this.arCardDataTemp.findIndex((card) => card.departament == dr.cDepartamento);
 
-              this.arCardDataTemp[indexDepartament]['store_2'] = (socketStore || {}).description;
-              this.arCardDataTemp[indexDepartament]['anio_2'] = {
-                anio: anioData,
-                unid: parseInt(dr.cUnidades),
-                import: dr.cImporte
-              };
+            dataResponse.filter((dr) => {
+              let indexDpt = this.arCardData.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
+              let dataFamilia = { anio: anioData, unid: parseInt(dr.cUnidades) || 0, importe: parseFloat(dr.cImporte) || 0 };
+              let indexFamily = this.arCardData[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
+              if (indexDpt > -1) {
+
+                this.arCardData[indexDpt]['data'][indexFamily]['anio_2'] = dataFamilia || {};
+                this.arCardData[indexDpt]['total_import_2'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_2'].importe), 0).toFixed(2));
+                this.arCardData[indexDpt]['total_und_2'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseInt(f['anio_2'].unid), 0).toFixed(2));
+
+                this.arCardData[indexDpt]['total_import_1'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_1'].importe), 0).toFixed(2));
+                this.arCardData[indexDpt]['total_und_1'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseInt(f['anio_1'].unid), 0).toFixed(2));
+              }
             });
 
-            this.onSearchDataAnio();
+
+
+            console.log(this.arCardData);
           } else {
 
-            (dataResponse || []).filter((dr) => {
-              this.arCardDataTemp.push({
-                id: keyComparation,
-                departament: dr.cDepartamento,
-                column: dateResponse['column'],
-                typeReport: dateResponse['type_report'],
-                semana: dateResponse['semana'],
-                store_1: (socketStore || {}).description,
-                diffPorc: 0,
-                anio_1: {
-                  anio: anioData,
-                  unid: parseInt(dr.cUnidades),
-                  import: dr.cImporte,
-                  proc_1: 0
-                },
-                anio_2: {}
-              });
+            dataResponse.filter((dr) => {
+              let index = (arFamilia || []).findIndex((fm) => fm.departament == dr.cDepartamento);
+              let dataFamilia = { familia: dr.cFamilia, anio_1: { anio: anioData, unid: parseInt(dr.cUnidades), importe: parseFloat(dr.cImporte) }, anio_2: { anio: '', unid: 0, importe: 0 } };
 
+              if (index == -1) {
+                (arFamilia || []).push({
+                  id: keyComparation,
+                  store: (socketStore || {}).description,
+                  column: dateResponse['column'],
+                  semana: dateResponse['semana'],
+                  typeReport: dateResponse['type_report'],
+                  departament: dr.cDepartamento,
+                  total_import_1: dr.cImporte,
+                  total_und_1: parseInt(dr.cUnidades),
+                  total_import_2: 0,
+                  total_und_2: 0,
+                  data: [dataFamilia]
+                });
+              } else {
+                (((arFamilia || [])[index] || [])['data'] || []).push(dataFamilia);
+                ((arFamilia || [])[index] || [])['total_import_1'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.importe), 0).toFixed(2));
+                ((arFamilia || [])[index] || [])['total_und_1'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.unid), 0).toFixed(2));
+              }
             });
+
+            this.arCardData = arFamilia;
+
+
           }
+
+
         }
+
+
 
       }
 
@@ -324,7 +344,7 @@ export class MtIcgreportComponent implements OnInit {
 
 
     //this.arCardData['data'] = parseData;
-    console.log(this.arCardData);
+    //console.log(this.arCardData);
 
 
   }
@@ -481,7 +501,6 @@ export class MtIcgreportComponent implements OnInit {
     this.service.allStores().then((response: Array<any>) => {
       this.arStoreAll = response;
       this.arStoreAll.filter((store) => {
-        console.log((store.serie.split('')[0]));
         if ((store.serie.split('')[0]) == '7') {
           this.cboStoreAll.push({ key: store.serie, value: store.description });
         }
