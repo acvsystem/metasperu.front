@@ -14,7 +14,7 @@ import { filter } from 'rxjs/operators';
 export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   @Input() dataTable: Array<any> = [];
 
-  displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
+  displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Fecha_comp', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
   listaPapeletas: Array<any> = [];
   dataSourcePap = new MatTableDataSource<any>(this.listaPapeletas);
   filterCodigov: string = "";
@@ -33,6 +33,7 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
     codigo_tienda: "",
     documento: "",
     fecha_creacion: "",
+    fecha_compensacion: "",
     fecha_desde: "",
     fecha_hasta: "",
     hora_acumulado: "",
@@ -196,6 +197,7 @@ export interface PeriodicElement {
   codigo_tienda: String,
   documento: String,
   fecha_creacion: String,
+  fecha_compensacion: String,
   fecha_desde: String,
   fecha_hasta: String,
   hora_acumulado: String,

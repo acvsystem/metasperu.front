@@ -1,12 +1,11 @@
-
 <mat-drawer-container class="example-container" [hasBackdrop]="true">
   <mat-drawer #drawer [mode]="'over'" position="end">
     <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap.length"></mt-papeleta-preview>
-</mat-drawer>
-<mat-drawer-content>
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSourcePap">
-  
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSourcePap">
+
         <ng-container matColumnDef="Codigo_Papeleta">
           <th mat-header-cell *matHeaderCellDef>
             <div class="head-table">
@@ -14,8 +13,8 @@
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterCodigo">
                   @if(isFilterCP){
-                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
-                  } 
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
               </div>
@@ -29,7 +28,7 @@
             {{element.codigo_papeleta}}
           </td>
         </ng-container>
-  
+
         <ng-container matColumnDef="Tienda">
           <th mat-header-cell *matHeaderCellDef>
             <div class="head-table">
@@ -37,8 +36,8 @@
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterTienda">
                   @if(isFilterT){
-                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
-                  } 
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
               </div>
@@ -52,14 +51,21 @@
             {{element.uns}}
           </td>
         </ng-container>
-  
+
         <ng-container matColumnDef="Fecha">
-          <th mat-header-cell *matHeaderCellDef> Fecha </th>
-          <td mat-cell *matCellDef="let element"> 
+          <th mat-header-cell *matHeaderCellDef> Fecha Creacion </th>
+          <td mat-cell *matCellDef="let element">
             <span>{{element.fecha_creacion}}</span>
           </td>
         </ng-container>
-  
+
+        <ng-container matColumnDef="Fecha_comp">
+          <th mat-header-cell *matHeaderCellDef> Fecha Compensacion </th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{element.fecha_desde}}</span>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="Tipo_papeleta">
           <th mat-header-cell *matHeaderCellDef>
             <div class="head-table">
@@ -67,7 +73,7 @@
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterTipoPap">
                   @if(isFilterTP){
-                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
                   }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
@@ -82,7 +88,7 @@
             {{element.tipo}}
           </td>
         </ng-container>
-  
+
         <ng-container matColumnDef="Nombre_Completo">
           <th mat-header-cell *matHeaderCellDef>
             <div class="head-table">
@@ -90,7 +96,7 @@
               <div class="filter-content" slot="end">
                 <div class="btn-filter" [matMenuTriggerFor]="filterNombreCompleto">
                   @if(isFilterNM){
-                    <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
+                  <div matBadge="1" matBadgeSize="small" style="width: 2px;"></div>
                   }
                   <i class="fa fa-filter" aria-hidden="true"></i>
                 </div>
@@ -105,21 +111,22 @@
             {{element.nombre_completo}}
           </td>
         </ng-container>
-  
+
         <ng-container matColumnDef="Accion">
           <th mat-header-cell *matHeaderCellDef> Accion </th>
           <td mat-cell *matCellDef="let element">
-            <button (click)="onViewPapeleta(element)" (click)="drawer.toggle()" style="margin-left: 8px;" matTooltip="ver papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
+            <button (click)="onViewPapeleta(element)" (click)="drawer.toggle()" style="margin-left: 8px;"
+              matTooltip="ver papeleta" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button">
               <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
             </button>
           </td>
         </ng-container>
-  
+
         <tr mat-header-row *matHeaderRowDef="displayedColumnsPap"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsPap;"></tr>
-    </table>
-    <mat-paginator #MatPaginator2 [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
-      aria-label="Select page of periodic elements">
-    </mat-paginator>
-  </div>
-</mat-drawer-content>
+      </table>
+      <mat-paginator #MatPaginator2 [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+        aria-label="Select page of periodic elements">
+      </mat-paginator>
+    </div>
+  </mat-drawer-content>
