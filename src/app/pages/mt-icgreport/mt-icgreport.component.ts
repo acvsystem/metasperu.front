@@ -129,7 +129,7 @@ export class MtIcgreportComponent implements OnInit {
 
             dataResponse.filter((dr) => {
               let indexDpt = this.arCardData.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
-              let dataFamilia = { anio: anioData, unid: parseInt(dr.cUnidades) || 0, importe: parseFloat(dr.cImporte) || 0 };
+              let dataFamilia = { anio: anioData, unid: parseInt(dr.cUnidades) || 0, importe: parseFloat(dr.cImporte) || 0, proc_2: 0 };
               let indexFamily = this.arCardData[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
               if (indexDpt > -1) {
 
@@ -139,9 +139,29 @@ export class MtIcgreportComponent implements OnInit {
 
                 this.arCardData[indexDpt]['total_import_1'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_1'].importe), 0).toFixed(2));
                 this.arCardData[indexDpt]['total_und_1'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseInt(f['anio_1'].unid), 0).toFixed(2));
+
+
+
+                let porc_2 = this.getPorcentage(parseFloat(dr.cImporte), Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_2'].importe), 0).toFixed(2)));
+                this.arCardData[indexDpt]['data'][indexFamily]['anio_2']['proc_2'] = porc_2;
               }
             });
 
+            this.arCardData.filter((dr, i) => {
+              let indexDpt = this.arCardData.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
+              let dataFamilia = { anio: anioData, unid: parseInt(dr.cUnidades) || 0, importe: parseFloat(dr.cImporte) || 0, proc_2: 0 };
+              let indexFamily = this.arCardData[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
+              let porc_1 = this.getPorcentage(parseFloat(dr.cImporte), Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_1'].importe), 0).toFixed(2)));
+             
+              this.arCardData[indexDpt]['data'][indexFamily]['anio_1']['proc_1'] = porc_1;
+              let porc_2 = this.getPorcentage(parseFloat(dr.cImporte), Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_2'].importe), 0).toFixed(2)));
+              this.arCardData[indexDpt]['data'][indexFamily]['anio_2']['proc_2'] = porc_2;
+             
+              //this.arCardData[indexDpt]['diffPorc'] = porc_1 - porc_2;
+              //his.arCardData[indexDpt]['diffUnid'] = this.getPorcentage(pr.anio_1.unid, pr.anio_2.unid);
+              //parseData[i]['store_1'] = pr.store_1;
+              //parseData[i]['store_2'] = pr.store_1;
+            });
 
 
             console.log(this.arCardData);
@@ -149,7 +169,7 @@ export class MtIcgreportComponent implements OnInit {
 
             dataResponse.filter((dr) => {
               let index = (arFamilia || []).findIndex((fm) => fm.departament == dr.cDepartamento);
-              let dataFamilia = { familia: dr.cFamilia, anio_1: { anio: anioData, unid: parseInt(dr.cUnidades), importe: parseFloat(dr.cImporte) }, anio_2: { anio: '', unid: 0, importe: 0 } };
+              let dataFamilia = { familia: dr.cFamilia, anio_1: { anio: anioData, unid: parseInt(dr.cUnidades), importe: parseFloat(dr.cImporte), proc_1: 0 }, anio_2: { anio: '', unid: 0, importe: 0 } };
 
               if (index == -1) {
                 (arFamilia || []).push({
@@ -166,9 +186,17 @@ export class MtIcgreportComponent implements OnInit {
                   data: [dataFamilia]
                 });
               } else {
+
+                let indexDpt = arFamilia.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
+
+                let indexFamily = arFamilia[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
+                console.log(arFamilia[indexDpt]['data'][indexFamily]);
                 (((arFamilia || [])[index] || [])['data'] || []).push(dataFamilia);
                 ((arFamilia || [])[index] || [])['total_import_1'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.importe), 0).toFixed(2));
                 ((arFamilia || [])[index] || [])['total_und_1'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.unid), 0).toFixed(2));
+
+                // let porc_1 = this.getPorcentage(parseFloat(dr.cImporte), arFamilia[indexDpt]['total_import_1']);
+                // arFamilia[indexDpt]['data'][indexFamily]['anio_1']['proc_1'] = porc_1;
               }
             });
 

@@ -66,6 +66,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   isResetForm: boolean = false;
   isResetCalendar: boolean = false;
   isResetCalendarComp: boolean = false;
+  isLoadingEmployes: boolean = false;
   hroAcumulada: string = "00:00";
   hroAcumuladaTotal: string = "00:00";
   hroTomada: string = "00:00";
@@ -87,6 +88,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   isEJB: boolean = false;
   isServer: boolean = false;
   isPapPermiso: boolean = false;
+  isSuccessEmploye: boolean = false;
   unidServicio: string = "";
   cboCargo: string = "";
   idCboTipoPap: number = 0;
@@ -1066,6 +1068,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
     if (index == 'cboTiendaConsulting') {
+      this.isLoadingEmployes = true;
+      this.arDataEJB = [];
+      setTimeout(() => {
+        if (this.isLoadingEmployes) {
+          this.isLoadingEmployes = false;
+          this.isSuccessEmploye = false;
+          this.service.toastError("Vuelva a seleccionar la tienda o presiene F5 en caso de ser una tienda", "Empleados");
+        }
+      }, 40000)
+
       this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
@@ -1108,9 +1120,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
-        console.log(response);
+
         let dataEmpleado = (response || {}).data || [];
         let codigo_uns = (this.onListTiendas || []).find((tienda) => (tienda || {}).code == this.codeTienda);
+
+        if ((dataEmpleado || []).length) {
+          this.isLoadingEmployes = false;
+          this.isSuccessEmploye = true;
+        }
 
         (dataEmpleado || []).filter((emp) => {
           if (response.id == "EJB") {

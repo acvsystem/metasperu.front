@@ -88,14 +88,14 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   constructor(private store: StorageService, private service: ShareService, private socket: SocketService) {
-    this.onAllStore();
+
   }
 
 
 
   async ngOnInit() {
 
-
+    await this.onAllStore();
 
     this.profileUser = this.store.getStore('mt-profile');
 
@@ -208,12 +208,15 @@ export class MtHorarioTiendaComponent implements OnInit {
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
     this.codeTienda = profileUser.code.toUpperCase();
-    let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
+      let unidServicio = this.onListTiendas.filter((tienda) => tienda.code == this.codeTienda);
+      this.unidServicio = (unidServicio || {})['uns'];
+      this.onListEmpleado = [];
 
-    this.unidServicio = (unidServicio || {})['uns'];
-    this.onListEmpleado = [];
+      console.log("EMPLEADO", this.unidServicio);
+   
 
-    console.log("EMPLEADO", this.unidServicio);
+
+
     this.socket.emit('horario/empleadoEJB', this.unidServicio);
 
 

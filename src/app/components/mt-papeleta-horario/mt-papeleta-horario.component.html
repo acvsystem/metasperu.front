@@ -1,292 +1,329 @@
 <mat-tab-group dynamicHeight>
-  <mat-tab label="Generar Papeleta" >
+  <mat-tab label="Generar Papeleta">
     @if(!isMantenimiento){
-      <div class="example-small-box mat-elevation-z4 boy-tap" [ngStyle]="{'min-height.px': screenHeight,'max-height.px': screenHeight}">
-        <ion-row *ngIf="!isConsulting">
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" >
-            <div>
-              <span style="color: black;margin-left: 12px;">Codigo Papeleta: <label style="font-weight: 700;">{{codigoPapeleta}}</label></span>
-            </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" >
-            <div style="display: flex;justify-content: end;align-items: center;">
-              <button data-bs-dismiss="offcanvas" aria-label="Close" style="margin-left: 8px;" id="searchProducto" type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm" (click)="onSavePapeleta()"> 
-                Registrar papeleta
-              </button>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <div style="display: flex;justify-content: center;align-items: center;color: black;">
-              <span style="font-weight: 500;">{{nameTienda}}</span>
-            </div>
-          </ion-col>
-        </ion-row>
-        <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;" *ngIf="!isResetForm">
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="isConsulting">
-                <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)" placeHolder="Seleccione Tienda" [optionList]="cboListCargo"></mt-select>
-              </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <mt-select id="cboEmpleado" (changeSelected)="onChangeSelect($event)" [nameOptionSelected]="vNameOptionSelected" placeHolder="Seleccione Empleado" [optionList]="onListEmpleado"></mt-select>
-              </ion-col>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="!isConsulting">
-                <mt-select id="cboCasos" placeHolder="Tipo de caso" [optionList]="onListCasos" (changeSelected)="onChangeSelect($event)"></mt-select>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isConsulting">
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <mt-select id="cboCargo" placeHolder="Seleccione Cargo" [optionList]="onListCargo" (changeSelected)="onChangeSelect($event)"></mt-select>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-          @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7" || isConsulting){
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="display: flex;justify-content: flex-end;">
-              <div style="display: flex;align-items: center;font-weight: 500;padding-right: 32px;color: black;">
-                Papeletas Asociadas: {{cantidadPapeletas}}
+    <div class="example-small-box mat-elevation-z4 boy-tap"
+      [ngStyle]="{'min-height.px': screenHeight,'max-height.px': screenHeight}">
+      <ion-row *ngIf="!isConsulting">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <div>
+            <span style="color: black;margin-left: 12px;">Codigo Papeleta: <label
+                style="font-weight: 700;">{{codigoPapeleta}}</label></span>
+          </div>
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <div style="display: flex;justify-content: end;align-items: center;">
+            <button data-bs-dismiss="offcanvas" aria-label="Close" style="margin-left: 8px;" id="searchProducto"
+              type="button" class="btn btn-primary btn-sm" type="button" class="btn btn-primary btn-sm"
+              (click)="onSavePapeleta()">
+              Registrar papeleta
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div style="display: flex;justify-content: center;align-items: center;color: black;">
+            <span style="font-weight: 500;">{{nameTienda}}</span>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row style="border-bottom: 1px solid #ccc;padding-bottom: 15px;" *ngIf="!isResetForm">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="isConsulting">
+              <div style="width: 95%;">
+                <mt-select id="cboTiendaConsulting" (changeSelected)="onChangeSelect($event)"
+                  placeHolder="Seleccione Tienda" [optionList]="cboListCargo"></mt-select>
               </div>
             </ion-col>
-          }
-        </ion-row>
-  
-          <div>
-            <ion-row *ngIf="!isConsulting">
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
-                  <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
-                </div>
-              </ion-col>
-            </ion-row>
-            <ion-row *ngIf="!isConsulting">
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <ion-row *ngIf="!isResetCalendarComp">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <div style="display: flex;justify-content: center;align-items: center;">
-                      <div style="width: 100px;">
-                        <span style="color: black;">Desde</span>
-                      </div>
-                      <div style="width: 200px;" >
-                        <mt-calendar id="vFechaDesde" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
-                        ></mt-calendar>
-                      </div>
-                    </div>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isVacacionesProgramadas">
-                    <div style="display: flex;justify-content: center;align-items: center;">
-                      <div style="width: 100px;">
-                        <span style="color: black;">Inicio de hora</span>
-                      </div>
-                      <div style="width: 200px;">
-                        <mt-calendar 
-                        id="horaSalida"
-                        [isTime]="true" 
-                        placeholder="Hora"
-                        [isReset]="isResetCalendar"
-                        (afterChange)="onCaledar($event)">
-                      </mt-calendar>
-                      </div>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row *ngIf="!isConsulting">
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <ion-row  *ngIf="!isResetCalendarComp">
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <div style="display: flex;justify-content: center;align-items: center;">
-                      <div style="width: 100px;">
-                        <span style="color: black;">Hasta</span>
-                      </div>
-                      <div style="width: 200px;">
-                        <mt-calendar id="vFechaHasta" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true" placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"
-                        ></mt-calendar>
-                      </div>
-                    </div>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isVacacionesProgramadas">
-                    <div style="display: flex;justify-content: center;align-items: center;">
-                      <div style="width: 100px;">
-                        <span style="color: black;">Fin de hora</span>
-                      </div>
-                      <div style="width: 200px;">
-                        <mt-calendar 
-                        [selected] = horaLlegada
-                        id="horaLlegada"
-                        [isTime]="true" 
-                        placeholder="Hora"
-                        name="horaLlegada"
-                        isReset="isResetCalendar"
-                        (afterChange)="onCaledar($event)">
-                      </mt-calendar>
-                      </div>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-        @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7" || isConsulting) {
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <ion-row>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
-                    <div style="display: flex;justify-content: center;align-items: center;">
-                      <div style="width: 100px;display: flex;align-items: center;">
-                        <span style="color: black;">Acumulado</span>
-                      </div>
-                      <div style="width: 200px;display: flex;align-items: center;">
-                        <span style="color: black;">{{hroAcumulada}} Horas</span>
-                      </div>
-                    </div>
-                  </ion-col>
-                  <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isConsulting">
-                    <div style="display: flex;justify-content: center;align-items: center;display: flex;align-items: center;">
-                      <div style="width: 100px;">
-                        <span style="color: black;">Solicitadas</span>
-                      </div>
-                      <div style="width: 200px;" class="mini-spinner-container">
-                        <span style="color: black;display: inline-flex;">{{diffHoraPap}} Horas <mat-spinner *ngIf="isLoaderHrx"></mat-spinner></span>
-                      </div>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            @if(arSelectRegistro.length) {
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="max-height: 150px;overflow: auto;">
-                  <table class="table table-bordered table-hover table-fixed">
-                    <thead>
-                      <tr>
-                        @if(isPartTime){
-                          <th class="columHead" style="width: 33% !important;">Fecha</th>
-                          <th class="columHead" style="width: 33% !important;">Hora Trabajadas</th>
-                        }@else{
-                          <th class="columHead" style="width: 33% !important;">Fecha</th>
-                          <th class="columHead" style="width: 33% !important;">Hora Entrada</th>
-                          <th class="columHead" style="width: 33% !important;">Hora Salida</th>
-                        }
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let columBody of arSelectRegistro;let index = index">
-                        @if(isPartTime){
-                          <td class="columBody">{{columBody.dia}}</td>
-                          <td class="columBody">{{columBody.hr_trabajadas}}</td>
-                        }@else{
-                          <td class="columBody">{{columBody.dia}}</td>
-                          <td class="columBody">{{columBody.hrIn}}</td>
-                          <td class="columBody">{{columBody.hrOut}}</td>
-                        }
-                      </tr>
-                    </tbody>
-                  </table>
-                </ion-col>
-              </ion-row>
-            }
-            <ion-row>
-              <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-                <div style="max-height: 500px;overflow: auto;">
-                    <table class="table table-bordered table-hover">
-                      <thead>
-                        <tr>
-                          <th class="columHead">Fecha</th>
-                          <th class="columHead">Hora Extra</th>
-                          <th class="columHead">Hora Solicitado</th>
-                          <th class="columHead">Hora Sobrante</th>
-                          <th class="columHead">Estado</th>
-                          <th class="columHead">Aprobar</th>
-                          <th class="columHead">Seleccionado</th>
-                          <th class="columHead" *ngIf="isConsulting">Accion</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let columBody of bodyList;let index = index">
-                          <td class="columBody">
-                            @if(isPartTime){
-                              <button matTooltip="Ver fechas" id="searchProducto" (click)="onSearchFechasPartTime(index)" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
-                                <i class="fa fa-eye" aria-hidden="true"></i>
-                              </button>
-                            }@else{
-                              {{columBody.fecha}}
-                            }
-                          </td>
-                          <td class="columBody">{{columBody.extra}}</td>
-                          <td class="columBody">{{columBody.hrx_solicitado}}</td>
-                          <td class="columBody">{{columBody.hrx_sobrante}}</td>
-                          <td class="columBody">
-                            <h6 *ngIf="!columBody.seleccionado && !columBody.verify && columBody.estado == 'correcto' || columBody.estado == 'aprobado' && !columBody.verify" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
-                            <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify && !columBody.rechazado" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">solicitar aprobacion</span></h6>
-                            <h6 *ngIf="columBody.estado == 'utilizado' || columBody.seleccionado" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
-                            <h6 *ngIf="columBody.rechazado || columBody.estado == 'rechazado'" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
-                          </td>
-                          <td class="columBody">
-                              <div>
-                                @if(columBody.estado == 'aprobar'){
-                                  <button matTooltip="Solicitar aprobacion" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onAutorizacion(columBody)">
-                                    <i class="fa fa-check" aria-hidden="true"></i>
-                                  </button>
-                                  <button matTooltip="Revisar Registro del dia" id="searchProducto" type="button" class="btn btn-warning btn-sm" style="color: #fff; padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onSearchRegistro(columBody.fecha)">
-                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                                  </button>
-                                } 
-                                @if(columBody.estado == 'rechazado'){
-                                  <button matTooltip="Ver comentario" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onViewComentario(columBody)">
-                                    <i class="fa fa-commenting" aria-hidden="true"></i>
-                                  </button>
-                                }
-                              </div>
-                          </td>
-                          <td class="columBody">
-                            <div style="display: flex;justify-content: center;align-items: center;">
-                              @if(columBody.estado == 'aprobar' || columBody.estado == 'rechazado'){
-                                <span *ngIf="columBody.checked" style="color: grey;"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
-                              } @else {
-                                <span *ngIf="columBody.checked" style="color: green;"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
-                              }
-                            </div>
-                          </td>
-                          <td class="columBody" style="display: none;">
-                            <button  matTooltip="Recalcular" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;" (click)="onRecal(columBody)">
-                              <i class="fa fa-refresh" aria-hidden="true"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </div>
-              </ion-col>
-            </ion-row>
-        }
-  
-        @if(cboCasos != 'Compensacion de horas trabajadas' && cboCasos != "7" && !isConsulting){
-          <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-              <div style="width: 100%;color: black;padding: 10px;">
-                <span>Razon del permiso:</span>
+              <div style="display: flex;justify-content: center;align-items: center;height: 50px;">
+                <div style="width: 95%;">
+                  <mt-select id="cboEmpleado" (changeSelected)="onChangeSelect($event)"
+                    [nameOptionSelected]="vNameOptionSelected" placeHolder="Seleccione Empleado"
+                    [optionList]="onListEmpleado"></mt-select>
+                </div>
+                <div style="width: 5%;display: flex;justify-content: center;align-items: center;">
+                  <mat-spinner *ngIf="isLoadingEmployes"></mat-spinner>
+                  <i class="fa fa-check" aria-hidden="true" *ngIf="!isLoadingEmployes && isSuccessEmploye"
+                    style="color: green;"></i>
+                </div>
               </div>
-              <div style="padding: 10px;">
-                <textarea id="vObservacion" class="form-control" rows="5" [value]="vObservacion" (keyup)="onChangeTextArea($event)"></textarea>
+            </ion-col>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" *ngIf="!isConsulting">
+              <div style="width: 95%;">
+                <mt-select id="cboCasos" placeHolder="Tipo de caso" [optionList]="onListCasos"
+                  (changeSelected)="onChangeSelect($event)"></mt-select>
               </div>
             </ion-col>
           </ion-row>
-        }
+        </ion-col>
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isConsulting">
+          <ion-row>
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+              <mt-select id="cboCargo" placeHolder="Seleccione Cargo" [optionList]="onListCargo"
+                (changeSelected)="onChangeSelect($event)"></mt-select>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7" || isConsulting){
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="display: flex;justify-content: flex-end;">
+          <div style="display: flex;align-items: center;font-weight: 500;padding-right: 32px;color: black;">
+            Papeletas Asociadas: {{cantidadPapeletas}}
           </div>
+        </ion-col>
+        }
+      </ion-row>
+
+      <div>
+        <ion-row *ngIf="!isConsulting">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;margin-bottom: 5px;">
+              <span style="color: black;font-weight: 500;">Duracion del permiso de salida</span>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!isConsulting">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <ion-row *ngIf="!isResetCalendarComp">
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <div style="display: flex;justify-content: center;align-items: center;">
+                  <div style="width: 100px;">
+                    <span style="color: black;">Desde</span>
+                  </div>
+                  <div style="width: 200px;">
+                    <mt-calendar id="vFechaDesde" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true"
+                      placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"></mt-calendar>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isVacacionesProgramadas">
+                <div style="display: flex;justify-content: center;align-items: center;">
+                  <div style="width: 100px;">
+                    <span style="color: black;">Inicio de hora</span>
+                  </div>
+                  <div style="width: 200px;">
+                    <mt-calendar id="horaSalida" [isTime]="true" placeholder="Hora" [isReset]="isResetCalendar"
+                      (afterChange)="onCaledar($event)">
+                    </mt-calendar>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!isConsulting">
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <ion-row *ngIf="!isResetCalendarComp">
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <div style="display: flex;justify-content: center;align-items: center;">
+                  <div style="width: 100px;">
+                    <span style="color: black;">Hasta</span>
+                  </div>
+                  <div style="width: 200px;">
+                    <mt-calendar id="vFechaHasta" [isPeriodo]="false" [isMultiSelect]="false" [isDefault]="true"
+                      placeholder="Seleccione la fecha" (afterChange)="onCaledar($event)"></mt-calendar>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isVacacionesProgramadas">
+                <div style="display: flex;justify-content: center;align-items: center;">
+                  <div style="width: 100px;">
+                    <span style="color: black;">Fin de hora</span>
+                  </div>
+                  <div style="width: 200px;">
+                    <mt-calendar [selected]=horaLlegada id="horaLlegada" [isTime]="true" placeholder="Hora"
+                      name="horaLlegada" isReset="isResetCalendar" (afterChange)="onCaledar($event)">
+                    </mt-calendar>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        @if(cboCasos == 'Compensacion de horas trabajadas' || cboCasos == "7" || isConsulting) {
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <ion-row>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6">
+                <div style="display: flex;justify-content: center;align-items: center;">
+                  <div style="width: 100px;display: flex;align-items: center;">
+                    <span style="color: black;">Acumulado</span>
+                  </div>
+                  <div style="width: 200px;display: flex;align-items: center;">
+                    <span style="color: black;">{{hroAcumulada}} Horas</span>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="6" *ngIf="!isConsulting">
+                <div
+                  style="display: flex;justify-content: center;align-items: center;display: flex;align-items: center;">
+                  <div style="width: 100px;">
+                    <span style="color: black;">Solicitadas</span>
+                  </div>
+                  <div style="width: 200px;" class="mini-spinner-container">
+                    <span style="color: black;display: inline-flex;">{{diffHoraPap}} Horas <mat-spinner
+                        *ngIf="isLoaderHrx"></mat-spinner></span>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        @if(arSelectRegistro.length) {
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" style="max-height: 150px;overflow: auto;">
+            <table class="table table-bordered table-hover table-fixed">
+              <thead>
+                <tr>
+                  @if(isPartTime){
+                  <th class="columHead" style="width: 33% !important;">Fecha</th>
+                  <th class="columHead" style="width: 33% !important;">Hora Trabajadas</th>
+                  }@else{
+                  <th class="columHead" style="width: 33% !important;">Fecha</th>
+                  <th class="columHead" style="width: 33% !important;">Hora Entrada</th>
+                  <th class="columHead" style="width: 33% !important;">Hora Salida</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let columBody of arSelectRegistro;let index = index">
+                  @if(isPartTime){
+                  <td class="columBody">{{columBody.dia}}</td>
+                  <td class="columBody">{{columBody.hr_trabajadas}}</td>
+                  }@else{
+                  <td class="columBody">{{columBody.dia}}</td>
+                  <td class="columBody">{{columBody.hrIn}}</td>
+                  <td class="columBody">{{columBody.hrOut}}</td>
+                  }
+                </tr>
+              </tbody>
+            </table>
+          </ion-col>
+        </ion-row>
+        }
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div style="max-height: 500px;overflow: auto;">
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th class="columHead">Fecha</th>
+                    <th class="columHead">Hora Extra</th>
+                    <th class="columHead">Hora Solicitado</th>
+                    <th class="columHead">Hora Sobrante</th>
+                    <th class="columHead">Estado</th>
+                    <th class="columHead">Aprobar</th>
+                    <th class="columHead">Seleccionado</th>
+                    <th class="columHead" *ngIf="isConsulting">Accion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let columBody of bodyList;let index = index">
+                    <td class="columBody">
+                      @if(isPartTime){
+                      <button matTooltip="Ver fechas" id="searchProducto" (click)="onSearchFechasPartTime(index)"
+                        type="button" class="btn btn-success btn-sm"
+                        style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                      </button>
+                      }@else{
+                      {{columBody.fecha}}
+                      }
+                    </td>
+                    <td class="columBody">{{columBody.extra}}</td>
+                    <td class="columBody">{{columBody.hrx_solicitado}}</td>
+                    <td class="columBody">{{columBody.hrx_sobrante}}</td>
+                    <td class="columBody">
+                      <h6
+                        *ngIf="!columBody.seleccionado && !columBody.verify && columBody.estado == 'correcto' || columBody.estado == 'aprobado' && !columBody.verify"
+                        style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">correcto</span></h6>
+                      <h6 *ngIf="columBody.estado == 'aprobar'  && !columBody.verify && !columBody.rechazado"
+                        style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;">solicitar
+                          aprobacion</span></h6>
+                      <h6 *ngIf="columBody.estado == 'utilizado' || columBody.seleccionado" style="margin: 0;"><span
+                          class="badge"
+                          style="font-weight: 100;background-color: rgb(253 159 13) !important;">utilizado</span></h6>
+                      <h6 *ngIf="columBody.rechazado || columBody.estado == 'rechazado'" style="margin: 0;"><span
+                          class="badge" style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
+                    </td>
+                    <td class="columBody">
+                      <div>
+                        @if(columBody.estado == 'aprobar'){
+                        <button matTooltip="Solicitar aprobacion" id="searchProducto" type="button"
+                          class="btn btn-success btn-sm"
+                          style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;"
+                          (click)="onAutorizacion(columBody)">
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </button>
+                        <button matTooltip="Revisar Registro del dia" id="searchProducto" type="button"
+                          class="btn btn-warning btn-sm"
+                          style="color: #fff; padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;"
+                          (click)="onSearchRegistro(columBody.fecha)">
+                          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                        </button>
+                        }
+                        @if(columBody.estado == 'rechazado'){
+                        <button matTooltip="Ver comentario" id="searchProducto" type="button"
+                          class="btn btn-success btn-sm"
+                          style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;"
+                          (click)="onViewComentario(columBody)">
+                          <i class="fa fa-commenting" aria-hidden="true"></i>
+                        </button>
+                        }
+                      </div>
+                    </td>
+                    <td class="columBody">
+                      <div style="display: flex;justify-content: center;align-items: center;">
+                        @if(columBody.estado == 'aprobar' || columBody.estado == 'rechazado'){
+                        <span *ngIf="columBody.checked" style="color: grey;"><i class="fa fa-check-circle"
+                            aria-hidden="true"></i></span>
+                        } @else {
+                        <span *ngIf="columBody.checked" style="color: green;"><i class="fa fa-check-circle"
+                            aria-hidden="true"></i></span>
+                        }
+                      </div>
+                    </td>
+                    <td class="columBody" style="display: none;">
+                      <button matTooltip="Recalcular" id="searchProducto" type="button" class="btn btn-success btn-sm"
+                        style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;"
+                        (click)="onRecal(columBody)">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ion-col>
+        </ion-row>
+        }
+
+        @if(cboCasos != 'Compensacion de horas trabajadas' && cboCasos != "7" && !isConsulting){
+        <ion-row>
+          <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <div style="width: 100%;color: black;padding: 10px;">
+              <span>Razon del permiso:</span>
+            </div>
+            <div style="padding: 10px;">
+              <textarea id="vObservacion" class="form-control" rows="5" [value]="vObservacion"
+                (keyup)="onChangeTextArea($event)"></textarea>
+            </div>
+          </ion-col>
+        </ion-row>
+        }
       </div>
+    </div>
     } @else {
-      <div style="padding: 50px;">
-        <div style="text-align: center;display: inline-grid;width: 100%;">
-          <span style="font-weight: 500;">EN MANTENIMIENTO</span>
-          <span>Cree las papeletas manualmente y luego cuando se reestablesca crearlo en el sistema, gracias.</span>
-        </div>
-        <div style="text-align: center;">
-          <img src="../../../assets/mecanico.png">
-        </div>
+    <div style="padding: 50px;">
+      <div style="text-align: center;display: inline-grid;width: 100%;">
+        <span style="font-weight: 500;">EN MANTENIMIENTO</span>
+        <span>Cree las papeletas manualmente y luego cuando se reestablesca crearlo en el sistema, gracias.</span>
       </div>
+      <div style="text-align: center;">
+        <img src="../../../assets/mecanico.png">
+      </div>
+    </div>
     }
 
   </mat-tab>
@@ -302,41 +339,43 @@
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <div style="max-height: 500px;overflow: auto;" *ngIf="!isViewPapeleta">
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource">
+              <table mat-table [dataSource]="dataSource">
 
-                  <ng-container matColumnDef="codigo_papeleta">
-                    <th mat-header-cell *matHeaderCellDef> Codigo Papeleta </th>
-                    <td mat-cell *matCellDef="let element"> {{element.codigo_papeleta}} </td>
-                  </ng-container>
+                <ng-container matColumnDef="codigo_papeleta">
+                  <th mat-header-cell *matHeaderCellDef> Codigo Papeleta </th>
+                  <td mat-cell *matCellDef="let element"> {{element.codigo_papeleta}} </td>
+                </ng-container>
 
-                  <ng-container matColumnDef="Fecha">
-                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                    <td mat-cell *matCellDef="let element"> {{element.fecha_creacion}} </td>
-                  </ng-container>
+                <ng-container matColumnDef="Fecha">
+                  <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fecha_creacion}} </td>
+                </ng-container>
 
-                  <ng-container matColumnDef="tipo_papeleta">
-                    <th mat-header-cell *matHeaderCellDef> Tipo papeleta </th>
-                    <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
-                  </ng-container>
+                <ng-container matColumnDef="tipo_papeleta">
+                  <th mat-header-cell *matHeaderCellDef> Tipo papeleta </th>
+                  <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+                </ng-container>
 
-                  <ng-container matColumnDef="nombre_completo">
-                    <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
-                    <td mat-cell *matCellDef="let element"> {{element.nombre_completo}} </td>
-                  </ng-container>
+                <ng-container matColumnDef="nombre_completo">
+                  <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+                  <td mat-cell *matCellDef="let element"> {{element.nombre_completo}} </td>
+                </ng-container>
 
-                  <ng-container matColumnDef="Accion">
-                    <th mat-header-cell *matHeaderCellDef> Accion </th>
-                    <td mat-cell *matCellDef="let element">
-                      <button matTooltip="ver papeleta" (click)="onViewPapeleta(element)" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
-                        <i class="fa fa-reply" aria-hidden="true"></i>
-                      </button>
-                    </td>
-                  </ng-container>
+                <ng-container matColumnDef="Accion">
+                  <th mat-header-cell *matHeaderCellDef> Accion </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button matTooltip="ver papeleta" (click)="onViewPapeleta(element)" type="button"
+                      class="btn btn-success btn-sm"
+                      style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                      <i class="fa fa-reply" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </ng-container>
 
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
 
 
               <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
@@ -355,6 +394,3 @@
     </div>
   </mat-tab>
 </mat-tab-group>
-
-
-  
