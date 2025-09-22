@@ -1078,7 +1078,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
         }
       }, 40000)
 
-      this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+      //this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
       let perfil = this.store.getStore("mt-profile");
 
@@ -1097,6 +1097,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       this.unidServicio = (unidServicio || {})['uns'];
       this.onListEmpleado = [];
+      console.log("**************EMIT",this.unidServicio);
       this.socket.emit('consultaListaEmpleado', this.unidServicio);
 
       this.socket.on('respuesta_autorizacion', async (response) => { //AUTORIZACION HORAS EXTRA
