@@ -1078,8 +1078,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
         }
       }, 40000)
 
-      //this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
-
       let perfil = this.store.getStore("mt-profile");
 
       this.store.setStore("mt-profile", JSON.stringify({

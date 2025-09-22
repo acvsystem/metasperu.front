@@ -74,7 +74,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
   onProcess() {
 
-    this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
+    //this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
     this.onTiempoTolerancia();
 
@@ -575,7 +575,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             this.hroAcumuladaTotal = this.arHoraExtra[0];
 
             let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
-            this.parseEJB[index]['hroAcumulada'] = this.hroAcumulada;
+            (this.parseEJB[index] || {})['hroAcumulada'] = this.hroAcumulada;
             //this.store.removeStore('mt-hrExtra');
             //this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
           }
