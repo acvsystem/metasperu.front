@@ -26,3 +26,25 @@
     width: 50% !important;
     border-radius: 0px !important;
 }
+
+.mat-drawer-container {
+    min-height: 600px;
+}
+
+.visible-onBack {
+    display: none !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .mat-drawer-over {
+        width: 100% !important;
+    }
+
+    .visible-onBack {
+        display: block !important;
+        margin-left: 10px !important;
+        margin-top: 10px !important;
+    }
+
+
+}

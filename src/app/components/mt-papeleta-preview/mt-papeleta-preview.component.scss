@@ -8,8 +8,48 @@
 
     .columHead,
     .columBody {
-        font-size: 14px !important;
+        font-size: 14px;
         font-weight: 500 !important;
         text-align: center !important;
     }
+}
+
+
+@media only screen and (max-width: 600px) {
+
+    #btnUpdate,
+    #btnDPF,
+    #vFechapap {
+        width: 100% !important;
+    }
+
+    .font-mb {
+        font-size: 12px !important;
+    }
+
+    .space_datatime {
+        width: 160px !important;
+    }
+
+    .title_none {
+        display: none !important;
+    }
+
+    .space_datatime_0 {
+        width: 0px !important;
+    }
+
+    .wt-size {
+        width: 100% !important;
+    }
+
+    .table {
+
+        .columHead,
+        .columBody {
+            font-size: 12px !important;
+            font-weight: 500 !important;
+        }
+    }
+
 }

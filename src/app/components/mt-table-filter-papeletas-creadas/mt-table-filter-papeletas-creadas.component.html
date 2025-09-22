@@ -1,5 +1,9 @@
 <mat-drawer-container class="example-container" [hasBackdrop]="true">
   <mat-drawer #drawer [mode]="'over'" position="end">
+    <button type="button" class="btn btn-light visible-onBack" (click)="drawer.toggle()" *ngIf="isViewPapeleta">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+
     <mt-papeleta-preview [codigoPap]="codigoPap" *ngIf="codigoPap.length"></mt-papeleta-preview>
   </mat-drawer>
   <mat-drawer-content>
