@@ -588,7 +588,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             setTimeout(() => {
               this.parseEJB.filter((dt, i) => {
                 let exs = this.bodyList.findIndex((bd) => bd.documento == dt.documento);
-                if (exs == -1 && !dt.hroAcumulada.length) {
+                if (exs == -1 && !((dt || {}).hroAcumulada || "").length) {
 
                   (this.parseEJB[i] || {})['hroAcumulada'] = '-------';
                 }
