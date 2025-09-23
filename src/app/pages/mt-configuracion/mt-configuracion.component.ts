@@ -1195,8 +1195,9 @@ export class MtConfiguracionComponent implements OnInit {
       if ((event || {})['container']['id'] == "dropTiendaAsig") {
         let dataRecept = event.container.data;
 
-        let dataTienda = this.dataDropTiendaList.find((tienda) => tienda.DESCRIPCION == dataRecept[event.currentIndex]);
-        this.onAddAsignarTienda(this.cboUsuarioTienda, dataTienda.ID_TIENDA, dataTienda.DESCRIPCION);
+        let dataTienda = this.dataDropTiendaList.find((tienda) => tienda.description == dataRecept[event.currentIndex]);
+     
+        this.onAddAsignarTienda(this.cboUsuarioTienda, dataTienda.id, dataTienda.description);
       }
 
     }
