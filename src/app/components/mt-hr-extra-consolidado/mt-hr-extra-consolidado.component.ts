@@ -140,6 +140,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
 
         if (dataEmpleado.length - 1 == index) {
+
           this.afterChange.emit(response);
           this.parseEJB.filter((arEmp) => {
 
@@ -167,12 +168,14 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
 
+
         }
       });
     });
 
 
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
+
       let data = (response || {}).data || [];
       this.parseHuellero = data;
       this.onDataTemp = [];
@@ -546,6 +549,9 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
         this.hroAcumulada = "";
         this.hroAcumuladaTotal = "";
         this.arHoraExtra = [];
+
+
+
         this.bodyList.filter((dt, i) => {
           this.bodyList[i]['hrx_solicitado'] = "00:00";
 
@@ -575,11 +581,26 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             this.hroAcumuladaTotal = this.arHoraExtra[0];
 
             let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
-            (this.parseEJB[index] || {})['hroAcumulada'] = this.hroAcumulada;
+
+            (this.parseEJB[index] || {})['hroAcumulada'] = typeof this.hroAcumulada == 'undefined' || this.hroAcumulada.length == 0 ? '-------' : this.hroAcumulada;
+
+
+            setTimeout(() => {
+              this.parseEJB.filter((dt, i) => {
+                let exs = this.bodyList.findIndex((bd) => bd.documento == dt.documento);
+                if (exs == -1 && !dt.hroAcumulada.length) {
+
+                  (this.parseEJB[i] || {})['hroAcumulada'] = '-------';
+                }
+              });
+            }, 4000);
             //this.store.removeStore('mt-hrExtra');
             //this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
           }
         });
+
+
+
       });
     }
   }
