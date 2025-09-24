@@ -1,0 +1,100 @@
+.table_card {
+    border: 1px solid #c0c0c0 !important;
+    width: 100% !important;
+    height: 100px !important;
+    border-radius: 4px !important;
+    display: grid !important;
+    padding-left: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.status_color {
+    height: 100% !important;
+    width: 10px;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+.status_success {
+    background: rgb(62, 123, 255) !important;
+    border: 1px solid rgb(62, 123, 255) !important;
+    height: 100% !important;
+    width: 10px;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+
+}
+
+.status_reject {
+    background: rgb(255, 62, 62) !important;
+    border: 1px solid rgb(255, 62, 62) !important;
+    height: 100% !important;
+    width: 10px;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+
+}
+
+.status_alert {
+    background: rgb(226 179 6) !important;
+    border: 1px solid rgb(226 179 6) !important;
+    height: 100% !important;
+    width: 10px;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+.padding-none {
+    padding: 0px !important;
+    display: flex !important;
+
+
+    .content_button {
+        height: 100% !important;
+        padding-top: 5px !important;
+
+
+    }
+}
+
+.content_card {
+    width: 100% !important;
+
+    .store_title {
+        margin-left: 5px !important;
+        margin-top: 5px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+    }
+
+    .data_time {
+        font-size: 12px !important;
+        margin-left: 5px !important;
+    }
+
+    .name_employee {
+        font-size: 12px !important;
+        margin-left: 5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .card_head {
+        display: grid !important;
+
+        .content_title {
+            align-items: center !important;
+            display: flex !important;
+             justify-content: space-between !important;
+        }
+    }
+
+    .separator {
+        background: black;
+        margin: 4px;
+    }
+
+
+}

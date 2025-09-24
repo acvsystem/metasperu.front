@@ -1,7 +1,7 @@
 <ion-content>
   <div id="content" class="full-center-page">
     <mt-loading [isVisible]="isLoading"></mt-loading>
-    
+
     <div class="card-content">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
@@ -12,7 +12,7 @@
       <ion-row *ngIf="!isDetalle">
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
+            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="isDesktopView">
               <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource">
 
@@ -33,8 +33,9 @@
 
                   <ng-container matColumnDef="APROBADO_POR">
                     <th mat-header-cell *matHeaderCellDef> Usuario </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      <h6 style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">{{element.USUARIO_MODF}}</span></h6>
+                    <td mat-cell *matCellDef="let element">
+                      <h6 style="margin: 0;"><span class="badge bg-primary"
+                          style="font-weight: 100;">{{element.USUARIO_MODF}}</span></h6>
                     </td>
                   </ng-container>
 
@@ -50,26 +51,35 @@
 
                   <ng-container matColumnDef="ESTADO">
                     <th mat-header-cell *matHeaderCellDef> Estado </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      <h6 *ngIf="element.ESTADO == 'aprobado'" style="margin: 0;"><span class="badge bg-primary" style="font-weight: 100;">aprobado</span></h6>
-                      <h6 *ngIf="element.ESTADO == 'pendiente'" style="margin: 0;"><span class="badge bg-danger" style="font-weight: 100;background-color: rgb(253 159 13) !important;">pendiente</span></h6>
-                      <h6 *ngIf="element.ESTADO == 'rechazado'" style="margin: 0;"><span class="badge" style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
+                    <td mat-cell *matCellDef="let element">
+                      <h6 *ngIf="element.ESTADO == 'aprobado'" style="margin: 0;"><span class="badge bg-primary"
+                          style="font-weight: 100;">aprobado</span></h6>
+                      <h6 *ngIf="element.ESTADO == 'pendiente'" style="margin: 0;"><span class="badge bg-danger"
+                          style="font-weight: 100;background-color: rgb(253 159 13) !important;">pendiente</span></h6>
+                      <h6 *ngIf="element.ESTADO == 'rechazado'" style="margin: 0;"><span class="badge"
+                          style="font-weight: 100;background-color: red !important;">rechazado</span></h6>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="AUTORIZAR">
                     <th mat-header-cell *matHeaderCellDef> Autorizar </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      <button matTooltip="Aprobar Hora extra" (click)="onAutorizar(element)" id="searchProducto" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 6px;padding-right: 6px;padding-top: 0;margin-right: 5px;">
+                    <td mat-cell *matCellDef="let element">
+                      <button matTooltip="Aprobar Hora extra" (click)="onAutorizar(element)" id="searchProducto"
+                        type="button" class="btn btn-success btn-sm"
+                        style="padding-bottom: 0px;padding-left: 6px;padding-right: 6px;padding-top: 0;margin-right: 5px;">
                         <i class="fa fa-shield" aria-hidden="true"></i>
                       </button>
-                      <button matTooltip="Rechazar Hora Extra" (click)="onRechazar(element)" id="searchProducto" type="button" class="btn btn-danger btn-sm" style="padding-bottom: 0px;padding-left: 6px;padding-right: 6px;padding-top: 0;margin-right: 5px;">
+                      <button matTooltip="Rechazar Hora Extra" (click)="onRechazar(element)" id="searchProducto"
+                        type="button" class="btn btn-danger btn-sm"
+                        style="padding-bottom: 0px;padding-left: 6px;padding-right: 6px;padding-top: 0;margin-right: 5px;">
                         <i class="fa fa-times" aria-hidden="true"></i>
                       </button>
-                      <button matTooltip="Ver registro" id="searchProducto" (click)="onViewRegistro(element)" type="button" class="btn btn-success btn-sm" style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
+                      <button matTooltip="Ver registro" id="searchProducto" (click)="onViewRegistro(element)"
+                        type="button" class="btn btn-success btn-sm"
+                        style="padding-bottom: 0px;padding-left: 3px;padding-right: 3px;padding-top: 0;margin-right: 5px;">
                         <i class="fa fa-eye" aria-hidden="true"></i>
                       </button>
-                      
+
                     </td>
                   </ng-container>
 
@@ -82,13 +92,16 @@
                 </mat-paginator>
               </div>
             </ion-col>
+            <ion-col class="isMobileView">
+              <mt-table-mobile (afterAction)="afterAction($event)" [data]="onDataView"></mt-table-mobile>
+            </ion-col>
           </ion-row>
         </ion-col>
       </ion-row>
 
 
       <ion-row *ngIf="parseHuellero.length">
-        
+
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
           <button type="button" class="btn btn-light" (click)="onBackPap()">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -120,7 +133,7 @@
           </ion-row>
         </ion-col>
       </ion-row>
-      
+
     </div>
 
 

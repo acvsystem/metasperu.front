@@ -1,0 +1,50 @@
+@if(data.length){
+@for (element of data; track element) {
+<ion-row>
+  <ion-col>
+    <div class="table_card">
+      <ion-row>
+        <ion-col class="padding-none">
+          @if(element.ESTADO == 'aprobado'){
+          <div class="status_success"></div>
+          }
+          @if(element.ESTADO == 'rechazado'){
+          <div class="status_reject"></div>
+          }
+          @if(element.ESTADO == 'pendiente'){
+          <div class="status_alert"></div>
+          }
+
+          <div class="content_card">
+            <ion-row>
+              <ion-col>
+                <div class="card_head">
+                  <div class="content_title">
+                    <span class="store_title">{{element.TIENDA}}</span>
+                    <h6 style="margin: 0;margin-left: 5px;"><span class="badge bg-primary"
+                        style="font-weight: 100;">{{element.USUARIO_MODF}}</span></h6>
+                  </div>
+                  <span class="data_time">{{element.FECHA}} - {{element.HR_EXTRA_ACOMULADO}}</span>
+                </div>
+                <div class="card_head">
+                  <span class="name_employee">{{element.NOMBRE_COMPLETO}}</span>
+                  <hr class="separator">
+                  <span class="name_employee">{{element.COMENTARIO}}</span>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+
+          <div class="content_button">
+
+            <button class="option_modal" matIconButton (click)="openDialog('0ms', '0ms',element)">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-col>
+</ion-row>
+}
+}

@@ -18,3 +18,32 @@
     //height: 100% !important;
     background-color: white !important;
 }
+
+.isDesktopView {
+    display: block !important;
+}
+
+.isMobileView {
+    display: none !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .isMobileView {
+        display: block !important;
+    }
+
+    .isDesktopView {
+        display: none !important;
+    }
+
+    .example-card {
+        max-width: 400px;
+    }
+
+    .example-header-image {
+        background-image: url('https://material.angular.dev/assets/img/examples/shiba1.jpg');
+        background-size: cover;
+    }
+
+
+}

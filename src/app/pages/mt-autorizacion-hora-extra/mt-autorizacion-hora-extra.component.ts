@@ -490,4 +490,16 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  afterAction(ev) {
+    let isApproved = (ev || {}).approved;
+    if (isApproved) {
+      this.onAutorizar((ev || {}).data);
+    }
+
+    if (!isApproved && typeof isApproved != 'undefined') {
+      this.onRechazar((ev || {}).data)
+    }
+
+  }
+
 }

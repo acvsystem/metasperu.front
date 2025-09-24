@@ -1,0 +1,21 @@
+.aprobar {
+    padding: 5px;
+    color: #ffff;
+    border-radius: 4px;
+    width: 31px;
+    background: rgb(95 116 161);
+    width: 80px !important;
+}
+
+.rechazar {
+    padding: 5px;
+    color: #ffff;
+    border-radius: 4px;
+    margin-left: 10px;
+    background: rgb(211 75 75);
+    width: 80px !important;
+}
+
+mat-dialog-actions{
+    justify-content: center;
+}

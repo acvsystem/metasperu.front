@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Hora extra</h2>
+<mat-dialog-content>
+  Desea aprobar la hora extra?
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="aprobar" (click)="onResponse(true)" matButton mat-dialog-close>Si</button>
+  <button class="rechazar" (click)="onResponse(false)" matButton mat-dialog-close cdkFocusInitial>No</button>
+</mat-dialog-actions>

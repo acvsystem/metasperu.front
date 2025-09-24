@@ -33,7 +33,7 @@ import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-as
 import { MtTraspasosInventarioComponent } from './pages/mt-traspasos-inventario/mt-traspasos-inventario.component';
 import { MtLoadingComponent } from './components/mt-loading/mt-loading.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
+import { MtTableMobileComponent } from './components/mt-table-mobile/mt-table-mobile.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PortalModule } from '@angular/cdk/portal';
@@ -100,7 +100,7 @@ import { MtIcgreportComponent } from './pages/mt-icgreport/mt-icgreport.componen
 import { MtTableTraspasosComponent } from './components/mt-table-traspasos/mt-table-traspasos.component';
 import { registerLocaleData } from '@angular/common';
 import localeEsPe from '@angular/common/locales/es-PE';
-
+import { MtModalOptionTableMobileComponent } from './components/mt-modal-option-table-mobile/mt-modal-option-table-mobile.component';
 registerLocaleData(localeEsPe, 'es-PE');
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
@@ -149,7 +149,9 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtLoadingComponent,
         MtPopoverNotificacionComponent,
         MtIcgreportComponent,
-        MtTableTraspasosComponent
+        MtTableMobileComponent,
+        MtTableTraspasosComponent,
+        MtModalOptionTableMobileComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
