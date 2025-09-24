@@ -337,7 +337,7 @@
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <div style="max-height: 500px;overflow: auto;" *ngIf="!isViewPapeleta">
+          <div style="overflow: auto;" *ngIf="!isViewPapeleta">
             <div class="mat-elevation-z8">
               <table mat-table [dataSource]="dataSource">
 
@@ -378,7 +378,7 @@
 
 
 
-              <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
+              <mat-paginator [pageSizeOptions]="[30,40,50]" showFirstLastButtons
                 aria-label="Select page of periodic elements">
               </mat-paginator>
             </div>
