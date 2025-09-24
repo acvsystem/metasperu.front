@@ -56,7 +56,7 @@
       </ion-row>
     </div>
 
-    <div class="card-login" *ngIf="isCodigo">
+    <div class="card-login">
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
           <div class="head-login full-center">
@@ -76,7 +76,7 @@
                   id="codigo_auth"
                   label="Codigo"
                   placeholder="Ingrese el codigo verificacion"
-                  type="text"
+                  type="number"
                   value="{{ codigo_auth }}"
                   (afterChange)="onChangeInput($event)"
                 ></mt-input>
