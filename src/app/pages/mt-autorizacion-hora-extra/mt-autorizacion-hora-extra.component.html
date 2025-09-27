@@ -3,7 +3,7 @@
     <mt-loading [isVisible]="isLoading"></mt-loading>
 
     <div class="card-content">
-      <ion-row>
+      <ion-row class="isDesktopView">
         <ion-col sizeXs="12" sizeSm="12" sizeMd="2" sizeLg="2">
           <mt-input id="filterEmpleado" label="Filtro" placeholder="Filtro" type="text" value="{{ filterEmpleado }}"
             (keyup)="applyFilterPapeleta($event)"></mt-input>
@@ -93,7 +93,8 @@
               </div>
             </ion-col>
             <ion-col class="isMobileView" *ngIf="onDataView.length">
-              <mt-table-mobile (afterAction)="afterAction($event)" [data]="onDataView"></mt-table-mobile>
+              <mt-table-mobile (afterView)="onViewRegistro($event)" (afterAction)="afterAction($event)"
+                [data]="onDataView"></mt-table-mobile>
             </ion-col>
           </ion-row>
         </ion-col>
@@ -108,7 +109,7 @@
           </button>
         </ion-col>
 
-        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral" class="isDesktopView">
           <ion-row class="scroll-y">
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
               <table class="table table-bordered table-hover">
@@ -131,6 +132,10 @@
               </table>
             </ion-col>
           </ion-row>
+        </ion-col>
+
+        <ion-col class="isMobileView">
+          <mt-table-asistencia-view-mobile [data]="parseHuellero"></mt-table-asistencia-view-mobile>
         </ion-col>
       </ion-row>
 

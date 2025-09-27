@@ -21,6 +21,7 @@
                 <div class="card_head">
                   <div class="content_title">
                     <span class="store_title">{{element.TIENDA}}</span>
+
                     <h6 style="margin: 0;margin-left: 5px;"><span class="badge bg-primary"
                         style="font-weight: 100;">{{element.USUARIO_MODF}}</span></h6>
                   </div>
@@ -36,9 +37,11 @@
           </div>
 
           <div class="content_button">
-
             <button class="option_modal" matIconButton (click)="openDialog('0ms', '0ms',element)">
               <mat-icon>more_vert</mat-icon>
+            </button>
+            <button matIconButton (click)="onViewRegister(element)">
+              <mat-icon>open_in_new</mat-icon>
             </button>
           </div>
         </ion-col>

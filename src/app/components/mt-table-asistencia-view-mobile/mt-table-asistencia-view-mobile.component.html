@@ -1,0 +1,33 @@
+@if(data.length){
+@for (element of data; track element) {
+<ion-row>
+  <ion-col>
+    <div class="table_card">
+      <ion-row>
+        <ion-col class="padding-none">
+          <div class="status_success"></div>
+          <div class="content_card">
+            <ion-row>
+              <ion-col>
+                <div class="card_head">
+                  <div class="content_title">
+                    <span class="store_title">{{element.nombreCompleto}}</span>
+                    <span class="data_time">{{element.dia}}</span>
+                  </div>
+                </div>
+                <div class="card_head">
+                  <span class="name_employee">H.Ingreso: {{element.hrIn}}</span>
+                  <span class="name_employee">H.Salida: {{element.hrOut}}</span>
+                  <hr class="separator">
+                  <span class="name_employee" style="font-weight: 500;">H.Trabajadas: {{element.hrWorking}}</span>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-col>
+</ion-row>
+}
+}

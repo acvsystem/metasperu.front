@@ -17,6 +17,7 @@ export class MtTableMobileComponent implements OnInit {
 
   @Input() data: Array<any> = [];
   @Output() afterAction: EventEmitter<any> = new EventEmitter();
+  @Output() afterView: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -42,6 +43,10 @@ export class MtTableMobileComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.afterAction.emit({ approved: result, data: data });
     });
+  }
+
+  onViewRegister(data) {
+    this.afterView.emit(data);
   }
 
 

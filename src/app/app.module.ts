@@ -101,6 +101,7 @@ import { MtTableTraspasosComponent } from './components/mt-table-traspasos/mt-ta
 import { registerLocaleData } from '@angular/common';
 import localeEsPe from '@angular/common/locales/es-PE';
 import { MtModalOptionTableMobileComponent } from './components/mt-modal-option-table-mobile/mt-modal-option-table-mobile.component';
+import { MtTableAsistenciaViewMobileComponent } from './components/mt-table-asistencia-view-mobile/mt-table-asistencia-view-mobile.component';
 registerLocaleData(localeEsPe, 'es-PE');
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
@@ -151,7 +152,8 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         MtIcgreportComponent,
         MtTableMobileComponent,
         MtTableTraspasosComponent,
-        MtModalOptionTableMobileComponent
+        MtModalOptionTableMobileComponent,
+        MtTableAsistenciaViewMobileComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent],
