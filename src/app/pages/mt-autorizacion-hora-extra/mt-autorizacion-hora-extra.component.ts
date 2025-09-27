@@ -53,13 +53,15 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private store: StorageService, private service: ShareService, private socket: SocketService) {
-    this.onAllStore();
+
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+
+    await this.onAllStore();
 
     this.profileUser = this.store.getStore('mt-profile');
-
 
 
     this.socket.on('lista_solicitudes', async (response) => {
@@ -197,19 +199,25 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       this.hroAcumuladaTotal = this.arHoraExtra[0];
     });
 
-    this.onListHorasAutorizar();
+    if (this.onListTiendas.length) {
+      this.onListHorasAutorizar();
+    }
   }
 
   onAllStore() {
-    this.service.allStores().then((stores: Array<any>) => {
-      (stores || []).filter((store) => {
-        (this.onListTiendas || []).push({
-          uns: (store || {}).service_unit,
-          code: (store || {}).serie,
-          name: (store || {}).description,
-          procesar: 0,
-          procesado: -1
+    return new Promise((resolve, reject) => {
+      this.service.allStores().then((stores: Array<any>) => {
+        (stores || []).filter((store) => {
+          (this.onListTiendas || []).push({
+            uns: (store || {}).service_unit,
+            code: (store || {}).serie,
+            name: (store || {}).description,
+            procesar: 0,
+            procesado: -1
+          });
         });
+
+        resolve(this.onListTiendas);
       });
     });
   }

@@ -88,7 +88,7 @@ export class MtIcgreportComponent implements OnInit {
     this.onStoreAll();
     this.socket.on('report:sales:departament:response', (response) => {
       console.log(response);
-      let dataResponse: Array<any> = JSON.parse(response['data']);
+      let dataResponse: Array<any> = response['dataParse'];
       let dateResponse: Array<any> = response['date'];
       let keyComparation = dateResponse['key'];
       let anioData = dateResponse['anio'];
@@ -126,90 +126,22 @@ export class MtIcgreportComponent implements OnInit {
           let indexCard = this.arCardData.findIndex((card) => card.id == keyComparation);
 
           if (indexCard != -1) {
+            let old_anio = this.arCardData[0]['nm_anio_1'];
+            let old_data_anio = this.arCardData[0]['anio_1'];
 
-            dataResponse.filter((dr) => {
-              let indexDpt = this.arCardData.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
-              let dataFamilia = { anio: anioData, unid: parseInt(dr.cUnidades) || 0, importe: parseFloat(dr.cImporte) || 0, proc_2: 0 };
-              let indexFamily = this.arCardData[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
-              if (indexDpt > -1) {
+            this.arCardData[indexCard]['nm_anio_1'] = old_anio > anioData ? old_anio : anioData;
+            this.arCardData[indexCard]['nm_anio_2'] = old_anio > anioData ? anioData : old_anio;
+            this.arCardData[indexCard]['anio_1'] = old_anio > anioData ? old_data_anio : dataResponse;
+            this.arCardData[indexCard]['anio_2'] = old_anio > anioData ? dataResponse : old_data_anio;
 
-                this.arCardData[indexDpt]['data'][indexFamily]['anio_2'] = dataFamilia || {};
-                this.arCardData[indexDpt]['total_import_2'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_2'].importe), 0).toFixed(2));
-                this.arCardData[indexDpt]['total_und_2'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseInt(f['anio_2'].unid), 0).toFixed(2));
-
-                this.arCardData[indexDpt]['total_import_1'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_1'].importe), 0).toFixed(2));
-                this.arCardData[indexDpt]['total_und_1'] = Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseInt(f['anio_1'].unid), 0).toFixed(2));
-
-
-
-                let porc_2 = this.getPorcentage(parseFloat(dr.cImporte), Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_2'].importe), 0).toFixed(2)));
-                this.arCardData[indexDpt]['data'][indexFamily]['anio_2']['proc_2'] = porc_2;
-              }
-            });
-
-            this.arCardData.filter((dr, i) => {
-              let indexDpt = this.arCardData.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
-              let dataFamilia = { anio: anioData, unid: parseInt(dr.cUnidades) || 0, importe: parseFloat(dr.cImporte) || 0, proc_2: 0 };
-              let indexFamily = this.arCardData[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
-              let porc_1 = this.getPorcentage(parseFloat(dr.cImporte), Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_1'].importe), 0).toFixed(2)));
-             
-              this.arCardData[indexDpt]['data'][indexFamily]['anio_1']['proc_1'] = porc_1;
-              let porc_2 = this.getPorcentage(parseFloat(dr.cImporte), Number(this.arCardData[indexDpt]['data'].reduce((acum, f) => acum + parseFloat(f['anio_2'].importe), 0).toFixed(2)));
-              this.arCardData[indexDpt]['data'][indexFamily]['anio_2']['proc_2'] = porc_2;
-             
-              //this.arCardData[indexDpt]['diffPorc'] = porc_1 - porc_2;
-              //his.arCardData[indexDpt]['diffUnid'] = this.getPorcentage(pr.anio_1.unid, pr.anio_2.unid);
-              //parseData[i]['store_1'] = pr.store_1;
-              //parseData[i]['store_2'] = pr.store_1;
-            });
-
-
+            this.arCardData = this.groupByFamily(this.arCardData);
             console.log(this.arCardData);
           } else {
-
-            dataResponse.filter((dr) => {
-              let index = (arFamilia || []).findIndex((fm) => fm.departament == dr.cDepartamento);
-              let dataFamilia = { familia: dr.cFamilia, anio_1: { anio: anioData, unid: parseInt(dr.cUnidades), importe: parseFloat(dr.cImporte), proc_1: 0 }, anio_2: { anio: '', unid: 0, importe: 0 } };
-
-              if (index == -1) {
-                (arFamilia || []).push({
-                  id: keyComparation,
-                  store: (socketStore || {}).description,
-                  column: dateResponse['column'],
-                  semana: dateResponse['semana'],
-                  typeReport: dateResponse['type_report'],
-                  departament: dr.cDepartamento,
-                  total_import_1: dr.cImporte,
-                  total_und_1: parseInt(dr.cUnidades),
-                  total_import_2: 0,
-                  total_und_2: 0,
-                  data: [dataFamilia]
-                });
-              } else {
-
-                let indexDpt = arFamilia.findIndex((card) => card.id == keyComparation && card.departament == dr.cDepartamento);
-
-                let indexFamily = arFamilia[indexDpt]['data'].findIndex((dt) => dt.familia == dr.cFamilia);
-                console.log(arFamilia[indexDpt]['data'][indexFamily]);
-                (((arFamilia || [])[index] || [])['data'] || []).push(dataFamilia);
-                ((arFamilia || [])[index] || [])['total_import_1'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.importe), 0).toFixed(2));
-                ((arFamilia || [])[index] || [])['total_und_1'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.unid), 0).toFixed(2));
-
-                // let porc_1 = this.getPorcentage(parseFloat(dr.cImporte), arFamilia[indexDpt]['total_import_1']);
-                // arFamilia[indexDpt]['data'][indexFamily]['anio_1']['proc_1'] = porc_1;
-              }
-            });
-
-            this.arCardData = arFamilia;
-
-
+            this.arCardData = [
+              { id: keyComparation, column: dateResponse['column'], typeReport: dateResponse['type_report'], nm_anio_1: anioData, nm_anio_2: 0, anio_1: dataResponse, anio_2: [] }
+            ]
           }
-
-
         }
-
-
-
       }
 
       if (this.cboColumn == 'Departamento') {
@@ -278,6 +210,112 @@ export class MtIcgreportComponent implements OnInit {
         }
       }
     });
+  }
+
+  groupByFamily(data) {
+    const result = [];
+    // Iterar sobre cada objeto dentro de los datos
+    data.forEach(item => {
+      const { anio_1, anio_2 } = item;
+
+      // Procesar los datos de `anio_1`
+      anio_1.forEach(ano1 => {
+        const { departament, data } = ano1;
+
+        // Para cada familia dentro del departamento, agregarla al resultado
+        data.forEach(familiaData => {
+          result.push({
+            departament,
+            column: item['column'],
+            typeReport: item['typeReport'],
+            familia: familiaData.familia,
+            
+            anio_1: {
+              unid: familiaData.unid,
+              importe: parseFloat(familiaData.importe),
+              percentage_unid: familiaData.percentage_unid,
+              percentage_import: familiaData.percentage_import
+            },
+            anio_2: {
+              unid: 0,
+              importe: 0,
+              percentage_unid: 0,
+              percentage_import: 0
+            }
+          });
+        });
+      });
+
+      // Procesar los datos de `anio_2`
+      anio_2.forEach(ano2 => {
+        const { departament, data } = ano2;
+
+        // Para cada familia dentro del departamento, agregarla al resultado
+        data.forEach(familiaData => {
+          // Buscar si esa familia ya existe para ese departamento
+          const existingData = result.find(
+            item => item.departament === departament && item.familia === familiaData.familia
+          );
+
+          if (existingData) {
+            // Si existe, actualizar el `anio_2`
+            existingData.anio_2.unid = familiaData.unid;
+            existingData.anio_2.importe = parseFloat(familiaData.importe);
+            existingData.anio_2.percentage_unid = parseFloat(familiaData.percentage_unid);
+            existingData.anio_2.percentage_import = parseFloat(familiaData.percentage_import);
+          } else {
+            // Si no existe, agregar un nuevo objeto para ese departamento y familia
+            result.push({
+              departament,
+              familia: familiaData.familia,
+              anio_1: {
+                unid: 0,
+                importe: 0
+              },
+              anio_2: {
+                unid: familiaData.unid,
+                importe: parseFloat(familiaData.importe),
+                percentage_unid: familiaData.percentage_unid,
+                percentage_import: familiaData.percentage_import
+              }
+            });
+          }
+        });
+      });
+    });
+
+    return this.groupByDepartament(result);
+  }
+
+
+  groupByDepartament(data) {
+    const result = [];
+
+    // Agrupamos por departament, pero no usamos departament como clave en el objeto
+    data.forEach(item => {
+      // Buscamos si ya existe un grupo para este departamento
+      let departamentGroup = result.find(group => group.departament === item.departament);
+
+      // Si no existe, lo creamos
+      if (!departamentGroup) {
+        departamentGroup = {
+          column: item['column'],
+          typeReport: item['typeReport'],
+          departament: item.departament,
+          data: [] // Inicializamos un array de familias
+        };
+        result.push(departamentGroup);
+      }
+
+      // Agregamos la familia al grupo correspondiente
+      departamentGroup.data.push({
+        familia: item.familia,
+        anio_1: item.anio_1,
+        anio_2: item.anio_2
+      });
+    });
+
+    return result;
   }
 
   onCaledar($event) {

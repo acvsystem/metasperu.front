@@ -92,7 +92,7 @@
                 </mat-paginator>
               </div>
             </ion-col>
-            <ion-col class="isMobileView">
+            <ion-col class="isMobileView" *ngIf="onDataView.length">
               <mt-table-mobile (afterAction)="afterAction($event)" [data]="onDataView"></mt-table-mobile>
             </ion-col>
           </ion-row>

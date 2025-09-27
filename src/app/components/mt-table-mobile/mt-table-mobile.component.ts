@@ -26,7 +26,6 @@ export class MtTableMobileComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.hasOwnProperty('data')) {
-      console.log(this.data);
     }
   }
 
