@@ -180,7 +180,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
     });
 
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
-      console.log(response);
+      
       let data = (response || {}).data || [];
 
       this.parseHuellero = data;
