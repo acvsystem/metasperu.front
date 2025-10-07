@@ -88,9 +88,20 @@ export class MtVerificationComprobantesComponent implements OnInit {
     const self = this;
     this.headList = []
     this.headListSunat = ['#', 'Codigo Documento', 'Nro Correlativo', 'Nom Adquiriente', 'Num documento', 'Observacion', 'Estado Sunat', 'Estado Comprobante', 'Fecha emision']
-    this.columnsToDisplay = ['codigo', 'Tienda', 'isVerification', 'cant_comprobantes', 'transacciones', 'clientes_null', 'online', 'conexICG'];
+    this.columnsToDisplay = ['codigo', 'Tienda', 'Traffic', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes', 'Online', 'conexICG'];
     this.onTransacciones();
     this.onListClient();
+
+
+
+    this.socket.on('traffic:get:online:response', (network) => {
+        let codigo = (network || {}).code;
+        let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
+        if (indexData != -1) {
+          let inxTraffic = (this.dataSource['_data']['_value'] || [])[indexData]['traffic'].findIndex((data) => (data.ip == (network || {}).ip));
+          (this.dataSource['_data']['_value'] || [])[indexData]['traffic'][inxTraffic]['active'] = (network || {}).active;
+        }
+    });
 
     this.socket.on('terminales:get:name:response', (terminales) => {//RECIBE NOMBRE DE LOS TERMINALES FRONT RETAIL
       let indexData = (this.dataSource['_data']['_value'] || []).findIndex((data) => (data.codigo == (terminales || [])[0].CODIGO_TIENDA));
@@ -101,6 +112,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
     this.socket.on('terminales:get:cantidad:response', (dataTerminal) => {//CANTIDAD DE COMPROBANTES POR TERMINAL
+
       this.isShowLoading = false;
       let indexData = (this.dataSource['_data']['_value'] || []).findIndex((data) => (data.codigo == (((dataTerminal || [])[0] || {}).CODIGO_TIENDA || "")));
       if (indexData != -1) {
@@ -174,12 +186,21 @@ export class MtVerificationComprobantesComponent implements OnInit {
           let codigo = (dataSocket || {}).CODIGO_TERMINAL;
           let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
           if (indexData != -1) {
+
             (this.dataSource['_data']['_value'] || [])[indexData].codigo = (dataSocket || {}).CODIGO_TERMINAL;
             (this.dataSource['_data']['_value'] || [])[indexData].Tienda = (dataSocket || {}).DESCRIPCION;
             (this.dataSource['_data']['_value'] || [])[indexData].isVerification = (listaSession[0] || {}).VERIFICACION;
             (this.dataSource['_data']['_value'] || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
             (this.dataSource['_data']['_value'] || [])[indexData].online = (dataSocket || {}).ISONLINE;
             (this.dataSource['_data']['_value'] || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
+            (this.dataSource['_data']['_value'] || [])[indexData].traffic = [];
+            let i = 0;
+            for (let trf of (dataSocket || {}).TRAFFIC_COUNTERS) {
+              (this.dataSource['_data']['_value'] || [])[indexData].traffic.push({ ip: trf.IP, active: false });
+              i++;
+            }
+
+            this.socket.emit('traffic:get:online', codigo);
           }
         });
       }
@@ -371,7 +392,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
           online: (tnd || {}).ISONLINE,
           conexICG: 0,
           terminales: [],
-          dataTerminales: []
+          dataTerminales: [],
+          traffic: []
         });
 
 
@@ -448,6 +470,7 @@ export interface PeriodicElement {
   conexICG: number,
   terminales: Array<any>,
   dataTerminales: Array<any>
+  traffic: Array<any>
 }
 
 

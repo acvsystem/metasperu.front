@@ -12,7 +12,7 @@
     <ion-content class="ion-padding">
       <div class="example-menu" *ngFor="let menu of menuUser" cdkMenu>
         <button class="example-menu-item" (click)="onNavigatorRoute(menu.ruta)" *ngIf="menu.ISVISIBLE"
-          cdkMenuItem>{{menu.nombre_menu}}</button>
+          cdkMenuItem> <span>{{menu.nombre_menu}}</span> </button>
       </div>
     </ion-content>
   </ion-menu>
