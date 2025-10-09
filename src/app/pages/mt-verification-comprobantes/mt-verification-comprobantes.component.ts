@@ -196,7 +196,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
             setTimeout(() => {
               this.socket.emit('traffic:get:online', codigo);
-            }, 500);
+            }, 1000);
 
           }
         });
