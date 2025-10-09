@@ -193,9 +193,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.dataSource['_data']['_value'] || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
             (this.dataSource['_data']['_value'] || [])[indexData].online = (dataSocket || {}).ISONLINE;
             (this.dataSource['_data']['_value'] || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
-          
 
-            this.socket.emit('traffic:get:online', codigo);
+            setTimeout(() => {
+              this.socket.emit('traffic:get:online', codigo);
+            }, 500);
+
           }
         });
       }
