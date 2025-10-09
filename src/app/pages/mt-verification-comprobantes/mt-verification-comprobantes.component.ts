@@ -95,12 +95,12 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
     this.socket.on('traffic:get:online:response', (network) => {
-        let codigo = (network || {}).code;
-        let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
-        if (indexData != -1) {
-          let inxTraffic = (this.dataSource['_data']['_value'] || [])[indexData]['traffic'].findIndex((data) => (data.ip == (network || {}).ip));
-          (this.dataSource['_data']['_value'] || [])[indexData]['traffic'][inxTraffic]['active'] = (network || {}).active;
-        }
+      let codigo = (network || {}).code;
+      let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
+      if (indexData != -1) {
+        let inxTraffic = (this.dataSource['_data']['_value'] || [])[indexData]['traffic'].findIndex((data) => (data.ip == (network || {}).ip));
+        (this.dataSource['_data']['_value'] || [])[indexData]['traffic'][inxTraffic]['active'] = (network || {}).active;
+      }
     });
 
     this.socket.on('terminales:get:name:response', (terminales) => {//RECIBE NOMBRE DE LOS TERMINALES FRONT RETAIL
@@ -193,12 +193,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.dataSource['_data']['_value'] || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
             (this.dataSource['_data']['_value'] || [])[indexData].online = (dataSocket || {}).ISONLINE;
             (this.dataSource['_data']['_value'] || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
-            (this.dataSource['_data']['_value'] || [])[indexData].traffic = [];
-            let i = 0;
-            for (let trf of (dataSocket || {}).TRAFFIC_COUNTERS) {
-              (this.dataSource['_data']['_value'] || [])[indexData].traffic.push({ ip: trf.IP, active: false });
-              i++;
-            }
+          
 
             this.socket.emit('traffic:get:online', codigo);
           }
@@ -374,12 +369,12 @@ export class MtVerificationComprobantesComponent implements OnInit {
     };
 
     this.service.get(parms).then((response) => {
-
+      console.log(response);
       let tiendaList = (response || {}).data || [];
 
       (tiendaList || []).filter((tnd) => {
 
-
+        let traffic = [];
         this.conxOnline.push((tnd || {}).CODIGO_TERMINAL);
 
         (this.bodyList || []).push({
@@ -393,7 +388,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
           conexICG: 0,
           terminales: [],
           dataTerminales: [],
-          traffic: []
+          traffic: (tnd || {}).TRAFFIC_COUNTERS
         });
 
 
