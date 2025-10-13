@@ -133,7 +133,11 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
       let dataList = [];
       dataList = listaSession || [];
-      console.log((dataList || [])[0]['CODIGO_TERMINAL']);
+
+      setTimeout(() => {
+        this.socket.emit('traffic:get:online', (dataList || [])[0]['CODIGO_TERMINAL']);
+      }, 1000);
+
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
 
       if (dataList.length >= 1 && index == -1) {
@@ -193,10 +197,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.dataSource['_data']['_value'] || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
             (this.dataSource['_data']['_value'] || [])[indexData].online = (dataSocket || {}).ISONLINE;
             (this.dataSource['_data']['_value'] || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
-
-            setTimeout(() => {
-              this.socket.emit('traffic:get:online', codigo);
-            }, 1000);
 
           }
         });
