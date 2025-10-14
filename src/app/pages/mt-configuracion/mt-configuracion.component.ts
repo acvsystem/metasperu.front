@@ -33,7 +33,7 @@ export class MtConfiguracionComponent implements OnInit {
   displayedColumnsAuthSession: string[] = ['id_auth_session', 'email', 'codigo', 'accion'];
   displayedColumnsUsers: string[] = ['usuario', 'password', 'page_default', 'email', 'nivel', 'accion'];
   displayedColumnsCajas: string[] = ['nro_caja', 'mac', 'serie_tienda', 'database_instance', 'database_name', 'cod_tipo_factura', 'cod_tipo_boleta', 'property_stock', 'name_excel_stock', 'ruta_download_agente', 'ruta_download_sunat'];
-  displayedColumnsPermiso: string[] = ['codigo', 'tienda', 'horario_permiso', 'papeleta_permiso'];
+  displayedColumnsPermiso: string[] = ['codigo', 'tienda', 'horario_permiso', 'papeleta_permiso', 'aviso_traffic'];
   displayedColumnsPlugin: string[] = ['select', 'tienda', 'nro_caja', 'mac', 'plugins_instalados', 'ip', 'progreso', 'online'];
 
 
@@ -391,7 +391,7 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataSourceCajas.paginator = this.paginator_caja;
       this.dataSourceCajas.sort = this.sort_caja;
     }
-    if (ev.tab.textLabel == "Horario y papeletas") {
+    if (ev.tab.textLabel == "Permiso Horario, papeletas y alertas") {
       this.isSession = false;
       this.isUsers = false;
       this.isCajas = false;
@@ -910,20 +910,21 @@ export class MtConfiguracionComponent implements OnInit {
     this.dataSourceCajas.filter = filterValue.trim().toLowerCase();
   }
 
-  onUpdatePermisoHP(row, isPermiso_h, isPermiso_p) {
+  onUpdatePermisoHP(row, isPermiso_h, isPermiso_p, isAlerta_t) {
     let parms = {
       url: '/security/configuracion/permisos/hp',
       body: [{
         id: (row || {}).ID_CONF_HP,
         isPermiso_h: isPermiso_h ? 1 : 0,
         isPermiso_p: isPermiso_p ? 1 : 0,
+        isAlerta_t: isAlerta_t ? 1 : 0,
       }]
     };
+
     this.service.post(parms).then((response) => {
       this.onPermisosTienda();
       this.service.toastSuccess("Actualizado con exito...!!", "Permisos");
     });
-
   }
 
   onTiempoTolerancia() {
@@ -1196,7 +1197,7 @@ export class MtConfiguracionComponent implements OnInit {
         let dataRecept = event.container.data;
 
         let dataTienda = this.dataDropTiendaList.find((tienda) => tienda.description == dataRecept[event.currentIndex]);
-     
+
         this.onAddAsignarTienda(this.cboUsuarioTienda, dataTienda.id, dataTienda.description);
       }
 
