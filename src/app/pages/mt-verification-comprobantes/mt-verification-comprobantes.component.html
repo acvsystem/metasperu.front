@@ -16,7 +16,7 @@
       </ion-row>
       <ion-row>
         <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12">
-          <button (click)="onVerificarDataBase()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
+          <button (click)="getComparacionBD()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
               class="fa fa-refresh" aria-hidden="true"></i> verificar</button>
         </ion-col>
       </ion-row>
@@ -52,21 +52,21 @@
             <ion-col sizeXs="12" sizeSm="12" sizeMd="7" sizeLg="7">
               <div class="content-button">
                 <div class="content-button-comp">
-                  <button (click)="onVerify()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
+                  <button (click)="getComprobantes()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
                       class="fa fa-refresh" aria-hidden="true"></i> Comprobantes</button>
-                  <button (click)="onTransacciones()" type="button"
+                  <button (click)="getTransacciones()" type="button"
                     class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-refresh" aria-hidden="true"></i>
                     Transacciones</button>
                 </div>
                 <div class="content-button-comp">
-                  <button (click)="onListClientesNull()" type="button"
+                  <button (click)="getClientesNull()" type="button"
                     class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-search"
                       aria-hidden="true"></i>Consultar Clientes</button>
-                  <button (click)="onClientesNull()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
+                  <button (click)="emitirLimpiezaClientes()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
                       class="fa fa-trash" aria-hidden="true"></i>Limpiar Clientes</button>
                 </div>
                 <div class="content-button-comp">
-                  <button (click)="onClearColaUpdate()" type="button"
+                  <button (click)="cleanColaFront()" type="button"
                     class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-trash-o"
                       aria-hidden="true"></i>Limpiar Cola panama</button>
                   <button (click)="drawer.toggle()" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i
@@ -253,98 +253,6 @@
             </tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
           </table>
-
-          <!--
-          <ion-row>
-            <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-              <ion-row>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="only-desktop">
-                  <table class="table table-bordered table-hover">
-                    <thead>
-                      <tr>
-                        <th class="columHead" *ngFor="let columHead of headList;let i = index">{{columHead}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let columBody of bodyList;let index = index">
-                        <td class="columBody">{{index + 1}}</td>
-                        <td class="columBody">{{columBody.codigo}}</td>
-                        <td class="columBody">{{columBody.Tienda}}</td>
-                        <td class="columBody">
-                          <span class="badge bg-success-comprobantes" *ngIf="columBody.isVerification == 1">ready</span>
-                          <span class="badge bg-danger" *ngIf="columBody.isVerification == 0">not ready</span>
-                        </td>
-                        <td class="columBody">
-                          <span class="badge bg-success-comprobantes"
-                            *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
-                          <span class="badge bg-danger"
-                            *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
-                        </td>
-                        <td class="columBody">
-                          <span class="badge bg-success-comprobantes"
-                          *ngIf="columBody.transacciones == 0">0</span>
-                          <span class="badge bg-danger"
-                          *ngIf="columBody.transacciones != 0">{{columBody.transacciones}}</span>
-                        </td>
-                        <td class="columBody">
-                          <span class="badge bg-success-comprobantes"
-                          *ngIf="columBody.clientes_null == 0">0</span>
-                          <span class="badge bg-danger"
-                          *ngIf="columBody.clientes_null != 0">{{columBody.clientes_null}}</span>
-                        </td>
-                        <td class="columBody">
-                          <div [ngClass]="[columBody.online == 1 ? 'blob blue': 'blob red']"></div>
-                        </td>
-                        <td class="columBody">
-                          <div [ngClass]="[columBody.conexICG == 1 ? 'blob blue': 'blob red']"></div>
-                        </td>
-                        <td class="columBody">
-                          <button (click)="toolCaja(columBody)" type="button" class="btn btn-primary btn-sm mobil-margin-button"><i class="fa fa-eye" aria-hidden="true"></i></button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </ion-col>
-                <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral only-mobil">
-                  <ion-row *ngFor="let columBody of bodyList">
-                    <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
-                      <ion-item class="item-mobile">
-                        <ion-avatar slot="start" class="full-center">
-                          {{columBody.codigo}}
-                          <span
-                            class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle status"
-                            *ngIf="columBody.online == 1">
-                            <span class="visually-hidden">New alerts</span>
-                          </span>
-                          <span
-                            class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle status"
-                            *ngIf="columBody.online == 0">
-                            <span class="visually-hidden">New alerts</span>
-                          </span>
-                        </ion-avatar>
-                        <div class="body">
-                          <div class="content-title">
-                            <span class="title">{{columBody.Tienda}}</span>
-                            <span class="status"><i class="fa fa-check-circle" aria-hidden="true"
-                                *ngIf="columBody.isVerification == 1"></i></span>
-                            <span class="status"><i class="fa fa-times" aria-hidden="true"
-                                *ngIf="columBody.isVerification == 0"></i></span>
-                          </div>
-                        </div>
-                        <div slot="end" class="estados">
-                          <span class="badge rounded-pill bg-success"
-                            *ngIf="columBody.cant_comprobantes == 0">{{columBody.cant_comprobantes}}</span>
-                          <span class="badge rounded-pill bg-danger"
-                            *ngIf="columBody.cant_comprobantes != 0">{{columBody.cant_comprobantes}}</span>
-                        </div>
-                      </ion-item>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-          </ion-row>
-    -->
           <ion-row>
             <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" class="no-padding-lateral">
               <ion-row class="scroll-y">
