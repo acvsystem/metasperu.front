@@ -211,27 +211,27 @@ export class MtVerificationComprobantesComponent implements OnInit {
   }
 
   private updateComprobantes(lista: any[]): void {
-    console.log(lista);
-    this.isShowLoading = false;
-    setTimeout(() => {
-      this.getTrafficOnline(lista[0].CODIGO_TERMINAL);
-      this.getTerminalesName();
-    }, 2000);
+    if ((lista || []).length) {
+      this.isShowLoading = false;
+      setTimeout(() => {
+        this.getTrafficOnline(lista[0].CODIGO_TERMINAL);
+        this.getTerminalesName();
+      }, 2000);
 
-    const updated = [...this.dataSource.data];
-    lista.forEach(item => {
-      const index = updated.findIndex(d => d.codigo === item.CODIGO_TERMINAL);
-      if (index !== -1) {
-        updated[index] = {
-          ...updated[index],
-          cant_comprobantes: item.CANT_COMPROBANTES,
-          online: item.ISONLINE,
-        };
-      }
-    });
-    this.dataSource.data = updated;
-    this.getTrafficOnline(lista[0].CODIGO_TERMINAL);
-    
+      const updated = [...this.dataSource.data];
+      lista.forEach(item => {
+        const index = updated.findIndex(d => d.codigo === item.CODIGO_TERMINAL);
+        if (index !== -1) {
+          updated[index] = {
+            ...updated[index],
+            cant_comprobantes: item.CANT_COMPROBANTES,
+            online: item.ISONLINE,
+          };
+        }
+      });
+      this.dataSource.data = updated;
+      this.getTrafficOnline(lista[0].CODIGO_TERMINAL);
+    }
   }
 
   private updateTerminales(terminales: any[]): void {

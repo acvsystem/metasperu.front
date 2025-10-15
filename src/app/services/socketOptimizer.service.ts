@@ -39,6 +39,7 @@ export class SocketService {
     }
 
     onComprobantes(): Observable<any[]> {
+        console.log('comprobantes:get:response');
         return this.on<any[]>('comprobantes:get:response');
     }
 
