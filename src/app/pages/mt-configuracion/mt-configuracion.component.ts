@@ -922,7 +922,8 @@ export class MtConfiguracionComponent implements OnInit {
     };
 
     this.service.post(parms).then((response) => {
-      this.onPermisosTienda();
+      this.dataViewPermiso = response || [];
+      this.dataSourcePermiso = new MatTableDataSource(this.dataViewPermiso);
       this.service.toastSuccess("Actualizado con exito...!!", "Permisos");
     });
   }
