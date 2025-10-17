@@ -135,7 +135,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
       dataList = listaSession || [];
 
       setTimeout(() => {
-        this.socket.emit('traffic:get:online', (dataList || [])[0]['CODIGO_TERMINAL']);
+        this.socket.emit('traffic:get:online', { code: (dataList || [])[0]['CODIGO_TERMINAL'], isEmail: false });
       }, 1000);
 
       let index = this.conxOnline.findIndex((conx) => conx == (dataList || [])[0]['CODIGO_TERMINAL']);
