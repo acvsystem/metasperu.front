@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { io } from "socket.io-client";
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
@@ -11,6 +11,8 @@ import {
 } from '@angular/material/snack-bar';
 import { GlobalConstants } from '../../const/globalConstants';
 import { SocketService } from '../../services/socket.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-mt-verification-comprobantes',
@@ -38,6 +40,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
   isVisibleStatus: boolean = false;
   isVerificarBd: boolean = false;
   isLoadingDB: boolean = false;
+  cantFacturacion = 0;
+  cantFrontRetail = 0;
   statusServerList: any = [];
   countClientes: any = 0;
   /* socket = io(GlobalConstants.backendServer, {
@@ -66,15 +70,22 @@ export class MtVerificationComprobantesComponent implements OnInit {
   columnsToDisplayWithExpand: Array<any> = [];
   expandedElement: Array<PeriodicElement> = [];
   dataSource = new MatTableDataSource<PeriodicElement>(this.bodyList);
+  isDocumentNoSend: boolean = false;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   private _snackBar = inject(MatSnackBar);
+  displayedColumnsDoc: string[] = ['nro_document', 'date_emision', 'date_expired', 'owner'];
+  dataSourceDocument = new MatTableDataSource<PeriodicElement>([]);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private service: ShareService, private store: StorageService, private socket: SocketService) { }
 
   ngOnInit() {
     this.onVerify();
     this.onListTienda();
+    this.allDocumentPending();
     this.service.onViewPageAdmin.subscribe((view) => {
       this.isViewPage = view;
     });
@@ -364,6 +375,29 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
   }
 
+  allDocumentPending() {
+    let parms = {
+      url: '/security/all/document/pending'
+    };
+
+    this.service.get(parms).then((response) => {
+      this.cantFacturacion = 0;
+      this.cantFrontRetail = 0;
+      (response || {}).filter((doc) => {
+        if ((doc || {}).OWNER == 'FACTURACION') {
+          this.cantFacturacion += 1;
+        } else {
+          this.cantFrontRetail += 1;
+        }
+      });
+
+      this.dataSourceDocument = response;
+      this.dataSourceDocument = new MatTableDataSource(response);
+      this.dataSourceDocument.paginator = this.paginator;
+      this.dataSourceDocument.sort = this.sort;
+    });
+  }
+
   onListTienda() { //LISTA DE TIENDAS REGISTRADAS
     const self = this;
     let parms = {
@@ -399,6 +433,16 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.bodyList);
 
     });
+  }
+
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceDocument.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSourceDocument.paginator) {
+      this.dataSourceDocument.paginator.firstPage();
+    }
   }
 
   toolCaja(data) {

@@ -336,53 +336,88 @@ ion-item {
 
 table {
     width: 100%;
-  }
-  
-  tr.example-detail-row {
+}
+
+tr.example-detail-row {
     height: 0;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):hover {
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
     background: whitesmoke;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):active {
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
     background: #efefef;
-  }
-  
-  .example-element-row td {
+}
+
+.example-element-row td {
     border-bottom-width: 0;
-  }
-  
-  .example-element-detail {
+}
+
+.example-element-detail {
     overflow: hidden;
     display: flex;
-  }
-  
-  .example-element-diagram {
+}
+
+.example-element-diagram {
     min-width: 80px;
     border: 2px solid black;
     padding: 8px;
     font-weight: lighter;
     margin: 8px 0;
     height: 104px;
-  }
-  
-  .example-element-symbol {
+}
+
+.example-element-symbol {
     font-weight: bold;
     font-size: 40px;
     line-height: normal;
-  }
-  
-  .example-element-description {
-    padding: 16px;
-  }
-  
-  .example-element-description-attribution {
-    opacity: 0.5;
-  }
+}
 
-  .mat-drawer-over {
+.example-element-description {
+    padding: 16px;
+}
+
+.example-element-description-attribution {
+    opacity: 0.5;
+}
+
+.mat-drawer-over {
     width: 30% !important;
     border-radius: 0px !important;
+}
+
+
+.content-card-compration {
+    width: 247px;
+    border: 1px solid #bfbbbb;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.content-img-comparation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .icon {
+        border: 1px solid rgb(34 131 223);
+        border-radius: 4px;
+        padding: 9px;
+        width: 50px;
+        height: 50px;
+        background: rgb(34 131 223);
+        color: white;
+        font-size: 25px;
+        text-align: center;
+    }
+}
+
+.title-comparation {
+    font-weight: 500;
+}
+
+.number-comparation {
+    font-weight: 600;
+    font-size: 20px;
 }
