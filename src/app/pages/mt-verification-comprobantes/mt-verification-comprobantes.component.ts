@@ -395,7 +395,15 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.dataSourceDocument = new MatTableDataSource(response);
       this.dataSourceDocument.paginator = this.paginator;
       this.dataSourceDocument.sort = this.sort;
+      this.isShowLoading = false;
     });
+  }
+
+  onRefreshDocument() {
+    this.onVerify();
+    setTimeout(() => {
+      this.allDocumentPending();
+    }, 2000);
   }
 
   onListTienda() { //LISTA DE TIENDAS REGISTRADAS
