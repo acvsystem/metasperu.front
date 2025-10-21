@@ -96,7 +96,6 @@ export class MtHorarioTiendaComponent implements OnInit {
   async ngOnInit() {
 
     await this.onAllStore();
-
     this.profileUser = this.store.getStore('mt-profile');
 
     if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "OPERACIONES" || (this.profileUser || {}).mt_nivel == "FIELDLEADER") {
@@ -208,12 +207,12 @@ export class MtHorarioTiendaComponent implements OnInit {
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
     this.codeTienda = profileUser.code.toUpperCase();
-      let unidServicio = this.onListTiendas.filter((tienda) => tienda.code == this.codeTienda);
-      this.unidServicio = (unidServicio || {})['uns'];
-      this.onListEmpleado = [];
+    let unidServicio = this.onListTiendas.filter((tienda) => tienda.code == this.codeTienda);
+    this.unidServicio = (unidServicio || {})['uns'];
+    this.onListEmpleado = [];
 
-      console.log("EMPLEADO", this.unidServicio);
-   
+    console.log("EMPLEADO", this.unidServicio);
+
 
 
 
@@ -1000,7 +999,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     let day = new Date(dateNow).toLocaleDateString().split('/');
     var diasMes = new Date(año, mes, 0).getDate();
     var diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    let arMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    let arMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     let dias = [];
 
 
@@ -1075,11 +1074,6 @@ export class MtHorarioTiendaComponent implements OnInit {
     });
 
     this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
-
-    let parms = {
-      url: '/calendario/generar',
-      body: listCargoTienda
-    };
   }
 
   onModal(value) {
@@ -1096,7 +1090,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onCaledarRange($event) {
-
+    this.vRangoDiasSearch = '';
     let range = [];
     let dateList = $event.value;
 
@@ -1108,23 +1102,79 @@ export class MtHorarioTiendaComponent implements OnInit {
     let fechaInicio = new Date(range[0]);
     let fechaFin = new Date(range[1]);
     let count = 0;
+    this.onEvalueHorary(range[0], range[1]).then((resolve) => {
+      let permisionStore = this.dataViewPermiso.find((per) => per.SERIE_TIENDA == this.codeTienda);
+      //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
 
-    while (fechaFin.getTime() >= fechaInicio.getTime()) {
+      if (resolve || (permisionStore || {}).IS_FREE_HORARIO) {
+        while (fechaFin.getTime() >= fechaInicio.getTime()) {
 
-      count++;
-      let index = this.arListDia.findIndex((dia) => dia.id == count);
-      fechaInicio.setDate(fechaInicio.getDate() + 1);
-      let date = new Date(fechaInicio).toLocaleDateString().split('/');
+          count++;
+          let index = this.arListDia.findIndex((dia) => dia.id == count);
+          fechaInicio.setDate(fechaInicio.getDate() + 1);
+          let date = new Date(fechaInicio).toLocaleDateString().split('/');
 
-      this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
-      this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
-    }
+          this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
+          this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
+        }
 
-    let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
-    let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
-    this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+        let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
+        let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
+
+        this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+      } else {
+        this.service.toastError('Solo puede crear el horario de la semana siguiente.', 'Horario');
+      }
+    });
+  }
+
+  convertirAFormatoISO(fechaStr: string): string {
+    const [dia, mes, anio] = fechaStr.split('-');
+    return `${anio}-${mes}-${dia}`;
+  }
 
 
+  onEvalueHorary(newInitDate, newEndDate) {
+    this.profileUser = this.store.getStore('mt-profile');
+    this.codeTienda = this.profileUser.code.toUpperCase();
+
+    return new Promise((resolve, reject) => {
+      let parms = {
+        url: '/schedule/limit/register',
+        parms: [
+          { key: "code", value: this.codeTienda }
+        ]
+      };
+
+      this.service.get(parms).then(async (response) => {
+        let currentRange = (((response || {}).data || [])[0] || {})['rangeSchedule'].split(' ');
+        let isValid = this.esSiguienteSemana(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
+        console.log(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
+        resolve(isValid)
+      });
+    });
+  }
+
+  esSiguienteSemana(rangoActualInicio: string, rangoActualFin: string, nuevoInicio: string, nuevoFin: string): boolean {
+    // Convertir a objetos Date
+    const actualInicio = new Date(rangoActualInicio);
+    const actualFin = new Date(rangoActualFin);
+    const nuevoInicioDate = new Date(nuevoInicio);
+    const nuevoFinDate = new Date(nuevoFin);
+
+    // Calcular el día siguiente del rango actual
+    const siguienteSemanaInicio = new Date(actualFin);
+    siguienteSemanaInicio.setDate(siguienteSemanaInicio.getDate() + 1);
+
+    // Calcular el fin de la nueva semana esperada (7 días después del fin actual)
+    const siguienteSemanaFin = new Date(actualFin);
+    siguienteSemanaFin.setDate(siguienteSemanaFin.getDate() + 7);
+
+    // Validar que el nuevo rango coincide exactamente con esa semana siguiente
+    return (
+      nuevoInicioDate.getTime() === siguienteSemanaInicio.getTime() &&
+      nuevoFinDate.getTime() === siguienteSemanaFin.getTime()
+    );
   }
 
   onEditHorario(id) {

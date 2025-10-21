@@ -198,3 +198,9 @@
 .example-menu-item:active {
   background-color: rgb(255 255 255 / 16%);
 }
+
+.toast-container {
+  .toast-title {
+    font-weight: 500 !important;
+  }
+}
