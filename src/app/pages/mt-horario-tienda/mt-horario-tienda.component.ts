@@ -1171,9 +1171,10 @@ export class MtHorarioTiendaComponent implements OnInit {
     siguienteSemanaFin.setDate(siguienteSemanaFin.getDate() + 7);
 
     // Validar que el nuevo rango coincide exactamente con esa semana siguiente
+
     return (
-      nuevoInicioDate.getTime() === siguienteSemanaInicio.getTime() &&
-      nuevoFinDate.getTime() === siguienteSemanaFin.getTime()
+      nuevoInicioDate.getTime() <= siguienteSemanaInicio.getTime() &&
+      nuevoFinDate.getTime() <= siguienteSemanaFin.getTime()
     );
   }
 
