@@ -345,6 +345,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.socket.emit('comprobantes:get', 'angular');
   }
 
+  onEvalueDocPending() {
+    this.socket.emit('evalue:document:pending:get', 'angular');
+  }
+
   onTransacciones() {// ENVIO DE CONSULTA DE TRANSACCIONES DE LOS FRONT RETAIL
     this.isShowLoading = true;
     this.contadorCliente = 0;
@@ -400,7 +404,8 @@ export class MtVerificationComprobantesComponent implements OnInit {
   }
 
   onRefreshDocument() {
-    this.onVerify();
+    this.isShowLoading = true;
+    this.onEvalueDocPending();
     setTimeout(() => {
       this.allDocumentPending();
     }, 2000);
