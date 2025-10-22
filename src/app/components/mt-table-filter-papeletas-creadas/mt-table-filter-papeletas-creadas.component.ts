@@ -14,7 +14,7 @@ import { filter } from 'rxjs/operators';
 export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   @Input() dataTable: Array<any> = [];
 
-  displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Fecha_comp', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
+  displayedColumnsPap: string[] = ['Codigo_Papeleta', 'Tienda', 'Fecha', 'Fecha_comp','Hr_solicitada', 'Tipo_papeleta', 'Nombre_Completo', 'Accion'];
   listaPapeletas: Array<any> = [];
   dataSourcePap = new MatTableDataSource<any>(this.listaPapeletas);
   filterCodigov: string = "";
@@ -62,6 +62,7 @@ export class MtTableFilterPapeletasCreadasComponent implements OnInit {
   ngOnInit() { }
 
   ngOnChanges() {
+    console.log(this.dataTable);
     this.dataSourcePap = new MatTableDataSource(this.dataTable);
     this.dataSourcePap.paginator = this.paginator_pap;
     this.dataSourcePap.sort = this.sort_pap;
