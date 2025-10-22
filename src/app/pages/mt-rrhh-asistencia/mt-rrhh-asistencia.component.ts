@@ -343,7 +343,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
                 caja: (huellero || {}).caja,
                 isJornadaCompleta: this.onVerificacionJornada(!(huellero || {}).isPapeleta ? hrt : hrPapeleta),
                 isBrakeComplete: false,
-                isRegistroMax: false,
+                isRegistroMax: true,
                 statusRegistro: 'CORRECTO',
                 statusTardanza: isVerificar ? 'verificar' : isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
                 dataRegistro: [huellero],
@@ -378,6 +378,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.onDataTemp[indexData]['hr_trabajadas']);
               this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
+            
               this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
 
               let defaultHTT = "07:50";

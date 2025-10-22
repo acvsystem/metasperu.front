@@ -23,7 +23,7 @@ export class MtTableFilterComponent implements OnInit {
   @Input() dataTable: Array<any> = [];
 
   onDataView: Array<any> = [];
-  dataSource = new MatTableDataSource<PeriodicElement>(this.onDataView);
+  dataSource = new MatTableDataSource<PeriodicElement>([]);
   displayedColumns: string[] = ['tienda', 'codigoEJB', 'nro_documento', 'nombre_completo', 'dia', 'hr_ingreso_1', 'hr_salida_1', 'hr_break', 'hr_ingreso_2', 'hr_salida_2', 'hr_trabajadas', 'maximo_registro', 'estado_papeleta', 'view_registre', 'rango_horario', 'isTardanza'];
   filterEmpleado: string = "";
   filterTardanzaStatus: string = "";
@@ -90,12 +90,14 @@ export class MtTableFilterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(this.dataTable);
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
