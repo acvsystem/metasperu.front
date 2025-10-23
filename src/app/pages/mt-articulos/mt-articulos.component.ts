@@ -9,6 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalConstants } from '../../const/globalConstants';
 import { SocketService } from 'src/app/services/socket.service';
+import * as $ from 'jquery';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -205,7 +206,11 @@ export class MtArticulosComponent implements OnInit {
 
     this.socket.on('dataStockParse', async (data) => {
       console.log(data[0].cCodigoTienda);
+
       this.proccessData.push(data[0].cCodigoTienda);
+
+      $(`#head${data[0].cCodigoTienda}`).addClass("badge-active");
+
       if (this.selectedUS == 'VICTORIA SECRET' && this.proccessData.length == this.compTiendaList.length) {
         this.isLoading = false;
       }
@@ -584,6 +589,10 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.proccessData = [];
       this.isLoading = true;
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 60000);
 
       if (!this.isVendedor) {
         this.onProcessPetition(this.selectedUS);

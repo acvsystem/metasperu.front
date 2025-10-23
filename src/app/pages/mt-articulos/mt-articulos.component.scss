@@ -348,3 +348,18 @@ ion-item {
     display: flex !important;
     justify-content: left !important;
 }
+
+mat-spinner {
+    width: 23px !important;
+    height: 23px !important;
+}
+
+.mat-badge-content {
+    margin-left: 3px !important;
+}
+
+.badge-active {
+    .mat-badge-content {
+        background: #40a9ff !important;
+    }
+}
