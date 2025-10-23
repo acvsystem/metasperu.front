@@ -853,10 +853,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       });
 
     } else {
-      if (row.dataRegistro[0]['nroDocumento'] == '73176079') {
-        console.log(this.arPartTimeFech);
-      }
-
       this.onVerificarHrExtra([], row.dataRegistro[0]['nroDocumento']);
     }
 
