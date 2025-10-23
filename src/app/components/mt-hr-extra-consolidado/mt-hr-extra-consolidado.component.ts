@@ -40,6 +40,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   dataSource = new MatTableDataSource<any>(this.onListEmpleado);
   displayedColumns = ['nombre_completo', 'nro_documento', 'hroAcumulada'];
   isTienda: boolean = false;
+  isLoading: boolean = false;
   cboTiendas: Array<any> = [];
   onListTiendas: Array<any> = [];
 
@@ -187,7 +188,12 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       var documentoConsultar = "";
       this.isPartTime = false;
       await (this.parseHuellero || []).filter(async (huellero, i) => { //CALCULO PARA LAS HORAS EXTRAS
+
+
+
+
         documentoConsultar = (huellero || {}).nroDocumento;
+
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
         var codigo = (huellero || {}).caja.substr(0, 2);
 
@@ -198,6 +204,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
         }
 
         if (codigo == this.codeTienda) {
+
           //COMPROBAR SI EXISTE EL REGISTRO POR DIA
           let indexData = (this.onDataTemp || []).findIndex((data) => ((data || {}).dia == (huellero || []).dia));
 
@@ -226,8 +233,12 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
               dataRegistro: [huellero]
             });
 
+
+
             if (huellero.tpAsociado == "**") { //PART TIME
               this.isPartTime = true;
+
+
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -489,11 +500,15 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             }
           }
 
+
+
+
           if (this.onDataTemp.length - 1 == indexData) {
-            this.onVerificarHrExtra(this.dataVerify);
+            this.onVerificarHrExtra(this.dataVerify, documentoConsultar);
           }
         });
       }
+
 
       this.hroAcumulada = this.arHoraExtra[0];
       this.hroAcumuladaTotal = this.arHoraExtra[0];
@@ -532,7 +547,8 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
     return `${dif_hr}:${(dif_res < 10) ? '0' + dif_res : dif_res}`;
   }
 
-  onVerificarHrExtra(dataVerificar) {
+  onVerificarHrExtra(dataVerificar, nro_documento?) {
+
     let parms = {
       url: '/recursos_humanos/pap/horas_extras',
       body: dataVerificar
@@ -549,8 +565,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
         this.hroAcumulada = "";
         this.hroAcumuladaTotal = "";
         this.arHoraExtra = [];
-
-
 
         this.bodyList.filter((dt, i) => {
           this.bodyList[i]['hrx_solicitado'] = "00:00";
@@ -583,25 +597,12 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
 
             (this.parseEJB[index] || {})['hroAcumulada'] = typeof this.hroAcumulada == 'undefined' || this.hroAcumulada.length == 0 ? '-------' : this.hroAcumulada;
-
-
-            setTimeout(() => {
-              this.parseEJB.filter((dt, i) => {
-                let exs = this.bodyList.findIndex((bd) => bd.documento == dt.documento);
-                if (exs == -1 && !((dt || {}).hroAcumulada || "").length) {
-
-                  (this.parseEJB[i] || {})['hroAcumulada'] = '-------';
-                }
-              });
-            }, 4000);
-            //this.store.removeStore('mt-hrExtra');
-            //this.store.setStore('mt-hrExtra', JSON.stringify(ascDates));
           }
         });
-
-
-
       });
+    } else {
+      let index = this.parseEJB.findIndex((ejb) => ejb.documento == nro_documento);
+      (this.parseEJB[index] || {})['hroAcumulada'] = '-------';
     }
   }
 
@@ -676,8 +677,9 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   }
 
 
-  onProcesarPartTime(length, index, row) {
+  onProcesarPartTime(length, index, row, isUpdate?) {
     this.dataVerify = [];
+
 
     let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
 
@@ -688,9 +690,24 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
     let estado = row.dataRegistro.length >= 3 ? 'aprobar' : 'correcto';
     let aprobado = estado == "correcto" ? true : false;
 
-    this.arPartTimeFech.push({
-      dia: row.dia, diaNom: dias[indice], hr_trabajadas: row.hr_trabajadas, indice: indice
-    });
+    let htrb = row.hr_trabajadas;
+
+    if (((row || {})['papeleta'] || []).length) {
+      htrb = this.obtenerHorasTrabajadas(row.hr_trabajadas, (((row || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
+    }
+
+    if (!isUpdate) {
+      this.arPartTimeFech.push({
+        dia: row.dia, diaNom: dias[indice], hr_trabajadas: htrb, indice: indice
+      });
+    } else {
+      let indexData = (this.arPartTimeFech || []).findIndex((data) => ((data || {}).dia == (row || {}).dia));
+
+      this.arPartTimeFech[indexData]['hr_trabajadas'] = htrb;
+
+    }
+
+
 
     if (length - 1 == index) {
 
@@ -699,22 +716,23 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       });
 
       this.arPartTimeFech = ascDates;
-
       let count = "00:00";
       let arFechas = [];
+      let cFechas = [];
 
-      this.arPartTimeFech.filter((pt, index) => {
+
+
+
+      this.arPartTimeFech.filter(async (pt, index) => {
 
         let hr = (pt.hr_trabajadas || "").split(":");
         let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
 
         let hora = parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) ? `${hr[0]}:${hr[1]}` : `${hr[0]}:00`; //LIMITIE DE HORA VALIDA
 
+
+
         if ((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice || pt.indice == 6) {
-
-
-
-
 
           count = this.obtenerHorasTrabajadas(hora, count);
 
@@ -742,38 +760,217 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             let process = ToTime(newAcumulado);
 
             arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
+            cFechas.push((this.arPartTimeFech[index] || {}).dia);
+            this.arPartTimeFech[index]["fechas"] = arFechas;
+            this.arPartTimeFech[index]["fechasProcess"] = cFechas;
 
             if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) >= 24) {
-              this.arPartTimeFech[index]["fechas"] = arFechas;
+
+
               this.arPartTimeFech[index]["hrExtra"] = process;
 
               let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
 
               // LIMITE HORA PART TIME
-              if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
+
+              if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) == 24) {
+                if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
+                  console.log(this.arPartTimeFech[index]["fechas"]);
+                  this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.arPartTimeFech[index]["hrTrabajadas"], fecha: this.arPartTimeFech[index]["fechas"][0]['dia'], hrx_acumulado: this.arPartTimeFech[index]["hrExtra"], extra: this.arPartTimeFech[index]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: this.arPartTimeFech[index]["fechas"] });
+                }
+              } else {
                 this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.arPartTimeFech[index]["hrTrabajadas"], fecha: this.arPartTimeFech[index]["fechas"][0]['dia'], hrx_acumulado: this.arPartTimeFech[index]["hrExtra"], extra: this.arPartTimeFech[index]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: this.arPartTimeFech[index]["fechas"] });
               }
+
             }
           }
 
 
           count = "00:00";
           arFechas = [];
+          cFechas = [];
 
 
         } else {
           arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
-
+          cFechas.push((this.arPartTimeFech[index] || {}).dia);
           count = this.obtenerHorasTrabajadas(hora, count);
         }
 
-        if (this.arPartTimeFech.length - 1 == index) { // TERMINO DEL ARRAY
 
-          this.onVerificarHrExtra(this.dataVerify);
+
+        if (this.arPartTimeFech.length - 1 == index) { // TERMINO DEL ARRAY
+          this.dataVerify = [];
+
+          await this.onRepoccesarPart((row || {})['dataRegistro'][0]['nroDocumento']).then((dataPromise: any) => {
+
+            (dataPromise || []).filter((dt, i) => {
+              if (((dt || {}).fechas || []).length) {
+                dataPromise[i]['hrTrabajadas'] = this.sumarHoras((dt || {}).fechas);
+              }
+
+              if (dataPromise.length - 1 == i) {
+                this.arPartTimeFech = dataPromise;
+
+                dataPromise.filter((dtp, indx) => {
+
+                  if (parseInt((dtp["hrTrabajadas"] || "").split(":")[0]) >= 24) {
+
+                    dtp["hrExtra"] = this.diferenciaHoras(dtp["hrTrabajadas"], '24:00');
+
+                    let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
+
+                    // LIMITE HORA PART TIME
+
+                    if (parseInt((dtp["hrTrabajadas"] || "").split(":")[0]) == 24) {
+
+                      if (parseInt((dtp["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
+                        console.log(dtp);
+                        this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: dtp["hrTrabajadas"], fecha: dtp["fechas"][0]['dia'], hrx_acumulado: dtp["hrExtra"], extra: dtp["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: dtp["fechas"] });
+                      }
+                    } else {
+                      let inx = this.dataVerify.findIndex((dv) => dv.fecha == dataPromise[indx]["fechas"][0]['dia']);
+
+                      if (inx == -1) {
+                        this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: dtp["hrTrabajadas"], fecha: dtp["fechas"][0]['dia'], hrx_acumulado: dtp["hrExtra"], extra: dtp["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: dtp["fechas"] });
+                      }
+                    }
+
+                  }
+
+
+                  if (dataPromise.length - 1 == indx) {
+
+                    this.onVerificarHrExtra(this.dataVerify, row.dataRegistro[0]['nroDocumento']);
+                  }
+                });
+              }
+            });
+          });
+
         }
 
       });
+
+    } else {
+      if (row.dataRegistro[0]['nroDocumento'] == '73176079') {
+        console.log(this.arPartTimeFech);
+      }
+
+      this.onVerificarHrExtra([], row.dataRegistro[0]['nroDocumento']);
     }
+
+  }
+
+  diferenciaHoras(hora1, hora2) {
+    const [h1, m1] = hora1.split(':').map(Number);
+    const [h2, m2] = hora2.split(':').map(Number);
+
+    const minutos1 = h1 * 60 + m1;
+    const minutos2 = h2 * 60 + m2;
+
+    let diferencia = Math.abs(minutos1 - minutos2);
+
+    const horas = Math.floor(diferencia / 60);
+    const minutos = diferencia % 60;
+
+    return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
+  }
+
+  sumarHoras(arrayHoras: Array<any>) {
+    let totalMinutos = 0;
+    let arF = [];
+    let horasTotales;
+    let minutosRestantes;
+    (arrayHoras || []).forEach((ar, i) => {
+      arF.push(ar.hr_trabajadas);
+      if (arrayHoras.length - 1 == i) {
+        (arF || []).filter((hora) => {
+          let [h, m] = (hora || "").split(':').map(Number);
+          totalMinutos += h * 60 + m;
+        });
+
+        horasTotales = Math.floor(totalMinutos / 60);
+        minutosRestantes = totalMinutos % 60;
+
+      }
+    });
+
+    return `${String(horasTotales).padStart(2, '0')}:${String(minutosRestantes).padStart(2, '0')}`;
+
+  }
+
+  onVerifyPap(fecha, documento) {
+    let parms = {
+      url: '/papeleta/search/fecha',
+      body: { nroDocumento: documento, dia: fecha }
+    };
+
+    return this.service.post(parms).then(async (response) => {
+      return response;
+    });
+
+  }
+
+  onRepoccesarPart(nroDocumento) {
+    return new Promise((resolve, reject) => {
+      let dataPT = [...this.arPartTimeFech];
+      dataPT.filter((fecha, i) => {
+        if (((fecha || {})['fechasProcess'] || []).length) {
+
+          let fechaFaltante = this.fechasFaltantesDeSemana(((fecha || {})['fechasProcess'] || []), i, nroDocumento);
+
+          (fechaFaltante || []).filter((fecha, j) => {
+            this.onVerifyPap(fecha.dia, fecha.documento).then((rs) => {
+              if (((rs || {}).data || []).length) {
+                let data = ((rs || {}).data || [])[0];
+                const [h, m] = (data.HORA_SOLICITADA || "").split(':').map(Number);
+                let hora = String(h).length == 1 ? `0${h}:${String(m).padStart(2, '0')}` : data.HORA_SOLICITADA;
+                dataPT[fecha['index']]['fechas'].push({ dia: data.FECHA_DESDE, hr_trabajadas: hora, isPapeleta: true });
+              }
+
+              if (fechaFaltante.length - 1 == j) {
+                setTimeout(() => {
+                  resolve(dataPT);
+                }, 2000);
+              }
+            });
+          });
+        }
+      });
+    });
+  }
+
+  obtenerLunes(fechaStr) {
+    const fecha = new Date(fechaStr);
+    const dia = fecha.getDay(); // 0 (domingo) a 6 (sábado)
+    const diff = (dia + 6) % 7; // diferencia desde el lunes
+    fecha.setDate(fecha.getDate() - diff);
+    fecha.setHours(0, 0, 0, 0);
+    return (fecha).toISOString().slice(0, 10);
+  }
+
+  generarSemanaDesdeLunes(lunesStr, index, documento) {
+    const fechas = [];
+    const lunes = new Date(lunesStr);
+    for (let i = 0; i < 7; i++) {
+      const dia = new Date(lunes);
+      dia.setDate(lunes.getDate() + i);
+      fechas.push({ dia: dia.toISOString().slice(0, 10), index: index, documento: documento });
+    }
+    return fechas;
+  }
+
+  fechasFaltantesDeSemana(fechasArray, index, documento) {
+
+    if (fechasArray.length === 0) return [];
+
+    const lunesSemana = this.obtenerLunes(fechasArray[fechasArray.length - 1]);
+
+    const semanaCompleta = this.generarSemanaDesdeLunes(lunesSemana, index, documento);
+    const fechasSet = new Set(fechasArray);
+
+    return semanaCompleta.filter(fecha => !fechasSet.has(fecha.dia));
   }
 
   onTiempoTolerancia() {

@@ -22,7 +22,13 @@
 
           <ng-container matColumnDef="hroAcumulada">
             <th mat-header-cell *matHeaderCellDef> Hora Acumulada </th>
-            <td mat-cell *matCellDef="let element" style="font-weight: 600;">{{element.hroAcumulada}}</td>
+            <td mat-cell *matCellDef="let element" style="font-weight: 600;">
+              @if(!element.hroAcumulada.length){
+                <mat-spinner></mat-spinner>
+              }@else{
+                {{element.hroAcumulada}}
+              }
+            </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
