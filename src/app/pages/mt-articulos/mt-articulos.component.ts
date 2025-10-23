@@ -20,7 +20,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class MtArticulosComponent implements OnInit {
   //socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
-  displayedColumns: string[] = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color'];
+  displayedColumns: string[] = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'color_scent'];
   headList = ['Referencia', 'Codigo Barra', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Familia', 'SubFamilia'];
   headListTienda = ['Tienda', 'Procesar', 'Procesado', 'Estado'];
   onReporteList: Array<any> = [];
@@ -416,6 +416,8 @@ export class MtArticulosComponent implements OnInit {
           self.onReporteList[indexProductoExist]["cTalla"] = ((data || {})['cTalla'] || "").length ? (data || {})['cTalla'] : self.onReporteList[indexProductoExist]['cTalla'];
           self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
           self.onReporteList[indexProductoExist]["cColor"] = ((data || {})['cColor'] || "").length ? (data || {})['cColor'] : self.onReporteList[indexProductoExist]['cColor'];
+          self.onReporteList[indexProductoExist]["cColorScent"] = ((data || {})['cColorScent'] || "").length ? (data || {})['cColorScent'] : self.onReporteList[indexProductoExist]['cColorScent'];
+
 
           // }
 
@@ -433,6 +435,7 @@ export class MtArticulosComponent implements OnInit {
               "cTemporada": (data || {}).cTemporada || "",
               "cTalla": (data || {}).cTalla || "",
               "cColor": (data || {}).cColor || "",
+              "cColorScent": (data || {}).cColorScent || "",
               "VS_AQP": this.onEvalDesconection('9N', (data || {}).vs_m_aventura || 0),
               "VS_LRB": this.onEvalDesconection('9D', (data || {}).vs_rambla || 0),
               "VS_PN": this.onEvalDesconection('9B', (data || {}).vs_p_norte || 0),
@@ -513,8 +516,8 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "vs";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU', 'VS-SA'];
-      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru', 'vs_santa_anita'];
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'Color/Scent', 'VS-AQP', 'VS-LRB', 'VS-PN', 'VS-PSM', 'VS-RPS', 'VS-MDS', 'VS-PUR', 'VS-ECOM', 'VS-MEP', 'VS-MNK', 'VSFA-JOC', 'VS-MPTRU', 'VS-SA'];
+      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'color_scent', 'vs_aqp', 'vs_lrb', 'vs_pn', 'vs_psm', 'vs_rps', 'vs_mds', 'vs_pur', 'vs_ecom', 'vs_mep', 'vs_mnk', 'vsfa_joc', 'vs_mptru', 'vs_santa_anita'];
       let codeTiendas = [
         { code: '9N' },
         { code: '9D' },
