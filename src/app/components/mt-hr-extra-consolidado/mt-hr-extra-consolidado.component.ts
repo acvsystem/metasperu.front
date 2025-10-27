@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { io } from 'socket.io-client';
 import { ShareService } from 'src/app/services/shareService';
 import { GlobalConstants } from '../../const/globalConstants';
+import { StorageService } from 'src/app/utils/storage';
 
 @Component({
   selector: 'mt-hr-extra-consolidado',
@@ -14,7 +15,7 @@ import { GlobalConstants } from '../../const/globalConstants';
 export class MtHrExtraConsolidadoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @Input() vTiendaLogin: any = {};
+  @Input() inUserData: any = {};
   @Output() afterChange: EventEmitter<any> = new EventEmitter();
   socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
   onListEmpleado: Array<any> = [];
@@ -35,6 +36,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   cboEmpleado: string = "";
   codigoPapeleta: string = "";
   cboTiendaConsulting: string = "";
+  nameTienda: string = "";
   hroAcumulada: string = "00:00";
   hroAcumuladaTotal: string = "00:00";
   dataSource = new MatTableDataSource<any>(this.onListEmpleado);
@@ -44,12 +46,14 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
   cboTiendas: Array<any> = [];
   onListTiendas: Array<any> = [];
 
-  constructor(private service: ShareService) {
+  constructor(private service: ShareService, private store: StorageService) {
     this.onAllStore();
   }
 
   ngOnInit() {
+    this.onTiempoTolerancia();
     this.onProcess();
+    this.onSocketListening();
   }
 
   onAllStore() {
@@ -75,26 +79,24 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
   onProcess() {
 
-    //this.socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
-
-    this.onTiempoTolerancia();
-
     this.onListEmpleado = [];
     this.parseEJB = [];
 
-    if (!Object.keys(this.vTiendaLogin).length) {
+    if (!Object.keys(this.inUserData).length) {
       this.isTienda = false;
       let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.cboTiendaConsulting);
       this.codeTienda = (unidServicio || {})['code'];
       this.unidServicio = (unidServicio || {})['uns'];
     } else {
       this.isTienda = true;
-      this.codeTienda = (this.vTiendaLogin || {})['code'];
-      this.unidServicio = (this.vTiendaLogin || {})['uns'];
+      this.codeTienda = (this.inUserData || {})['code'];
+      this.unidServicio = (this.inUserData || {})['uns'];
     }
 
-
     this.socket.emit('consultaListaEmpleado', this.unidServicio);
+  }
+
+  onSocketListening() {
 
     this.socket.on('reporteEmpleadoTienda', async (response) => { //LISTA EMPLEADOS DE TIENDA
       let dataEmpleado = (response || {}).data || [];
@@ -175,7 +177,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
         }
       });
     });
-
 
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
 
@@ -514,8 +515,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       this.hroAcumuladaTotal = this.arHoraExtra[0] || "";
 
     });
-
-
   }
 
   async onChangeSelect(data: any) {
@@ -684,7 +683,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
     return horaResult;
   }
-
 
   onProcesarPartTime(length, index, row, isUpdate?) {
     this.dataVerify = [];
