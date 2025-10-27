@@ -1278,8 +1278,11 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onOpenPapeleta() {
-    this.isPapeleta = true;
-    this.isOpenModal = true;
+    const self = this;
+    self.isPapeleta = true;
+    self.isOpenModal = true;
+    self.isObservacion = false;
+    self.isObervacionView = false;
   }
 
   opChangeObservation(ev) {
