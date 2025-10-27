@@ -117,7 +117,8 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
                   (this.parseEJB || []).push({
                     nombre_completo: (ejb || {}).nombre_completo,
                     documento: (ejb || {}).nro_documento,
-                    codigo_tienda: this.codeTienda
+                    codigo_tienda: this.codeTienda,
+                    hroAcumulada: ""
                   });
                 }
               }
@@ -131,13 +132,14 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
                     nombre_completo: (ejb || {}).nombre_completo,
                     documento: (ejb || {}).nro_documento,
                     codigo_tienda: this.codeTienda,
-                    hroAcumulada: ''
+                    hroAcumulada: ""
                   });
                 }
               }
             }
           });
         }
+
 
 
         if (dataEmpleado.length - 1 == index) {
@@ -189,10 +191,11 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       this.isPartTime = false;
       await (this.parseHuellero || []).filter(async (huellero, i) => { //CALCULO PARA LAS HORAS EXTRAS
 
-
-
-
         documentoConsultar = (huellero || {}).nroDocumento;
+
+        if (documentoConsultar == '001698517') {
+          console.log(huellero);
+        }
 
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
         var codigo = (huellero || {}).caja.substr(0, 2);
@@ -500,9 +503,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             }
           }
 
-
-
-
           if (this.onDataTemp.length - 1 == indexData) {
             this.onVerificarHrExtra(this.dataVerify, documentoConsultar);
           }
@@ -510,8 +510,8 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       }
 
 
-      this.hroAcumulada = this.arHoraExtra[0];
-      this.hroAcumuladaTotal = this.arHoraExtra[0];
+      this.hroAcumulada = this.arHoraExtra[0] || "";
+      this.hroAcumuladaTotal = this.arHoraExtra[0] || "";
 
     });
 
@@ -554,6 +554,8 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       body: dataVerificar
     };
 
+
+
     if ((dataVerificar || []).length) {
       this.service.post(parms).then(async (response) => {
         const ascDates = response.sort((a, b) => {
@@ -591,12 +593,19 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
           if (this.bodyList.length - 1 == i) {
 
-            this.hroAcumulada = this.arHoraExtra[0];
-            this.hroAcumuladaTotal = this.arHoraExtra[0];
+            this.hroAcumulada = this.arHoraExtra[0] || "";
+            this.hroAcumuladaTotal = this.arHoraExtra[0] || "";
 
             let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
 
-            (this.parseEJB[index] || {})['hroAcumulada'] = typeof this.hroAcumulada == 'undefined' || this.hroAcumulada.length == 0 ? '-------' : this.hroAcumulada;
+            if (nro_documento == '71293455') {
+              console.log(this.hroAcumulada);
+            }
+
+            if (!((this.parseEJB[index] || {})['hroAcumulada'] || "").length) {
+              (this.parseEJB[index] || {})['hroAcumulada'] = typeof this.hroAcumulada == 'undefined' || this.hroAcumulada.length == 0 ? '-------' : this.hroAcumulada;
+            }
+
           }
         });
       });

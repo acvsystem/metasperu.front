@@ -85,7 +85,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
   ngOnInit() {
     this.onVerify();
     this.onListTienda();
-    this.allDocumentPending();
     this.service.onViewPageAdmin.subscribe((view) => {
       this.isViewPage = view;
     });
@@ -103,7 +102,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.onTransacciones();
     this.onListClient();
 
-
+    this.socket.on('evalue:document:pending:resolve', (data) => {
+      this.allDocumentPending();
+    });
 
     this.socket.on('traffic:get:online:response', (network) => {
       let codigo = (network || {}).code;
@@ -406,9 +407,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
   onRefreshDocument() {
     this.isShowLoading = true;
     this.onEvalueDocPending();
-    setTimeout(() => {
-      this.allDocumentPending();
-    }, 2000);
   }
 
   onListTienda() { //LISTA DE TIENDAS REGISTRADAS
