@@ -1339,7 +1339,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onSearchCalendario(rango?, codigo?) {
-
+    this.isLoading = true;
     let parms = {
       url: '/calendario/searchrHorario',
       body: [{ rango_dias: rango || this.vRangoDiasSearch, codigo_tienda: codigo || this.codeTienda }]
@@ -1425,15 +1425,12 @@ export class MtHorarioTiendaComponent implements OnInit {
 
           (this.onListCargo || []).push({ key: dt.id, value: dt.cargo });
         });
-
+        this.isLoading = false;
         this.store.setStore("mt-horario", JSON.stringify(this.dataHorario));
       } else {
+        this.isLoading = false;
         this.dataHorario = [];
         this.service.toastError((response || {}).msj, "Horario");
-      }
-
-      if ((this.data || {}).length) {
-        this.isLoading = false;
       }
     });
 

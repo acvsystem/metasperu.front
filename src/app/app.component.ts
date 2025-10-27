@@ -231,11 +231,9 @@ export class AppComponent {
   }
 
   onImgProfile(user) {
-
     let tienda = this.lsDataTiendas.find((dt) => dt.serie == ((user || [])[0] || {}).code);
     this.unidServicioPrf = (tienda || {}).service_unit;
-
-    if (user.nivel == 'TIENDA') {
+    if (user[0].mt_nivel == 'TIENDA') {
       if (this.unidServicioPrf == 'BBW') {
         this.linkImgPerfil = '../assets/bbwicon.webp';
       } else if (this.unidServicioPrf == 'VS') {
