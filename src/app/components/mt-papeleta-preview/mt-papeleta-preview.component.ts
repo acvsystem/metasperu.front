@@ -21,6 +21,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
   observacion: string = "";
   vFechapap: string = "";
   isMultiPap: boolean = true;
+  isLoading: boolean = false;
   onListTiendas: Array<any> = [];
 
   constructor(private service: ShareService, private store: StorageService,) {
@@ -35,7 +36,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
 
   async ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.hasOwnProperty('codigoPap')) {
-
+      this.isLoading = true;
       await this.onListTipoPapeleta();
       this.onSearchPap(this.codigoPap);
     }
@@ -73,7 +74,7 @@ export class MtPapeletaPreviewComponent implements OnInit {
     };
 
     this.service.post(parms).then(async (response) => {
-
+      this.isLoading = false;
       if ((this.arCodigos || []).length) {
         this.dataPap.push(response[0]);
       } else {

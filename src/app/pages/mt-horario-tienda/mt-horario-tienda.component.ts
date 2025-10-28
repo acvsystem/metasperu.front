@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, Input, OnInit } from '@angular/core';
+import { Component, HostListener, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { StorageService } from 'src/app/utils/storage';
 import { io } from "socket.io-client";
 import {
@@ -12,6 +12,9 @@ import * as html2pdf from 'html2pdf.js';
 import * as $ from 'jquery';
 import { GlobalConstants } from '../../const/globalConstants';
 import { SocketService } from 'src/app/services/socket.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'mt-horario-tienda',
@@ -29,14 +32,20 @@ export class MtHorarioTiendaComponent implements OnInit {
   isPapeleta: boolean = false;
   isExpiredDay: boolean = false;
   isStartEditRg: boolean = false;
+  isPapeletaDay: boolean = false;
   isLoading: boolean = false;
+  isViewPapeleta: boolean = false;
+  dataSource = new MatTableDataSource<any>([]);
+
   dataObservation: Array<any> = [];
   onListEmpleado: Array<any> = [];
+  allPapeletas: Array<any> = [];
   selectedIdRango: number = 0;
   indexObservacion: number = -1;
   horaEnd: string = "";
   codeTienda: string = "";
   unidServicio: string = "";
+  codigoPap: string = "";
   isSearch: boolean = false;
   idCalendar: number = 0;
   arListDia: Array<any> = [
@@ -62,6 +71,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   arDataEJB: Array<any> = [];
   arDataServer: Array<any> = [];
   arObservacion: Array<any> = [];
+  displayedColumns: string[] = ['codigo_papeleta', 'Fecha', 'tipo_papeleta', 'nombre_completo', 'Accion'];
   screenHeight: number = 0;
   screenWith: number = 0;
   vObservacion: string = "";
@@ -81,6 +91,9 @@ export class MtHorarioTiendaComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
   @HostListener('window:resize', ['$event'])
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
 
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight - 100;
@@ -96,6 +109,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   async ngOnInit() {
 
     await this.onAllStore();
+
     this.profileUser = this.store.getStore('mt-profile');
 
     if ((this.profileUser || {}).mt_nivel == "RRHH" || (this.profileUser || {}).mt_nivel == "SISTEMAS" || (this.profileUser || {}).mt_nivel == "JOHNNY" || (this.profileUser || {}).mt_nivel == "OPERACIONES" || (this.profileUser || {}).mt_nivel == "FIELDLEADER") {
@@ -186,7 +200,6 @@ export class MtHorarioTiendaComponent implements OnInit {
         });
 
 
-
         this.idCargo = this.dataHorario[index]['id'];
 
         //  this.dataHorario[index]['rg_hora'] = this.dataHorario[0]['rg_hora'];
@@ -197,6 +210,8 @@ export class MtHorarioTiendaComponent implements OnInit {
           if (obsExist != -1) {
             this.dataHorario[index]['dias'][i]['isObservation'] = true;
           }
+
+
         });
 
         this.onListCargo.push({ key: dt.id, value: dt.cargo });
@@ -211,17 +226,9 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.unidServicio = (unidServicio || {})['uns'];
     this.onListEmpleado = [];
 
-    console.log("EMPLEADO", this.unidServicio);
-
-
-
-
     this.socket.emit('horario/empleadoEJB', this.unidServicio);
 
-
-
     this.socket.on('reporteEmpleadoTienda', async (response) => {
-      console.log(response);
       let dataEmpleado = (response || {}).data;
       let codigo_uns = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
 
@@ -258,6 +265,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       });
     });
 
+    this.onListPapeleta();
     this.onPermisosTienda();
   }
 
@@ -282,6 +290,17 @@ export class MtHorarioTiendaComponent implements OnInit {
     };
     this.service.get(parms).then((response) => {
       this.dataViewPermiso = response || [];
+    });
+  }
+
+  onListPapeleta() {
+    let parms = {
+      url: '/recursos_humanos/pap/lista/papeleta',
+      body: [{ codigo_tienda: this.codeTienda }]
+    };
+
+    this.service.post(parms).then(async (response) => {
+      this.allPapeletas = response;
     });
   }
 
@@ -1067,7 +1086,8 @@ export class MtHorarioTiendaComponent implements OnInit {
           dias_trabajo: [],
           dias_libres: [],
           arListTrabajador: [],
-          observacion: []
+          observacion: [],
+          papeletas: []
         }
       );
 
@@ -1080,6 +1100,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.isOpenModal = value;
     this.isPapeleta = false;
     this.isObservacion = false;
+    this.isPapeletaDay = false;
     this.onViewObservacion(false);
   }
 
@@ -1087,6 +1108,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onViewObservacion(ev) {
     this.isObervacionView = ev;
+    this.isPapeletaDay = false;
   }
 
   onCaledarRange($event) {
@@ -1275,6 +1297,8 @@ export class MtHorarioTiendaComponent implements OnInit {
 
     this.isObservacion = true;
     this.isOpenModal = true;
+    this.isPapeleta = false;
+    this.isObervacionView = false;
   }
 
   onOpenPapeleta() {
@@ -1403,9 +1427,20 @@ export class MtHorarioTiendaComponent implements OnInit {
 
 
             let obsExist = (this.dataHorario[index]['observacion'] || []).findIndex((obs) => obs.id_dia == ds.id);
-
             if (obsExist != -1) {
               this.dataHorario[index]['dias'][i]['isObservation'] = true;
+            }
+
+            let objPapeleta = this.allPapeletas.filter((pap) => {
+              let fPap = this.formatearFechaTexto(pap.fecha_desde);
+              if (fPap == ds.fecha_number) {
+                this.dataHorario[index]['papeleta'].push(pap)
+                return pap;
+              }
+            });
+
+            if ((objPapeleta || []).length) {
+              this.dataHorario[index]['dias'][i]['isPapeleta'] = true;
             }
           });
 
@@ -1434,6 +1469,41 @@ export class MtHorarioTiendaComponent implements OnInit {
       }
     });
 
+  }
+
+  formatearFechaTexto(fechaTexto: string): string {
+    const [año, mes, dia] = fechaTexto.split('-');
+    return `${dia}-${mes}-${año}`;
+  }
+
+  onViewPapeletaDia(day) {
+    const self = this;
+    self.isPapeletaDay = true;
+
+    let allPApeletas = [];
+    this.dataHorario[0]['papeleta'].find((pap, i) => {
+      let fPap = this.formatearFechaTexto(pap.fecha_desde);
+      if (fPap == day) {
+        allPApeletas.push(pap)
+      }
+      self.isPapeleta = false;
+      self.isOpenModal = true;
+      self.isObservacion = false;
+      self.isObervacionView = false;
+      this.dataSource = new MatTableDataSource(allPApeletas);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+  }
+
+  onViewPapeleta(ev) {
+    this.isViewPapeleta = true;
+    this.codigoPap = ev.codigo_papeleta;
+  }
+
+  onBackPap() {
+    this.isViewPapeleta = false;
+    this.codigoPap = "";
   }
 
   onObservacionSelected(ev) {
@@ -1505,5 +1575,6 @@ export interface HorarioElement {
   dias_trabajo: Array<any>,
   dias_libres: Array<any>,
   arListTrabajador: Array<any>,
-  observacion: Array<any>
+  observacion: Array<any>,
+  papeletas: Array<any>
 }

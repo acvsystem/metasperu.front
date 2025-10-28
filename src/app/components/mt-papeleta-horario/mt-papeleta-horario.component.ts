@@ -138,7 +138,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
   constructor(private modalCtrl: ModalController, private store: StorageService, private service: ShareService) {
     this.onAllStore();
     this.getScreenSize();
-    this.onAllStore();
   }
 
 
