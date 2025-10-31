@@ -1304,6 +1304,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   onOpenPapeleta() {
     const self = this;
     self.isPapeleta = true;
+    self.isPapeletaDay = false;
     self.isOpenModal = true;
     self.isObservacion = false;
     self.isObervacionView = false;
