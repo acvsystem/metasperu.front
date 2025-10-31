@@ -294,9 +294,11 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   onListPapeleta() {
+
+    let code = this.data.length ? (this.data || [])[0]['code'] : this.codeTienda;
     let parms = {
       url: '/recursos_humanos/pap/lista/papeleta',
-      body: [{ codigo_tienda: this.codeTienda }]
+      body: [{ codigo_tienda: code }]
     };
 
     this.service.post(parms).then(async (response) => {
