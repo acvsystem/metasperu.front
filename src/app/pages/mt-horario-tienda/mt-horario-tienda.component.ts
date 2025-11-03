@@ -1476,7 +1476,7 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   formatearFechaTexto(fechaTexto: string): string {
     const [año, mes, dia] = fechaTexto.split('-');
-    return `${dia}-${mes}-${año}`;
+    return `${parseInt(dia)}-${parseInt(mes)}-${año}`;
   }
 
   onViewPapeletaDia(day) {
