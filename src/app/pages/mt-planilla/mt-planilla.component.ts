@@ -4,9 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { io } from "socket.io-client";
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { SocketService } from '@metasperu/services/socket.service';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';

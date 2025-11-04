@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { IRequestParams } from '../const/IRequestParams';
+import { IRequestParams } from '@metasperu/const/IRequestParams';
 import { catchError, retryWhen, tap } from 'rxjs/operators';
-import { genericRetryStrategy } from '../utils/rxjUtils';
+import { genericRetryStrategy } from '@metasperu/utils/rxjUtils';
 import { of, throwError } from 'rxjs';
-import { StorageService } from '../utils/storage';
+import { StorageService } from '@metasperu/utils/storage';
 
 @Injectable({
   providedIn: 'root'

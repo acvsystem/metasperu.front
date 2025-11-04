@@ -2,9 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { environment } from 'src/environments/environment'; // Asegúrate de que existe
-import { GlobalConstants } from '../const/globalConstants';
-import { StorageService } from '../utils/storage';
+import { GlobalConstants } from '@metasperu/const/globalConstants';
+import { StorageService } from '@metasperu/utils/storage';
 
 @Injectable({
   providedIn: 'root' // Importante: esto lo convierte en singleton

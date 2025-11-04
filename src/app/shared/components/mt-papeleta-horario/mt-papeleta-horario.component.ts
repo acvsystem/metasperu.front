@@ -2,8 +2,8 @@ import { Component, HostListener, Input, OnInit, ViewChild, inject } from '@angu
 import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { StorageService } from 'src/app/utils/storage';
-import { ShareService } from 'src/app/services/shareService';
+import { StorageService } from '@metasperu/utils/storage';
+import { ShareService } from '@metasperu/services/shareService';
 import * as $ from 'jquery';
 import {
   MatSnackBar,
@@ -13,21 +13,10 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
 import { ModalController } from '@ionic/angular';
-import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
-import { MtModalViewComentarioComponent } from '../../components/mt-modal-view-comentario/mt-modal-view-comentario.component';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { MtModalViewComentarioComponent } from '@metasperu/components/mt-modal-view-comentario/mt-modal-view-comentario.component';
+import { MatDialog } from '@angular/material/dialog';
+import { GlobalConstants } from '@metasperu/const/globalConstants';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';

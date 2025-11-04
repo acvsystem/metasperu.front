@@ -1,10 +1,10 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { concatMap, of, throwError } from 'rxjs';
-import { IRequestParams } from '../const/IRequestParams';
-import { StorageService } from '../utils/storage';
+import { IRequestParams } from '@metasperu/const/IRequestParams';
+import { StorageService } from '@metasperu/utils/storage';
 import { HttpService } from './httpService';
 import { ToastrService } from 'ngx-toastr';
-import { GlobalConstants } from '../const/globalConstants';
+import { GlobalConstants } from '@metasperu/const/globalConstants';
 
 @Injectable({
   providedIn: 'root'

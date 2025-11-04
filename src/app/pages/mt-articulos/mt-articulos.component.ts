@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { io } from "socket.io-client";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { ShareService } from '../../services/shareService';
-import { StorageService } from 'src/app/utils/storage';
+import { ShareService } from '@metasperu/services/shareService';
+import { StorageService } from '@metasperu/utils/storage';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { SocketService } from '@metasperu/services/socket.service';
 import * as $ from 'jquery';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';

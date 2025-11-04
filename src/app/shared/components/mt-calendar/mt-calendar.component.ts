@@ -1,26 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, inject, signal, model, SimpleChanges } from '@angular/core';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import {
-  MatMomentDateModule,
-  MAT_MOMENT_DATE_FORMATS,
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MomentDateAdapter
-} from '@angular/material-moment-adapter';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { ShareService } from 'src/app/services/shareService';
+import { ShareService } from '@metasperu/services/shareService';
 
 const moment = _rollupMoment || _moment;
 

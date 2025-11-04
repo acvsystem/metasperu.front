@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
-import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
+import { MtModalContentComponent } from '@metasperu/components/mt-modal-content/mt-modal-content.component';
 
 @Component({
   selector: 'app-mt-inscription-postulant',
@@ -27,7 +27,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
 
   isAuth: boolean = false;
   isPostulant: boolean = true;
-  
+
   constructor(private sanitized: DomSanitizer, public modalCtrl: ModalController) { }
 
   ngOnInit() {
@@ -40,7 +40,7 @@ export class MtInscriptionPostulantComponent implements OnInit {
   }
 
   onSaveOrUpdate(ev: any) {
-  
+
   }
 
   async openModalAddPostulant() {

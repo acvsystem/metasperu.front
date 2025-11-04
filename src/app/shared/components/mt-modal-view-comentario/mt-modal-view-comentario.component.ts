@@ -1,19 +1,14 @@
-import { ChangeDetectionStrategy, inject, model, signal, Component, OnInit, Input } from '@angular/core';
+import { inject, model, Component, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
+  MatDialogRef
 } from '@angular/material/dialog';
 import * as $ from 'jquery';
 
 export interface DialogData {
   comentario: string;
   isViewComentario: boolean;
-  isRechazar:boolean;
+  isRechazar: boolean;
 }
 
 @Component({
@@ -32,20 +27,20 @@ export class MtModalViewComentarioComponent implements OnInit {
   isRechazar: any = this.isRechazarModal;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
 
-   onChangeTextArea(data: any) {
-      let id = data.target.id;
-      let inputData = $(`#${id}`).val();
-      this[id] = inputData || "";
-    }
-  
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
-  
-    onOk(): void {
-      this.dialogRef.close(this.vComentario);
-    }
+  onChangeTextArea(data: any) {
+    let id = data.target.id;
+    let inputData = $(`#${id}`).val();
+    this[id] = inputData || "";
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onOk(): void {
+    this.dialogRef.close(this.vComentario);
+  }
 }

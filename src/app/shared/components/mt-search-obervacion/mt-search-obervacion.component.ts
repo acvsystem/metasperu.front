@@ -2,8 +2,8 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ShareService } from 'src/app/services/shareService';
-import { StorageService } from 'src/app/utils/storage';
+import { ShareService } from '@metasperu/services/shareService';
+import { StorageService } from '@metasperu/utils/storage';
 
 @Component({
   selector: 'mt-search-obervacion',

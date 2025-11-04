@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { io } from "socket.io-client";
-import { ShareService } from 'src/app/services/shareService';
+import { ShareService } from '@metasperu/services/shareService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { GlobalConstants } from '../../const/globalConstants';
+import { GlobalConstants } from '@metasperu/const/globalConstants';
 
 @Component({
   selector: 'mt-panel-horario',

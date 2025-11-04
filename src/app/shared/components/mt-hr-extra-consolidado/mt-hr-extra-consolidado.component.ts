@@ -3,9 +3,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { io } from 'socket.io-client';
-import { ShareService } from 'src/app/services/shareService';
-import { GlobalConstants } from '../../const/globalConstants';
-import { StorageService } from 'src/app/utils/storage';
+import { ShareService } from '@metasperu/services/shareService';
+import { GlobalConstants } from '@metasperu/const/globalConstants';
+import { StorageService } from '@metasperu/utils/storage';
 
 @Component({
   selector: 'mt-hr-extra-consolidado',

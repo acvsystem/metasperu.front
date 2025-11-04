@@ -1,24 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ShareService } from 'src/app/services/shareService';
-import { StorageService } from 'src/app/utils/storage';
-import { io } from "socket.io-client";
+import { ShareService } from '@metasperu/services/shareService';
+import { StorageService } from '@metasperu/utils/storage';
 import * as XLSX from 'xlsx';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { MtModalComentarioComponent } from '../../components/mt-modal-comentario/mt-modal-comentario.component';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MtModalComentarioComponent } from '@metasperu/components/mt-modal-comentario/mt-modal-comentario.component';
 import { GlobalConstants } from '../../const/globalConstants';
-import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { SocketService } from 'src/app/services/socket.service';
+import { SocketService } from '@metasperu/services/socket.service';
 
 @Component({
   selector: 'mt-traspasos-inventario',

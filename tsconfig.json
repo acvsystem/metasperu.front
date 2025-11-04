@@ -22,7 +22,14 @@
       "es2018",
       "dom"
     ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "paths": {
+      "@metasperu/services/*": ["src/app/shared/services/*"],
+      "@metasperu/utils/*": ["src/app/shared/utils/*"],
+      "@metasperu/components/*": ["src/app/shared/components/*"],
+      "@metasperu/shared/*": ["src/app/shared/*"],
+      "@metasperu/const/*": ["src/app/const/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

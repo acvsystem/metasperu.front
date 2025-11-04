@@ -1,15 +1,15 @@
 import { Component, HostListener } from '@angular/core';
-import { HttpService } from './services/httpService';
+import { HttpService } from './shared/services/httpService';
 import { Router, ActivationStart, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { filter } from "rxjs/operators";
-import { StorageService } from './utils/storage';
+import { StorageService } from './shared/utils/storage';
 import { NavController } from '@ionic/angular';
-import { ShareService } from './services/shareService';
+import { ShareService } from './shared/services/shareService';
 import { MenuController } from '@ionic/angular';
 import { UAParser } from 'ua-parser-js';
 import { io } from 'socket.io-client';
 import { GlobalConstants } from './const/globalConstants';
-import { SocketService } from './services/socket.service';
+import { SocketService } from './shared/services/socket.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

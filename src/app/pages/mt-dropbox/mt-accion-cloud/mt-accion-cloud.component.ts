@@ -1,14 +1,8 @@
 import { Component, Inject, inject, Input, model, OnInit } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
+  MAT_DIALOG_DATA, MatDialogRef,
 } from '@angular/material/dialog';
-import { ShareService } from 'src/app/services/shareService';
+import { ShareService } from '@metasperu/services/shareService';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,

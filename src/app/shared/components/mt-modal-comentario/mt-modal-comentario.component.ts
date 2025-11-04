@@ -1,14 +1,5 @@
-import { ChangeDetectionStrategy, inject, model, signal, Component, OnInit, Input } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import * as $ from 'jquery';
+import { inject, Component, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export interface DialogData {
   comentario: string;

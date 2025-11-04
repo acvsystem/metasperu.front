@@ -1,17 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatListModule } from '@angular/material/list';
-import { ShareService } from 'src/app/services/shareService';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ShareService } from '@metasperu/services/shareService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { io } from "socket.io-client";
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import * as $ from 'jquery';
-import { StorageService } from 'src/app/utils/storage';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { StorageService } from '@metasperu/utils/storage';
+import { SocketService } from '@metasperu/services/socket.service';
 const moment = _rollupMoment || _moment;
 
 interface Shoes {

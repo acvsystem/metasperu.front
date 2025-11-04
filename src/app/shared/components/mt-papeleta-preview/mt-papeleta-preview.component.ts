@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { ShareService } from 'src/app/services/shareService';
+import { ShareService } from '@metasperu/services/shareService';
 import * as html2pdf from 'html2pdf.js';
 import * as $ from 'jquery';
-import { StorageService } from 'src/app/utils/storage';
+import { StorageService } from '@metasperu/utils/storage';
 
 @Component({
   selector: 'mt-papeleta-preview',

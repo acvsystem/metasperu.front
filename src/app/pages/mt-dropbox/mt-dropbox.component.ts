@@ -1,11 +1,6 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { ShareService } from 'src/app/services/shareService';
-import {
-  MatDialog,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
-} from '@angular/material/dialog';
+import { ShareService } from '@metasperu/services/shareService';
+import { MatDialog } from '@angular/material/dialog';
 import { MtAccionCloudComponent } from './mt-accion-cloud/mt-accion-cloud.component';
 import {
   MatSnackBar,
@@ -19,8 +14,8 @@ import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { io } from 'socket.io-client';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { GlobalConstants } from '@metasperu/const/globalConstants';
+import { SocketService } from '@metasperu/services/socket.service';
 
 @Component({
   selector: 'mt-dropbox',

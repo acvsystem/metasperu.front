@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { io } from "socket.io-client";
-import { ShareService } from 'src/app/services/shareService';
-import { StorageService } from 'src/app/utils/storage';
+import { ShareService } from '@metasperu/services/shareService';
+import { StorageService } from '@metasperu/utils/storage';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
@@ -10,7 +10,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from '../../services/socket.service';
+import { SocketService } from '../../shared/services/socket.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 

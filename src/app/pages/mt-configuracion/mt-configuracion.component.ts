@@ -1,19 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ShareService } from '../../services/shareService';
+import { ShareService } from '@metasperu/services/shareService';
 import { io } from "socket.io-client";
 import { ModalController } from '@ionic/angular';
-import { MtModalContentComponent } from '../../components/mt-modal-content/mt-modal-content.component';
+import { MtModalContentComponent } from '@metasperu/components/mt-modal-content/mt-modal-content.component';
 
-import { StorageService } from 'src/app/utils/storage';
+import { StorageService } from '@metasperu/utils/storage';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
   CdkDragDrop,
-  CdkDrag,
-  CdkDropList,
-  CdkDropListGroup,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';

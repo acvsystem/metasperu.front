@@ -1,17 +1,14 @@
 import { Component, HostListener, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { StorageService } from 'src/app/utils/storage';
-import { io } from "socket.io-client";
+import { StorageService } from '@metasperu/utils/storage';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { ShareService } from '../../services/shareService';
-import { ToastrService } from 'ngx-toastr';
+import { ShareService } from '@metasperu/services/shareService';
 import * as html2pdf from 'html2pdf.js';
 import * as $ from 'jquery';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { SocketService } from '@metasperu/services/socket.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';

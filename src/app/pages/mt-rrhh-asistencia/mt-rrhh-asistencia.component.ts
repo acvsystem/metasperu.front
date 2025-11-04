@@ -1,5 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, SimpleChanges, ViewChild, NgZone } from '@angular/core';
-import { io } from "socket.io-client";
+import { Component, inject, OnInit, ViewChild, NgZone } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { MatPaginator, } from '@angular/material/paginator';
@@ -11,24 +10,15 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import Chart from 'chart.js/auto'
-import { jsonToPlainText, Options } from "json-to-plain-text";
 import { DomSanitizer } from '@angular/platform-browser';
-import {
-  MatDialog,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MtViewRegistroComponent } from './components/mt-view-registro/mt-view-registro.component';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { ShareService } from 'src/app/services/shareService';
-import { StorageService } from 'src/app/utils/storage';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { Subject, Observable, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { ShareService } from '@metasperu/services/shareService';
+import { StorageService } from '@metasperu/utils/storage';
+import { MatMenu } from '@angular/material/menu';
+import { SocketService } from '@metasperu/services/socket.service';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -378,7 +368,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.onDataTemp[indexData]['hr_trabajadas']);
               this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
-            
+
               this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
 
               let defaultHTT = "07:50";

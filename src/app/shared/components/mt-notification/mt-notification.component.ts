@@ -1,5 +1,5 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
-import { ShareService } from '../../services/shareService';
+import { Component, OnInit } from '@angular/core';
+import { ShareService } from '@metasperu/services/shareService';
 
 @Component({
   selector: 'mt-notification',

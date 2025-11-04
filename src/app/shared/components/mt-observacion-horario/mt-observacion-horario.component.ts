@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { io } from "socket.io-client";
-import { StorageService } from 'src/app/utils/storage';
+import { StorageService } from '@metasperu/utils/storage';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { ShareService } from 'src/app/services/shareService';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { ShareService } from '@metasperu/services/shareService';
+import { SocketService } from '@metasperu/services/socket.service';
 
 @Component({
   selector: 'mt-observacion-horario',

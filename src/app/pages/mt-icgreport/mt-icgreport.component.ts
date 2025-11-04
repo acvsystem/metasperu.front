@@ -1,8 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ShareService } from 'src/app/services/shareService';
-import { SocketService } from 'src/app/services/socket.service';
+import { ShareService } from '@metasperu/services/shareService';
+import { SocketService } from '@metasperu/services/socket.service';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { StorageService } from 'src/app/utils/storage';
+import { StorageService } from '@metasperu/utils/storage';
 
 @Component({
   selector: 'mt-icgreport',
@@ -229,7 +229,7 @@ export class MtIcgreportComponent implements OnInit {
             column: item['column'],
             typeReport: item['typeReport'],
             familia: familiaData.familia,
-            
+
             anio_1: {
               unid: familiaData.unid,
               importe: parseFloat(familiaData.importe),

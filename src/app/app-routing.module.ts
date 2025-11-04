@@ -4,7 +4,7 @@ import { MtLoginComponent } from './pages/mt-login/mt-login.component';
 import { MtVerificationComprobantesComponent } from './pages/mt-verification-comprobantes/mt-verification-comprobantes.component';
 import { MtArticulosComponent } from './pages/mt-articulos/mt-articulos.component';
 import { MtConfiguracionComponent } from './pages/mt-configuracion/mt-configuracion.component';
-import { AuthGuardService as authGuard } from './services/authGuardServices';
+import { AuthGuardService as authGuard } from '@metasperu/services/authGuardServices';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
 import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-tienda.component';
 import { MtAutorizacionHoraExtraComponent } from './pages/mt-autorizacion-hora-extra/mt-autorizacion-hora-extra.component';

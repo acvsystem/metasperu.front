@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ShareService } from '../../services/shareService'
+import { ShareService } from '@metasperu/services/shareService'
 import { NavController } from '@ionic/angular';
-import { StorageService } from '../../utils/storage';
+import { StorageService } from '@metasperu/utils/storage';
 import { UAParser } from 'ua-parser-js';
-import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
-import { io } from 'socket.io-client';
+import { publicIpv4 } from 'public-ip';
 import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from 'src/app/services/socket.service';
+import { SocketService } from '@metasperu/services/socket.service';
 
 @Component({
   selector: 'app-mt-login',
@@ -91,7 +90,7 @@ export class MtLoginComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
 
-    if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY" || (profileUser || {}).mt_nivel == "RRHH" ||  (profileUser || {}).mt_nivel == "FIELDLEADER" ||  (profileUser || {}).mt_nivel == "OPERACIONES" ) {
+    if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY" || (profileUser || {}).mt_nivel == "RRHH" || (profileUser || {}).mt_nivel == "FIELDLEADER" || (profileUser || {}).mt_nivel == "OPERACIONES") {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (profileUser || {}).mt_name_1,
         "mt_nivel": (profileUser || {}).mt_nivel,
