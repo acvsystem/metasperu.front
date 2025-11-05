@@ -1,74 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { ShareService } from '@metasperu/services/shareService'
+import { ShareService } from '@metasperu/services/shareService';
 import { NavController } from '@ionic/angular';
 import { StorageService } from '@metasperu/utils/storage';
 import { UAParser } from 'ua-parser-js';
 import { publicIpv4 } from 'public-ip';
-import { GlobalConstants } from '../../const/globalConstants';
-import { SocketService } from '@metasperu/services/socket.service';
-
+import { GlobalConstants } from '@metasperu/const/globalConstants';
+import { AuthService } from '@metasperu/services/authService';
+import { User } from '@metasperu/models/user.model';
 @Component({
   selector: 'app-mt-login',
   templateUrl: './mt-login.component.html',
   styleUrls: ['./mt-login.component.scss'],
 })
 export class MtLoginComponent implements OnInit {
-  // socket = io(GlobalConstants.backendServer, { query: { code: 'app' } });
 
   userName: string = "";
   password: string = "";
   codigo_auth: string = "";
+  msjErrorCodigo: string = "";
+  publicIP: string = "";
   isCodigo: boolean = false;
   isCodeExpired: boolean = false;
   isCodeFail: boolean = false;
-  isLogin: boolean = true;
   isLoading: boolean = false;
-  msjErrorCodigo: string = "";
+  isLogin: boolean = true;
   msjErrorLogin: string = GlobalConstants.message.login.error;
 
   constructor(
-    private shrService: ShareService,
+    private shareService: ShareService,
     private nav: NavController,
     private store: StorageService,
-    private socket: SocketService
+    private auth: AuthService
   ) { }
 
   async ngOnInit() {
+    this.publicIP = await publicIpv4();
   }
-
 
   async onLogin() {
     this.isLoading = true;
-    const { browser, cpu, device, os } = UAParser();
-    let publicIP = await publicIpv4();
+    const { browser } = UAParser();
 
     if (this.userName == "BBW" || this.userName == "VSBA") {
-      this.shrService.createToken(this.userName, this.password).then((token) => {
-        if (token) {
-          this.onRouteDefault();
-        }
+      this.auth.login(this.userName, this.password).then((response) => {
+        ((response || [])[0].auth || {}).token ? this.onRouteDefault() : '';
       });
     } else {
-
       let parms = {
         url: '/session_login',
-        body:
-        {
+        body: {
           usuario: this.userName,
           password: this.password,
           divice: `${(browser || {}).name} ${(browser || {}).version}`,
-          ip: publicIP
+          ip: this.publicIP
         }
       };
 
-      this.shrService.post(parms).then(async (response) => {
+      this.shareService.post(parms).then(async (response) => {
         this.isLoading = false;
         if ((response || {}).success) {
           this.isLogin = true;
-          this.shrService.createToken(this.userName, this.password).then((token) => {
-            if (token) {
-              this.onRouteDefault();
-            }
+          this.auth.login(this.userName, this.password).then((token) => {
+            token ? this.onRouteDefault() : "";
           });
         } else if ((response || {}).isSendCode) {
           this.isLogin = true;
@@ -89,7 +82,7 @@ export class MtLoginComponent implements OnInit {
   onRouteDefault() {
 
     let profileUser = this.store.getStore('mt-profile');
-
+    console.log(profileUser);
     if ((profileUser || {}).mt_nivel == "SISTEMAS" || (profileUser || {}).mt_nivel == "JOHNNY" || (profileUser || {}).mt_nivel == "RRHH" || (profileUser || {}).mt_nivel == "FIELDLEADER" || (profileUser || {}).mt_nivel == "OPERACIONES") {
       this.store.setStore('mt-profile', JSON.stringify({
         "mt_name_1": (profileUser || {}).mt_name_1,
@@ -120,12 +113,12 @@ export class MtLoginComponent implements OnInit {
 
     };
 
-    this.shrService.post(parms).then(async (response) => {
+    this.shareService.post(parms).then(async (response) => {
       this.isLoading = false;
       if ((response || {}).success) {
         this.isCodigo = false;
         this.isLogin = true;
-        this.shrService.createToken(this.userName, this.password).then((token) => {
+        this.shareService.createToken(this.userName, this.password).then((token) => {
           if (token) {
             this.onRouteDefault();
           }

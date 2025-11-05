@@ -24,11 +24,14 @@
     ],
     "useDefineForClassFields": false,
     "paths": {
+      "@metasperu/const/*": ["src/app/const/*"],
+      "@metasperu/shared/*": ["src/app/shared/*"],
       "@metasperu/services/*": ["src/app/shared/services/*"],
       "@metasperu/utils/*": ["src/app/shared/utils/*"],
       "@metasperu/components/*": ["src/app/shared/components/*"],
-      "@metasperu/shared/*": ["src/app/shared/*"],
-      "@metasperu/const/*": ["src/app/const/*"]
+      "@metasperu/interceptor/*": ["src/app/shared/interceptor/*"],
+      "@metasperu/models/*": ["src/app/models/*"]
+
     }
   },
   "angularCompilerOptions": {

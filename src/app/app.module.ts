@@ -4,7 +4,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-
+import { AuthInterceptorService } from '@metasperu/interceptor/auth-interceptor.service';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MtLoginComponent } from './pages/mt-login/mt-login.component';
@@ -102,6 +102,8 @@ import { registerLocaleData } from '@angular/common';
 import localeEsPe from '@angular/common/locales/es-PE';
 import { MtModalOptionTableMobileComponent } from './shared/components/mt-modal-option-table-mobile/mt-modal-option-table-mobile.component';
 import { MtTableAsistenciaViewMobileComponent } from './shared/components/mt-table-asistencia-view-mobile/mt-table-asistencia-view-mobile.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 registerLocaleData(localeEsPe, 'es-PE');
 
 const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
@@ -210,6 +212,11 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         ToastrModule.forRoot(),
         SocketIoModule.forRoot(confSocket)],
     providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptorService,
+            multi: true
+        },
         { provide: LOCALE_ID, useValue: 'es-PE' },
         provideAnimations(),
         provideToastr({
