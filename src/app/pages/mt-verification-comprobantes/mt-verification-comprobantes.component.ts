@@ -60,6 +60,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
   conxOnline: Array<any> = [];
   vListaClientes: string = '';
   vDataTienda: Array<any> = [];
+  arDocumentMallAventura: Array<any> = [];
   vDataTransferencia: Array<any> = [
     {
       dataOne: [],
@@ -101,6 +102,13 @@ export class MtVerificationComprobantesComponent implements OnInit {
     this.columnsToDisplay = ['codigo', 'Tienda', 'Traffic', 'Verificacion', 'Comprobantes', 'Transacciones', 'Clientes', 'Online', 'conexICG'];
     this.onTransacciones();
     this.onListClient();
+
+
+    this.socket.emit('consultaDocumentMall', "");
+    this.socket.on('consultaDocumentMall:response', (data) => {
+      this.arDocumentMallAventura = data?.documents || [];
+      console.log(data);
+    });
 
     this.socket.on('evalue:document:pending:resolve', (data) => {
       this.allDocumentPending();
