@@ -162,6 +162,7 @@ export class MtConfiguracionComponent implements OnInit {
   optionListRol: Array<any> = [];
   vListaClientes: String = "";
   isOnlineTienda: Boolean = false;
+  vNivelUser: string = "";
   cboUnidServicio: String = "";
   cboUnidServicioTnd: String = "";
   vAddCodigoAlmTienda: String = "";
@@ -194,6 +195,17 @@ export class MtConfiguracionComponent implements OnInit {
      this.onListMenu();
      this.onListRoles();*/
 
+    let profile = this.store.getStore('mt-profile');
+    this.vNivelUser = profile?.mt_nivel;
+    if (this.vNivelUser == 'RRHH') {
+      this.isSession = false;
+      this.isUsers = false;
+      this.isCajas = false;
+      this.isHp = true;
+      this.onPermisosTienda();
+
+      this.dataSourcePermiso = new MatTableDataSource<any>([]);
+    }
     this.onNivelesList();
     this.onListTienda();
     this.onEquiposList();
