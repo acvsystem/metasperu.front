@@ -399,10 +399,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
               if (tipoAsc.length == 2) { //LACTANCIA
 
                 let fechaLactancia = tipoAsc[1].trim().split('/');
-                console.log(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0]));
                 var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
                 var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
-                console.log(this.onDataTemp[indexData]['dia']);
                 if (f1 >= f2) {
                   defaultHT = "07:00";
                 }
