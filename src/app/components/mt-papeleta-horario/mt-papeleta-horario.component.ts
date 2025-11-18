@@ -195,6 +195,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.dataVerify = [];
       this.copyBodyList = [];
       this.arPartTimeFech = [];
+      console.log(data);
       await (this.parseHuellero || []).filter(async (huellero, i) => { //CALCULO PARA LAS HORAS EXTRAS
 
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
@@ -394,13 +395,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               let defaultHT = "08:00";
 
+
               if (tipoAsc.length == 2) { //LACTANCIA
 
-                let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
-
+                let fechaLactancia = tipoAsc[1].trim().split('/');
+                console.log(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0]));
                 var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
                 var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
-
+                console.log(this.onDataTemp[indexData]['dia']);
                 if (f1 >= f2) {
                   defaultHT = "07:00";
                 }
