@@ -69,27 +69,31 @@ export class MtTraspasosInventarioComponent implements OnInit {
     this.onListaTiendas();
     this.allTransfers();
     this.socket.on('inventario:get:barcode:response', (inventario) => {
+
       let dataInventario = JSON.parse(((inventario || {}).data || []));
 
-      let indexEx = this.onDataView.findIndex((dt) => dt.cCodigoBarra == dataInventario[0].cCodigoBarra);
-      if (indexEx == -1) {
-        let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
+      if ((dataInventario || []).length) {
+        let indexEx = this.onDataView.findIndex((dt) => dt.cCodigoBarra == dataInventario[0].cCodigoBarra);
+        if (indexEx == -1) {
+          let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
 
-        if (indexPD != -1) {
-          dataInventario[0]['cSolicitado'] = this.parsedData[indexPD][1];
-          this.onDataView.push(dataInventario[0]);
+          if (indexPD != -1) {
+            dataInventario[0]['cSolicitado'] = this.parsedData[indexPD][1];
+            this.onDataView.push(dataInventario[0]);
+          }
+
+          this.dataSource = new MatTableDataSource(this.onDataView);
+        } else {
+
+          let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
+          if (indexPD != -1) {
+            this.onDataView[indexEx]['cStock'] = dataInventario[0].cStock;
+            this.onDataView[indexEx]['cSolicitado'] = this.parsedData[indexPD][1];
+          }
         }
-
-        this.dataSource = new MatTableDataSource(this.onDataView);
       } else {
-
-        let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
-        if (indexPD != -1) {
-          this.onDataView[indexEx]['cStock'] = dataInventario[0].cStock;
-          this.onDataView[indexEx]['cSolicitado'] = this.parsedData[indexPD][1];
-        }
+        this.service.toastError('Inventario', 'Articulo no encontrado, verifique el codigo de barra ingresado.');
       }
-
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => {
@@ -336,17 +340,21 @@ export class MtTraspasosInventarioComponent implements OnInit {
               let contenido = ``;
 
               this.onDataView.filter((dt) => {
-                contenido += `${this.vAlmacenOrigen}|${this.vAlmacenDestino}|${dt.cCodigoArticulo}|${dt.cColor}|${dt.cTalla}|${dt.cSolicitado}|\n`;
+                const todosDefinidos = [dt.cCodigoArticulo, dt.cColor, dt.cTalla, dt.cSolicitado].every(v => v != null);
 
-                (detailTransfers || []).push({
-                  barcode: dt.cCodigoBarra,
-                  article_code: dt.cCodigoArticulo,
-                  description: dt.cDescripcion,
-                  size: dt.cTalla,
-                  color: dt.cColor,
-                  stock: dt.cStock,
-                  stock_required: dt.cSolicitado
-                });
+                if (todosDefinidos) {
+                  contenido += `${this.vAlmacenOrigen}|${this.vAlmacenDestino}|${dt.cCodigoArticulo}|${dt.cColor}|${dt.cTalla}|${dt.cSolicitado}|\n`;
+
+                  (detailTransfers || []).push({
+                    barcode: dt.cCodigoBarra,
+                    article_code: dt.cCodigoArticulo,
+                    description: dt.cDescripcion,
+                    size: dt.cTalla,
+                    color: dt.cColor,
+                    stock: dt.cStock,
+                    stock_required: dt.cSolicitado
+                  });
+                }
               });
 
               this.newTraspaso = {
@@ -381,21 +389,23 @@ export class MtTraspasosInventarioComponent implements OnInit {
               formData.append('file', archivo);
 
               formData.append('ftpDirectorio', nmCarpeta);
-              
-              this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
-                .subscribe({
-                  next: res => {
-                    console.log('Subido con éxito')
-                    this.service.toastSuccess('Se realizo el traspaso con exito..!!', 'Traspasos');
-                    this.onRegisterTrasfer();
-                  },
-                  error: err => {
-                    this.service.toastError('Error ', err);
-                    console.error('Error', err);
-                  }
-                });
 
-
+              if (contenido.includes("undefined") || contenido.includes("null")) {
+                this.service.toastError('File txt', 'Error en el txt verificar el documento txt.');
+              } else {
+                this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
+                  .subscribe({
+                    next: res => {
+                      console.log('Subido con éxito')
+                      this.service.toastSuccess('Se realizo el traspaso con exito..!!', 'Traspasos');
+                      this.onRegisterTrasfer();
+                    },
+                    error: err => {
+                      this.service.toastError('Error ', err);
+                      console.error('Error', err);
+                    }
+                  });
+              }
 
               const enlace = document.createElement('a');
               enlace.href = URL.createObjectURL(blob);
