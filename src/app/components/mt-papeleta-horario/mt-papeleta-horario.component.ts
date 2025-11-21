@@ -273,10 +273,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                 if (tipoAsc.length == 2) { //LACTANCIA
 
-                  let fechaLactancia = new Date(tipoAsc[1]).toLocaleDateString().split('/'); new Date();
-
-                  var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
-                  var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
+                let fechaLactancia = tipoAsc[1].trim().split('-');
+                var f1 = new Date(parseInt(fechaLactancia[0]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[2])).getTime(); //FECHA DE LACTANCIA
+                var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
 
                   if (f1 >= f2) {
                     defaultHT = "07:00";
@@ -398,10 +397,11 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               if (tipoAsc.length == 2) { //LACTANCIA
 
-                let fechaLactancia = tipoAsc[1].trim().split('/');
-                var f1 = new Date(parseInt(fechaLactancia[2]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[0])).getTime(); //FECHA DE LACTANCIA
+                let fechaLactancia = tipoAsc[1].trim().split('-');
+                var f1 = new Date(parseInt(fechaLactancia[0]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[2])).getTime(); //FECHA DE LACTANCIA
                 var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
                 if (f1 >= f2) {
+
                   defaultHT = "07:00";
                 }
               }
