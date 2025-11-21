@@ -320,7 +320,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
   onGenerarTxt() {
     let isDiferencia = false;
     let detailTransfers = [];
-    this.newTraspaso = [];
+    this.newTraspaso = {};
+    let nTraspaso = {};
     if (this.onDataView.length) {
       this.onDataView.filter((dt, i) => {
         if (dt.cSolicitado > dt.cStock) {
@@ -358,6 +359,16 @@ export class MtTraspasosInventarioComponent implements OnInit {
                 details: detailTransfers || []
               };
 
+              nTraspaso = {
+                unid_service: this.undServicio || "",
+                store_origin: this.nameStoreOrigin || "",
+                store_destination: this.nameStoreDestination || "",
+                code_warehouse_origin: this.vAlmacenOrigen || "",
+                code_warehouse_destination: this.vAlmacenDestino || "",
+                datetime: this.obtenerFechaMysql(),
+                details: detailTransfers || []
+              };
+
               let nmCarpeta = this.onVerificarTipoTienda();
               let min = 1000;
               let max = 99000;
@@ -370,15 +381,18 @@ export class MtTraspasosInventarioComponent implements OnInit {
               formData.append('file', archivo);
 
               formData.append('ftpDirectorio', nmCarpeta);
-
+              
               this.http.post(`${GlobalConstants.backendServer}/upload/traspasos`, formData)
                 .subscribe({
                   next: res => {
                     console.log('Subido con éxito')
-                    this.service.toastError('Se realizo el traspaso con exito..!!', 'Traspasos');
+                    this.service.toastSuccess('Se realizo el traspaso con exito..!!', 'Traspasos');
                     this.onRegisterTrasfer();
                   },
-                  error: err => console.error('Error', err)
+                  error: err => {
+                    this.service.toastError('Error ', err);
+                    console.error('Error', err);
+                  }
                 });
 
 
