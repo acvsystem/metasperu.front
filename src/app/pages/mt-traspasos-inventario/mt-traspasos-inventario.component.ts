@@ -62,6 +62,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
   newTraspaso: any = {};
   expandedElement: Array<any> = [];
   countElement: number = 0;
+  countUnidades: number = 0;
+
   constructor(private service: ShareService, private store: StorageService, private http: HttpClient, private router: Router, private socket: SocketService) { }
 
   ngOnInit() {
@@ -69,7 +71,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
     this.onListaTiendas();
     this.allTransfers();
     this.socket.on('inventario:get:barcode:response', (inventario) => {
-
+      this.countUnidades = 0;
       let dataInventario = JSON.parse(((inventario || {}).data || []));
 
       if ((dataInventario || []).length) {
@@ -91,7 +93,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
             this.onDataView[indexEx]['cSolicitado'] = this.parsedData[indexPD][1];
           }
         }
-
+        this.onDataView.filter((row) => {
+          this.countUnidades += parseInt(row.cSolicitado);
+        });
         this.countElement = this.onDataView.length;
       } else {
         this.service.toastError('Inventario', 'Articulo no encontrado, verifique el codigo de barra ingresado.');
@@ -488,11 +492,15 @@ export class MtTraspasosInventarioComponent implements OnInit {
 
 
   onEliminarProducto(barcode) {
+    this.countUnidades = 0;
     let index = this.onDataView.findIndex((dt) => dt['cCodigoBarra'] == barcode);
     let indexPD = this.parsedData.findIndex((dt) => dt[0] == barcode);
     this.onDataView.splice(index, 1);
     this.parsedData.splice(indexPD, 1);
     this.countElement = this.onDataView.length;
+    this.onDataView.filter((row) => {
+      this.countUnidades += parseInt(row.cSolicitado);
+    });
     this.dataSource = new MatTableDataSource(this.onDataView);
   }
 
