@@ -61,7 +61,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
   dataTransfers: Array<any> = [];
   newTraspaso: any = {};
   expandedElement: Array<any> = [];
-
+  countElement: number = 0;
   constructor(private service: ShareService, private store: StorageService, private http: HttpClient, private router: Router, private socket: SocketService) { }
 
   ngOnInit() {
@@ -91,6 +91,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
             this.onDataView[indexEx]['cSolicitado'] = this.parsedData[indexPD][1];
           }
         }
+
+        this.countElement = this.onDataView.length;
       } else {
         this.service.toastError('Inventario', 'Articulo no encontrado, verifique el codigo de barra ingresado.');
       }
@@ -403,6 +405,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
                     error: err => {
                       this.service.toastError('Error ', err);
                       console.error('Error', err);
+                      this.onRegisterTrasfer();
                     }
                   });
               }
@@ -489,6 +492,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
     let indexPD = this.parsedData.findIndex((dt) => dt[0] == barcode);
     this.onDataView.splice(index, 1);
     this.parsedData.splice(indexPD, 1);
+    this.countElement = this.onDataView.length;
     this.dataSource = new MatTableDataSource(this.onDataView);
   }
 
