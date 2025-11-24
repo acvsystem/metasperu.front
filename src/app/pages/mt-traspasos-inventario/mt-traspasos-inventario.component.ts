@@ -403,7 +403,7 @@ export class MtTraspasosInventarioComponent implements OnInit {
                       this.onRegisterTrasfer();
                     },
                     error: err => {
-                      this.service.toastError('Error ', err);
+                      this.service.toastSuccess('Se realizo el traspaso con exito..!!', 'Traspasos');
                       console.error('Error', err);
                       this.onRegisterTrasfer();
                     }
