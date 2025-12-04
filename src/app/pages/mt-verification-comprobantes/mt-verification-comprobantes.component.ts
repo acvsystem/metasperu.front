@@ -150,7 +150,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
-
+    
       let dataList = [];
       dataList = listaSession || [];
 

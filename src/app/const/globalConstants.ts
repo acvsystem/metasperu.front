@@ -1,7 +1,8 @@
 export class GlobalConstants {
 
     public static backendServer: string = "https://api.metasperu.net.pe";
-
+    public static socketServer: string = "wss://api.metasperu.net.pe";
+    
     public static message = {
         login: {
             error: "Usuario o contraseña incorrectos.",

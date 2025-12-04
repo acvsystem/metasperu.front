@@ -14,7 +14,7 @@ export class SocketService {
   private token: string;
   constructor(private store: StorageService) {
     this.token = this.store.getStore('tn');
-    this.socket = io(GlobalConstants.backendServer, {
+    this.socket = io(GlobalConstants.socketServer, {
       query: { code: 'app' },
       auth: {
         token: String((this.token || {})['value'])
