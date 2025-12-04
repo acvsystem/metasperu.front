@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ShareService } from 'src/app/services/shareService';
 import { StorageService } from 'src/app/utils/storage';
@@ -19,6 +19,8 @@ import { GlobalConstants } from '../../const/globalConstants';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SocketService } from 'src/app/services/socket.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'mt-traspasos-inventario',
@@ -57,6 +59,9 @@ export class MtTraspasosInventarioComponent implements OnInit {
   isDiferencia: boolean = false;
   readonly dialog = inject(MatDialog);
   dataSource = new MatTableDataSource<any>(this.onDataView);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   displayedColumns: string[] = ['codigoBarras', 'codigoArticulo', 'descripcion', 'talla', 'color', 'stock', 'solicitado', 'estado', 'accion'];
   dataTransfers: Array<any> = [];
   newTraspaso: any = {};
@@ -85,6 +90,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
           }
 
           this.dataSource = new MatTableDataSource(this.onDataView);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         } else {
 
           let indexPD = this.parsedData.findIndex((dtp) => dtp[0] == dataInventario[0].cCodigoBarra);
@@ -502,6 +509,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
       this.countUnidades += parseInt(row.cSolicitado);
     });
     this.dataSource = new MatTableDataSource(this.onDataView);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   allTransfers() {
