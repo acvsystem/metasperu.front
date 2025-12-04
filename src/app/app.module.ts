@@ -28,7 +28,6 @@ import { MtHorarioTiendaComponent } from './pages/mt-horario-tienda/mt-horario-t
 import { MtTableFilterComponent } from './components/mt-table-filter/mt-table-filter.component';
 import { MtTableFilterPapeletasCreadasComponent } from './components/mt-table-filter-papeletas-creadas/mt-table-filter-papeletas-creadas.component';
 import { MtTableOficinaComponent } from './components/mt-table-oficina/mt-table-oficina.component';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MtRrhhAsistenciaComponent } from './pages/mt-rrhh-asistencia/mt-rrhh-asistencia.component';
 import { MtTraspasosInventarioComponent } from './pages/mt-traspasos-inventario/mt-traspasos-inventario.component';
 import { MtLoadingComponent } from './components/mt-loading/mt-loading.component';
@@ -103,8 +102,6 @@ import localeEsPe from '@angular/common/locales/es-PE';
 import { MtModalOptionTableMobileComponent } from './components/mt-modal-option-table-mobile/mt-modal-option-table-mobile.component';
 import { MtTableAsistenciaViewMobileComponent } from './components/mt-table-asistencia-view-mobile/mt-table-asistencia-view-mobile.component';
 registerLocaleData(localeEsPe, 'es-PE');
-
-const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} };
 
 @NgModule({
     declarations: [
@@ -207,8 +204,7 @@ const confSocket: SocketIoConfig = { url: 'http://localhost:3200', options: {} }
         NgxMatTimepickerModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        ToastrModule.forRoot(),
-        SocketIoModule.forRoot(confSocket)],
+        ToastrModule.forRoot()],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-PE' },
         provideAnimations(),
