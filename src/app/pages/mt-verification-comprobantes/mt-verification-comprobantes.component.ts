@@ -87,10 +87,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
     this.onListTienda();
 
-    setTimeout(() => {
-      this.contadorCliente = 0;
-      this.socket.emit('comprobantes:get', 'angular');
-    }, 5000);
+    this.contadorCliente = 0;
+    this.socket.emit('comprobantes:get', 'angular');
+
 
 
     this.service.onViewPageAdmin.subscribe((view) => {
