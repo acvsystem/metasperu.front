@@ -5,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment'; // Asegúrate de que existe
 import { GlobalConstants } from '../const/globalConstants';
 import { StorageService } from '../utils/storage';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root' // Importante: esto lo convierte en singleton
@@ -12,15 +13,23 @@ import { StorageService } from '../utils/storage';
 export class SocketService {
   private socket: Socket;
   private token: string;
+  private connected$ = new BehaviorSubject<boolean>(false);
+  
   constructor(private store: StorageService) {
     this.token = this.store.getStore('tn');
     this.socket = io(GlobalConstants.socketServer, {
+      transports: ['websocket', 'polling'],
+      withCredentials: false,
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 2000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      autoConnect: true,
       query: { code: 'app' },
       auth: {
         token: String((this.token || {})['value'])
       }
-      // Puedes pasar opciones aquí, como auth
-      //withCredentials: true,
     });
   }
 
@@ -42,5 +51,16 @@ export class SocketService {
   // Acceder al socket si es necesario
   getSocket() {
     return this.socket;
+  }
+
+  public disconnect(): void {
+    if (!this.socket) return;
+    this.socket.disconnect();
+    this.connected$.next(false);
+    this.socket = null;
+  }
+
+  ngOnDestroy(): void {
+    this.disconnect();
   }
 }

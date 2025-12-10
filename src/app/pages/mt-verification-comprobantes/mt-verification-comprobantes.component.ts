@@ -84,8 +84,15 @@ export class MtVerificationComprobantesComponent implements OnInit {
   constructor(private service: ShareService, private store: StorageService, private socket: SocketService) { }
 
   ngOnInit() {
-    this.onVerify();
+
     this.onListTienda();
+
+    setTimeout(() => {
+      this.contadorCliente = 0;
+      this.socket.emit('comprobantes:get', 'angular');
+    }, 5000);
+
+
     this.service.onViewPageAdmin.subscribe((view) => {
       this.isViewPage = view;
     });
@@ -150,10 +157,10 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('comprobantes:get:response', (listaSession) => { //VERIFICACION DE COMPROBANTES
-    
+
       let dataList = [];
       dataList = listaSession || [];
-
+      console.log((dataList || [])[0]['CODIGO_TERMINAL']);
       setTimeout(() => {
         this.socket.emit('traffic:get:online', { code: (dataList || [])[0]['CODIGO_TERMINAL'], isEmail: false });
       }, 1000);
@@ -349,6 +356,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
 
   onVerify() { // ENVIO DE CONSULTA DE COMPROBANTES
+    console.log("comrpobantes");
     this.isShowLoading = true;
     this.contadorCliente = 0;
     this.socket.emit('comprobantes:get', 'angular');
