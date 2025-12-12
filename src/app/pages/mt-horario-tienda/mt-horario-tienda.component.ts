@@ -71,7 +71,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   arDataEJB: Array<any> = [];
   arDataServer: Array<any> = [];
   arObservacion: Array<any> = [];
-  displayedColumns: string[] = ['codigo_papeleta', 'Fecha', 'tipo_papeleta', 'nombre_completo', 'Accion'];
+  displayedColumns: string[] = ['codigo_papeleta', 'Fecha', 'fecha_compensacion', 'nombre_completo', 'Accion'];
   screenHeight: number = 0;
   screenWith: number = 0;
   vObservacion: string = "";
@@ -1486,7 +1486,9 @@ export class MtHorarioTiendaComponent implements OnInit {
     let allPApeletas = [];
     this.dataHorario[0]['papeleta'].find((pap, i) => {
       let fPap = this.formatearFechaTexto(pap.fecha_desde);
+
       if (fPap == day) {
+        console.log(fPap, day);
         allPApeletas.push(pap)
       }
       self.isPapeleta = false;
