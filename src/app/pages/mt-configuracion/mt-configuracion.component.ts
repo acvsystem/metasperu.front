@@ -169,10 +169,11 @@ export class MtConfiguracionComponent implements OnInit {
   vAddEmailTienda: String = "";
   onListUndServicio: Array<any> = [
     { key: 'VS', value: 'VICTORIA SECRET' },
-    { key: 'BBW', value: 'BATH AND BODY WORKS' }
+    { key: 'BBW', value: 'BATH AND BODY WORKS' },
+    { key: 'TM', value: 'TUMI' }
   ];
 
-  socket = io(GlobalConstants.backendServer, { query: { code: 'app', token: this.token } });
+  socket = io(GlobalConstants.socketServer, { query: { code: 'app', token: this.token } });
 
   @ViewChild(MatPaginator) paginator_user: MatPaginator;
   @ViewChild(MatSort) sort_user: MatSort;

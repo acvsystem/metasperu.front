@@ -54,7 +54,8 @@ export class MtTraspasosInventarioComponent implements OnInit {
   optionDefault: Array<any> = [];
   onListMarcas: Array<any> = [
     { key: 'VS', value: 'VICTORIA SECRET' },
-    { key: 'BBW', value: 'BATH AND BODY WORKS' }
+    { key: 'BBW', value: 'BATH AND BODY WORKS' },
+    { key: 'TM', value: 'TUMI' }
   ];
   isDiferencia: boolean = false;
   readonly dialog = inject(MatDialog);
