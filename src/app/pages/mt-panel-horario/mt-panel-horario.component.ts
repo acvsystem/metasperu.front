@@ -112,12 +112,13 @@ export class MtPanelHorarioComponent implements OnInit {
     };
 
     this.service.get(parms).then(async (response) => {
-      let dataResponse = response.reverse();
+      let dataResponse = response;
 
       this.dataView = [];
       if ((dataResponse || []).length) {
-      
+        console.log(dataResponse);
         (dataResponse || []).filter(async (dt, i) => {
+
           let tienda = await this.arDataHorario.filter((hr) => hr.code == dt.CODIGO_TIENDA);
 
           let horario = ((dt || {}).RANGO_DIAS || "").split(" ");
