@@ -106,29 +106,8 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     { key: 'Tardanzas', value: 'Tardanzas' }
   ];
 
-  onListTiendas: Array<any> = [
-    { code: '7A', name: 'BBW JOCKEY', procesar: 0, procesado: -1 },
-    { code: '9N', name: 'VS MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code: '7J', name: 'BBW MALL AVENTURA AQP', procesar: 0, procesado: -1 },
-    { code: '7E', name: 'BBW LA RAMBLA', procesar: 0, procesado: -1 },
-    { code: '9D', name: 'VS LA RAMBLA', procesar: 0, procesado: -1 },
-    { code: '9B', name: 'VS PLAZA NORTE', procesar: 0, procesado: -1 },
-    { code: '7C', name: 'BBW SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code: '9C', name: 'VS SAN MIGUEL', procesar: 0, procesado: -1 },
-    { code: '7D', name: 'BBW SALAVERRY', procesar: 0, procesado: -1 },
-    { code: '9I', name: 'VS SALAVERRY', procesar: 0, procesado: -1 },
-    { code: '9G', name: 'VS MALL DEL SUR', procesar: 0, procesado: -1 },
-    { code: '9H', name: 'VS PURUCHUCO', procesar: 0, procesado: -1 },
-    { code: '9M', name: 'VS ECOMMERCE', procesar: 0, procesado: -1 },
-    { code: '7F', name: 'BBW ECOMMERCE', procesar: 0, procesado: -1 },
-    { code: '9K', name: 'VS MEGA PLAZA', procesar: 0, procesado: -1 },
-    { code: '9L', name: 'VS MINKA', procesar: 0, procesado: -1 },
-    { code: '9F', name: 'VSFA JOCKEY FULL', procesar: 0, procesado: -1 },
-    { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
-    { code: '9P', name: 'VS MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code: '7I', name: 'BBW MALL PLAZA TRU', procesar: 0, procesado: -1 },
-    { code: '9Q', name: 'VS SANTA ANITA', procesar: 0, procesado: -1 }
-  ];
+  onListTiendas: Array<any> = [];
+
   fileUrl;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -147,6 +126,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   constructor(private ngZone: NgZone, private sanitizer: DomSanitizer, private service: ShareService, private store: StorageService, private socket: SocketService) { }
 
   ngOnInit() {
+    this.onAllStore();
     let profileUser = this.store.getStore('mt-profile');
     this.nivelUsuario = (profileUser || {}).mt_nivel;
     this.socket.on('marcacionOficina', async (response) => {
@@ -220,6 +200,19 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           this.onProcesarAsistencia();
         }
       }
+    });
+  }
+
+  onAllStore() {
+    this.service.allStores().then((stores: Array<any>) => {
+      (stores || []).filter((store) => {
+        (this.onListTiendas || []).push({
+          code: (store || {}).serie,
+          name: (store || {}).description,
+          procesar: 0,
+          procesado: -1
+        });
+      });
     });
   }
 
@@ -378,7 +371,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
               this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.onDataTemp[indexData]['hr_trabajadas']);
               this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
-            
+
               this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
 
               let defaultHTT = "07:50";
