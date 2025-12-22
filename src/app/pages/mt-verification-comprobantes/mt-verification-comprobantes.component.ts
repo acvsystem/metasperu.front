@@ -222,7 +222,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
             (this.dataSource['_data']['_value'] || [])[indexData].Tienda = (dataSocket || {}).DESCRIPCION;
             (this.dataSource['_data']['_value'] || [])[indexData].isVerification = (listaSession[0] || {}).VERIFICACION;
             (this.dataSource['_data']['_value'] || [])[indexData].cant_comprobantes = (dataSocket || {}).CANT_COMPROBANTES;
-            (this.dataSource['_data']['_value'] || [])[indexData].online = 1;
+            (this.dataSource['_data']['_value'] || [])[indexData].online = (dataSocket || {}).ISONLINE;
             (this.dataSource['_data']['_value'] || [])[indexData].conexICG = ((this.bodyList || [])[indexData] || {}).conexICG || 0;
 
           }

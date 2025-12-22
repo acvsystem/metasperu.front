@@ -1146,6 +1146,7 @@ export class MtHorarioTiendaComponent implements OnInit {
         let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
 
         this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+        this.vRangoDiasSearch;
       } else {
         this.service.toastError('Solo puede crear el horario de la semana siguiente.', 'Horario');
       }
@@ -1153,7 +1154,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   }
 
   convertirAFormatoISO(fechaStr: string): string {
-    const [dia, mes, anio] = fechaStr.split('-');
+    const [dia, mes, anio] = (fechaStr || "").split('-');
     return `${anio}-${mes}-${dia}`;
   }
 
@@ -1171,7 +1172,7 @@ export class MtHorarioTiendaComponent implements OnInit {
       };
 
       this.service.get(parms).then(async (response) => {
-        let currentRange = (((response || {}).data || [])[0] || {})['rangeSchedule'].split(' ');
+        let currentRange = ((((response || {}).data || [])[0] || {})['rangeSchedule'] || "").split(' ');
         let isValid = this.esSiguienteSemana(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
         console.log(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
         resolve(isValid)
