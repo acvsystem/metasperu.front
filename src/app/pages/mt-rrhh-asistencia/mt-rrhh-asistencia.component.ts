@@ -216,326 +216,322 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     });
   }
 
-  async onProcesarAsistencia() {
-    this.isDataServer = true;
-    this.parseHuellero = [];
-    (this.dataServGeneral || []).filter((huellero) => {
-      this.parseHuellero.push({
-        nro_documento: (huellero || {}).nroDocumento,
-        nombre_completo: (huellero || {}).nombreCompleto,
-        dia: (huellero || {}).dia,
-        hr_ingreso: (huellero || {}).hrIn,
-        hr_salida: (huellero || {}).hrOut,
-        hr_trabajadas: (huellero || {}).hrWorking,
-        caja: (huellero || {}).caja,
-        papeletas: (huellero || {}).papeleta,
-        isPapeleta: ((huellero || {}).papeleta || []).length ? true : false,
-        rango_horario: (huellero || {}).rango_horario
-      });
-    });
 
-    if (this.isDataEJB && this.isDataServer) {
-      this.onDataTemp = [];
+  private calculateTiendaCode(caja: string): string {
+    if (!caja) return '';
 
-      await (this.parseHuellero || []).filter(async (huellero) => {
-
-        if ((huellero || {}).caja != '9M1' && (huellero || {}).caja != '9M2' && (huellero || {}).caja != '9M3') {
-
-          var codigo = (huellero || {}).caja.substr(0, 2);
-          var selectedLocal = {};
-
-
-
-          if ((huellero || {}).caja.substr(2, 2) == 7) {
-            codigo = (huellero || {}).caja;
-          } else {
-            codigo.substr(0, 1)
-          }
-
-          selectedLocal = await this.onListTiendas.find((data) => data.code == codigo) || {};
-
-          let indexData = this.onDataTemp.findIndex((data) => (data || {}).nro_documento == (huellero || {}).nro_documento && ((data || {}).dia == (huellero || []).dia) && (data || {}).caja == (huellero || []).caja);
-          let dataEJB = this.parseEJB.find((ejb) => ejb.nro_documento == (huellero || {}).nro_documento);
-
-          if ((dataEJB || {}).codigoEJB != null) {
-
-            if (indexData == -1) {
-
-              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'tardanza');
-
-              let defaultHT = this.obtenerHorasTrabajadas(((huellero || {}).rango_horario || "").split(" ")[0], (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA ENTRADA
-              let ingreso = (huellero || {}).hr_ingreso.split(':');
-              let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
-              let ingresoHorario = (defaultHT).split(':');
-              let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-
-              let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
-              let isVerificar = false;
-
-              if (!isTardanza) {
-                if ((huellero || {}).nro_documento == '70611399' && (huellero || {}).dia == '2025-07-05') {
-                }
-                if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0])) {
-                  let diferencia = parseInt(ingresoHorario[0]) - parseInt(ingreso[0]);
-                  if (diferencia == 1) {
-                    if (parseInt(ingreso[1]) < 55) {
-                      isVerificar = true;
-                    }
-                  } else if (diferencia > 1) {
-                    isVerificar = true;
-                  }
-                }
-              }
-
-              let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-
-              let hrPapeleta = "";
-
-              if ((huellero || {}).isPapeleta) {
-                ((huellero || {}).papeletas || []).filter((papeleta) => {
-                  if (isTardanza) {
-                    let salidapap = (papeleta || {})['HORA_SALIDA'].split(':');
-                    let salidapapInt = parseInt(salidapap[0]) * 60 + parseInt(salidapap[1]);
-                    let llegadapap = (papeleta || {})['HORA_LLEGADA'].split(':');
-                    let llegadapapInt = parseInt(llegadapap[0]) * 60 + parseInt(llegadapap[1]);
-
-                    if (ingresoHorarioInt >= salidapapInt) {
-                      if (llegadapapInt >= ingresoInt) {
-                        isTardanza = false;
-                      } else {
-                        isTardanza = true;
-                      }
-                    }
-                  }
-
-                  hrPapeleta = this.obtenerHorasTrabajadas((papeleta || {})['HORA_SOLICITADA'], (hrPapeleta || "").length > 0 ? hrPapeleta : hrt);
-                });
-              }
-
-              this.onDataTemp.push({
-                tienda: (selectedLocal || {})["name"],
-                codigoEJB: (dataEJB || {}).codigoEJB,
-                nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
-                nro_documento: (huellero || {}).nro_documento,
-                telefono: (dataEJB || {}).telefono,
-                email: (dataEJB || {}).email,
-                fec_nacimiento: (dataEJB || {}).fec_nacimiento,
-                fec_ingreso: (dataEJB || {}).fec_ingreso,
-                status: (dataEJB || {}).status,
-                dia: (huellero || {}).dia,
-                hr_ingreso_1: (huellero || {}).hr_ingreso,
-                hr_salida_1: (huellero || {}).hr_salida,
-                rango_horario: (huellero || {}).rango_horario,
-                isNullRango: !((huellero || {}).rango_horario || "").length ? true : false,
-                isTardanza: isTardanza,
-                isVerificar: isVerificar,
-                hr_brake: "",
-                hr_ingreso_2: "",
-                hr_salida_2: "",
-                hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : hrPapeleta,
-                caja: (huellero || {}).caja,
-                isJornadaCompleta: this.onVerificacionJornada(!(huellero || {}).isPapeleta ? hrt : hrPapeleta),
-                isBrakeComplete: false,
-                isRegistroMax: true,
-                statusRegistro: 'CORRECTO',
-                statusTardanza: isVerificar ? 'verificar' : isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
-                dataRegistro: [huellero],
-                papeletas: (huellero || {}).papeletas || [],
-                isPapeleta: (huellero || {}).isPapeleta,
-                estadoPapeleta: (huellero || {}).isPapeleta ? 'con papeleta' : 'sin papeleta'
-              });
-
-            } else {
-
-              this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
-              this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
-              this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
-              let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
-
-              let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'breake');
-
-              let defaultHT = this.obtenerHorasTrabajadas("01:00", (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA BREAKE
-              let ingresoHorario = (defaultHT).split(':');
-              let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
-
-              let ingreso = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso).split(':');
-              let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
-
-              let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
-
-
-
-              this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
-
-
-              this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.onDataTemp[indexData]['hr_trabajadas']);
-              this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
-              this.onDataTemp[indexData]['dataRegistro'].push(huellero);
-
-              this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
-
-              let defaultHTT = "07:50";
-              let ingresoHorario2 = (defaultHTT).split(':');
-              let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
-
-              let ingreso2 = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
-              let ingresoInt2 = parseInt(ingreso2[0]) * 60 + parseInt(ingreso2[1]);
-
-              this.onDataTemp[indexData]['isIncompleto'] = ingresoInt2 > ingresoHorarioInt2 ? false : true;
-
-              this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO" : "CORRECTO";
-
-            }
-          }
-        }
-      });
-
-      if (this.isViewDefault || this.isDetallado) {
-
-        this.onDataView = this.onDataTemp;
-        this.originalOnDataView = [...this.onDataTemp];
-        this.dataSource = new MatTableDataSource(this.onDataView);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-
-        this.onDataTemp.filter((dt) => {
-          if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
-            let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
-
-            if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
-              if (indexData == -1) {
-                this.arrDataGrafic.push({
-                  tienda: dt.tienda,
-                  cantidad: 1
-                });
-              } else {
-                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
-              }
-            }
-
-            if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
-              if (indexData == -1) {
-                this.arrDataGrafic.push({
-                  tienda: dt.tienda,
-                  cantidad: 1
-                });
-              } else {
-                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
-              }
-            }
-
-            if (dt.isTardanza && !dt.isNullRango && this.cboTipoGraffic == "Tardanzas") {
-              if (indexData == -1) {
-                this.arrDataGrafic.push({
-                  tienda: dt.tienda,
-                  cantidad: 1
-                });
-              } else {
-                this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
-              }
-            }
-          }
-        });
-
-        this.onViewGrafic();
-        if (this.onDataView.length) {
-          this.isLoading = false;
-        }
-
-      }
-
-      if (this.isViewFeriados) {
-        this.onFiltrarFeriado(this.vMultiSelect);
-      }
+    if (caja.length >= 3 && caja.charAt(2) === '7') {
+      return caja;
     }
+
+    return caja.substring(0, 2);
   }
 
-  onProcesarAsistenciaOf(dataProcesar) {
-    this.isLoading = false;
+  private findExistingEntryIndex(huellero: any): number {
+    return this.onDataTemp.findIndex((data) =>
+      data.nro_documento === huellero.nro_documento &&
+      data.dia === huellero.dia &&
+      data.caja === huellero.caja
+    );
+  }
 
-    const ascDates = dataProcesar.sort((a, b) => {
-      return new Date(a.logid).getTime() - new Date(b.logid).getTime();
-    });
+  async onProcesarAsistencia() {
+    this.isDataServer = true;
+    this.onDataTemp = [];
 
-    (ascDates || []).filter((mc, i) => {
-      let date = mc.checkinout.split(' ');
+    this.parseHuellero = (this.dataServGeneral ?? []).map(h => ({
+      nro_documento: h?.nroDocumento,
+      nombre_completo: h?.nombreCompleto,
+      dia: h?.dia,
+      hr_ingreso: h?.hrIn,
+      hr_salida: h?.hrOut,
+      hr_trabajadas: h?.hrWorking,
+      caja: h?.caja,
+      papeletas: h?.papeleta ?? [],
+      isPapeleta: !!h?.papeleta?.length,
+      rango_horario: h?.rango_horario
+    }));
 
-      if (mc.name != 'JOHNNY') {
-        let date = mc.checkinout.split(' ');
+    if (!this.isDataEJB || !this.isDataServer) return;
 
-        let nombre = mc.name + ' ' + mc.lastsname;
-        let indexData = this.arrMarcacionOf.findIndex((data) => (data || {}).nombre == nombre && ((data || {}).fecha == date[0]));
+    for (const huellero of this.parseHuellero) {
 
-        if (indexData == -1) {
+      if (['9M1', '9M2', '9M3'].includes(huellero.caja)) continue;
+      
+      const tiendaCode = this.calculateTiendaCode(huellero.caja);
+      const selectedLocal = this.onListTiendas.find(t => t.code === tiendaCode) ?? {};
+      const dataEJB = this.parseEJB.find(e => e.nro_documento === huellero.nro_documento);
 
-          //PROCESO TARDANZA
-          let isTardanza = false;
 
-          if ((mc.rango_horario || "").length) {
+      if (!dataEJB?.codigoEJB) continue;
 
-            let defaultHT = this.obtenerHorasTrabajadas(mc.rango_horario.split(" ")[0], "00:05"); //TOLERANCIA HORA ENTRADA
+      const indexData = this.findExistingEntryIndex(huellero);
 
-            let ingresoHorario = (defaultHT).split(':');
-            let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+      if (indexData == -1) {
 
-            let ingreso = date[1].split(':');
-            let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+        let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'tardanza');
 
-            isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
+        let defaultHT = this.obtenerHorasTrabajadas(((huellero || {}).rango_horario || "").split(" ")[0], (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA ENTRADA
+        let ingreso = (huellero || {}).hr_ingreso.split(':');
+        let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+        let ingresoHorario = (defaultHT).split(':');
+        let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
 
+        let isTardanza = ingresoHorarioInt >= ingresoInt ? false : true;
+        let isVerificar = false;
+
+        if (!isTardanza) {
+          if ((huellero || {}).nro_documento == '70611399' && (huellero || {}).dia == '2025-07-05') {
           }
+          if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0])) {
+            let diferencia = parseInt(ingresoHorario[0]) - parseInt(ingreso[0]);
+            if (diferencia == 1) {
+              if (parseInt(ingreso[1]) < 55) {
+                isVerificar = true;
+              }
+            } else if (diferencia > 1) {
+              isVerificar = true;
+            }
+          }
+        }
 
-          this.arrMarcacionOf.push({
-            nombre: mc.name + ' ' + mc.lastsname,
-            fecha: date[0],
-            hr_ingreso: date[1],
-            hr_in_break: '',
-            hr_out_break: '',
-            hr_break: 0,
-            hr_salida: '',
-            hr_trabajadas: 0,
-            rango_horario: mc.rango_horario,
-            isTardanza: isTardanza,
-            statusTardanza: isTardanza ? 'tardanza' : 'correcto'
+        let hrt = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
+
+        let hrPapeleta = "";
+
+        if ((huellero || {}).isPapeleta) {
+          ((huellero || {}).papeletas || []).filter((papeleta) => {
+            if (isTardanza) {
+              let salidapap = (papeleta || {})['HORA_SALIDA'].split(':');
+              let salidapapInt = parseInt(salidapap[0]) * 60 + parseInt(salidapap[1]);
+              let llegadapap = (papeleta || {})['HORA_LLEGADA'].split(':');
+              let llegadapapInt = parseInt(llegadapap[0]) * 60 + parseInt(llegadapap[1]);
+
+              if (ingresoHorarioInt >= salidapapInt) {
+                if (llegadapapInt >= ingresoInt) {
+                  isTardanza = false;
+                } else {
+                  isTardanza = true;
+                }
+              }
+            }
+
+            hrPapeleta = this.obtenerHorasTrabajadas((papeleta || {})['HORA_SOLICITADA'], (hrPapeleta || "").length > 0 ? hrPapeleta : hrt);
           });
-        } else {
+        }
 
-          //PROCESO INICIO BRREAK
+        this.onDataTemp.push({
+          tienda: (selectedLocal || {})["name"],
+          codigoEJB: (dataEJB || {}).codigoEJB,
+          nombre_completo: (dataEJB || {}).nombre_completo || "VRF - " + (huellero || {}).nombre_completo,
+          nro_documento: (huellero || {}).nro_documento,
+          telefono: (dataEJB || {}).telefono,
+          email: (dataEJB || {}).email,
+          fec_nacimiento: (dataEJB || {}).fec_nacimiento,
+          fec_ingreso: (dataEJB || {}).fec_ingreso,
+          status: (dataEJB || {}).status,
+          dia: (huellero || {}).dia,
+          hr_ingreso_1: (huellero || {}).hr_ingreso,
+          hr_salida_1: (huellero || {}).hr_salida,
+          rango_horario: (huellero || {}).rango_horario,
+          isNullRango: !((huellero || {}).rango_horario || "").length ? true : false,
+          isTardanza: isTardanza,
+          isVerificar: isVerificar,
+          hr_brake: "",
+          hr_ingreso_2: "",
+          hr_salida_2: "",
+          hr_trabajadas: !(huellero || {}).isPapeleta ? hrt : hrPapeleta,
+          caja: (huellero || {}).caja,
+          isJornadaCompleta: this.onVerificacionJornada(!(huellero || {}).isPapeleta ? hrt : hrPapeleta),
+          isBrakeComplete: false,
+          isRegistroMax: true,
+          statusRegistro: 'CORRECTO',
+          statusTardanza: isVerificar ? 'verificar' : isTardanza && ((huellero || {}).rango_horario || "").length ? 'tardanza' : !isTardanza && ((huellero || {}).rango_horario || "").length ? 'correcto' : !((huellero || {}).rango_horario || "").length ? 'sin rango' : "",
+          dataRegistro: [huellero],
+          papeletas: (huellero || {}).papeletas || [],
+          isPapeleta: (huellero || {}).isPapeleta,
+          estadoPapeleta: (huellero || {}).isPapeleta ? 'con papeleta' : 'sin papeleta'
+        });
 
-          if (this.arrMarcacionOf[indexData]['hr_in_break'].length && !this.arrMarcacionOf[indexData]['hr_out_break'].length) {
-            this.arrMarcacionOf[indexData]['hr_out_break'] = date[1];
+      } else {
+
+        this.onDataTemp[indexData]['hr_brake'] = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso);
+        this.onDataTemp[indexData]['hr_ingreso_2'] = (huellero || {}).hr_ingreso;
+        this.onDataTemp[indexData]['hr_salida_2'] = (huellero || {}).hr_salida;
+        let hora_trb_1 = this.obtenerDiferenciaHora((huellero || {}).hr_ingreso, (huellero || {}).hr_salida);
+
+        let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'breake');
+
+        let defaultHT = this.obtenerHorasTrabajadas("01:00", (tolerancia || "").TIEMPO_TOLERANCIA || "00:00"); //TOLERANCIA HORA BREAKE
+        let ingresoHorario = (defaultHT).split(':');
+        let ingresoHorarioInt = parseInt(ingresoHorario[0]) * 60 + parseInt(ingresoHorario[1]);
+
+        let ingreso = this.obtenerDiferenciaHora(this.onDataTemp[indexData]['hr_salida_1'], (huellero || {}).hr_ingreso).split(':');
+        let ingresoInt = parseInt(ingreso[0]) * 60 + parseInt(ingreso[1]);
+
+        let isBrakeComplete = ingresoInt > ingresoHorarioInt ? false : true;
+
+
+
+        this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], hora_trb_1);
+
+
+        this.onDataTemp[indexData]['isJornadaCompleta'] = this.onVerificacionJornada(this.onDataTemp[indexData]['hr_trabajadas']);
+        this.onDataTemp[indexData]['isBrakeComplete'] = isBrakeComplete;
+        this.onDataTemp[indexData]['dataRegistro'].push(huellero);
+
+        this.onDataTemp[indexData]['isRegistroMax'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? true : false;
+
+        let defaultHTT = "07:50";
+        let ingresoHorario2 = (defaultHTT).split(':');
+        let ingresoHorarioInt2 = parseInt(ingresoHorario2[0]) * 60 + parseInt(ingresoHorario2[1]);
+
+        let ingreso2 = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
+        let ingresoInt2 = parseInt(ingreso2[0]) * 60 + parseInt(ingreso2[1]);
+
+        this.onDataTemp[indexData]['isIncompleto'] = ingresoInt2 > ingresoHorarioInt2 ? false : true;
+
+        this.onDataTemp[indexData]['statusRegistro'] = this.onDataTemp[indexData]['dataRegistro'].length >= 3 || this.onDataTemp[indexData]['dataRegistro'].length == 1 ? "REVISAR" : this.onDataTemp[indexData]['isIncompleto'] ? "INCOMPLETO" : "CORRECTO";
+
+      }
+
+
+    };
+
+    if (this.isViewDefault || this.isDetallado) {
+
+      this.onDataView = this.onDataTemp;
+      this.originalOnDataView = [...this.onDataTemp];
+      this.dataSource = new MatTableDataSource(this.onDataView);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
+      this.onDataTemp.filter((dt) => {
+        if (dt.nro_documento != '001763881' && dt.nro_documento != '75946420' && dt.nro_documento != '003755453' && dt.nro_documento != '002217530' && dt.nro_documento != '002190263' && dt.nro_documento != '70276451') {
+          let indexData = this.arrDataGrafic.findIndex((gr) => gr.tienda == (dt || {}).tienda);
+
+          if (!dt.isBrakeComplete && this.cboTipoGraffic == "Brake incompleta") {
+            if (indexData == -1) {
+              this.arrDataGrafic.push({
+                tienda: dt.tienda,
+                cantidad: 1
+              });
+            } else {
+              this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+            }
           }
 
-          if (!this.arrMarcacionOf[indexData]['hr_in_break'].length) {
-            this.arrMarcacionOf[indexData]['hr_in_break'] = date[1];
+          if (!dt.isJornadaCompleta && this.cboTipoGraffic == "Jornada incompleta") {
+            if (indexData == -1) {
+              this.arrDataGrafic.push({
+                tienda: dt.tienda,
+                cantidad: 1
+              });
+            } else {
+              this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+            }
           }
 
-          if (this.arrMarcacionOf[indexData]['hr_in_break'].length && this.arrMarcacionOf[indexData]['hr_out_break'].length) {
-            this.arrMarcacionOf[indexData]['hr_break'] = this.obtenerDiferenciaHora(this.arrMarcacionOf[indexData]['hr_in_break'], this.arrMarcacionOf[indexData]['hr_out_break']);
+          if (dt.isTardanza && !dt.isNullRango && this.cboTipoGraffic == "Tardanzas") {
+            if (indexData == -1) {
+              this.arrDataGrafic.push({
+                tienda: dt.tienda,
+                cantidad: 1
+              });
+            } else {
+              this.arrDataGrafic[indexData]['cantidad'] = this.arrDataGrafic[indexData]['cantidad'] + 1;
+            }
           }
+        }
+      });
 
-          //PROCESO HORA SALIDA DE TRABAJO
+      this.onViewGrafic();
+      if (this.onDataView.length) {
+        this.isLoading = false;
+      }
 
-          if (this.arrMarcacionOf[indexData]['hr_ingreso'].length && this.arrMarcacionOf[indexData]['hr_in_break'].length && this.arrMarcacionOf[indexData]['hr_out_break'].length) {
-            this.arrMarcacionOf[indexData]['hr_salida'] = date[1];
-          }
+    }
 
-          //PROCESO HORA TRABAJADAS
+    if (this.isViewFeriados) {
+      this.onFiltrarFeriado(this.vMultiSelect);
+    }
 
-          if (this.arrMarcacionOf[indexData]['hr_ingreso'].length && this.arrMarcacionOf[indexData]['hr_salida'].length) {
-            this.arrMarcacionOf[indexData]['hr_trabajadas'] = this.obtenerDiferenciaHora(this.arrMarcacionOf[indexData]['hr_ingreso'], this.arrMarcacionOf[indexData]['hr_salida']);
-          }
+  }
+
+  onProcesarAsistenciaOf(dataProcesar: any[]) {
+    this.isLoading = false;
+    this.arrMarcacionOf = [];
+
+
+    const sortedLogs = [...dataProcesar].sort((a, b) => a.logid - b.logid);
+
+    sortedLogs.forEach((mc) => {
+
+      if (mc.name === 'JOHNNY') return;
+
+      const [fecha, hora] = mc.checkinout.split(' ');
+      const nombreCompleto = `${mc.name} ${mc.lastsname}`;
+
+
+      let record = this.arrMarcacionOf.find(r => r.nombre === nombreCompleto && r.fecha === fecha);
+
+      if (!record) {
+
+        let isTardanza = false;
+        if (mc.rango_horario?.length) {
+          // Apply 5-minute tolerance
+          const limitEntry = this.obtenerHorasTrabajadas(mc.rango_horario.split(" ")[0], "00:05");
+          isTardanza = this.toMinutes(hora) > this.toMinutes(limitEntry);
+        }
+
+        this.arrMarcacionOf.push({
+          nombre: nombreCompleto,
+          fecha: fecha,
+          hr_ingreso: hora,
+          hr_in_break: '',
+          hr_out_break: '',
+          hr_break: '00:00',
+          hr_salida: '',
+          hr_trabajadas: '00:00',
+          rango_horario: mc.rango_horario,
+          isTardanza: isTardanza,
+          statusTardanza: isTardanza ? 'tardanza' : 'correcto'
+        });
+      } else {
+
+        if (!record.hr_in_break) {
+          record.hr_in_break = hora;
+        }
+
+        else if (!record.hr_out_break) {
+          record.hr_out_break = hora;
+          record.hr_break = this.obtenerDiferenciaHora(record.hr_in_break, record.hr_out_break);
+        }
+
+        else {
+          record.hr_salida = hora;
+          record.hr_trabajadas = this.obtenerDiferenciaHora(record.hr_ingreso, record.hr_salida);
         }
       }
     });
 
+    this.finalizeTableOf();
+  }
+
+  /** Helper to convert HH:mm to total minutes for comparison */
+  private toMinutes(time: string): number {
+    if (!time) return 0;
+    const [hrs, mins] = time.split(':').map(Number);
+    return (hrs * 60) + (mins || 0);
+  }
+
+  private finalizeTableOf() {
     if (this.arrMarcacionOf.length) {
       this.onDataViewOf = [...this.arrMarcacionOf];
       this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
       this.dataSourceOf.paginator = this.paginator;
       this.dataSourceOf.sort = this.sort;
     }
-
   }
 
 

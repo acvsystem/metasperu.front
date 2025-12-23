@@ -61,7 +61,8 @@ export class MtArticulosComponent implements OnInit {
     { key: '7A7', value: 'BBW ASIA', progress: -1, checked: false },
     { key: '9P', value: 'VS MALL PLAZA', progress: -1, checked: false },
     { key: '7I', value: 'BBW MALL PLAZA', progress: -1, checked: false },
-    { key: '9Q', value: 'VS SANTA ANITA', progress: -1, checked: false }
+    { key: '9Q', value: 'VS SANTA ANITA', progress: -1, checked: false },
+    { key: '7R', value: 'BBW SANTA ANITA', progress: -1, checked: false }
   ];
 
   onListTiendas: Array<any> = [
@@ -85,7 +86,8 @@ export class MtArticulosComponent implements OnInit {
     { code: '7A7', name: 'BBW ASIA', procesar: 0, procesado: -1 },
     { code: '9P', name: 'VS MALL PLAZA', procesar: 0, procesado: -1 },
     { code: '7I', name: 'BBW MALL PLAZA', procesar: 0, procesado: -1 },
-    { code: '9Q', name: 'VS SANTA ANITA', procesar: 0, procesado: -1 }
+    { code: '9Q', name: 'VS SANTA ANITA', procesar: 0, procesado: -1 },
+    { code: '7R', name: 'BBW SANTA ANITA', procesar: 0, procesado: -1 }
   ];
 
   onListMarcas: Array<any> = [
@@ -172,7 +174,8 @@ export class MtArticulosComponent implements OnInit {
         { code: '7D' },
         { code: '7F' },
         { code: '7A7' },
-        { code: '7I' }
+        { code: '7I' },
+        { code: '7R' }
       ];
 
       let undServicio = "";
@@ -205,7 +208,7 @@ export class MtArticulosComponent implements OnInit {
     this.onViewDataTable(this.vPageAnteriorTable, this.vPageActualTable);
 
     this.socket.on('dataStockParse', async (data) => {
-      console.log(data[0].cCodigoTienda);
+      console.log(data[0]);
 
       this.proccessData.push(data[0].cCodigoTienda);
 
@@ -392,7 +395,8 @@ export class MtArticulosComponent implements OnInit {
         { code: '7A7', property_r: 'BBW_ASIA', property: 'bbw_asia', ready: false },
         { code: '9P', property_r: 'VS_M_PLAZA', property: 'vs_mall_plaza', ready: false },
         { code: '7I', property_r: 'BBW_M_PLAZA', property: 'bbw_m_plaza', ready: false },
-        { code: '9Q', property_r: 'VS_SANTA_ANITA', property: 'vs_santa_anita', ready: false }
+        { code: '9Q', property_r: 'VS_SANTA_ANITA', property: 'vs_santa_anita', ready: false },
+        { code: '7R', property_r: 'BBW_M_PLAZA_L', property: 'bbw_sa', ready: false }
       ];
 
 
@@ -453,7 +457,7 @@ export class MtArticulosComponent implements OnInit {
               "VS_MNK": this.onEvalDesconection('9L', (data || {}).vs_minka || 0),
               "VSFA_JOC": this.onEvalDesconection('9F', (data || {}).vs_full || 0),
               "VS_M_PLAZA": this.onEvalDesconection('9P', (data || {}).vs_mall_plaza || 0),
-              "VS_SANTA_ANITA": this.onEvalDesconection('9Q', (data || {}).vs_santa_anita || 0)
+              "VS_SANTA_ANITA": this.onEvalDesconection('9Q', (data || {}).vs_santa_anita || 0),
             });
           }
           if (this.selectedUS == 'BATH AND BODY WORKS' || undServicio == 'BATH AND BODY WORKS') {
@@ -475,7 +479,8 @@ export class MtArticulosComponent implements OnInit {
               "BBW_RPS": this.onEvalDesconection('7D', (data || {}).bbw_salaverry || 0),
               "BBW_ECOM": this.onEvalDesconection('7F', (data || {}).bbw_ecom || 0),
               "BBW_ASIA": this.onEvalDesconection('7A7', (data || {}).bbw_asia || 0),
-              "BBW_M_PLAZA": this.onEvalDesconection('7I', (data || {}).bbw_m_plaza || 0)
+              "BBW_M_PLAZA": this.onEvalDesconection('7I', (data || {}).bbw_m_plaza || 0),
+              "BBW_M_PLAZA_L": this.onEvalDesconection('7R', (data || {}).bbw_sa || 0)
             });
           }
         }
@@ -557,8 +562,8 @@ export class MtArticulosComponent implements OnInit {
       this.onReporteList = [];
       this.compTiendaList = [];
       this.nameExcel = "bbw";
-      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA', 'BBW-MPTRU']
-      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'bbw_joc', 'bbw_aqp', 'bbw_lrb', 'bbw_psm', 'bbw_rps', 'bbw_ecom', 'bbw_asia', 'bbw_mptru'];
+      this.headList = ['Codigo Barra', 'Referencia', 'Descripcion', 'Departamento', 'Seccion', 'Familia', 'SubFamilia', 'Temporada', 'Talla', 'Color', 'BBW-JOC', 'BBW-AQP', 'BBW-LRB', 'BBW-PSM', 'BBW-RPS', 'BBW-ECOM', 'BBW ASIA', 'BBW-MPTRU', 'BBW-MP']
+      this.displayedColumns = ['codigoBarra', 'referencia', 'descripcion', 'departamento', 'seccion', 'familia', 'subfamilia', 'temporada', 'talla', 'color', 'bbw_joc', 'bbw_aqp', 'bbw_lrb', 'bbw_psm', 'bbw_rps', 'bbw_ecom', 'bbw_asia', 'bbw_mptru', 'bbw_m_plaza_l'];
 
       let codeTiendas = [
         { code: '7A' },
@@ -568,7 +573,8 @@ export class MtArticulosComponent implements OnInit {
         { code: '7D' },
         { code: '7F' },
         { code: '7A7' },
-        { code: '7I' }
+        { code: '7I' },
+        { code: '7R' }
       ];
 
       codeTiendas.filter((tienda) => {
@@ -623,7 +629,8 @@ export class MtArticulosComponent implements OnInit {
           { code: '7D' },
           { code: '7F' },
           { code: '7A7' },
-          { code: '7I' }
+          { code: '7I' },
+          { code: '7R' }
         ];
 
         let undServicio = "";
