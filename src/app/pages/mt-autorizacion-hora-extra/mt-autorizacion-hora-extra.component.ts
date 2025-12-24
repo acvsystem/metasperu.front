@@ -214,9 +214,9 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
 
       this.service.get(parms).then(async (response) => {
         let dataAsignation = (response || []).data[0] || [];
-
+        let autorizadoUsers = ['JOHNNY', 'SISTEMAS'];
         dataAsignation.filter((dt) => {
-          if (this.profileUser.mt_name_1 == (dt || {}).USUARIO) {
+          if (this.profileUser.mt_name_1 == (dt || {}).USUARIO || autorizadoUsers.includes(this.profileUser.mt_name_1)) {
             this.asignationStore.push((dt || {}).DESCRIPCION_TIENDA);
           }
         });
@@ -410,7 +410,7 @@ export class MtAutorizacionHoraExtraComponent implements OnInit {
       });
 
       this.onDataView = viewData;
-
+      console.log(this.asignationStore);
       this.dataSource = new MatTableDataSource(this.onDataView);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
