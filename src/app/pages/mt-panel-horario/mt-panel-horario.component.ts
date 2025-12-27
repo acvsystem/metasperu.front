@@ -36,9 +36,7 @@ export class MtPanelHorarioComponent implements OnInit {
   @ViewChild('MatPaginator2') paginator_pap: MatPaginator;
   @ViewChild(MatSort) sort_pap: MatSort;
 
-  arDataHorario: Array<any> = [];
-
-
+  arDataHorario: Array<any> = [{ code: 'OF', rango: '', name: 'ADMINISTRACION', isHorario: false, id_Horario: 0 }];
 
   constructor(private service: ShareService) {
   }

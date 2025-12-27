@@ -257,7 +257,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     for (const huellero of this.parseHuellero) {
 
       if (['9M1', '9M2', '9M3'].includes(huellero.caja)) continue;
-      
+
       const tiendaCode = this.calculateTiendaCode(huellero.caja);
       const selectedLocal = this.onListTiendas.find(t => t.code === tiendaCode) ?? {};
       const dataEJB = this.parseEJB.find(e => e.nro_documento === huellero.nro_documento);
@@ -526,6 +526,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
   }
 
   private finalizeTableOf() {
+    console.log(this.arrMarcacionOf);
     if (this.arrMarcacionOf.length) {
       this.onDataViewOf = [...this.arrMarcacionOf];
       this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
@@ -704,6 +705,14 @@ export class MtRrhhAsistenciaComponent implements OnInit {
           dataTemp = this.arrMarcacionOf.filter((mc) => mc.fecha == `${date[1]}/${date[2]}/${date[0]}`);
         }
 
+        console.log(dataTemp);
+
+        dataTemp.sort((a, b) => {
+          const fechaA = new Date(a.fecha.split('-').reverse().join('-')).getTime();
+          const fechaB = new Date(b.fecha.split('-').reverse().join('-')).getTime();
+
+          return fechaB - fechaA;
+        });
 
         this.onDataViewOf = dataTemp;
         this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
