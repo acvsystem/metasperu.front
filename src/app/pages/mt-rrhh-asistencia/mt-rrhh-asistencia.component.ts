@@ -139,7 +139,7 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     this.socket.on('reporteHuellero', async (configuracion) => {
 
       if (configuracion.id == "EJB") {
-
+        console.log((configuracion || {}).data);
         this.isDataEJB = true;
         let dateNow = new Date();
         let mesNow = (dateNow.getMonth() + 1).toString();
@@ -281,8 +281,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         let isVerificar = false;
 
         if (!isTardanza) {
-          if ((huellero || {}).nro_documento == '70611399' && (huellero || {}).dia == '2025-07-05') {
-          }
           if (parseInt(ingresoHorario[0]) > parseInt(ingreso[0])) {
             let diferencia = parseInt(ingresoHorario[0]) - parseInt(ingreso[0]);
             if (diferencia == 1) {

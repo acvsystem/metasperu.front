@@ -273,9 +273,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                 if (tipoAsc.length == 2) { //LACTANCIA
 
-                let fechaLactancia = tipoAsc[1].trim().split('-');
-                var f1 = new Date(parseInt(fechaLactancia[0]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[2])).getTime(); //FECHA DE LACTANCIA
-                var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
+                  let fechaLactancia = tipoAsc[1].trim().split('-');
+                  var f1 = new Date(parseInt(fechaLactancia[0]) + 1 + "-" + fechaLactancia[1] + "-" + parseInt(fechaLactancia[2])).getTime(); //FECHA DE LACTANCIA
+                  var f2 = new Date(this.onDataTemp[indexData]['dia']).getTime(); //FECHA TRABAJADA
 
                   if (f1 >= f2) {
                     defaultHT = "07:00";
@@ -1069,8 +1069,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
         var mes = (dateNow.getMonth() + 1);
         let dayNow = dateNow.getDay();
         let day = new Date(dateNow).toLocaleDateString().split('/');
-        let añoIn = año;
-        let mesIn = mes > 1 ? mes - 1 : mes;
+        let añoIn = mes == 1 ? año - 1 : año;
+        let mesIn = mes >= 1 ? 12 - 1 : mes;
         let diaR = mes == 1 ? 1 : day[0];
         let configuracion = [{
           fechain: `${añoIn}-${mesIn}-${1}`,
@@ -1971,8 +1971,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
       var mes = (dateNow.getMonth() + 1);
       let dayNow = dateNow.getDay();
       let day = new Date(dateNow).toLocaleDateString().split('/');
-      let añoIn = año;
-      let mesIn = mes > 1 ? mes - 1 : mes;
+        let añoIn = mes == 1 ? año - 1 : año;
+        let mesIn = mes >= 1 ? 12 - 1 : mes;
       let diaR = mes == 1 ? 1 : day[0];
       let configuracion = [{
         fechain: `${añoIn}-${mesIn}-${1}`,
