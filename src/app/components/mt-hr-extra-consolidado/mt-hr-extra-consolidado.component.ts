@@ -194,10 +194,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
         documentoConsultar = (huellero || {}).nroDocumento;
 
-        if (documentoConsultar == '001698517') {
-          console.log(huellero);
-        }
-
         let tipoAsc = ((huellero || {}).tpAsociado || "").split('*');
         var codigo = (huellero || {}).caja.substr(0, 2);
 
@@ -238,10 +234,13 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             });
 
 
-
             if (huellero.tpAsociado == "**") { //PART TIME
               this.isPartTime = true;
+              let htrb = this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut);
 
+              if (((huellero || {})['papeleta'] || []).length) {
+                htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
+              }
 
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
@@ -250,7 +249,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
                 hr_brake: "",
                 hr_ingreso_2: "",
                 hr_salida_2: "",
-                hr_trabajadas: this.obtenerDiferenciaHora((huellero || {}).hrIn, (huellero || {}).hrOut),
+                hr_trabajadas: htrb,
                 hr_extra: 0,
                 hr_faltante: 0,
                 dataRegistro: [huellero]
@@ -595,10 +594,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
             let index = this.parseEJB.findIndex((ejb) => ejb.documento == this.bodyList[0]['documento']);
 
-            if (nro_documento == '71293455') {
-              console.log(this.hroAcumulada);
-            }
-
             if (!((this.parseEJB[index] || {})['hroAcumulada'] || "").length) {
               (this.parseEJB[index] || {})['hroAcumulada'] = typeof this.hroAcumulada == 'undefined' || this.hroAcumulada.length == 0 ? '-------' : this.hroAcumulada;
             }
@@ -682,9 +677,46 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
     return horaResult;
   }
 
+  finDeSemana(fecha: string | Date): Date {
+
+    let resultado: Date;
+
+    if (typeof fecha === 'string') {
+      const [y, m, d] = fecha.split('-').map(Number);
+      resultado = new Date(y, m - 1, d); // ← SIN UTC
+    } else {
+      resultado = new Date(
+        fecha.getFullYear(),
+        fecha.getMonth(),
+        fecha.getDate()
+      );
+    }
+
+    const dia = resultado.getDay() === 0 ? 7 : resultado.getDay(); // lunes=1
+    const diasParaDomingo = 7 - dia;
+
+    resultado.setDate(resultado.getDate() + diasParaDomingo);
+    resultado.setHours(0, 0, 0, 0);
+
+    return resultado;
+  }
+
+  formatearFecha(fecha: Date): string {
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  esMayor(fecha1: string, fecha2: string): boolean {
+    let f1 = new Date(fecha1);
+    let f2 = new Date(fecha2);
+    return f1.getTime() > f2.getTime();
+  }
+
   onProcesarPartTime(length, index, row, isUpdate?) {
     this.dataVerify = [];
-
 
     let fecha = new Date(row.dia).toLocaleDateString().split('/'); new Date();
 
@@ -703,7 +735,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
     if (!isUpdate) {
       this.arPartTimeFech.push({
-        dia: row.dia, diaNom: dias[indice], hr_trabajadas: htrb, indice: indice
+        dia: row.dia, diaNom: dias[indice], hr_trabajadas: htrb, indice: indice, fechaFin: this.formatearFecha(this.finDeSemana(row.dia))
       });
     } else {
       let indexData = (this.arPartTimeFech || []).findIndex((data) => ((data || {}).dia == (row || {}).dia));
@@ -711,8 +743,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       this.arPartTimeFech[indexData]['hr_trabajadas'] = htrb;
 
     }
-
-
 
     if (length - 1 == index) {
 
@@ -725,9 +755,6 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       let arFechas = [];
       let cFechas = [];
 
-
-
-
       this.arPartTimeFech.filter(async (pt, index) => {
 
         let hr = (pt.hr_trabajadas || "").split(":");
@@ -735,13 +762,13 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
         let hora = parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) ? `${hr[0]}:${hr[1]}` : `${hr[0]}:00`; //LIMITIE DE HORA VALIDA
 
+        const isNext = this.esMayor((this.arPartTimeFech[index + 1] || {}).fechaFin, (this.arPartTimeFech[index] || {}).fechaFin);
 
-
-        if ((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice || pt.indice == 6) {
+        if (isNext) {
 
           count = this.obtenerHorasTrabajadas(hora, count);
 
-          if (((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice) || pt.indice == 6) {
+          if (isNext) {
 
             this.arPartTimeFech[index]["hrTrabajadas"] = count;
 
@@ -790,19 +817,15 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
             }
           }
 
-
           count = "00:00";
           arFechas = [];
           cFechas = [];
-
 
         } else {
           arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
           cFechas.push((this.arPartTimeFech[index] || {}).dia);
           count = this.obtenerHorasTrabajadas(hora, count);
         }
-
-
 
         if (this.arPartTimeFech.length - 1 == index) { // TERMINO DEL ARRAY
           this.dataVerify = [];
@@ -830,7 +853,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
                     if (parseInt((dtp["hrTrabajadas"] || "").split(":")[0]) == 24) {
 
                       if (parseInt((dtp["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
-                        console.log(dtp);
+
                         this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: dtp["hrTrabajadas"], fecha: dtp["fechas"][0]['dia'], hrx_acumulado: dtp["hrExtra"], extra: dtp["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: dtp["fechas"] });
                       }
                     } else {
@@ -858,6 +881,7 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
       });
 
     } else {
+
       this.onVerificarHrExtra([], row.dataRegistro[0]['nroDocumento']);
     }
 

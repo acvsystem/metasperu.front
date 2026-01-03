@@ -244,9 +244,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
                 htrb = this.obtenerHorasTrabajadas(htrb, (((huellero || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
               }
 
-              //this.onDataTemp[indexData]['hr_trabajadas'] = this.obtenerHorasTrabajadas(this.onDataTemp[indexData]['hr_trabajadas'], htrb);
-
-              console.log(233);
               this.onProcesarPartTime(this.parseHuellero.length, i, {
                 dia: (huellero || {}).dia,
                 hr_ingreso_1: (huellero || {}).hrIn,
@@ -628,6 +625,13 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
   reProcessPT: Array<any> = [];
 
+
+  esMayor(fecha1: string, fecha2: string): boolean {
+    let f1 = new Date(fecha1);
+    let f2 = new Date(fecha2);
+    return f1.getTime() > f2.getTime();
+  }
+
   onProcesarPartTime(length, index, row, isUpdate?) {
     this.dataVerify = [];
 
@@ -641,14 +645,14 @@ export class MtPapeletaHorarioComponent implements OnInit {
     let aprobado = estado == "correcto" ? true : false;
 
     let htrb = row.hr_trabajadas;
-    console.log(row);
+
     if (((row || {})['papeleta'] || []).length) {
       htrb = this.obtenerHorasTrabajadas(row.hr_trabajadas, (((row || {})['papeleta'] || [])[0] || {})['HORA_SOLICITADA']);
     }
 
     if (!isUpdate) {
       this.arPartTimeFech.push({
-        dia: row.dia, diaNom: dias[indice], hr_trabajadas: htrb, indice: indice
+        dia: row.dia, diaNom: dias[indice], hr_trabajadas: htrb, indice: indice, fechaFin: this.formatearFecha(this.finDeSemana(row.dia))
       });
     } else {
       let indexData = (this.arPartTimeFech || []).findIndex((data) => ((data || {}).dia == (row || {}).dia));
@@ -656,8 +660,6 @@ export class MtPapeletaHorarioComponent implements OnInit {
       this.arPartTimeFech[indexData]['hr_trabajadas'] = htrb;
 
     }
-
-
 
     if (length - 1 == index) {
       const ascDates = this.arPartTimeFech.sort((a, b) => {
@@ -668,6 +670,9 @@ export class MtPapeletaHorarioComponent implements OnInit {
       let count = "00:00";
       let arFechas = [];
       let cFechas = [];
+
+      console.log(this.arPartTimeFech);
+
       this.arPartTimeFech.filter(async (pt, index) => {
 
         let hr = (pt.hr_trabajadas || "").split(":");
@@ -675,13 +680,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         let hora = parseInt(hr[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1]) ? `${hr[0]}:${hr[1]}` : `${hr[0]}:00`; //LIMITIE DE HORA VALIDA
 
-
-
-        if ((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice || pt.indice == 6) {
+        const isNext = this.esMayor((this.arPartTimeFech[index + 1] || {}).fechaFin, (this.arPartTimeFech[index] || {}).fechaFin);
+        if (isNext) {
 
           count = this.obtenerHorasTrabajadas(hora, count);
 
-          if (((this.arPartTimeFech[index] || {}).indice > (this.arPartTimeFech[index + 1] || {}).indice) || pt.indice == 6) {
+          if (isNext) {
 
             this.arPartTimeFech[index]["hrTrabajadas"] = count;
 
@@ -705,6 +709,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let process = ToTime(newAcumulado);
 
             arFechas.push({ dia: (this.arPartTimeFech[index] || {}).dia, hr_trabajadas: (this.arPartTimeFech[index] || {}).hr_trabajadas });
+
             cFechas.push((this.arPartTimeFech[index] || {}).dia);
             this.arPartTimeFech[index]["fechas"] = arFechas;
             this.arPartTimeFech[index]["fechasProcess"] = cFechas;
@@ -720,7 +725,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) == 24) {
                 if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
-                  console.log(this.arPartTimeFech[index]["fechas"]);
+
                   this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: this.arPartTimeFech[index]["hrTrabajadas"], fecha: this.arPartTimeFech[index]["fechas"][0]['dia'], hrx_acumulado: this.arPartTimeFech[index]["hrExtra"], extra: this.arPartTimeFech[index]["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: this.arPartTimeFech[index]["fechas"] });
                 }
               } else {
@@ -767,7 +772,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
                     if (parseInt((dtp["hrTrabajadas"] || "").split(":")[0]) == 24) {
 
                       if (parseInt((dtp["hrTrabajadas"] || "").split(":")[1]) >= parseInt(((tolerancia || {}).TIEMPO_TOLERANCIA).split(":")[1])) {
-                        console.log(dtp);
+
                         this.dataVerify.push({ documento: row.dataRegistro[0]['nroDocumento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: dtp["hrTrabajadas"], fecha: dtp["fechas"][0]['dia'], hrx_acumulado: dtp["hrExtra"], extra: dtp["hrExtra"], estado: estado, aprobado: aprobado, seleccionado: false, arFechas: dtp["fechas"] });
                       }
                     } else {
@@ -793,6 +798,38 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
     }
+  }
+
+  finDeSemana(fecha: string | Date): Date {
+
+    let resultado: Date;
+
+    if (typeof fecha === 'string') {
+      const [y, m, d] = fecha.split('-').map(Number);
+      resultado = new Date(y, m - 1, d); // ← SIN UTC
+    } else {
+      resultado = new Date(
+        fecha.getFullYear(),
+        fecha.getMonth(),
+        fecha.getDate()
+      );
+    }
+
+    const dia = resultado.getDay() === 0 ? 7 : resultado.getDay(); // lunes=1
+    const diasParaDomingo = 7 - dia;
+
+    resultado.setDate(resultado.getDate() + diasParaDomingo);
+    resultado.setHours(0, 0, 0, 0);
+
+    return resultado;
+  }
+
+  formatearFecha(fecha: Date): string {
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   diferenciaHoras(hora1, hora2) {
@@ -1971,8 +2008,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
       var mes = (dateNow.getMonth() + 1);
       let dayNow = dateNow.getDay();
       let day = new Date(dateNow).toLocaleDateString().split('/');
-        let añoIn = mes == 1 ? año - 1 : año;
-        let mesIn = mes >= 1 ? 12 - 1 : mes;
+      let añoIn = mes == 1 ? año - 1 : año;
+      let mesIn = mes >= 1 ? 12 - 1 : mes;
       let diaR = mes == 1 ? 1 : day[0];
       let configuracion = [{
         fechain: `${añoIn}-${mesIn}-${1}`,
