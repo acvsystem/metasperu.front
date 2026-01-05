@@ -61,8 +61,8 @@ export class MtArticulosComponent implements OnInit {
 
   constructor(private http: ShareService, private store: StorageService, private socket: SocketService) { }
 
-  ngOnInit() {
-    this.onAllStore();
+  async ngOnInit() {
+    await this.onAllStore();
     this.onVerify();
 
     this.socket.on('comprobantes:get:response', (listaSession) => {
@@ -121,6 +121,7 @@ export class MtArticulosComponent implements OnInit {
 
 
       this.selectedUS = undServicio;
+      
       this.onProcessPetition(undServicio);
     } else {
       this.isVendedor = false;
@@ -186,7 +187,7 @@ export class MtArticulosComponent implements OnInit {
 
 
   onAllStore() {
-    this.http.allStores().then((stores: Array<any>) => {
+    return this.http.allStores().then((stores: Array<any>) => {
       (stores || []).filter((store) => {
 
         if (store?.serie.slice(0, 1) == '9') {
@@ -525,6 +526,7 @@ export class MtArticulosComponent implements OnInit {
     this.onReporteList = [];
     this.proccessData = [];
     this.isLoading = true;
+    let undServicio = "";
 
     setTimeout(() => (this.isLoading = false), 60000);
 
@@ -532,7 +534,7 @@ export class MtArticulosComponent implements OnInit {
       const profileUser = this.store.getStore('mt-profile') || {};
       const userCode = profileUser.code;
 
-      let undServicio = "";
+
 
       if (this.codeTiendasVs?.some(t => t.code === userCode)) {
         undServicio = 'VICTORIA SECRET';
@@ -540,8 +542,8 @@ export class MtArticulosComponent implements OnInit {
         undServicio = 'BATH AND BODY WORKS';
       }
     }
-
-    this.onProcessPetition(this.selectedUS);
+   console.log(undServicio);
+    this.onProcessPetition(this.selectedUS || undServicio);
 
     const barcodeValue = this.barcode?.length ? this.barcode : "";
     this.socket.emit('comunicationStockTable', this.tiendasPetition, barcodeValue);
