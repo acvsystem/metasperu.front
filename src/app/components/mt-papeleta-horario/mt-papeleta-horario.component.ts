@@ -67,6 +67,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
   isResetCalendar: boolean = false;
   isResetCalendarComp: boolean = false;
   isLoadingEmployes: boolean = false;
+  isAutorization: boolean = false;
   hroAcumulada: string = "00:00";
   hroAcumuladaTotal: string = "00:00";
   hroTomada: string = "00:00";
@@ -145,6 +146,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
     let profileUser = this.store.getStore('mt-profile');
     this.nameTienda = profileUser.mt_name_1.toUpperCase();
+    this.isAutorization = profileUser.mt_name_1.toUpperCase() == 'SISTEMAS' ? true : false;
     this.codeTienda = ((profileUser || {}).code || "").toUpperCase();
     let unidServicio = this.onListTiendas.find((tienda) => tienda.code == this.codeTienda);
     this.onSelectTienda = unidServicio;
