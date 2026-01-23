@@ -120,7 +120,9 @@ export class MtVerificationComprobantesComponent implements OnInit {
       this.allDocumentPending();
     });
 
-    this.socket.on('traffic:get:online:response', (network) => {
+    this.socket.on('traffic:get:online:response', (data) => {
+
+      let network = (data || {})['data'];
       let codigo = (network || {}).code;
       let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
       if (indexData != -1) {
