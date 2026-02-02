@@ -869,58 +869,40 @@ export class MtRrhhAsistenciaComponent implements OnInit {
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
-  onCaledar($event) {
+  onCaledar($event: any) {
     this.isErrorFecha = false;
-    if ($event.isPeriodo) {
-      this.vCalendar = [];
-      this.vCalendar = $event.value;
-    }
+    const { isPeriodo, isMultiSelect, isDefault, isRange, value } = $event;
 
-    if ($event.isMultiSelect) {
-      this.vMultiSelect = [];
-      this.vMultiSelect = $event.value;
-    }
+    if (isPeriodo) this.vCalendar = [...value];
+    if (isMultiSelect) this.vMultiSelect = [...value];
 
-    if ($event.isDefault) {
-      this.vCalendarDefault = [];
+    if (isDefault || isRange) {
       this.vDetallado = [];
-      let dateNow = new Date();
 
-      let day = new Date(dateNow).toLocaleDateString().split('/');
+      const fechaAValidar = isRange ? new Date(value[1]) : new Date(value);
 
-      let date = new Date($event.value).toLocaleDateString().split('/');
-      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
-      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
-
-      if (f1.getTime() > f2.getTime()) {
+      if (this.esFechaFutura(fechaAValidar)) {
         this.isErrorFecha = true;
         this.openSnackBar("La fecha seleccionada no puede ser posterior a la actual.");
+        return;
       }
 
-      this.vCalendarDefault = [`${$event.value}`];
-    }
-
-    if ($event.isRange) {
-      this.vDetallado = [];
-      let range = $event.value;
-
-      let dateNow = new Date();
-
-      let day = new Date(dateNow).toLocaleDateString().split('/');
-
-      let date = new Date(range[1]).toLocaleDateString().split('/');
-      var f1 = new Date(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
-      var f2 = new Date(parseInt(day[2]), parseInt(day[1]), parseInt(day[0]));
-
-      if (f1.getTime() > f2.getTime()) {
-        this.isErrorFecha = true;
-        this.openSnackBar("La fecha seleccionada no puede ser posterior a la actual.");
-      } else {
-        if (range.length >= 2) {
-          this.vDetallado = range;
-        }
+      if (isDefault) {
+        this.vCalendarDefault = [`${value}`];
+      } else if (isRange && value.length >= 2) {
+        this.vDetallado = value;
       }
     }
+  }
+
+  private esFechaFutura(fecha: Date): boolean {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const fechaSeleccionada = new Date(fecha);
+    fechaSeleccionada.setHours(0, 0, 0, 0);
+
+    return fechaSeleccionada.getTime() > hoy.getTime();
   }
 
   obtenerMinutos(hora_1, hora_2) {

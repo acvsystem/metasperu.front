@@ -121,7 +121,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('traffic:get:online:response', (data) => {
-
+      console.log(data);
       let network = (data || {})['data'];
       let codigo = (network || {}).code;
       let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
@@ -161,7 +161,7 @@ export class MtVerificationComprobantesComponent implements OnInit {
 
       let dataList = [];
       dataList = listaSession || [];
-      console.log((dataList || [])[0]['CODIGO_TERMINAL']);
+      console.log(listaSession);
 
       setTimeout(() => {
         this.socket.emit('traffic:get:online', { code: (dataList || [])[0]['CODIGO_TERMINAL'], isEmail: false });
