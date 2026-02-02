@@ -1106,9 +1106,8 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
         var año = dateNow.getFullYear();
         var mes = (dateNow.getMonth() + 1);
-        let dayNow = dateNow.getDay();
         let day = new Date(dateNow).toLocaleDateString().split('/');
-        let añoIn = mes == 1 ? año - 1 : año;
+        let añoIn = mes == 2 ? año - 1 : año;
         let mesIn = mes >= 1 ? 12 - 1 : mes;
         let diaR = mes == 1 ? 1 : day[0];
         let configuracion = [{
