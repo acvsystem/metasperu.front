@@ -190,6 +190,16 @@ export class MtPapeletaHorarioComponent implements OnInit {
     this.socket.on('reporteHorario', async (response) => { //DATA ASISTENCIA FRONT
 
       let data = (response || {}).data || [];
+      console.log('reporteHorario', data);
+
+      data.sort((a, b) => {
+        // Convertimos los strings "YYYY-MM-DD" a objetos Date para comparar
+        const fechaA = new Date(a.dia);
+        const fechaB = new Date(b.dia);
+
+        // Orden ascendente (del más antiguo al más reciente)
+        return fechaA.getTime() - fechaB.getTime();
+      });
 
       this.parseHuellero = data;
       this.onDataTemp = [];
@@ -727,8 +737,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             this.arPartTimeFech[index]["fechasProcess"] = cFechas;
 
             if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) >= 24) {
-
-
+            
               this.arPartTimeFech[index]["hrExtra"] = process;
 
               let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
