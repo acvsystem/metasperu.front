@@ -327,7 +327,7 @@ export class MtConfiguracionComponent implements OnInit {
       this.dataViewUser = (response || [])['data'];
 
       this.dataViewUser.filter((du) => {
-        if (du.NIVEL == 'OPERACIONES') {
+        if (du.NIVEL == 'OPERACIONES' || du.NIVEL == 'SISTEMAS' ) {
           this.dataCboUser.push({ key: du.ID_LOGIN, value: du.USUARIO });
         }
       });
