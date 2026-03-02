@@ -153,14 +153,22 @@ export class MtHrExtraConsolidadoComponent implements OnInit {
 
             var año = dateNow.getFullYear();
             var mes = (dateNow.getMonth() + 1);
-            let dayNow = dateNow.getDay();
             let day = new Date(dateNow).toLocaleDateString().split('/');
             let añoIn = mes == 2 ? año - 1 : año;
-            let mesIn = mes >= 1 ? 12 - 1 : mes;
-            let diaR = mes == 1 ? 1 : day[0];
+            const fechaHoy = new Date();
+
+            // 1. Número del mes actual (sumamos 1 porque getMonth() devuelve 0-11)
+            const numMesActual = fechaHoy.getMonth() + 1;
+
+            // 2. Número del mes hace 2 meses
+            const fechaPasada = new Date();
+            fechaPasada.setMonth(fechaHoy.getMonth() - 2);
+            const numMesPasado = fechaPasada.getMonth() + 1;
+
+
             let configuracion = [{
-              fechain: `${añoIn}-${mesIn}-${1}`,
-              fechaend: `${año}-${mes}-${day[0]}`,
+              fechain: `${añoIn}-${numMesPasado}-${1}`,
+              fechaend: `${año}-${numMesActual}-${day[0]}`,
               nro_documento: arEmp.documento
             }];
 

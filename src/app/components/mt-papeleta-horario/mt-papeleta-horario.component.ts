@@ -737,7 +737,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
             this.arPartTimeFech[index]["fechasProcess"] = cFechas;
 
             if (parseInt((this.arPartTimeFech[index]["hrTrabajadas"] || "").split(":")[0]) >= 24) {
-            
+
               this.arPartTimeFech[index]["hrExtra"] = process;
 
               let tolerancia = this.dataViewTolerancia.find((dtt) => dtt.REFERENCIA == 'hora extra part time');
@@ -1120,6 +1120,15 @@ export class MtPapeletaHorarioComponent implements OnInit {
           this[index] = (selectData || {}).value;
           this.idCboTipoPap = (selectData || {}).key;
         }
+        const fechaHoy = new Date();
+
+        // 1. Número del mes actual (sumamos 1 porque getMonth() devuelve 0-11)
+        const numMesActual = fechaHoy.getMonth() + 1;
+
+        // 2. Número del mes hace 2 meses
+        const fechaPasada = new Date();
+        fechaPasada.setMonth(fechaHoy.getMonth() - 2);
+        const numMesPasado = fechaPasada.getMonth() + 1;
 
         let dateNow = new Date();
 
@@ -1127,11 +1136,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
         var mes = (dateNow.getMonth() + 1);
         let day = new Date(dateNow).toLocaleDateString().split('/');
         let añoIn = mes == 2 ? año - 1 : año;
-        let mesIn = mes >= 1 ? 12 - 1 : mes;
-        let diaR = mes == 1 ? 1 : day[0];
+
+
+
         let configuracion = [{
-          fechain: `${añoIn}-${mesIn}-${1}`,
-          fechaend: `${año}-${mes}-${day[0]}`,
+          fechain: `${añoIn}-${numMesPasado}-${1}`,
+          fechaend: `${año}-${numMesActual}-${day[0]}`,
           nro_documento: this.cboEmpleado
         }];
 
@@ -2026,14 +2036,22 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
       var año = dateNow.getFullYear();
       var mes = (dateNow.getMonth() + 1);
-      let dayNow = dateNow.getDay();
       let day = new Date(dateNow).toLocaleDateString().split('/');
       let añoIn = mes == 2 ? año - 1 : año;
-      let mesIn = mes >= 1 ? 12 - 1 : mes;
-      let diaR = mes == 1 ? 1 : day[0];
+      
+      const fechaHoy = new Date();
+
+      // 1. Número del mes actual (sumamos 1 porque getMonth() devuelve 0-11)
+      const numMesActual = fechaHoy.getMonth() + 1;
+
+      // 2. Número del mes hace 2 meses
+      const fechaPasada = new Date();
+      fechaPasada.setMonth(fechaHoy.getMonth() - 2);
+      const numMesPasado = fechaPasada.getMonth() + 1;
+
       let configuracion = [{
-        fechain: `${añoIn}-${mesIn}-${1}`,
-        fechaend: `${año}-${mes}-${day[0]}`,
+        fechain: `${añoIn}-${numMesPasado}-${1}`,
+        fechaend: `${año}-${numMesActual}-${day[0]}`,
         nro_documento: this.cboEmpleado
       }];
 
