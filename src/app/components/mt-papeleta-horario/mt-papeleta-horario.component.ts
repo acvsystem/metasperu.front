@@ -367,12 +367,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let validFecha = new Date((huellero || {}).dia).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
 
             let hora_1_pr = htrb.split(":");
-
-            if ((parseInt(hora_1_pr[0]) >= 8 && validFecha) || (huellero || {}).isException) {
+            console.log(parseInt(hora_1_pr[0]));
+            if ((parseInt(hora_1_pr[0]) > 8 && validFecha) || (huellero || {}).isException) {
               let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
               let aprobado = false;
-              (this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: htrb, fecha: (huellero || {}).dia, hrx_acumulado: htrb, extra: htrb, estado: 'aprobar', aprobado: aprobado, seleccionado: false });
+             //(this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: htrb, fecha: (huellero || {}).dia, hrx_acumulado: htrb, extra: htrb, estado: 'aprobar', aprobado: aprobado, seleccionado: false });
 
             }
 
