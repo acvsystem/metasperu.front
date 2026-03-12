@@ -362,6 +362,20 @@ export class MtPapeletaHorarioComponent implements OnInit {
               }
             }
 
+            let fecha = new Date().toLocaleDateString().split('/'); new Date();
+
+            let validFecha = new Date((huellero || {}).dia).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
+
+            let hora_1_pr = htrb.split(":");
+
+            if ((parseInt(hora_1_pr[0]) >= 8 && validFecha) || (huellero || {}).isException) {
+              let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
+
+              let aprobado = false;
+              (this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: htrb, fecha: (huellero || {}).dia, hrx_acumulado: htrb, extra: htrb, estado: 'aprobar', aprobado: aprobado, seleccionado: false });
+
+            }
+
           } else {
             if (huellero.tpAsociado == "**") { //PART TIME
 
@@ -404,9 +418,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
 
               let hora_1_pr = this.onDataTemp[indexData]['hr_trabajadas'].split(":");
+
+
               this.onDataTemp[indexData]['dataRegistro'].push(huellero);
 
               let defaultHT = "08:00";
+
 
 
               if (tipoAsc.length == 2) { //LACTANCIA
@@ -494,7 +511,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       });
 
       if ((this.dataVerify || []).length && !this.isPartTime) {
-
+        console.log(this.onDataTemp);
         this.onDataTemp.filter((dt, indexData) => {
 
           if (((dt || {}).dataRegistro || []).length == 1) {
@@ -2038,7 +2055,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
       var mes = (dateNow.getMonth() + 1);
       let day = new Date(dateNow).toLocaleDateString().split('/');
       let añoIn = mes == 2 ? año - 1 : año;
-      
+
       const fechaHoy = new Date();
 
       // 1. Número del mes actual (sumamos 1 porque getMonth() devuelve 0-11)

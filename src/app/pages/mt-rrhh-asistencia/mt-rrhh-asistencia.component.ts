@@ -687,7 +687,6 @@ export class MtRrhhAsistenciaComponent implements OnInit {
         let date = ((this.vCalendarDefault || [])[0] || "").split('/');
         let dataTemp = [];
         this.onDataViewOf = [];
-
         this.dataSourceOf = new MatTableDataSource(this.onDataViewOf);
         this.dataSourceOf.paginator = this.paginator;
         this.dataSourceOf.sort = this.sort;

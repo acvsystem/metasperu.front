@@ -121,7 +121,6 @@ export class MtVerificationComprobantesComponent implements OnInit {
     });
 
     this.socket.on('traffic:get:online:response', (data) => {
-      console.log(data);
       let network = (data || {})['data'];
       let codigo = (network || {}).code;
       let indexData = this.dataSource['_data']['_value'].findIndex((data) => (data.codigo == codigo));
