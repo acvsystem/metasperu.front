@@ -1126,31 +1126,30 @@ export class MtHorarioTiendaComponent implements OnInit {
     let fechaInicio = new Date(range[0]);
     let fechaFin = new Date(range[1]);
     let count = 0;
-    this.onEvalueHorary(range[0], range[1]).then((resolve) => {
-      let permisionStore = this.dataViewPermiso.find((per) => per.SERIE_TIENDA == this.codeTienda);
-      //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
+    const isValid = this.validarFechaCreacion(range[0]);
+    let permisionStore = this.dataViewPermiso.find((per) => per.SERIE_TIENDA == this.codeTienda);
+    //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
 
-      if (resolve || (permisionStore || {}).IS_FREE_HORARIO) {
-        while (fechaFin.getTime() >= fechaInicio.getTime()) {
+    if (isValid || (permisionStore || {}).IS_FREE_HORARIO) {
+      while (fechaFin.getTime() >= fechaInicio.getTime()) {
 
-          count++;
-          let index = this.arListDia.findIndex((dia) => dia.id == count);
-          fechaInicio.setDate(fechaInicio.getDate() + 1);
-          let date = new Date(fechaInicio).toLocaleDateString().split('/');
+        count++;
+        let index = this.arListDia.findIndex((dia) => dia.id == count);
+        fechaInicio.setDate(fechaInicio.getDate() + 1);
+        let date = new Date(fechaInicio).toLocaleDateString().split('/');
 
-          this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
-          this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
-        }
-
-        let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
-        let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
-
-        this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
-        this.vRangoDiasSearch;
-      } else {
-        this.service.toastError('Solo puede crear el horario de la semana siguiente.', 'Horario');
+        this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
+        this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
       }
-    });
+
+      let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
+      let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
+
+      this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+      this.vRangoDiasSearch;
+    } else {
+      this.service.toastError('Solo puede crear el horario de la semana siguiente.', 'Horario');
+    }
   }
 
   convertirAFormatoISO(fechaStr: string): string {
@@ -1158,7 +1157,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     return `${anio}-${mes}-${dia}`;
   }
 
-
+/*
   onEvalueHorary(newInitDate, newEndDate) {
     this.profileUser = this.store.getStore('mt-profile');
     this.codeTienda = this.profileUser.code.toUpperCase();
@@ -1178,6 +1177,34 @@ export class MtHorarioTiendaComponent implements OnInit {
         resolve(isValid)
       });
     });
+  }*/
+
+  validarFechaCreacion(fechaSeleccionada: string): boolean {
+    const hoy = new Date();
+    // Ajustar a lunes de esta semana
+    const lunesEstaSemana = new Date(hoy);
+    const diaHoy = hoy.getDay(); // 0 Dom, 1 Lun...
+    const diff = hoy.getDate() - (diaHoy === 0 ? 6 : diaHoy - 1);
+    lunesEstaSemana.setDate(diff);
+    lunesEstaSemana.setHours(0, 0, 0, 0);
+
+    // Definir lunes de la próxima semana
+    const lunesProximaSemana = new Date(lunesEstaSemana);
+    lunesProximaSemana.setDate(lunesEstaSemana.getDate() + 7);
+
+    // Definir lunes de subsiguiente (2 semanas)
+    const lunesSubSiguiente = new Date(lunesProximaSemana);
+    lunesSubSiguiente.setDate(lunesProximaSemana.getDate() + 7);
+
+    const fechaInput = new Date(fechaSeleccionada.replace(/-/g, '\/'));
+    fechaInput.setHours(0, 0, 0, 0);
+    let permisionStore = this.dataViewPermiso.find((per) => per.SERIE_TIENDA == this.codeTienda);
+    // REGLA: Solo puede crear si es EXACTAMENTE la semana que viene
+    if ((fechaInput.getTime() === lunesProximaSemana.getTime() || (permisionStore || {}).IS_FREE_HORARIO)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   esSiguienteSemana(rangoActualInicio: string, rangoActualFin: string, nuevoInicio: string, nuevoFin: string): boolean {

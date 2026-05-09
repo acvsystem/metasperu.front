@@ -220,6 +220,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let columBody of bodyList;let index = index">
+                    
                     <td class="columBody">
                       @if(isPartTime){
                       <button matTooltip="Ver fechas" id="searchProducto" (click)="onSearchFechasPartTime(index)"
