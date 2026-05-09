@@ -35,6 +35,7 @@ export class MtHorarioTiendaComponent implements OnInit {
   isPapeletaDay: boolean = false;
   isLoading: boolean = false;
   isViewPapeleta: boolean = false;
+  isValidCreate: boolean = false;
   dataSource = new MatTableDataSource<any>([]);
 
   dataObservation: Array<any> = [];
@@ -1126,28 +1127,28 @@ export class MtHorarioTiendaComponent implements OnInit {
     let fechaInicio = new Date(range[0]);
     let fechaFin = new Date(range[1]);
     let count = 0;
-    const isValid = this.validarFechaCreacion(range[0]);
+    this.isValidCreate = this.validarFechaCreacion(range[0]);
     let permisionStore = this.dataViewPermiso.find((per) => per.SERIE_TIENDA == this.codeTienda);
     //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
 
-    if (isValid || (permisionStore || {}).IS_FREE_HORARIO) {
-      while (fechaFin.getTime() >= fechaInicio.getTime()) {
+    while (fechaFin.getTime() >= fechaInicio.getTime()) {
 
-        count++;
-        let index = this.arListDia.findIndex((dia) => dia.id == count);
-        fechaInicio.setDate(fechaInicio.getDate() + 1);
-        let date = new Date(fechaInicio).toLocaleDateString().split('/');
+      count++;
+      let index = this.arListDia.findIndex((dia) => dia.id == count);
+      fechaInicio.setDate(fechaInicio.getDate() + 1);
+      let date = new Date(fechaInicio).toLocaleDateString().split('/');
 
-        this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
-        this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
-      }
+      this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
+      this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
+    }
 
-      let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
-      let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
+    let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
+    let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
 
-      this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
-      this.vRangoDiasSearch;
-    } else {
+    this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+    this.vRangoDiasSearch;
+
+    if (!this.isValidCreate) {
       this.service.toastError('Solo puede crear el horario de la semana siguiente.', 'Horario');
     }
   }
@@ -1157,27 +1158,27 @@ export class MtHorarioTiendaComponent implements OnInit {
     return `${anio}-${mes}-${dia}`;
   }
 
-/*
-  onEvalueHorary(newInitDate, newEndDate) {
-    this.profileUser = this.store.getStore('mt-profile');
-    this.codeTienda = this.profileUser.code.toUpperCase();
-
-    return new Promise((resolve, reject) => {
-      let parms = {
-        url: '/schedule/limit/register',
-        parms: [
-          { key: "code", value: this.codeTienda }
-        ]
-      };
-
-      this.service.get(parms).then(async (response) => {
-        let currentRange = ((((response || {}).data || [])[0] || {})['rangeSchedule'] || "").split(' ');
-        let isValid = this.esSiguienteSemana(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
-        console.log(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
-        resolve(isValid)
+  /*
+    onEvalueHorary(newInitDate, newEndDate) {
+      this.profileUser = this.store.getStore('mt-profile');
+      this.codeTienda = this.profileUser.code.toUpperCase();
+  
+      return new Promise((resolve, reject) => {
+        let parms = {
+          url: '/schedule/limit/register',
+          parms: [
+            { key: "code", value: this.codeTienda }
+          ]
+        };
+  
+        this.service.get(parms).then(async (response) => {
+          let currentRange = ((((response || {}).data || [])[0] || {})['rangeSchedule'] || "").split(' ');
+          let isValid = this.esSiguienteSemana(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
+          console.log(this.convertirAFormatoISO(currentRange[0]), this.convertirAFormatoISO(currentRange[1]), newInitDate, newEndDate);
+          resolve(isValid)
+        });
       });
-    });
-  }*/
+    }*/
 
   validarFechaCreacion(fechaSeleccionada: string): boolean {
     const hoy = new Date();
@@ -1395,6 +1396,24 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onSearchCalendario(rango?, codigo?) {
     this.isLoading = true;
+
+    while (fechaFin.getTime() >= fechaInicio.getTime()) {
+
+      count++;
+      let index = this.arListDia.findIndex((dia) => dia.id == count);
+      fechaInicio.setDate(fechaInicio.getDate() + 1);
+      let date = new Date(fechaInicio).toLocaleDateString().split('/');
+
+      this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
+      this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
+    }
+
+    let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
+    let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
+
+    this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+    this.vRangoDiasSearch;
+
     let parms = {
       url: '/calendario/searchrHorario',
       body: [{ rango_dias: rango || this.vRangoDiasSearch, codigo_tienda: codigo || this.codeTienda }]
