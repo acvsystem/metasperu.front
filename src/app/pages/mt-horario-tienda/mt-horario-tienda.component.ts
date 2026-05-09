@@ -1130,7 +1130,7 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.isValidCreate = this.validarFechaCreacion(range[0]);
     //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
 
-    if (range.length) {
+    if (range.length && dateList.length) {
       while (fechaFin.getTime() >= fechaInicio.getTime()) {
 
         count++;
