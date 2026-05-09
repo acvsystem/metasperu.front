@@ -1130,25 +1130,22 @@ export class MtHorarioTiendaComponent implements OnInit {
     this.isValidCreate = this.validarFechaCreacion(range[0]);
     //HABILITAR CAMBIOS DE CALENDARIO EN EL MISMO DIA
 
-    if (range.length && dateList.length) {
-      while (fechaFin.getTime() >= fechaInicio.getTime()) {
+    while (fechaFin.getTime() >= fechaInicio.getTime()) {
 
-        count++;
-        let index = this.arListDia.findIndex((dia) => dia.id == count);
-        fechaInicio.setDate(fechaInicio.getDate() + 1);
-        let date = new Date(fechaInicio).toLocaleDateString().split('/');
+      count++;
+      let index = this.arListDia.findIndex((dia) => dia.id == count);
+      fechaInicio.setDate(fechaInicio.getDate() + 1);
+      let date = new Date(fechaInicio).toLocaleDateString().split('/');
 
-        this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
-        this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
-      }
-
-      let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
-      let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
-
-      this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
-      this.vRangoDiasSearch;
+      this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
+      this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
     }
 
+    let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
+    let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
+
+    this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
+    this.vRangoDiasSearch;
 
     if (!this.isValidCreate) {
       this.service.toastError('Solo puede crear el horario de la semana siguiente.', 'Horario');
@@ -1398,23 +1395,6 @@ export class MtHorarioTiendaComponent implements OnInit {
 
   onSearchCalendario(rango?, codigo?) {
     this.isLoading = true;
-
-    while (fechaFin.getTime() >= fechaInicio.getTime()) {
-
-      count++;
-      let index = this.arListDia.findIndex((dia) => dia.id == count);
-      fechaInicio.setDate(fechaInicio.getDate() + 1);
-      let date = new Date(fechaInicio).toLocaleDateString().split('/');
-
-      this.arListDia[index]['fecha_number'] = `${date[0]}-${date[1]}-${date[2]}`;
-      this.arListDia[index]['fecha'] = `${(fechaInicio.getDate().toString().length == 1) ? '0' + fechaInicio.getDate() : fechaInicio.getDate()} - ${fechaInicio.toLocaleString('default', { month: 'short' })}`;
-    }
-
-    let day1 = new Date(dateList[0]).toLocaleDateString().split('/');
-    let day2 = new Date(dateList[1]).toLocaleDateString().split('/');
-
-    this.vRangoDiasSearch = `${day1[0]}-${day1[1]}-${day1[2]} ${day2[0]}-${day2[1]}-${day2[2]}`;
-    this.vRangoDiasSearch;
 
     let parms = {
       url: '/calendario/searchrHorario',
