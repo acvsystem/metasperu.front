@@ -280,21 +280,30 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
                 let defaultHT = "00:00";
 
-                if (tipoAsc.length == 2) { //LACTANCIA
+                if (tipoAsc.length === 2) { // LACTANCIA
+                  // 1. Limpiamos el asterisco y cualquier espacio
+                  const rawFechaNac = tipoAsc[1].replace('*', '').trim(); // "yyyy-mm-dd"
+                  console.log('rawFechaNac', rawFechaNac);
+                  // 2. Parseamos la fecha de nacimiento
+                  const [anio, mes, dia] = rawFechaNac.split('-').map(Number);
 
-                  const [dia, mes, anio] = tipoAsc[1].trim().split('-').map(Number);
+                  // 3. Creamos el límite: fecha de nacimiento + 1 año
+                  // Nota: Date(año, mesIndice, dia). El mes en JS es 0-11
+                  const fechaLimiteLactancia = new Date(anio + 1, mes - 1, dia);
+                  fechaLimiteLactancia.setHours(0, 0, 0, 0);
 
-                  // Creamos la fecha de lactancia sumando un año al año obtenido
-                  // Nota: Date(año, mesIndice, dia). El mes en JS es base 0 (0 = Enero)
-                  const fechaLactancia = new Date(anio + 1, mes - 1, dia);
-
-                  // Fecha trabajada
-                  const fechaTrabajada = new Date(this.onDataTemp[indexData]['dia']);
-
-                  if (fechaLactancia >= fechaTrabajada) {
+                  // 4. Parseamos el día trabajado (yyyy-mm-dd)
+                  const [tAnio, tMes, tDia] = this.onDataTemp[indexData]['dia'].split('-').map(Number);
+                  const fechaTrabajada = new Date(tAnio, tMes - 1, tDia);
+                  fechaTrabajada.setHours(0, 0, 0, 0);
+                  console.log(fechaLimiteLactancia, fechaTrabajada);
+                  // 5. Comparación lógica
+                  // Si la fecha límite es mayor o igual al día trabajado, aún tiene el beneficio
+                  if (fechaLimiteLactancia >= fechaTrabajada) {
                     defaultHT = "07:00";
                   }
                 }
+
 
                 let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
                 let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
@@ -367,12 +376,12 @@ export class MtPapeletaHorarioComponent implements OnInit {
             let validFecha = new Date((huellero || {}).dia).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
 
             let hora_1_pr = htrb.split(":");
-            console.log(parseInt(hora_1_pr[0]));
+        
             if ((parseInt(hora_1_pr[0]) > 8 && validFecha) || (huellero || {}).isException) {
               let ejb = this.parseEJB.filter((ejb) => ejb.documento == this.cboEmpleado);
 
               let aprobado = false;
-             //(this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: htrb, fecha: (huellero || {}).dia, hrx_acumulado: htrb, extra: htrb, estado: 'aprobar', aprobado: aprobado, seleccionado: false });
+              //(this.dataVerify || []).push({ documento: ejb[0]['documento'], codigo_papeleta: this.codigoPapeleta, hr_trabajadas: htrb, fecha: (huellero || {}).dia, hrx_acumulado: htrb, extra: htrb, estado: 'aprobar', aprobado: aprobado, seleccionado: false });
 
             }
 
@@ -425,22 +434,31 @@ export class MtPapeletaHorarioComponent implements OnInit {
               let defaultHT = "08:00";
 
 
+              if (tipoAsc.length === 2) { // LACTANCIA
+                // 1. Limpiamos el asterisco y cualquier espacio
+                const rawFechaNac = tipoAsc[1].replace('*', '').trim(); // "yyyy-mm-dd"
+                console.log('rawFechaNac', rawFechaNac);
+                // 2. Parseamos la fecha de nacimiento
+                const [anio, mes, dia] = rawFechaNac.split('-').map(Number);
 
-              if (tipoAsc.length == 2) { //LACTANCIA
+                // 3. Creamos el límite: fecha de nacimiento + 1 año
+                // Nota: Date(año, mesIndice, dia). El mes en JS es 0-11
+                const fechaLimiteLactancia = new Date(anio + 1, mes - 1, dia);
+                fechaLimiteLactancia.setHours(0, 0, 0, 0);
 
-                const [dia, mes, anio] = tipoAsc[1].trim().split('-').map(Number);
-
-                // Creamos la fecha de lactancia sumando un año al año obtenido
-                // Nota: Date(año, mesIndice, dia). El mes en JS es base 0 (0 = Enero)
-                const fechaLactancia = new Date(anio + 1, mes - 1, dia);
-
-                // Fecha trabajada
-                const fechaTrabajada = new Date(this.onDataTemp[indexData]['dia']);
-
-                if (fechaLactancia >= fechaTrabajada) {
+                // 4. Parseamos el día trabajado (yyyy-mm-dd)
+                const [tAnio, tMes, tDia] = this.onDataTemp[indexData]['dia'].split('-').map(Number);
+                const fechaTrabajada = new Date(tAnio, tMes - 1, tDia);
+                fechaTrabajada.setHours(0, 0, 0, 0);
+                console.log(fechaLimiteLactancia, fechaTrabajada);
+                // 5. Comparación lógica
+                // Si la fecha límite es mayor o igual al día trabajado, aún tiene el beneficio
+                if (fechaLimiteLactancia >= fechaTrabajada) {
                   defaultHT = "07:00";
                 }
               }
+
+              console.log(defaultHT);
 
               let hrxLlegada = this.onDataTemp[indexData]['hr_trabajadas'].split(':');
               let llegada = parseInt(hrxLlegada[0]) * 60 + parseInt(hrxLlegada[1]);
@@ -463,7 +481,7 @@ export class MtPapeletaHorarioComponent implements OnInit {
 
               let validFecha = new Date(this.onDataTemp[indexData]['dia']).getTime() != new Date(parseInt(fecha[2]) + "-" + (parseInt(fecha[1]) <= 9 ? '0' + parseInt(fecha[1]) : parseInt(fecha[1])) + "-" + (parseInt(fecha[0]) <= 9 ? '0' + parseInt(fecha[0]) : parseInt(fecha[0]))).getTime() ? true : false;
 
-              if ((hora_1_pr[0] >= 8 && validFecha) || this.onDataTemp[indexData].isException) {
+              if ((hora_1_pr[0] >= parseInt(defaultHT.split(":")[0]) && validFecha) || this.onDataTemp[indexData].isException) {
 
                 let hr = process.split(":");
 
